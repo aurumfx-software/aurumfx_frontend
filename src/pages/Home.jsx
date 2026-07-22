@@ -3,6 +3,7 @@ import Hero from "../components/Hero";
 import Features from "../components/Features";
 import InvestmentJourney from "../components/InvestmentJourney";
 import WhyChoose from "../components/WhyChoose";
+import CTASection from "../components/CTASection";
 
 
 
@@ -16,13 +17,11 @@ const Home = () => {
       <Features />
       <InvestmentJourney/>
       <WhyChoose/>
+      <CTASection/>
       {/*
       <Calculator />
-
       <Testimonials />
-
       <Contact />
-
       <Footer /> */}
     </>
   );
