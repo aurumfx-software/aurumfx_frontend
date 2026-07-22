@@ -1,0 +1,106 @@
+/* Google Font */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 72px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  z-index: 999;
+}
+
+.container {
+  width: 92%;
+  /* max-width: 95vw; */
+  max-width: 1400px;
+  margin: auto;
+}
+
+.navbar {
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* Pushes the menu and button to the right */
+}
+
+/* Pinned to extreme left, ignoring container constraints */
+.logo {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  padding-left: 20px; /* Gives the logo slight breathing room from the edge */
+  z-index: 1000;
+}
+
+.logo img {
+  height: 54px;
+  object-fit: contain;
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  margin-right: 48px;
+}
+
+.nav-menu a {
+  text-decoration: none;
+  color: #222;
+  font-size: 18px;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.nav-menu a:hover,
+.nav-menu .active {
+  color: #d6a318;
+}
+
+.nav-btn button {
+  margin-right: 5px;
+  background: #d6a318;
+  color: #fff;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 8px;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.nav-btn button:hover {
+  background: #be8f0e;
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+  .nav-menu {
+    display: none;
+  }
+
+  /* The navbar will naturally keep the button on the right because of flex-end */
+  /* The logo remains fixed to the extreme left */
+
+  .logo img {
+    height: 46px;
+  }
+
+  .nav-btn button {
+    padding: 10px 22px;
+  }
+}
