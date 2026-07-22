@@ -1,6 +1,10 @@
 import Navbar from "../components/Navbar";
 import Hero from "../components/Hero";
 import Features from "../components/Features";
+import InvestmentJourney from "../components/InvestmentJourney";
+import WhyChoose from "../components/WhyChoose";
+
+
 
 import "./Home.css";
 
@@ -8,12 +12,10 @@ const Home = () => {
   return (
     <>
       <Navbar />
-
       <Hero />
-
-      {/*<RegisterForm />*/}
-
       <Features />
+      <InvestmentJourney/>
+      <WhyChoose/>
       {/*
       <Calculator />
 
