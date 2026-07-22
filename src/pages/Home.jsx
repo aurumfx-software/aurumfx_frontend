@@ -4,8 +4,7 @@ import Features from "../components/Features";
 import InvestmentJourney from "../components/InvestmentJourney";
 import WhyChoose from "../components/WhyChoose";
 import CTASection from "../components/CTASection";
-
-
+import Footer from "../components/Footer";
 
 import "./Home.css";
 
@@ -15,14 +14,10 @@ const Home = () => {
       <Navbar />
       <Hero />
       <Features />
-      <InvestmentJourney/>
-      <WhyChoose/>
-      <CTASection/>
-      {/*
-      <Calculator />
-      <Testimonials />
-      <Contact />
-      <Footer /> */}
+      <InvestmentJourney />
+      <WhyChoose />
+      <CTASection />
+      <Footer />
     </>
   );
 };
