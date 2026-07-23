@@ -1,5 +1,5 @@
 import "./Hero.css";
-import goldImage from "../assets/goldbar.png";
+import goldImage from "../../assets/goldbar.png";
 
 const Hero = () => {
   return (
