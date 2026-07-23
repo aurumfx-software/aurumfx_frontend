@@ -1,106 +1,97 @@
-/* Google Font */
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
-}
-
-.header {
+.landing-header {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
+  right: 0;
   height: 72px;
-  background: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  z-index: 999;
-}
-
-.container {
-  width: 92%;
-  /* max-width: 95vw; */
-  max-width: 1400px;
-  margin: auto;
-}
-
-.navbar {
-  height: 72px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end; /* Pushes the menu and button to the right */
-}
-
-/* Pinned to extreme left, ignoring container constraints */
-.logo {
-  position: fixed;
-  left: 0;
-  top: 0;
-  height: 72px;
-  display: flex;
-  align-items: center;
-  padding-left: 20px; /* Gives the logo slight breathing room from the edge */
   z-index: 1000;
+  background: rgba(10, 12, 16, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.logo img {
-  height: 54px;
+.landing-nav {
+  max-width: 1280px;
+  margin: 0 auto;
+  height: 100%;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.landing-logo img {
+  height: 44px;
   object-fit: contain;
 }
 
-.nav-menu {
+.landing-nav-menu {
   display: flex;
   align-items: center;
-  gap: 48px;
-  margin-right: 48px;
+  gap: 36px;
 }
 
-.nav-menu a {
+.landing-nav-menu a {
+  color: rgba(255, 255, 255, 0.7);
   text-decoration: none;
-  color: #222;
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 500;
-  transition: 0.3s;
+  transition: color 0.2s;
 }
 
-.nav-menu a:hover,
-.nav-menu .active {
-  color: #d6a318;
+.landing-nav-menu a:hover {
+  color: #ffc52d;
 }
 
-.nav-btn button {
-  margin-right: 5px;
-  background: #d6a318;
-  color: #fff;
-  border: none;
-  padding: 12px 28px;
+.landing-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-login {
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 10px 18px;
   border-radius: 8px;
-  font-size: 17px;
+  transition: background 0.2s;
+}
+
+.nav-login:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.nav-signup {
+  background: #ffc52d;
+  color: #0a0c10;
+  text-decoration: none;
+  font-size: 15px;
   font-weight: 600;
-  cursor: pointer;
-  transition: 0.3s;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: background 0.2s;
 }
 
-.nav-btn button:hover {
-  background: #be8f0e;
+.nav-signup:hover {
+  background: #e6b028;
 }
 
-/* Mobile */
 @media (max-width: 900px) {
-  .nav-menu {
+  .landing-nav-menu {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-login {
     display: none;
   }
 
-  /* The navbar will naturally keep the button on the right because of flex-end */
-  /* The logo remains fixed to the extreme left */
-
-  .logo img {
-    height: 46px;
-  }
-
-  .nav-btn button {
-    padding: 10px 22px;
+  .nav-signup {
+    padding: 10px 16px;
+    font-size: 14px;
   }
 }

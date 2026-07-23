@@ -4,11 +4,26 @@
   border-bottom: 1px solid #eee;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  gap: 12px;
   padding: 0 28px;
   position: sticky;
   top: 0;
   z-index: 50;
+}
+
+.header-menu-btn {
+  display: none;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  background: #fff;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #555;
+  font-size: 20px;
+  flex-shrink: 0;
 }
 
 .header-spacer {
@@ -36,6 +51,10 @@
   background: #fafafa;
 }
 
+.currency-short {
+  display: none;
+}
+
 .header-icon-btn {
   width: 38px;
   height: 38px;
@@ -49,6 +68,7 @@
   color: #555;
   font-size: 17px;
   transition: background 0.15s;
+  flex-shrink: 0;
 }
 
 .header-icon-btn:hover {
@@ -66,4 +86,51 @@
   font-weight: 600;
   font-size: 14px;
   color: #fff;
+  flex-shrink: 0;
+}
+
+@media (max-width: 1024px) {
+  .header-menu-btn {
+    display: flex;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-header {
+    padding: 0 16px;
+  }
+
+  .header-actions {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-header {
+    height: 56px;
+    padding: 0 12px;
+  }
+
+  .currency-full {
+    display: none;
+  }
+
+  .currency-short {
+    display: inline;
+  }
+
+  .header-currency {
+    padding: 8px 12px;
+  }
+
+  .header-settings-btn {
+    display: none;
+  }
+
+  .header-icon-btn,
+  .header-avatar {
+    width: 34px;
+    height: 34px;
+    font-size: 15px;
+  }
 }

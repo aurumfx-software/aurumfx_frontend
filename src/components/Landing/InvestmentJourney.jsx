@@ -1,87 +1,66 @@
+import { Link } from "react-router-dom";
+import { FaUserPlus, FaChartBar, FaWallet } from "react-icons/fa";
 import "./InvestmentJourney.css";
-import {
-  FaCoins,
-  FaChartLine,
-  FaWallet,
-} from "react-icons/fa";
+
+const steps = [
+  {
+    icon: <FaUserPlus />,
+    step: "01",
+    title: "Create Account",
+    description: "Sign up in minutes with your email and verify your identity securely.",
+  },
+  {
+    icon: <FaWallet />,
+    step: "02",
+    title: "Fund Your Wallet",
+    description: "Deposit from ₹5,000 via UPI, bank transfer, or supported payment methods.",
+  },
+  {
+    icon: <FaChartBar />,
+    step: "03",
+    title: "Start Trading",
+    description: "Buy gold, trade forex pairs, and track portfolio performance in real time.",
+  },
+];
 
 const InvestmentJourney = () => {
   return (
-    <section className="journey">
+    <section className="journey" id="how-it-works">
       <div className="journey-container">
-        <h2>Your Investment Journey</h2>
-
-        <p className="journey-subtitle">
-          Start small and watch your investment grow with our transparent
-          10-month gold investment plan.
-        </p>
+        <div className="section-head">
+          <h2>Start Trading in 3 Steps</h2>
+          <p>From signup to your first trade — fast, simple, and secure.</p>
+        </div>
 
         <div className="journey-grid">
-          <div className="journey-card">
-            <div className="journey-icon">
-              <FaCoins />
+          {steps.map((item) => (
+            <div className="journey-card" key={item.step}>
+              <span className="journey-step">{item.step}</span>
+              <div className="journey-icon">{item.icon}</div>
+              <h3>{item.title}</h3>
+              <p>{item.description}</p>
             </div>
-
-            <h3>Step 1</h3>
-
-            <h4>Invest ₹5,000</h4>
-
-            <p>
-              Begin your investment journey with a minimum investment of ₹5,000.
-            </p>
-          </div>
-
-          <div className="journey-card">
-            <div className="journey-icon">
-              <FaChartLine />
-            </div>
-
-            <h3>Step 2</h3>
-
-            <h4>Earn 14% Monthly</h4>
-
-            <p>
-              Receive consistent monthly returns throughout the investment
-              period.
-            </p>
-          </div>
-
-          <div className="journey-card">
-            <div className="journey-icon">
-              <FaWallet />
-            </div>
-
-            <h3>Step 3</h3>
-
-            <h4>Complete in 10 Months</h4>
-
-            <p>
-              Withdraw your investment and accumulated returns after the plan
-              ends.
-            </p>
-          </div>
+          ))}
         </div>
 
         <div className="journey-summary">
           <div className="summary-box">
             <h3>₹5,000</h3>
-            <span>Minimum Investment</span>
+            <span>Min. Deposit</span>
           </div>
-
           <div className="summary-box">
             <h3>14%</h3>
-            <span>Monthly Return</span>
+            <span>Monthly Returns</span>
           </div>
-
           <div className="summary-box">
-            <h3>10</h3>
-            <span>Months Duration</span>
+            <h3>24/7</h3>
+            <span>Market Access</span>
           </div>
         </div>
 
-        <button className="journey-btn">
-          Start Your Investment
-        </button>
+        <Link to="/register" className="journey-btn">
+          Create Free Account
+        </Link>
       </div>
     </section>
   );

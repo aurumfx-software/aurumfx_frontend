@@ -1,4 +1,4 @@
-import "./Footer.css";
+import { Link } from "react-router-dom";
 import {
   FaFacebookF,
   FaInstagram,
@@ -8,97 +8,60 @@ import {
   FaEnvelope,
   FaPhoneAlt,
 } from "react-icons/fa";
+import "./Footer.css";
 
 const Footer = () => {
   return (
-    <footer className="footer">
+    <footer className="footer" id="contact">
       <div className="footer-container">
-        {/* Company Info */}
         <div className="footer-column">
           <h2 className="footer-logo">AurumFX</h2>
-
           <p>
-            Empowering investors through secure gold trading opportunities and
-            consistent monthly returns.
+            Professional gold and forex trading platform with real-time markets,
+            secure wallets, and transparent returns.
           </p>
-
           <div className="social-icons">
-            <a href="#">
+            <a href="#" aria-label="Facebook">
               <FaFacebookF />
             </a>
-
-            <a href="#">
+            <a href="#" aria-label="Instagram">
               <FaInstagram />
             </a>
-
-            <a href="#">
+            <a href="#" aria-label="LinkedIn">
               <FaLinkedinIn />
             </a>
-
-            <a href="#">
+            <a href="#" aria-label="Twitter">
               <FaTwitter />
             </a>
           </div>
         </div>
 
-        {/* Quick Links */}
         <div className="footer-column">
-          <h3>Quick Links</h3>
-
+          <h3>Platform</h3>
           <ul>
-            <li>
-              <a href="/">Home</a>
-            </li>
-            <li>
-              <a href="/">Investment Plans</a>
-            </li>
-            <li>
-              <a href="/">About Us</a>
-            </li>
-            <li>
-              <a href="/">Contact</a>
-            </li>
-            <li>
-              <a href="/">Privacy Policy</a>
-            </li>
+            <li><Link to="/">Home</Link></li>
+            <li><a href="#markets">Markets</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><Link to="/login">Sign In</Link></li>
+            <li><Link to="/register">Register</Link></li>
           </ul>
         </div>
 
-        {/* Investment */}
         <div className="footer-column">
-          <h3>Investment</h3>
-
+          <h3>Trading</h3>
           <ul>
-            <li>
-              <a>Minimum Investment : ₹5,000</a>
-            </li>
-            <li>
-              <a>Monthly Return : 14%</a>
-            </li>
-            <li>
-              <a>Duration : 10 Months</a>
-            </li>
-            <li>
-              <a>Secure Gold Trading</a>
-            </li>
+            <li><span>Min. Deposit: ₹5,000</span></li>
+            <li><span>Monthly Return: 14%</span></li>
+            <li><span>Gold &amp; FX Pairs</span></li>
+            <li><span>24/7 Market Access</span></li>
           </ul>
         </div>
 
-        {/* Contact */}
         <div className="footer-column">
-          <h3>Contact Us</h3>
-
-          <p>
-            <FaMapMarkerAlt /> Dubai, UAE
-          </p>
-
-          <p>
-            <FaEnvelope /> info@aurumfx.com
-          </p>
-
-          <p>
-            <FaPhoneAlt /> +971 55 123 4567
-          </p>
+          <h3>Contact</h3>
+          <p><FaMapMarkerAlt /> Dubai, UAE</p>
+          <p><FaEnvelope /> info@aurumfx.com</p>
+          <p><FaPhoneAlt /> +971 55 123 4567</p>
         </div>
       </div>
 

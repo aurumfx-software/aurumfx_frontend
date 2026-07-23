@@ -1,56 +1,52 @@
-import "./Features.css";
 import {
   FaChartLine,
   FaShieldAlt,
-  FaClock,
-  FaCoins,
+  FaBolt,
+  FaGlobe,
 } from "react-icons/fa";
+import "./Features.css";
 
 const features = [
   {
     icon: <FaChartLine />,
-    title: "14% Monthly Returns",
+    title: "Real-Time Charts",
     description:
-      "Earn consistent monthly returns through our professionally managed gold investment plans.",
+      "Professional candlestick and area charts with live price feeds for gold and forex pairs.",
+  },
+  {
+    icon: <FaBolt />,
+    title: "Instant Execution",
+    description:
+      "Execute trades in milliseconds with our low-latency order engine and smart routing.",
   },
   {
     icon: <FaShieldAlt />,
-    title: "100% Secure Investment",
+    title: "Secure Wallets",
     description:
-      "Your investments are protected with transparent operations and trusted financial practices.",
+      "Multi-layer encryption, 2FA, and segregated accounts keep your funds protected 24/7.",
   },
   {
-    icon: <FaClock />,
-    title: "10-Month Investment",
+    icon: <FaGlobe />,
+    title: "Global Markets",
     description:
-      "Enjoy predictable returns every month with our structured 10-month investment cycle.",
-  },
-  {
-    icon: <FaCoins />,
-    title: "Start from ₹5,000",
-    description:
-      "Begin your investment journey with a minimum amount of just ₹5,000.",
+      "Access gold, silver, and major currency pairs from a single unified trading desk.",
   },
 ];
 
 const Features = () => {
   return (
-    <section className="features">
+    <section className="features" id="features">
       <div className="features-container">
-        <h2>Simple, Secure & Profitable Investment</h2>
-
-        <p className="section-description">
-          Discover why thousands of investors trust AurumFX for building
-          long-term wealth through gold trading.
-        </p>
+        <div className="section-head">
+          <h2>Built for Modern Traders</h2>
+          <p>Everything you need to trade gold and forex with confidence.</p>
+        </div>
 
         <div className="features-grid">
           {features.map((feature, index) => (
             <div className="feature-card" key={index}>
               <div className="feature-icon">{feature.icon}</div>
-
               <h3>{feature.title}</h3>
-
               <p>{feature.description}</p>
             </div>
           ))}

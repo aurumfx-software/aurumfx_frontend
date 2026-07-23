@@ -1,41 +1,37 @@
+import { Link } from "react-router-dom";
 import "./CTASection.css";
 
 const CTASection = () => {
   return (
     <section className="cta">
       <div className="cta-container">
-        <h2>Ready to Start Growing Your Wealth?</h2>
-
+        <h2>Ready to trade gold &amp; forex?</h2>
         <p>
-          Join thousands of successful investors who trust AurumFX for secure
-          gold investments. Start today with just ₹5,000 and earn up to
-          <strong> 14% monthly returns.</strong>
+          Join AurumFX today. Open a free account, fund your wallet, and start
+          trading with professional tools built for serious investors.
         </p>
 
         <div className="cta-buttons">
-          <button className="cta-primary">
-            Get Started
-          </button>
-
-          <button className="cta-secondary">
-            Contact Us
-          </button>
+          <Link to="/register" className="cta-primary">
+            Get Started Free
+          </Link>
+          <Link to="/login" className="cta-secondary">
+            Sign In
+          </Link>
         </div>
 
         <div className="cta-stats">
           <div className="stat-box">
             <h3>₹5,000</h3>
-            <span>Minimum Investment</span>
+            <span>Minimum Deposit</span>
           </div>
-
           <div className="stat-box">
             <h3>14%</h3>
-            <span>Monthly Return</span>
+            <span>Monthly Returns</span>
           </div>
-
           <div className="stat-box">
-            <h3>10 Months</h3>
-            <span>Investment Period</span>
+            <h3>24/7</h3>
+            <span>Live Markets</span>
           </div>
         </div>
       </div>

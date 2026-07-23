@@ -118,6 +118,79 @@
     color: #666;
     font-weight: 500;
   }
+
+  .login-error {
+    color: #e53935;
+    font-size: 14px;
+    margin-bottom: 16px;
+    padding: 10px 14px;
+    background: #fdecea;
+    border-radius: 8px;
+  }
+
+  .demo-credentials {
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid #eee;
+  }
+
+  .demo-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+    text-align: center;
+  }
+
+  .demo-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .demo-card {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px;
+    background: #fafafa;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .demo-card:hover {
+    border-color: #ffc52d;
+    background: #fff8e6;
+  }
+
+  .demo-role {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #ffc52d;
+    letter-spacing: 0.5px;
+  }
+
+  .demo-id {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .demo-pass {
+    font-size: 12px;
+    color: #888;
+  }
+
+  .top-right .register-btn {
+    text-decoration: none;
+    display: inline-block;
+  }
   
   .login-btn {
     width: 100%;

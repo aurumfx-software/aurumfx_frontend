@@ -11,7 +11,8 @@
   top: 0;
   bottom: 0;
   overflow-y: auto;
-  z-index: 100;
+  z-index: 200;
+  transition: transform 0.25s ease;
 }
 
 .sidebar-logo {
@@ -52,6 +53,9 @@
   font-size: 14px;
   font-weight: 500;
   color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .sidebar-nav {
@@ -100,6 +104,13 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  min-width: 0;
+}
+
+.nav-item-left span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .nav-icon {
@@ -110,6 +121,7 @@
 .nav-chevron {
   font-size: 14px;
   color: #aaa;
+  flex-shrink: 0;
 }
 
 .nav-subitems {
@@ -154,6 +166,17 @@
 
 @media (max-width: 1024px) {
   .dashboard-sidebar {
-    width: 220px;
+    transform: translateX(-100%);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.12);
+  }
+
+  .dashboard-sidebar.sidebar--open {
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-sidebar {
+    width: min(280px, 85vw);
   }
 }

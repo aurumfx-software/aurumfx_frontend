@@ -35,7 +35,7 @@ const navItems = [
   { id: "reports", label: "Reports", icon: FiFileText, hasSubmenu: true },
 ];
 
-function Sidebar() {
+function Sidebar({ isOpen, onClose }) {
   const [expanded, setExpanded] = useState({ dashboard: true });
 
   const toggleExpand = (id) => {
@@ -43,7 +43,7 @@ function Sidebar() {
   };
 
   return (
-    <aside className="dashboard-sidebar">
+    <aside className={`dashboard-sidebar ${isOpen ? "sidebar--open" : ""}`}>
       <div className="sidebar-logo">
         <img src={logo} alt="AurumFX" />
       </div>
@@ -83,6 +83,7 @@ function Sidebar() {
                       key={child.id}
                       type="button"
                       className={`nav-subitem ${child.active ? "nav-subitem--active" : ""}`}
+                      onClick={onClose}
                     >
                       {child.active && <span className="nav-dot" />}
                       {child.label}
