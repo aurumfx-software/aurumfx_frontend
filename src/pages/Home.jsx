@@ -17,13 +17,13 @@ const Home = () => {
   return (
     <div className="landing-page">
       <Navbar />
-      <TickerBar />
+      {/* <TickerBar /> */}
       <Hero />
       <MT5RealChart />
       <ReturnsCalculator />
       <InvestmentTiers />
       <Features />
-      <MarketOverview />
+      {/* <MarketOverview /> */}
       <InvestmentJourney />
       <FAQ />
       <CTASection />
