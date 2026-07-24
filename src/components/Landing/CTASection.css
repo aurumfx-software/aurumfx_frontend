@@ -1,7 +1,7 @@
 .cta {
-  background: linear-gradient(180deg, #0a0c10 0%, #141820 100%);
+  background: linear-gradient(180deg, #fdfbf7 0%, #ffffff 100%);
   padding: 80px 24px;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid rgba(212, 175, 55, 0.2);
 }
 
 .cta-container {
@@ -14,13 +14,13 @@
   font-size: 40px;
   font-weight: 700;
   margin-bottom: 16px;
-  color: #fff;
+  color: #0f172a;
 }
 
 .cta p {
   font-size: 17px;
   line-height: 1.7;
-  color: rgba(255, 255, 255, 0.55);
+  color: #475569;
 }
 
 .cta-buttons {
@@ -35,29 +35,35 @@
   padding: 14px 32px;
   border-radius: 10px;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 700;
   text-decoration: none;
-  transition: background 0.2s, border-color 0.2s;
+  transition: background 0.2s, border-color 0.2s, transform 0.2s, box-shadow 0.2s;
 }
 
 .cta-primary {
-  background: #ffc52d;
-  color: #0a0c10;
+  background: linear-gradient(135deg, #f5d061 0%, #e5b80b 50%, #c59b27 100%);
+  color: #1e1b10;
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35);
+  border: none;
 }
 
 .cta-primary:hover {
-  background: #e6b028;
+  background: linear-gradient(135deg, #ffe082 0%, #f5d061 50%, #d4af37 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.45);
 }
 
 .cta-secondary {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #fff;
+  background: rgba(212, 175, 55, 0.06);
+  border: 1.5px solid #d4af37;
+  color: #966f0d;
 }
 
 .cta-secondary:hover {
-  border-color: #ffc52d;
-  color: #ffc52d;
+  background: rgba(212, 175, 55, 0.15);
+  border-color: #c59b27;
+  color: #785806;
+  transform: translateY(-2px);
 }
 
 .cta-stats {
@@ -69,22 +75,23 @@
 }
 
 .stat-box {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: #ffffff;
+  border: 1px solid rgba(212, 175, 55, 0.25);
   padding: 24px 36px;
   border-radius: 12px;
   min-width: 180px;
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.08);
 }
 
 .stat-box h3 {
-  color: #ffc52d;
+  color: #966f0d;
   font-size: 28px;
   font-weight: 700;
   margin-bottom: 6px;
 }
 
 .stat-box span {
-  color: rgba(255, 255, 255, 0.45);
+  color: #64748b;
   font-size: 13px;
 }
 

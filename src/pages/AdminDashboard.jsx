@@ -124,11 +124,11 @@ function MembersMap() {
       <rect width="800" height="400" fill="#f8f8f8" rx="8" />
 
       {/* Simplified continent shapes */}
-      <ellipse cx="400" cy="180" rx="120" ry="80" fill="#e0e0e0" />
+      {/* <ellipse cx="400" cy="180" rx="120" ry="80" fill="#e0e0e0" />
       <ellipse cx="200" cy="160" rx="80" ry="60" fill="#e0e0e0" />
       <ellipse cx="580" cy="200" rx="70" ry="90" fill="#e0e0e0" />
       <ellipse cx="650" cy="300" rx="50" ry="40" fill="#fff3c4" />
-      <ellipse cx="520" cy="130" rx="60" ry="50" fill="#e0e0e0" />
+      <ellipse cx="520" cy="130" rx="60" ry="50" fill="#e0e0e0" /> */}
 
       {/* India highlighted */}
       <ellipse cx="560" cy="210" rx="28" ry="35" fill="#222" />

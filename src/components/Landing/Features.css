@@ -1,6 +1,6 @@
 .features {
   padding: 80px 24px;
-  background: #0a0c10;
+  background: #fdfbf7;
 }
 
 .features-container {
@@ -16,13 +16,13 @@
 .features .section-head h2 {
   font-size: 36px;
   font-weight: 700;
-  color: #fff;
+  color: #0f172a;
   margin-bottom: 12px;
 }
 
 .features .section-head p {
   font-size: 16px;
-  color: rgba(255, 255, 255, 0.5);
+  color: #64748b;
 }
 
 .features-grid {
@@ -32,40 +32,43 @@
 }
 
 .feature-card {
-  background: #141820;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: #ffffff;
+  border: 1px solid rgba(212, 175, 55, 0.2);
   border-radius: 14px;
   padding: 32px 28px;
-  transition: border-color 0.2s, transform 0.2s;
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.08);
 }
 
 .feature-card:hover {
-  border-color: rgba(255, 197, 45, 0.25);
+  border-color: #d4af37;
   transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(212, 175, 55, 0.18);
 }
 
 .feature-icon {
-  width: 52px;
-  height: 52px;
+  width: 54px;
+  height: 54px;
   margin-bottom: 20px;
-  background: rgba(255, 197, 45, 0.1);
-  color: #ffc52d;
-  border-radius: 12px;
+  background: linear-gradient(135deg, #f5d061 0%, #e5b80b 100%);
+  color: #1e1b10;
+  border-radius: 14px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 22px;
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
 }
 
 .feature-card h3 {
   font-size: 18px;
-  color: #fff;
+  color: #0f172a;
   margin-bottom: 10px;
   font-weight: 600;
 }
 
 .feature-card p {
-  color: rgba(255, 255, 255, 0.5);
+  color: #475569;
   font-size: 14px;
   line-height: 1.7;
 }

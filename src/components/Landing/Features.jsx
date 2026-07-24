@@ -1,45 +1,45 @@
 import {
-  FaChartLine,
-  FaShieldAlt,
-  FaBolt,
-  FaGlobe,
-} from "react-icons/fa";
+  FiTrendingUp,
+  FiShield,
+  FiAward,
+  FiHeadphones,
+} from "react-icons/fi";
 import "./Features.css";
 
 const features = [
   {
-    icon: <FaChartLine />,
-    title: "Real-Time Charts",
+    icon: <FiAward />,
+    title: "Expert Gold Trading",
     description:
-      "Professional candlestick and area charts with live price feeds for gold and forex pairs.",
+      "Our team of seasoned professionals has years of experience in gold market trading, ensuring optimal returns on your investments.",
   },
   {
-    icon: <FaBolt />,
-    title: "Instant Execution",
+    icon: <FiShield />,
+    title: "Complete Transparency",
     description:
-      "Execute trades in milliseconds with our low-latency order engine and smart routing.",
+      "We believe in complete transparency. Track your investment growth monthly and understand exactly how your money is working for you.",
   },
   {
-    icon: <FaShieldAlt />,
-    title: "Secure Wallets",
+    icon: <FiTrendingUp />,
+    title: "Consistent Returns",
     description:
-      "Multi-layer encryption, 2FA, and segregated accounts keep your funds protected 24/7.",
+      "Our proven investment model delivers reliable 14% monthly returns, making wealth building predictable and accessible.",
   },
   {
-    icon: <FaGlobe />,
-    title: "Global Markets",
+    icon: <FiHeadphones />,
+    title: "Dedicated Support",
     description:
-      "Access gold, silver, and major currency pairs from a single unified trading desk.",
+      "Our investment advisors are always available to answer your questions and guide you through your wealth-building journey.",
   },
 ];
 
 const Features = () => {
   return (
-    <section className="features" id="features">
+    <section className="features" id="why-choose">
       <div className="features-container">
         <div className="section-head">
-          <h2>Built for Modern Traders</h2>
-          <p>Everything you need to trade gold and forex with confidence.</p>
+          <h2>Why Choose AurumFX?</h2>
+          <p>The trusted gold investment platform engineered for reliable returns and peace of mind.</p>
         </div>
 
         <div className="features-grid">
