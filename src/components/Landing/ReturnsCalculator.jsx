@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiCalculator, FiTrendingUp, FiDollarSign, FiCalendar, FiArrowRight } from "react-icons/fi";
+import {  FiTrendingUp, FiDollarSign, FiCalendar, FiArrowRight } from "react-icons/fi";
 import "./ReturnsCalculator.css";
 
 function ReturnsCalculator() {
@@ -17,7 +17,8 @@ function ReturnsCalculator() {
       <div className="calculator-container">
         <div className="section-head">
           <div className="section-badge">
-            <FiCalculator /> Profit Estimation
+            {/* <FiCalculator /> */}
+             Profit Estimation
           </div>
           <h2>
             Calculate Your <span>Gold Returns</span>
