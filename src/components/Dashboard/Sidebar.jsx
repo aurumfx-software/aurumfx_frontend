@@ -25,8 +25,29 @@ const navItems = [
       { id: "network", label: "Network", active: true },
     ],
   },
-  { id: "business", label: "Business", icon: FiBriefcase, hasSubmenu: true },
-  { id: "financial", label: "Financial", icon: FiDollarSign, hasSubmenu: true },
+  {
+    id: "business",
+    label: "Business",
+    icon: FiBriefcase,
+    children: [
+      { id: "club", label: "Club" },
+      { id: "enroller", label: "Enroller" },
+      { id: "structure", label: "Structure" },
+      { id: "list", label: "List" },
+    ],
+  },
+  {
+    id: "financial",
+    label: "Financial",
+    icon: FiDollarSign,
+    children: [
+      { id: "ewallet", label: "E-Wallet" },
+      { id: "deposit-wallet", label: "Deposit Wallet" },
+      { id: "fund-credit", label: "Fund Credit" },
+      { id: "payout", label: "Payout" },
+      { id: "investments", label: "Investments" },
+    ],
+  },
   { id: "communication", label: "Communication", icon: FiMessageSquare, hasSubmenu: true },
   { id: "tools", label: "Tools", icon: FiTool, hasSubmenu: true },
   { id: "members", label: "Members Management", icon: FiUsers, hasSubmenu: true },
@@ -36,7 +57,7 @@ const navItems = [
 ];
 
 function Sidebar({ isOpen, onClose }) {
-  const [expanded, setExpanded] = useState({ dashboard: true });
+  const [expanded, setExpanded] = useState({ dashboard: true, business: true, financial: true });
 
   const toggleExpand = (id) => {
     setExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -56,13 +77,13 @@ function Sidebar({ isOpen, onClose }) {
       <nav className="sidebar-nav">
         {navItems.map((item) => {
           const Icon = item.icon;
-          const isOpen = expanded[item.id];
+          const isItemExpanded = expanded[item.id];
 
           return (
             <div key={item.id} className="nav-group">
               <button
                 type="button"
-                className={`nav-item ${item.children ? "nav-item--parent" : ""} ${isOpen && item.children ? "nav-item--active" : ""}`}
+                className={`nav-item ${item.children ? "nav-item--parent" : ""} ${isItemExpanded && item.children ? "nav-item--expanded" : ""}`}
                 onClick={() => item.children && toggleExpand(item.id)}
               >
                 <span className="nav-item-left">
@@ -70,13 +91,13 @@ function Sidebar({ isOpen, onClose }) {
                   <span>{item.label}</span>
                 </span>
                 {item.children ? (
-                  isOpen ? <FiChevronDown className="nav-chevron" /> : <FiChevronRight className="nav-chevron" />
+                  isItemExpanded ? <FiChevronDown className="nav-chevron" /> : <FiChevronRight className="nav-chevron" />
                 ) : (
                   item.hasSubmenu && <FiChevronRight className="nav-chevron" />
                 )}
               </button>
 
-              {item.children && isOpen && (
+              {item.children && isItemExpanded && (
                 <div className="nav-subitems">
                   {item.children.map((child) => (
                     <button
