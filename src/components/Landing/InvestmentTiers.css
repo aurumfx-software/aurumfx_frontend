@@ -1,0 +1,138 @@
+.tiers-section {
+  padding: 90px 24px;
+  background: #fdfbf7;
+}
+
+.tiers-container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.tiers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  align-items: stretch;
+}
+
+.tier-card {
+  position: relative;
+  background: #ffffff;
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: 18px;
+  padding: 36px 28px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  box-shadow: 0 4px 14px rgba(212, 175, 55, 0.08);
+}
+
+.tier-card:hover {
+  transform: translateY(-4px);
+  border-color: #d4af37;
+  box-shadow: 0 16px 36px rgba(212, 175, 55, 0.2);
+}
+
+.tier-card.popular {
+  border: 2px solid #d4af37;
+  background: #ffffff;
+  box-shadow: 0 12px 30px rgba(212, 175, 55, 0.22);
+}
+
+.popular-badge {
+  position: absolute;
+  top: -14px;
+  right: 28px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 14px;
+  background: linear-gradient(135deg, #f5d061, #e5b80b);
+  color: #1e1b10;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 999px;
+  box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3);
+}
+
+.tier-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 12px;
+}
+
+.tier-price-box {
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.tier-range {
+  display: block;
+  font-size: 14px;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+
+.tier-return {
+  font-size: 26px;
+  font-weight: 700;
+  color: #966f0d;
+}
+
+.tier-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 32px;
+  flex: 1;
+}
+
+.tier-features li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #475569;
+}
+
+.check-icon {
+  color: #d4af37;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.tier-btn {
+  display: block;
+  text-align: center;
+  padding: 14px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.tier-btn.primary {
+  background: linear-gradient(135deg, #f5d061 0%, #e5b80b 50%, #c59b27 100%);
+  color: #1e1b10;
+  box-shadow: 0 6px 18px rgba(212, 175, 55, 0.35);
+}
+
+.tier-btn.primary:hover {
+  background: linear-gradient(135deg, #ffe082 0%, #f5d061 50%, #d4af37 100%);
+  transform: translateY(-2px);
+}
+
+.tier-btn.secondary {
+  background: rgba(212, 175, 55, 0.08);
+  border: 1.5px solid #d4af37;
+  color: #966f0d;
+}
+
+.tier-btn.secondary:hover {
+  background: rgba(212, 175, 55, 0.18);
+  color: #785806;
+}

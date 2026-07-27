@@ -1,0 +1,136 @@
+.dashboard-header {
+  height: 64px;
+  background: #fff;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 28px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.header-menu-btn {
+  display: none;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  background: #fff;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #555;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.header-spacer {
+  flex: 1;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-currency {
+  padding: 8px 16px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+}
+
+.header-currency:hover {
+  background: #fafafa;
+}
+
+.currency-short {
+  display: none;
+}
+
+.header-icon-btn {
+  width: 38px;
+  height: 38px;
+  border: 1px solid #eee;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #555;
+  font-size: 17px;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+
+.header-icon-btn:hover {
+  background: #fafafa;
+}
+
+.header-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #ffc52d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+@media (max-width: 1024px) {
+  .header-menu-btn {
+    display: flex;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-header {
+    padding: 0 16px;
+  }
+
+  .header-actions {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-header {
+    height: 56px;
+    padding: 0 12px;
+  }
+
+  .currency-full {
+    display: none;
+  }
+
+  .currency-short {
+    display: inline;
+  }
+
+  .header-currency {
+    padding: 8px 12px;
+  }
+
+  .header-settings-btn {
+    display: none;
+  }
+
+  .header-icon-btn,
+  .header-avatar {
+    width: 34px;
+    height: 34px;
+    font-size: 15px;
+  }
+}
