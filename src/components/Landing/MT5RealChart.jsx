@@ -5,20 +5,13 @@ import {
   FiMaximize2,
   FiMinimize2,
   FiActivity,
-  FiDollarSign,
   FiClock,
   FiZap,
-  FiCheckCircle,
 } from "react-icons/fi";
 import "./MT5RealChart.css";
 
 const SYMBOLS = [
-  { id: "XAUUSD", name: "Gold / USD", tvSymbol: "OANDA:XAUUSD", price: "2,341.80", change: "+1.24%", up: true, category: "Metals", spread: "0.20", bid: "2,341.70", ask: "2,341.90" },
-  { id: "XAGUSD", name: "Silver / USD", tvSymbol: "OANDA:XAGUSD", price: "28.65", change: "+0.87%", up: true, category: "Metals", spread: "0.02", bid: "28.64", ask: "28.66" },
-  { id: "EURUSD", name: "EUR / USD", tvSymbol: "FX:EURUSD", price: "1.0842", change: "-0.18%", up: false, category: "Forex", spread: "0.0001", bid: "1.0841", ask: "1.0843" },
-  { id: "GBPUSD", name: "GBP / USD", tvSymbol: "FX:GBPUSD", price: "1.2715", change: "+0.32%", up: true, category: "Forex", spread: "0.0002", bid: "1.2714", ask: "1.2716" },
-  { id: "USDJPY", name: "USD / JPY", tvSymbol: "FX:USDJPY", price: "157.42", change: "+0.09%", up: true, category: "Forex", spread: "0.02", bid: "157.41", ask: "157.43" },
-  { id: "BTCUSD", name: "Bitcoin / USD", tvSymbol: "BINANCE:BTCUSDT", price: "67,420.50", change: "-0.54%", up: false, category: "Crypto", spread: "1.50", bid: "67,419.75", ask: "67,421.25" },
+  { id: "XAUUSD", name: "Gold / USD", tvSymbol: "OANDA:XAUUSD", price: "2,341.80", change: "+1.24%", up: true, category: "Metals", spread: "0.20", bid: "2,341.70", ask: "2,341.90" }
 ];
 
 const TIMEFRAMES = [
@@ -34,26 +27,28 @@ function MT5RealChart() {
   const [selectedSymbol, setSelectedSymbol] = useState(SYMBOLS[0]);
   const [selectedInterval, setSelectedInterval] = useState("D");
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [orderVolume, setOrderVolume] = useState("0.10");
-  const [orderNotification, setOrderNotification] = useState(null);
 
   const containerRef = useRef(null);
 
   useEffect(() => {
     if (!containerRef.current) return;
 
+    // Clear previous widget
     containerRef.current.innerHTML = "";
 
-    const widgetContainer = document.createElement("div");
-    widgetContainer.className = "tradingview-widget-container__widget";
-    widgetContainer.style.height = "100%";
-    widgetContainer.style.width = "100%";
-    containerRef.current.appendChild(widgetContainer);
+    const widget = document.createElement("div");
+    widget.className = "tradingview-widget-container__widget";
+    widget.style.width = "100%";
+    widget.style.height = "100%";
+
+    containerRef.current.appendChild(widget);
 
     const script = document.createElement("script");
-    script.src = "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
-    script.type = "text/javascript";
+    script.src =
+      "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
     script.async = true;
+    script.type = "text/javascript";
+
     script.innerHTML = JSON.stringify({
       autosize: true,
       symbol: selectedSymbol.tvSymbol,
@@ -62,41 +57,24 @@ function MT5RealChart() {
       theme: "light",
       style: "1",
       locale: "en",
-      enable_publishing: false,
-      backgroundColor: "rgba(255, 255, 255, 1)",
-      gridColor: "rgba(0, 0, 0, 0.05)",
+      allow_symbol_change: true,
       hide_top_toolbar: false,
+      hide_side_toolbar: false,
       hide_legend: false,
       save_image: false,
-      calendar: false,
-      hide_side_toolbar: false,
-      allow_symbol_change: true,
+      backgroundColor: "#ffffff",
+      gridColor: "rgba(0,0,0,0.05)",
       support_host: "https://www.tradingview.com",
     });
 
-    const container = containerRef.current;
-    if (container) {
-      container.appendChild(script);
-    }
+    widget.appendChild(script);
 
     return () => {
-      if (container) {
-        container.innerHTML = "";
+      if (containerRef.current) {
+        containerRef.current.innerHTML = "";
       }
     };
   }, [selectedSymbol, selectedInterval]);
-
-  const handleOrder = (type) => {
-    const actionText = type === "buy" ? "BUY" : "SELL";
-    setOrderNotification({
-      type,
-      message: `Demo ${actionText} order executed: ${orderVolume} Lot(s) of ${selectedSymbol.id} @ ${type === "buy" ? selectedSymbol.ask : selectedSymbol.bid}`,
-    });
-
-    setTimeout(() => {
-      setOrderNotification(null);
-    }, 4000);
-  };
 
   return (
     <section className={`mt5-section ${isFullscreen ? "fullscreen-mode" : ""}`} id="mt5-chart">
@@ -111,7 +89,7 @@ function MT5RealChart() {
               MT5 <span>Live Terminal Chart</span>
             </h2>
             <p>
-              Professional candlestick charting with real-time liquidity, spread monitoring, and instant order execution.
+              Professional candlestick charting with real-time liquidity, spread monitoring, and technical indicators.
             </p>
           </div>
 
@@ -167,7 +145,7 @@ function MT5RealChart() {
 
           {/* Price Bar & Live Ticker */}
           <div className="mt5-stats-bar">
-            <div className="stat-main">
+            {/* <div className="stat-main">
               <span className="stat-symbol">{selectedSymbol.name}</span>
               <div className="stat-price-wrap">
                 <span className="stat-price">${selectedSymbol.price}</span>
@@ -176,9 +154,9 @@ function MT5RealChart() {
                   {selectedSymbol.change}
                 </span>
               </div>
-            </div>
+            </div> */}
 
-            <div className="stat-grid">
+            {/* <div className="stat-grid">
               <div className="stat-box">
                 <span className="stat-title">Bid Price</span>
                 <strong className="stat-val bid">${selectedSymbol.bid}</strong>
@@ -195,90 +173,15 @@ function MT5RealChart() {
                 <span className="stat-title">Execution</span>
                 <strong className="stat-val instant">STP / ECN Live</strong>
               </div>
-            </div>
+            </div> */}
           </div>
 
-          {/* Notification Alert */}
-          {orderNotification && (
-            <div className={`mt5-order-toast ${orderNotification.type}`}>
-              <FiCheckCircle />
-              <span>{orderNotification.message}</span>
-            </div>
-          )}
-
-          {/* Chart & Execution Panel Split */}
+          {/* Chart Viewport */}
           <div className="mt5-chart-layout">
-            {/* Real TradingView MT5 Chart Container */}
             <div className="mt5-chart-viewport" ref={containerRef}>
+              <p>Loading MT5 Real-Time Data Stream for {selectedSymbol.id}...</p>
               <div className="mt5-chart-placeholder">
                 <FiActivity className="spin-icon" />
-                <p>Loading MT5 Real-Time Data Stream for {selectedSymbol.id}...</p>
-              </div>
-            </div>
-
-            {/* Quick Order Panel */}
-            <div className="mt5-order-panel">
-              <div className="panel-head">
-                <FiDollarSign />
-                <h3>Quick Order</h3>
-              </div>
-
-              <div className="panel-body">
-                <div className="form-group">
-                  <label htmlFor="volume-select">Lot Size (Volume)</label>
-                  <div className="volume-selector">
-                    {["0.01", "0.10", "0.50", "1.00"].map((v) => (
-                      <button
-                        type="button"
-                        key={v}
-                        className={`vol-btn ${orderVolume === v ? "active" : ""}`}
-                        onClick={() => setOrderVolume(v)}
-                      >
-                        {v}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="price-quote-box">
-                  <div className="quote-col sell">
-                    <span className="q-label">SELL</span>
-                    <span className="q-price">${selectedSymbol.bid}</span>
-                  </div>
-                  <div className="quote-divider" />
-                  <div className="quote-col buy">
-                    <span className="q-label">BUY</span>
-                    <span className="q-price">${selectedSymbol.ask}</span>
-                  </div>
-                </div>
-
-                <div className="order-action-buttons">
-                  <button
-                    type="button"
-                    className="btn-order btn-sell"
-                    onClick={() => handleOrder("sell")}
-                  >
-                    SELL {orderVolume} Lot
-                  </button>
-                  <button
-                    type="button"
-                    className="btn-order btn-buy"
-                    onClick={() => handleOrder("buy")}
-                  >
-                    BUY {orderVolume} Lot
-                  </button>
-                </div>
-
-                <div className="panel-footer-info">
-                  <div>
-                    <span>Margin Req:</span>
-                    <strong>${(parseFloat(orderVolume) * 200).toFixed(2)}</strong>
-                  </div>
-                  <div>
-                    <span>Leverage:</span>
-                    <strong>1:500</strong>
-                  </div>
-                </div>
               </div>
             </div>
           </div>

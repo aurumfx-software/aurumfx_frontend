@@ -310,8 +310,9 @@
 /* Chart Layout */
 .mt5-chart-layout {
   display: grid;
-  grid-template-columns: 1fr 300px;
+  grid-template-columns: 1fr;
   min-height: 520px;
+  width: 100%;
 }
 
 .mt5-chart-viewport {
