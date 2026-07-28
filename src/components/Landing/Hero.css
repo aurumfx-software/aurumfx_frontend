@@ -2,18 +2,21 @@
   position: relative;
   min-height: 100vh;
   padding: 140px 24px 80px;
-  background: #ffffff;
+  background: radial-gradient(circle at 80% 25%, rgba(255, 223, 0, 0.16) 0%, rgba(245, 208, 97, 0.08) 35%, transparent 70%),
+    radial-gradient(circle at 20% 75%, rgba(212, 175, 55, 0.1) 0%, transparent 60%),
+    linear-gradient(180deg, #fffdf7 0%, #ffffff 100%);
   overflow: hidden;
 }
 
 .hero-glow {
   position: absolute;
-  top: -20%;
-  right: -10%;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(229, 184, 11, 0.12) 0%, transparent 70%);
+  top: -15%;
+  right: -5%;
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.22) 0%, rgba(229, 184, 11, 0.08) 50%, transparent 75%);
   pointer-events: none;
+  filter: blur(50px);
 }
 
 .hero-inner {
@@ -221,24 +224,152 @@
   align-items: center;
   justify-content: center;
   position: relative;
-  overflow: hidden;
+  padding: 44px;
+}
+
+/* Golden Ambient Radial Glow */
+.gold-glow-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.35) 0%, rgba(229, 184, 11, 0.15) 50%, transparent 75%);
+  border-radius: 50%;
+  filter: blur(40px);
+  pointer-events: none;
+  animation: goldPulse 4s ease-in-out infinite alternate;
+  z-index: 0;
+}
+
+.gold-glow-ring.secondary {
+  width: 480px;
+  height: 480px;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.2) 0%, transparent 70%);
+  filter: blur(60px);
+  animation: goldPulse 6s ease-in-out infinite alternate-reverse;
+}
+
+/* Golden Sparkle 4-Point Stars */
+.sparkle-star {
+  position: absolute;
+  color: #ffe082;
+  filter: drop-shadow(0 0 10px #ffd700) drop-shadow(0 0 20px #ffb300);
+  pointer-events: none;
+  z-index: 3;
+  animation: starTwinkle 2.5s ease-in-out infinite alternate;
+}
+
+.star-1 { top: 6%; left: 14%; width: 32px; height: 32px; animation-delay: 0s; }
+.star-2 { top: 16%; right: 10%; width: 38px; height: 38px; animation-delay: 0.6s; }
+.star-3 { bottom: 16%; left: 8%; width: 32px; height: 32px; animation-delay: 1.2s; }
+.star-4 { bottom: 10%; right: 12%; width: 28px; height: 28px; animation-delay: 1.8s; }
+.star-5 { top: 48%; left: 3%; width: 26px; height: 26px; animation-delay: 0.9s; }
+
+@keyframes starTwinkle {
+  0% { transform: scale(0.5) rotate(0deg); opacity: 0.2; filter: drop-shadow(0 0 4px #ffd700); }
+  50% { transform: scale(1.3) rotate(45deg); opacity: 1; filter: drop-shadow(0 0 18px #ffd700) drop-shadow(0 0 32px #ffab00); }
+  100% { transform: scale(0.6) rotate(90deg); opacity: 0.3; filter: drop-shadow(0 0 6px #ffd700); }
+}
+
+/* Floating Sparkle Particles */
+.gold-sparkle {
+  position: absolute;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 12px #ffd700, 0 0 24px #ffe082, 0 0 36px #ffb300;
+  pointer-events: none;
+  animation: sparkleFloat 3s ease-in-out infinite alternate;
+  z-index: 2;
+}
+
+.sparkle-1 { top: 12%; left: 22%; width: 10px; height: 10px; animation-delay: 0s; }
+.sparkle-2 { top: 22%; right: 20%; width: 12px; height: 12px; animation-delay: 0.5s; }
+.sparkle-3 { bottom: 22%; left: 18%; width: 8px; height: 8px; animation-delay: 1.1s; }
+.sparkle-4 { bottom: 14%; right: 25%; width: 11px; height: 11px; animation-delay: 1.6s; }
+.sparkle-5 { top: 38%; left: 12%; width: 9px; height: 9px; animation-delay: 2.1s; }
+.sparkle-6 { top: 42%; right: 14%; width: 10px; height: 10px; animation-delay: 0.3s; }
+.sparkle-7 { top: 75%; left: 35%; width: 8px; height: 8px; animation-delay: 1.4s; }
+.sparkle-8 { top: 10%; right: 40%; width: 12px; height: 12px; animation-delay: 2.4s; }
+
+/* Light Rays */
+.gold-light-rays {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  background: conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(255, 215, 0, 0.08) 30deg, transparent 60deg, rgba(255, 215, 0, 0.08) 120deg, transparent 150deg, rgba(255, 215, 0, 0.08) 210deg, transparent 240deg);
+  filter: blur(20px);
+  pointer-events: none;
+  animation: spinRays 25s linear infinite;
+  z-index: 0;
+}
+
+@keyframes goldPulse {
+  0% {
+    transform: translate(-50%, -50%) scale(0.92);
+    opacity: 0.7;
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(1.15);
+    opacity: 1;
+  }
+}
+
+@keyframes sparkleFloat {
+  0% {
+    transform: translateY(0) scale(0.8);
+    opacity: 0.4;
+  }
+
+  100% {
+    transform: translateY(-12px) scale(1.3);
+    opacity: 1;
+  }
+}
+
+@keyframes spinRays {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
 }
 
 .terminal-gold-img {
-  width: 100%;
-  max-width: 680px;
+  position: relative;
+  z-index: 2;
+  width: 120%;
+  max-width: 900px;
   height: auto;
   object-fit: contain;
   mix-blend-mode: multiply;
-  -webkit-mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 1) 55%, rgba(0, 0, 0, 0) 88%);
-  mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 1) 55%, rgba(0, 0, 0, 0) 88%);
-  filter: contrast(1.05) brightness(1.02) drop-shadow(0 16px 32px rgba(212, 175, 55, 0.3));
+  -webkit-mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 1) 65%, rgba(0, 0, 0, 0) 92%);
+  mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 1) 65%, rgba(0, 0, 0, 0) 92%);
+  filter: contrast(1.06) brightness(1.03) drop-shadow(0 25px 50px rgba(212, 175, 55, 0.45));
+  animation: floatImage 5s ease-in-out infinite alternate;
   transition: transform 0.4s ease, filter 0.4s ease;
 }
 
+@keyframes floatImage {
+  0% {
+    transform: translateY(0px);
+  }
+
+  100% {
+    transform: translateY(-10px);
+  }
+}
+
 .terminal-gold-img:hover {
-  transform: scale(1.04);
-  filter: contrast(1.08) brightness(1.04) drop-shadow(0 20px 40px rgba(212, 175, 55, 0.4));
+  transform: translateY(-10px) scale(1.04);
+  filter: contrast(1.08) brightness(1.04) drop-shadow(0 30px 60px rgba(212, 175, 55, 0.65));
 }
 
 .terminal-price-row {

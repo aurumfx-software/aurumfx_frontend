@@ -1,7 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 import {
-  FiTrendingUp,
-  FiTrendingDown,
   FiMaximize2,
   FiMinimize2,
   FiActivity,
@@ -31,17 +29,18 @@ function MT5RealChart() {
   const containerRef = useRef(null);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    const container = containerRef.current;
+    if (!container) return;
 
     // Clear previous widget
-    containerRef.current.innerHTML = "";
+    container.innerHTML = "";
 
     const widget = document.createElement("div");
     widget.className = "tradingview-widget-container__widget";
     widget.style.width = "100%";
     widget.style.height = "100%";
 
-    containerRef.current.appendChild(widget);
+    container.appendChild(widget);
 
     const script = document.createElement("script");
     script.src =
@@ -70,8 +69,8 @@ function MT5RealChart() {
     widget.appendChild(script);
 
     return () => {
-      if (containerRef.current) {
-        containerRef.current.innerHTML = "";
+      if (container) {
+        container.innerHTML = "";
       }
     };
   }, [selectedSymbol, selectedInterval]);
