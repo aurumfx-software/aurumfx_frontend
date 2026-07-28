@@ -1,5 +1,5 @@
 import { useState } from "react";
-import {  FiTrendingUp, FiDollarSign, FiCalendar, FiArrowRight } from "react-icons/fi";
+import { FiTrendingUp, FiDollarSign, FiArrowRight } from "react-icons/fi";
 import "./ReturnsCalculator.css";
 
 function ReturnsCalculator() {

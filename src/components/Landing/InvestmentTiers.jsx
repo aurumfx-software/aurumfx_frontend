@@ -1,4 +1,4 @@
-import { FiCheck, FiStar, FiZap, FiShield } from "react-icons/fi";
+import { FiCheck, FiStar, FiZap } from "react-icons/fi";
 import "./InvestmentTiers.css";
 
 const tiers = [
