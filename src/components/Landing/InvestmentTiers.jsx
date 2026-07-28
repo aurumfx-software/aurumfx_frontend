@@ -4,7 +4,7 @@ import "./InvestmentTiers.css";
 const tiers = [
   {
     name: "Starter Tier",
-    range: "₹5,000 – ₹24,999",
+    range: "₹5,000 – ₹195,000",
     returnRate: "14% Monthly",
     popular: false,
     features: [
@@ -17,7 +17,7 @@ const tiers = [
   },
   {
     name: "Growth Tier",
-    range: "₹25,000 – ₹99,999",
+    range: "₹20,0000 – ₹49,5000",
     returnRate: "14% Monthly",
     popular: true,
     features: [
@@ -31,7 +31,7 @@ const tiers = [
   },
   {
     name: "Premium Tier",
-    range: "₹100,000+",
+    range: "₹500,000+",
     returnRate: "14% Monthly",
     popular: false,
     features: [
