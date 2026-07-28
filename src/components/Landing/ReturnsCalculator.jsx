@@ -4,10 +4,16 @@ import "./ReturnsCalculator.css";
 
 function ReturnsCalculator() {
   const [amount, setAmount] = useState(5000);
+  const [tenure, setTenure] = useState(10); // 10 or 30 months
+
+  const plan =
+    tenure === 30
+      ? { months: 30, rate: 0.08, ratePercent: "8%", roi: 240 }
+      : { months: 10, rate: 0.14, ratePercent: "14%", roi: 140 };
 
   const parsedAmount = Math.max(0, Number(amount) || 0);
-  const monthlyBonus = Math.round(parsedAmount * 0.14);
-  const totalReturns = Math.round(monthlyBonus * 10);
+  const monthlyBonus = Math.round(parsedAmount * plan.rate);
+  const totalReturns = Math.round(monthlyBonus * plan.months);
   const finalPayout = parsedAmount + totalReturns;
 
   const quickAmounts = [5000, 10000, 25000, 50000, 100000];
@@ -16,34 +22,47 @@ function ReturnsCalculator() {
     <section className="calculator-section" id="calculator">
       <div className="calculator-container">
         <div className="section-head">
-          <div className="section-badge">
-            {/* <FiCalculator /> */}
-             Profit Estimation
-          </div>
+          <div className="section-badge">Profit Estimation</div>
           <h2>
             Calculate Your <span>Gold Returns</span>
           </h2>
           <p>
-            Enter your investment amount to calculate your projected 14% monthly payouts over the 10-month tenure.
+            Choose your preferred tenure and enter your investment amount to
+            calculate your projected payouts.
           </p>
         </div>
 
         <div className="calculator-card">
           <div className="calculator-left">
+            {/* Tenure Plan Selector */}
+
             <div className="form-group">
               <label htmlFor="inv-amount">Investment Amount (₹)</label>
-              <div className="input-wrap">
-                <span className="currency-symbol">₹</span>
-                <input
-                  id="inv-amount"
-                  type="number"
-                  min="5000"
-                  step="1000"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  placeholder="Enter investment amount (Min ₹5,000)"
-                />
+
+              <div className="input-row">
+                <div className="input-wrap">
+                  <span className="currency-symbol">₹</span>
+                  <input
+                    id="inv-amount"
+                    type="number"
+                    min="5000"
+                    step="1000"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    placeholder="Enter investment amount"
+                  />
+                </div>
+
+                <select
+                  className="tenure-dropdown"
+                  value={tenure}
+                  onChange={(e) => setTenure(Number(e.target.value))}
+                >
+                  <option value={10}>10 Months (14% / Month)</option>
+                  <option value={30}>30 Months (8% / Month)</option>
+                </select>
               </div>
+
               <span className="input-hint">Minimum investment: ₹5,000</span>
             </div>
 
@@ -54,7 +73,9 @@ function ReturnsCalculator() {
                   <button
                     type="button"
                     key={val}
-                    className={`quick-btn ${parsedAmount === val ? "active" : ""}`}
+                    className={`quick-btn ${
+                      parsedAmount === val ? "active" : ""
+                    }`}
                     onClick={() => setAmount(val)}
                   >
                     ₹{val.toLocaleString()}
@@ -66,7 +87,9 @@ function ReturnsCalculator() {
             <div className="calc-note">
               <FiTrendingUp className="note-icon" />
               <p>
-                That's <strong>₹{monthlyBonus.toLocaleString()}</strong> per month for 10 months on your <strong>₹{parsedAmount.toLocaleString()}</strong> investment!
+                That's <strong>₹{monthlyBonus.toLocaleString()}</strong> per
+                month for {plan.months} months ({plan.ratePercent}/mo) on your{" "}
+                <strong>₹{parsedAmount.toLocaleString()}</strong> investment!
               </p>
             </div>
           </div>
@@ -80,12 +103,16 @@ function ReturnsCalculator() {
 
               <div className="result-row">
                 <div className="res-item">
-                  <span className="res-title">Monthly Return (14%)</span>
-                  <strong className="res-value gold">₹{monthlyBonus.toLocaleString()} / mo</strong>
+                  <span className="res-title">
+                    Monthly Return ({plan.ratePercent})
+                  </span>
+                  <strong className="res-value gold">
+                    ₹{monthlyBonus.toLocaleString()} / mo
+                  </strong>
                 </div>
                 <div className="res-item">
                   <span className="res-title">Tenure Duration</span>
-                  <strong className="res-value">10 Months</strong>
+                  <strong className="res-value">{plan.months} Months</strong>
                 </div>
               </div>
 
@@ -93,10 +120,14 @@ function ReturnsCalculator() {
 
               <div className="total-box">
                 <div>
-                  <span className="tot-label">Total Profits (10 Months)</span>
-                  <h3 className="tot-value">₹{totalReturns.toLocaleString()}</h3>
+                  <span className="tot-label">
+                    Total Profit ({plan.months} Months)
+                  </span>
+                  <h3 className="tot-value">
+                    ₹{totalReturns.toLocaleString()}
+                  </h3>
                 </div>
-                <span className="roi-badge">+140% ROI</span>
+                <span className="roi-badge">+{plan.roi}% ROI</span>
               </div>
 
               <div className="payout-box">
