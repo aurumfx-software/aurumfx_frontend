@@ -60,7 +60,7 @@
   background-clip: text;
 }
 
-.hero-copy > p {
+.hero-copy>p {
   font-size: 18px;
   line-height: 1.7;
   color: #475569;
@@ -217,7 +217,28 @@
 }
 
 .terminal-body {
-  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.terminal-gold-img {
+  width: 100%;
+  max-width: 680px;
+  height: auto;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  -webkit-mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 1) 55%, rgba(0, 0, 0, 0) 88%);
+  mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 1) 55%, rgba(0, 0, 0, 0) 88%);
+  filter: contrast(1.05) brightness(1.02) drop-shadow(0 16px 32px rgba(212, 175, 55, 0.3));
+  transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+.terminal-gold-img:hover {
+  transform: scale(1.04);
+  filter: contrast(1.08) brightness(1.04) drop-shadow(0 20px 40px rgba(212, 175, 55, 0.4));
 }
 
 .terminal-price-row {
@@ -342,7 +363,7 @@
     text-align: center;
   }
 
-  .hero-copy > p {
+  .hero-copy>p {
     margin-left: auto;
     margin-right: auto;
   }

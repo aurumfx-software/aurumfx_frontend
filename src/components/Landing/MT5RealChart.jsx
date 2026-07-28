@@ -74,11 +74,14 @@ function MT5RealChart() {
       support_host: "https://www.tradingview.com",
     });
 
-    containerRef.current.appendChild(script);
+    const container = containerRef.current;
+    if (container) {
+      container.appendChild(script);
+    }
 
     return () => {
-      if (containerRef.current) {
-        containerRef.current.innerHTML = "";
+      if (container) {
+        container.innerHTML = "";
       }
     };
   }, [selectedSymbol, selectedInterval]);
