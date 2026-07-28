@@ -26,8 +26,8 @@ const CTASection = () => {
             <span>Minimum Deposit</span>
           </div>
           <div className="stat-box">
-            <h3>14%</h3>
-            <span>Monthly Returns</span>
+            <h3>14% & 8%</h3>
+            <span>Monthly Return</span>
           </div>
           <div className="stat-box">
             <h3>24/7</h3>
