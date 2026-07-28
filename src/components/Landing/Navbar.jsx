@@ -48,15 +48,6 @@ const Navbar = () => {
           </div>
         </nav>
 
-        <div className="landing-nav-actions">
-          <Link to="/login" className="nav-login">
-            Log In
-          </Link>
-          <Link to="/register" className="nav-signup">
-            Start Trading
-          </Link>
-        </div>
-
         <button
           type="button"
           className="landing-menu-toggle"
