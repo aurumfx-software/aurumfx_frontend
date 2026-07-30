@@ -12,10 +12,10 @@ const CTASection = () => {
         </p>
 
         <div className="cta-buttons">
-          <Link to="/register" className="cta-primary">
+          <Link to="/user/register" className="cta-primary">
             Get Started Free
           </Link>
-          <Link to="/login" className="cta-secondary">
+          <Link to="/user/login" className="cta-secondary">
             Sign In
           </Link>
         </div>

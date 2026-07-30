@@ -16,7 +16,7 @@ export const loginApi = async (userId, password, requiredRole = null) => {
 
     const { token, user, role, redirect } = response.data;
     const userRole = role || user?.role || requiredRole || "user";
-    const redirectPath = redirect || (userRole === "admin" ? "/admin/dashboard" : "/dashboard");
+    const redirectPath = redirect || (userRole === "admin" ? "/admin/dashboard" : "/user/dashboard");
 
     localStorage.setItem("token", token || `token-${userRole}`);
     localStorage.setItem("role", userRole);

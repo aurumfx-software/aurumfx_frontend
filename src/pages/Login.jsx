@@ -46,7 +46,7 @@ function Login() {
     <div className="login-page">
       <div className="top-right">
         <span style={{ marginTop: "15px" }}>Don't have an account?</span>
-        <Link to="/register" className="register-btn">
+        <Link to="/user/register" className="register-btn">
           Get Started
         </Link>
       </div>

@@ -11,7 +11,7 @@ export const DEMO_USERS = [
     userId: "user",
     password: "user123",
     role: "user",
-    redirect: "/dashboard",
+    redirect: "/user/dashboard",
   },
 ];
 

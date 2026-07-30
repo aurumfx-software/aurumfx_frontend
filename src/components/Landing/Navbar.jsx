@@ -39,10 +39,10 @@ const Navbar = () => {
           ))}
 
           <div className="landing-mobile-actions">
-            <Link to="/login" className="nav-login" onClick={closeMenu}>
+            <Link to="/user/login" className="nav-login" onClick={closeMenu}>
               Log In
             </Link>
-            <Link to="/register" className="nav-signup" onClick={closeMenu}>
+            <Link to="/user/register" className="nav-signup" onClick={closeMenu}>
               Start Trading
             </Link>
           </div>

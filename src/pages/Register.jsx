@@ -98,7 +98,7 @@ const Register = () => {
       if (result.success) {
         setSuccessMessage(result.message || "Registration Successful! Redirecting to login...");
         setTimeout(() => {
-          navigate("/login");
+          navigate("/user/login");
         }, 1500);
       } else {
         setApiError(result.error);

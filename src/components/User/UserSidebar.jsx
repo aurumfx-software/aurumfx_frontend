@@ -16,15 +16,15 @@ import logo from "../../assets/logo.png";
 import "./UserSidebar.css";
 
 const userNavItems = [
-  { id: "dashboard", label: "Dashboard", icon: FiGrid, path: "/dashboard" },
+  { id: "dashboard", label: "Dashboard", icon: FiGrid, path: "/user/dashboard" },
   {
     id: "business",
     label: "Business",
     icon: FiBriefcase,
     hasSubmenu: true,
     children: [
-      { id: "club", label: "Club", path: "/business/club" },
-      { id: "structure", label: "Structure", path: "/business/structure" },
+      { id: "club", label: "Club", path: "/user/business/club" },
+      { id: "structure", label: "Structure", path: "/user/business/structure" },
     ],
   },
   {
@@ -33,8 +33,8 @@ const userNavItems = [
     icon: FiDollarSign,
     hasSubmenu: true,
     children: [
-      { id: "income", label: "Income", path: "/financial/income" },
-      { id: "withdrawals", label: "Withdrawals", path: "/financial/withdrawals" },
+      { id: "income", label: "Income", path: "/user/financial/income" },
+      { id: "withdrawals", label: "Withdrawals", path: "/user/financial/withdrawals" },
     ],
   },
   {
@@ -43,7 +43,7 @@ const userNavItems = [
     icon: FiAward,
     hasSubmenu: true,
   },
-  { id: "profile", label: "My Profile", icon: FiUser, path: "/profile" },
+  { id: "profile", label: "My Profile", icon: FiUser, path: "/user/profile" },
   {
     id: "help",
     label: "Help Center",
@@ -72,7 +72,7 @@ function UserSidebar({ isOpen, onClose, user }) {
       <aside className={`user-sidebar ${isOpen ? "user-sidebar--open" : ""}`}>
         {/* Header Logo */}
         <div className="user-sidebar-logo">
-          <Link to="/dashboard">
+          <Link to="/user/dashboard">
             <img src={logo} alt="AurumFX" className="sidebar-logo-img" />
           </Link>
           <button
@@ -107,7 +107,7 @@ function UserSidebar({ isOpen, onClose, user }) {
             const isExpanded = expanded[item.id];
             const isActive =
               location.pathname === item.path ||
-              (item.id === "dashboard" && location.pathname === "/dashboard");
+              (item.id === "dashboard" && (location.pathname === "/user/dashboard" || location.pathname === "/dashboard"));
 
             return (
               <div key={item.id} className="user-nav-group">

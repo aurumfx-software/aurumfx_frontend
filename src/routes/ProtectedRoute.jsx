@@ -5,11 +5,11 @@ function ProtectedRoute({ children, requiredRole }) {
   const { token, role } = getAuth();
 
   if (!token) {
-    return <Navigate to={requiredRole === "admin" ? "/admin/login" : "/login"} replace />;
+    return <Navigate to={requiredRole === "admin" ? "/admin/login" : "/user/login"} replace />;
   }
 
   if (requiredRole && role !== requiredRole) {
-    return <Navigate to={role === "admin" ? "/admin/dashboard" : "/dashboard"} replace />;
+    return <Navigate to={role === "admin" ? "/admin/dashboard" : "/user/dashboard"} replace />;
   }
 
   return children;
