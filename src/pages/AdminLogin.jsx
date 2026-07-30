@@ -40,12 +40,12 @@ function AdminLogin() {
 
   return (
     <div className="login-page">
-      <div className="top-right">
+      {/* <div className="top-right">
         <span>User Portal?</span>
         <Link to="/login" className="register-btn">
           User Login
         </Link>
-      </div>
+      </div> */}
 
       <div className="login-card">
         <img src={logo} alt="AurumFX Admin" className="logo" />

@@ -39,12 +39,11 @@ function Login() {
   return (
     <div className="login-page">
       <div className="top-right">
-        <span>Don&apos;t have an account?</span>
+        <span style={{ marginTop: "15px" }}>Don't have an account?</span>
         <Link to="/register" className="register-btn">
           Get Started
         </Link>
       </div>
-
       <div className="login-card">
         <img src={logo} alt="AurumFX Logo" className="logo" />
 
@@ -123,7 +122,7 @@ function Login() {
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 }
 
