@@ -1,10 +1,13 @@
 .user-header {
-  height: 70px;
-  background: transparent;
+  height: 72px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(241, 245, 249, 0.8);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 30px;
+  padding: 0 32px;
   position: sticky;
   top: 0;
   z-index: 90;
@@ -17,16 +20,21 @@
 
 .user-header-menu-btn {
   display: none;
-  background: white;
-  border: 1px solid #eaeaea;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
   font-size: 20px;
-  color: #333;
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
+  color: #0f172a;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
   cursor: pointer;
   align-items: center;
   justify-content: center;
+  transition: all 0.2s;
+}
+
+.user-header-menu-btn:hover {
+  background: #f8fafc;
 }
 
 .user-header-right {
@@ -37,44 +45,52 @@
 }
 
 .currency-selector-btn {
-  background: transparent;
-  border: none;
-  font-size: 14px;
-  font-weight: 600;
-  color: #4a5568;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  font-size: 13px;
+  font-weight: 700;
+  color: #334155;
   cursor: pointer;
-  padding: 6px 12px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  transition: all 0.2s;
+}
+
+.currency-selector-btn:hover {
+  background: #ffffff;
+  border-color: #cbd5e1;
 }
 
 .header-icon-btn {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   background: #ffffff;
-  border: 1px solid #f0f0f0;
-  color: #5a6578;
-  font-size: 18px;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+  font-size: 19px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   position: relative;
-  transition: all 0.2s;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
 }
 
 .header-icon-btn:hover {
   background: #f8fafc;
-  color: #1a202c;
+  color: #0f172a;
+  transform: translateY(-1px);
 }
 
 .notification-dot {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 9px;
+  right: 9px;
   width: 8px;
   height: 8px;
-  background: #e53e3e;
+  background: #ef4444;
   border-radius: 50%;
   border: 2px solid #ffffff;
 }
@@ -83,15 +99,16 @@
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: #2d3748;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
   color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
+  font-weight: 800;
   font-size: 16px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+  cursor: pointer;
 }
 
 .header-user-avatar img {
@@ -102,9 +119,8 @@
 
 @media (max-width: 991px) {
   .user-header {
-    padding: 0 16px;
+    padding: 0 18px;
     background: #ffffff;
-    border-bottom: 1px solid #f0f0f0;
   }
 
   .user-header-menu-btn {
