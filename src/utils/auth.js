@@ -13,13 +13,20 @@ export const DEMO_USERS = [
   },
 ];
 
-export function login(userId, password) {
+export function login(userId, password, requiredRole = null) {
   const user = DEMO_USERS.find(
     (u) => u.userId === userId.trim() && u.password === password
   );
 
   if (!user) {
     return { success: false, error: "Invalid User ID or password" };
+  }
+
+  if (requiredRole && user.role !== requiredRole) {
+    return {
+      success: false,
+      error: `Access Denied: This portal is for ${requiredRole} accounts only.`,
+    };
   }
 
   localStorage.setItem("token", `demo-token-${user.role}`);

@@ -3,9 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { login, DEMO_USERS } from "../utils/auth";
 import logo from "../assets/logo.png";
-import "./Login.css";
+import "./AdminLogin.css";
 
-function Login() {
+function AdminLogin() {
   const navigate = useNavigate();
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
@@ -13,14 +13,14 @@ function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const userCred = DEMO_USERS.filter((u) => u.role === "user");
+  const adminCred = DEMO_USERS.find((u) => u.role === "admin");
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
-    const result = login(userId, password, "user");
+    const result = login(userId, password, "admin");
 
     if (result.success) {
       navigate(result.redirect);
@@ -30,34 +30,38 @@ function Login() {
     }
   };
 
-  const fillDemo = (cred) => {
-    setUserId(cred.userId);
-    setPassword(cred.password);
-    setError("");
+  const fillAdminDemo = () => {
+    if (adminCred) {
+      setUserId(adminCred.userId);
+      setPassword(adminCred.password);
+      setError("");
+    }
   };
 
   return (
     <div className="login-page">
       <div className="top-right">
-        <span>Don&apos;t have an account?</span>
-        <Link to="/register" className="register-btn">
-          Get Started
+        <span>User Portal?</span>
+        <Link to="/login" className="register-btn">
+          User Login
         </Link>
       </div>
 
       <div className="login-card">
-        <img src={logo} alt="AurumFX Logo" className="logo" />
+        <img src={logo} alt="AurumFX Admin" className="logo" />
 
-        <h1>Hi, Welcome Back!</h1>
-        <p>Sign in to AurumFX Trading Platform</p>
+        <div className="admin-pill">Admin Access</div>
+
+        <h1>Admin Login</h1>
+        <p>Sign in to AurumFX Control Center</p>
 
         <form onSubmit={handleSubmit}>
           <div className="input-group">
-            <label htmlFor="userId">User ID</label>
+            <label htmlFor="adminUserId">Admin User ID</label>
             <input
-              id="userId"
+              id="adminUserId"
               type="text"
-              placeholder="Enter User ID"
+              placeholder="Enter Admin ID"
               value={userId}
               onChange={(e) => setUserId(e.target.value)}
               autoComplete="username"
@@ -66,12 +70,12 @@ function Login() {
           </div>
 
           <div className="input-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="adminPassword">Admin Password</label>
             <div className="password-box">
               <input
-                id="password"
+                id="adminPassword"
                 type={showPassword ? "text" : "password"}
-                placeholder="Enter Password"
+                placeholder="Enter Admin Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 autoComplete="current-password"
@@ -95,36 +99,32 @@ function Login() {
               <input type="checkbox" defaultChecked />
               Remember me
             </label>
-            <Link to="/admin/login" className="admin-portal-link">
-              Admin Portal
-            </Link>
           </div>
 
           <button type="submit" className="login-btn" disabled={loading}>
-            {loading ? "Signing in..." : "Sign In"}
+            {loading ? "Signing in..." : "Sign In as Admin"}
           </button>
         </form>
 
-        <div className="demo-credentials">
-          <p className="demo-title">Demo user credentials</p>
-          <div className="demo-cards">
-            {userCred.map((cred) => (
+        {adminCred && (
+          <div className="demo-credentials">
+            <p className="demo-title">Admin demo credentials</p>
+            <div className="demo-cards" style={{ gridTemplateColumns: "1fr" }}>
               <button
-                key={cred.userId}
                 type="button"
                 className="demo-card"
-                onClick={() => fillDemo(cred)}
+                onClick={fillAdminDemo}
               >
-                <span className="demo-role">{cred.role}</span>
-                <span className="demo-id">{cred.userId}</span>
-                <span className="demo-pass">{cred.password}</span>
+                <span className="demo-role">admin</span>
+                <span className="demo-id">{adminCred.userId}</span>
+                <span className="demo-pass">{adminCred.password}</span>
               </button>
-            ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
 }
 
-export default Login;
+export default AdminLogin;
