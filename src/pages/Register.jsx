@@ -1,9 +1,15 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { registerApi } from "../api/auth";
 import "./Register.css";
 import logo from "../assets/logo.png";
 
 const Register = () => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [apiError, setApiError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const [formData, setFormData] = useState({
     email: "",
@@ -79,11 +85,28 @@ const Register = () => {
     return Object.keys(e).length === 0;
   };
 
-  const handleSubmit = (ev) => {
+  const handleSubmit = async (ev) => {
     ev.preventDefault();
-    if (validate()) {
-      alert("Registration Successful");
-      console.log(formData);
+    setApiError("");
+    setSuccessMessage("");
+
+    if (!validate()) return;
+
+    setLoading(true);
+    try {
+      const result = await registerApi(formData);
+      if (result.success) {
+        setSuccessMessage(result.message || "Registration Successful! Redirecting to login...");
+        setTimeout(() => {
+          navigate("/login");
+        }, 1500);
+      } else {
+        setApiError(result.error);
+      }
+    } catch {
+      setApiError("Registration failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -227,8 +250,11 @@ const Register = () => {
           {renderInput("nominee_aadhar", "Nominee Aadhaar", "text", true)}
           {renderInput("nominee_mobile", "Nominee Mobile", "tel", true)}
 
-          <button className="register-btn" type="submit">
-            Register
+          {apiError && <p className="register-error" style={{ color: "#e74c3c", marginTop: "15px", textAlign: "center" }}>{apiError}</p>}
+          {successMessage && <p className="register-success" style={{ color: "#27ae60", marginTop: "15px", textAlign: "center" }}>{successMessage}</p>}
+
+          <button className="register-btn" type="submit" disabled={loading}>
+            {loading ? "Registering..." : "Register"}
           </button>
         </form>
       </div>

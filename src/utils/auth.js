@@ -1,3 +1,5 @@
+import { logoutApi } from "../api/auth";
+
 export const DEMO_USERS = [
   {
     userId: "aurumfx",
@@ -37,10 +39,10 @@ export function login(userId, password, requiredRole = null) {
 }
 
 export function logout() {
-  localStorage.removeItem("token");
-  localStorage.removeItem("role");
-  localStorage.removeItem("userId");
+  logoutApi();
 }
+
+export { logoutApi };
 
 export function getAuth() {
   return {

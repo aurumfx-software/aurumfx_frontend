@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import { login, DEMO_USERS } from "../utils/auth";
+import { loginApi } from "../api/auth";
+import { DEMO_USERS } from "../utils/auth";
 import logo from "../assets/logo.png";
 import "./Login.css";
 
@@ -15,17 +16,22 @@ function Login() {
 
   const userCred = DEMO_USERS.filter((u) => u.role === "user");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
-    const result = login(userId, password, "user");
+    try {
+      const result = await loginApi(userId, password, "user");
 
-    if (result.success) {
-      navigate(result.redirect);
-    } else {
-      setError(result.error);
+      if (result.success) {
+        navigate(result.redirect);
+      } else {
+        setError(result.error);
+      }
+    } catch {
+      setError("An unexpected error occurred. Please try again.");
+    } finally {
       setLoading(false);
     }
   };

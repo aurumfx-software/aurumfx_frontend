@@ -1,8 +1,10 @@
+import { useState, useEffect } from "react";
 import { FiGift, FiCreditCard, FiUsers, FiInfo } from "react-icons/fi";
 import DashboardLayout from "../components/Dashboard/DashboardLayout";
+import { getAdminDashboardData } from "../api/dashboard";
 import "./AdminDashboard.css";
 
-const chartData = [
+const defaultChartData = [
   { day: 19, value: 5000 },
   { day: 20, value: 12000 },
   { day: 21, value: 28000 },
@@ -12,42 +14,24 @@ const chartData = [
   { day: 25, value: 2000 },
 ];
 
-const registrations = [
-  {
-    id: 1,
-    userId: "FX251",
-    email: "fx251@example.com",
-    enroller: "FX039",
-    dateJoined: "22 Jul 2026",
-    country: "IND",
-  },
-  {
-    id: 2,
-    userId: "FX252",
-    email: "fx252@example.com",
-    enroller: "FX039",
-    dateJoined: "22 Jul 2026",
-    country: "IND",
-  },
-];
-
-function NetworkBonusChart() {
+function NetworkBonusChart({ data = defaultChartData }) {
+  const chartData = data && data.length ? data : defaultChartData;
   const width = 520;
   const height = 200;
   const padding = { top: 10, right: 10, bottom: 30, left: 45 };
   const chartW = width - padding.left - padding.right;
   const chartH = height - padding.top - padding.bottom;
-  const maxVal = 40000;
+  const maxVal = Math.max(...chartData.map((d) => d.value), 40000);
 
   const points = chartData.map((d, i) => ({
-    x: padding.left + (i / (chartData.length - 1)) * chartW,
+    x: padding.left + (i / Math.max(chartData.length - 1, 1)) * chartW,
     y: padding.top + chartH - (d.value / maxVal) * chartH,
   }));
 
   const linePath = points.map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`).join(" ");
   const areaPath = `${linePath} L ${points[points.length - 1].x} ${padding.top + chartH} L ${points[0].x} ${padding.top + chartH} Z`;
 
-  const yTicks = [0, 10000, 20000, 30000, 40000];
+  const yTicks = [0, maxVal * 0.25, maxVal * 0.5, maxVal * 0.75, maxVal];
   const xTicks = chartData.map((d) => d.day);
 
   return (
@@ -65,7 +49,7 @@ function NetworkBonusChart() {
           <g key={tick}>
             <line x1={padding.left} y1={y} x2={width - padding.right} y2={y} stroke="#eee" strokeWidth="1" />
             <text x={padding.left - 8} y={y + 4} textAnchor="end" className="chart-axis-label">
-              {tick.toLocaleString()}
+              {Math.round(tick).toLocaleString()}
             </text>
           </g>
         );
@@ -75,7 +59,7 @@ function NetworkBonusChart() {
       <path d={linePath} fill="none" stroke="#ffc52d" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
 
       {xTicks.map((day, i) => {
-        const x = padding.left + (i / (chartData.length - 1)) * chartW;
+        const x = padding.left + (i / Math.max(chartData.length - 1, 1)) * chartW;
         return (
           <text key={day} x={x} y={height - 8} textAnchor="middle" className="chart-axis-label">
             {day}
@@ -122,24 +106,39 @@ function MembersMap() {
   return (
     <svg viewBox="0 0 800 400" className="members-map" preserveAspectRatio="xMidYMid meet">
       <rect width="800" height="400" fill="#f8f8f8" rx="8" />
-
-      {/* Simplified continent shapes */}
-      {/* <ellipse cx="400" cy="180" rx="120" ry="80" fill="#e0e0e0" />
-      <ellipse cx="200" cy="160" rx="80" ry="60" fill="#e0e0e0" />
-      <ellipse cx="580" cy="200" rx="70" ry="90" fill="#e0e0e0" />
-      <ellipse cx="650" cy="300" rx="50" ry="40" fill="#fff3c4" />
-      <ellipse cx="520" cy="130" rx="60" ry="50" fill="#e0e0e0" /> */}
-
-      {/* India highlighted */}
       <ellipse cx="560" cy="210" rx="28" ry="35" fill="#222" />
-
-      {/* Australia highlighted */}
       <ellipse cx="650" cy="300" rx="50" ry="40" fill="#ffc52d" opacity="0.6" />
     </svg>
   );
 }
 
 function AdminDashboard() {
+  const [timeframe, setTimeframe] = useState("week");
+  const [dashboardData, setDashboardData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+    setLoading(true);
+
+    getAdminDashboardData(timeframe).then((res) => {
+      if (isMounted && res.success) {
+        setDashboardData(res.data);
+        setLoading(false);
+      }
+    });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [timeframe]);
+
+  const kpis = dashboardData?.kpis || { totalNetworkBonus: 3629460, totalPayout: 3436610 };
+  const chartData = dashboardData?.chartData || defaultChartData;
+  const usersSummary = dashboardData?.usersSummary || { totalMembers: 2, holdingTank: 0, networkMembers: 2 };
+  const ticketsSummary = dashboardData?.ticketsSummary || { totalTickets: 0, open: 0, closed: 0 };
+  const registrations = dashboardData?.latestRegistrations || [];
+
   return (
     <DashboardLayout>
       <div className="admin-dashboard">
@@ -162,7 +161,9 @@ function AdminDashboard() {
                 <FiGift />
               </div>
               <div className="kpi-content">
-                <span className="kpi-value">₹3629460</span>
+                <span className="kpi-value">
+                  {loading ? "..." : `₹${kpis.totalNetworkBonus.toLocaleString()}`}
+                </span>
                 <span className="kpi-label">Total Network Bonus</span>
               </div>
             </div>
@@ -171,7 +172,9 @@ function AdminDashboard() {
                 <FiCreditCard />
               </div>
               <div className="kpi-content">
-                <span className="kpi-value">₹3436610</span>
+                <span className="kpi-value">
+                  {loading ? "..." : `₹${kpis.totalPayout.toLocaleString()}`}
+                </span>
                 <span className="kpi-label">Total Payout</span>
               </div>
             </div>
@@ -181,19 +184,27 @@ function AdminDashboard() {
           <div className="grid-chart card">
             <div className="card-header">
               <h3>Network Bonus</h3>
-              <select className="card-select" defaultValue="week">
+              <select
+                className="card-select"
+                value={timeframe}
+                onChange={(e) => setTimeframe(e.target.value)}
+              >
                 <option value="week">This Week</option>
                 <option value="month">This Month</option>
               </select>
             </div>
-            <NetworkBonusChart />
+            <NetworkBonusChart data={chartData} />
           </div>
 
           {/* Users Widget */}
           <div className="grid-users card">
             <div className="card-header">
               <h3>Users</h3>
-              <select className="card-select" defaultValue="week">
+              <select
+                className="card-select"
+                value={timeframe}
+                onChange={(e) => setTimeframe(e.target.value)}
+              >
                 <option value="week">This Week</option>
                 <option value="month">This Month</option>
               </select>
@@ -202,13 +213,13 @@ function AdminDashboard() {
               <div className="users-total">
                 <FiUsers className="users-icon" />
                 <div>
-                  <span className="users-count">2</span>
+                  <span className="users-count">{usersSummary.totalMembers}</span>
                   <span className="users-label">Total Members</span>
                 </div>
               </div>
               <div className="users-gauges">
-                <CircularGauge value={0} label="Holding Tank" />
-                <CircularGauge value={2} label="Network Members" active />
+                <CircularGauge value={usersSummary.holdingTank} label="Holding Tank" />
+                <CircularGauge value={usersSummary.networkMembers} label="Network Members" active />
               </div>
             </div>
           </div>
@@ -218,17 +229,17 @@ function AdminDashboard() {
             <h3>Support Tickets</h3>
             <div className="tickets-content">
               <div className="tickets-stat">
-                <span className="tickets-value">0</span>
+                <span className="tickets-value">{ticketsSummary.totalTickets}</span>
                 <span className="tickets-label">Total Tickets</span>
               </div>
               <div className="tickets-legend">
                 <div className="legend-item">
                   <span className="legend-dot legend-dot--open" />
-                  Open
+                  Open ({ticketsSummary.open})
                 </div>
                 <div className="legend-item">
                   <span className="legend-dot legend-dot--closed" />
-                  Closed
+                  Closed ({ticketsSummary.closed})
                 </div>
               </div>
             </div>

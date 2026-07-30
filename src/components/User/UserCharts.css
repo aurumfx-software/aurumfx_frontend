@@ -1,0 +1,79 @@
+/* Income Payout Donut Chart */
+.donut-chart-container {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.donut-graphic {
+  width: 95px;
+  height: 95px;
+  flex-shrink: 0;
+}
+
+.donut-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.donut-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.legend-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.legend-dot--income {
+  background: #d4af37;
+}
+
+.legend-dot--payout {
+  background: #f0ca4d;
+}
+
+.legend-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.legend-val {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1a1d1e;
+  line-height: 1.2;
+}
+
+.legend-lbl {
+  font-size: 12px;
+  color: #8c98a4;
+}
+
+/* Network Area Chart */
+.network-area-chart-wrapper {
+  width: 100%;
+  margin-top: 15px;
+}
+
+.area-chart-svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.chart-label {
+  font-size: 11px;
+  fill: #a0aec0;
+  font-weight: 500;
+}

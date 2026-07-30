@@ -1,0 +1,30 @@
+.user-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f7f9fa;
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.user-layout-main {
+  flex: 1;
+  margin-left: 260px;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  transition: margin-left 0.3s ease;
+}
+
+.user-layout-content {
+  padding: 10px 30px 40px 30px;
+  flex: 1;
+}
+
+@media (max-width: 991px) {
+  .user-layout-main {
+    margin-left: 0;
+  }
+
+  .user-layout-content {
+    padding: 16px 16px 30px 16px;
+  }
+}
