@@ -6,6 +6,10 @@ import Register from "./pages/Register";
 import Home from "./pages/Home";
 import AdminDashboard from "./pages/AdminDashboard";
 import UserDashboard from "./pages/UserDashboard";
+import ClubBusiness from "./pages/user/genealogy/ClubBusiness";
+import EnrollerBusiness from "./pages/user/genealogy/EnrollerBusiness";
+import StructureBusiness from "./pages/user/genealogy/StructureBusiness";
+import ListBusiness from "./pages/user/genealogy/ListBusiness";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./routes/ProtectedRoute";
 
@@ -21,6 +25,38 @@ function App() {
           element={
             <ProtectedRoute requiredRole="user">
               <UserDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/genealogy/binary"
+          element={
+            <ProtectedRoute requiredRole="user">
+              <ClubBusiness />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/genealogy/sponsor"
+          element={
+            <ProtectedRoute requiredRole="user">
+              <EnrollerBusiness />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/genealogy/tree"
+          element={
+            <ProtectedRoute requiredRole="user">
+              <StructureBusiness />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/genealogy/list"
+          element={
+            <ProtectedRoute requiredRole="user">
+              <ListBusiness />
             </ProtectedRoute>
           }
         />

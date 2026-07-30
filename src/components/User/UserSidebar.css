@@ -183,7 +183,7 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-  padding-left: 44px;
+  padding-left: 36px;
   margin-top: 4px;
   margin-bottom: 6px;
 }
@@ -195,11 +195,34 @@
   padding: 8px 12px;
   border-radius: 8px;
   transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.subitem-bullet {
+  font-size: 14px;
+  color: #a0aec0;
+  line-height: 1;
 }
 
 .user-nav-subitem:hover {
   color: #e5a800;
   background: #fffdf5;
+}
+
+.user-nav-subitem:hover .subitem-bullet {
+  color: #e5a800;
+}
+
+.user-nav-subitem--active {
+  color: #1a1d1e !important;
+  font-weight: 700 !important;
+  background: #f8fafc;
+}
+
+.user-nav-subitem--active .subitem-bullet {
+  color: #ffc52d !important;
 }
 
 /* Mobile responsive styles */

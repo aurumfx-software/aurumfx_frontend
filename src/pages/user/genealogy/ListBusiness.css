@@ -1,0 +1,117 @@
+.list-filter-form {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-bottom: 10px;
+}
+
+.filter-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+}
+
+.filter-input-group label {
+  font-size: 11px;
+  font-weight: 500;
+  color: #8c98a4;
+  position: absolute;
+  top: -8px;
+  left: 12px;
+  background: #ffffff;
+  padding: 0 4px;
+  z-index: 2;
+}
+
+.date-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.date-input-wrapper input {
+  height: 48px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 0 16px;
+  font-size: 14px;
+  color: #1a1d1e;
+  outline: none;
+  width: 220px;
+}
+
+.calendar-icon {
+  position: absolute;
+  right: 14px;
+  color: #8c98a4;
+  pointer-events: none;
+}
+
+.filter-select {
+  height: 48px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 0 16px;
+  font-size: 14px;
+  color: #1a1d1e;
+  outline: none;
+  width: 220px;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.get-report-btn {
+  height: 48px;
+  background: #ffc52d;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  padding: 0 24px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.get-report-btn:hover {
+  background: #e5a800;
+}
+
+.list-table-container {
+  overflow-x: auto;
+  margin-top: 10px;
+}
+
+.business-list-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.business-list-table th {
+  background: #f8fafc;
+  color: #8c98a4;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid #edf2f7;
+}
+
+.business-list-table td {
+  padding: 14px 16px;
+  font-size: 13px;
+  color: #2d3748;
+  border-bottom: 1px solid #f8f9fa;
+}
+
+.username-cell {
+  font-weight: 600;
+  color: #1a1d1e;
+}
+
+.level-cell {
+  font-weight: 500;
+  color: #64748b;
+}
