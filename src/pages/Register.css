@@ -16,7 +16,7 @@
 
 .register-card {
   width: 100%;
-  max-width: 720px;
+  max-width: 840px;
   background: #fff;
   border-radius: 15px;
   padding: 40px;
@@ -53,18 +53,25 @@
   color: #1d2939;
   font-size: 18px;
   font-weight: 600;
-  margin-top: 10px;
-  padding-bottom: 5px;
+  margin-top: 15px;
+  margin-bottom: 5px;
   border-bottom: 1px solid #eaecf0;
+  padding-bottom: 8px;
 }
 
 .field-group {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
-.field-group.full-width {
+.field-group label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #344054;
+}
+
+.field-group-full {
   grid-column: 1 / -1;
 }
 
@@ -86,9 +93,7 @@
 }
 
 .register-form textarea {
-  min-height: 80px;
-  padding-top: 12px;
-  padding-bottom: 12px;
+  padding: 12px 15px;
   resize: vertical;
 }
 
