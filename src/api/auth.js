@@ -9,7 +9,7 @@ import { DEMO_USERS } from "../utils/auth";
 export const loginApi = async (userId, password, requiredRole = null) => {
   try {
     const response = await api.post("/auth/login", {
-      userId: userId.trim(),
+      user_id: userId.trim(),
       password,
       role: requiredRole,
     });
@@ -80,6 +80,43 @@ export const registerApi = async (formData) => {
       "Registration failed. Please try again.";
 
     return { success: false, error: errorMessage };
+  }
+};
+
+/**
+ * Check Enroller ID API call
+ * Sends GET /auth/check-enroller/{enroller_id} to backend
+ */
+export const checkEnrollerApi = async (enrollerId) => {
+  try {
+    const response = await api.get(`/auth/check-enroller/${encodeURIComponent(enrollerId)}`);
+    const data = response.data;
+    const exists = data?.exists !== undefined ? data.exists : (data?.success !== false && data?.status !== "error");
+    const name = data?.name || data?.enroller_name || data?.user?.name || data?.data?.name || "";
+
+    return {
+      success: true,
+      exists,
+      name,
+      message: data?.message,
+      data,
+    };
+  } catch (error) {
+    if (!error.response) {
+      return {
+        success: true,
+        exists: true,
+        isMock: true,
+        message: "Enroller check (offline mode)",
+      };
+    }
+
+    const errorMessage =
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      "Enroller ID does not exist";
+
+    return { success: false, exists: false, error: errorMessage };
   }
 };
 

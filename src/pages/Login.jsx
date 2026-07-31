@@ -60,7 +60,7 @@ function Login() {
           <div className="input-group">
             <label htmlFor="userId">User ID</label>
             <input
-              id="userId"
+              id="user_id"
               type="text"
               placeholder="Enter User ID"
               value={userId}

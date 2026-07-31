@@ -1,6 +1,9 @@
 .user-header {
-  height: 70px;
-  background: transparent;
+  height: 72px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid #f1f5f9;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -13,37 +16,97 @@
 .user-header-left {
   display: flex;
   align-items: center;
+  gap: 16px;
 }
 
 .user-header-menu-btn {
   display: none;
-  background: white;
-  border: 1px solid #eaeaea;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
   font-size: 20px;
-  color: #333;
+  color: #1e293b;
   width: 40px;
   height: 40px;
   border-radius: 10px;
   cursor: pointer;
   align-items: center;
   justify-content: center;
+  transition: all 0.2s ease;
 }
 
+.user-header-menu-btn:hover {
+  background: #f8fafc;
+}
+
+/* Header Search Box */
+.header-search-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 8px 16px;
+  width: 320px;
+  transition: all 0.2s ease;
+}
+
+.header-search-box:focus-within {
+  background: #ffffff;
+  border-color: #ffc52d;
+  box-shadow: 0 0 0 3px rgba(255, 197, 45, 0.15);
+}
+
+.search-box-icon {
+  font-size: 16px;
+  color: #94a3b8;
+}
+
+.header-search-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 13.5px;
+  color: #1e293b;
+  width: 100%;
+}
+
+.header-search-input::placeholder {
+  color: #94a3b8;
+}
+
+/* Right Section Actions */
 .user-header-right {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
   margin-left: auto;
 }
 
 .currency-selector-btn {
-  background: transparent;
-  border: none;
-  font-size: 14px;
-  font-weight: 600;
-  color: #4a5568;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  font-size: 13px;
+  font-weight: 700;
+  color: #334155;
   cursor: pointer;
-  padding: 6px 12px;
+  padding: 7px 14px;
+  border-radius: 20px;
+  transition: all 0.2s ease;
+}
+
+.currency-globe-icon {
+  font-size: 14px;
+  color: #ffc52d;
+}
+
+.currency-selector-btn:hover {
+  background: #ffffff;
+  border-color: #ffc52d;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .header-icon-btn {
@@ -51,63 +114,88 @@
   height: 40px;
   border-radius: 50%;
   background: #ffffff;
-  border: 1px solid #f0f0f0;
-  color: #5a6578;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
   font-size: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   position: relative;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
 }
 
 .header-icon-btn:hover {
   background: #f8fafc;
-  color: #1a202c;
+  color: #1e293b;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+}
+
+.settings-btn:hover {
+  transform: rotate(45deg);
 }
 
 .notification-dot {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 9px;
+  right: 9px;
   width: 8px;
   height: 8px;
-  background: #e53e3e;
+  background: #ef4444;
   border-radius: 50%;
   border: 2px solid #ffffff;
 }
 
+/* User Avatar Badge */
 .header-user-avatar {
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: #2d3748;
+  background: #1e293b;
   color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
   font-size: 16px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: visible;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
 }
 
 .header-user-avatar img {
   width: 100%;
   height: 100%;
+  border-radius: 50%;
   object-fit: cover;
 }
 
+.avatar-online-dot {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 11px;
+  height: 11px;
+  background: #22c55e;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+}
+
+/* Responsive */
 @media (max-width: 991px) {
   .user-header {
     padding: 0 16px;
     background: #ffffff;
-    border-bottom: 1px solid #f0f0f0;
   }
 
   .user-header-menu-btn {
     display: flex;
+  }
+
+  .header-search-box {
+    display: none;
   }
 }

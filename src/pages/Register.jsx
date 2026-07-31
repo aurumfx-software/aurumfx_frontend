@@ -1,13 +1,16 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { registerApi } from "../api/auth";
+import { registerApi, checkEnrollerApi } from "../api/auth";
 import "./Register.css";
 import logo from "../assets/logo.png";
 
 const Register = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [checkingEnroller, setCheckingEnroller] = useState(false);
+  const [enrollerName, setEnrollerName] = useState("");
   const [apiError, setApiError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
@@ -16,6 +19,7 @@ const Register = () => {
     first_name: "",
     last_name: "",
     password: "",
+    confirm_password:"",
     enroller_id: "",
     date_of_birth: "",
     country: "",
@@ -42,8 +46,50 @@ const Register = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    if (name === "enroller_id") {
+      setEnrollerName("");
+    }
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
+  };
+
+  const verifyEnroller = async (idToVerify) => {
+    const id = idToVerify !== undefined ? idToVerify : formData.enroller_id;
+    if (!id || !String(id).trim()) {
+      setEnrollerName("");
+      return false;
+    }
+    setCheckingEnroller(true);
+    try {
+      const res = await checkEnrollerApi(id.trim());
+      if (res.success && res.exists) {
+        setEnrollerName(res.name ? `Enroller: ${res.name}` : "Enroller ID verified ✓");
+        setErrors((prev) => ({ ...prev, enroller_id: "" }));
+        return true;
+      } else {
+        setEnrollerName("");
+        setErrors((prev) => ({
+          ...prev,
+          enroller_id: res.error || "Enroller ID does not exist",
+        }));
+        return false;
+      }
+    } catch {
+      setEnrollerName("");
+      setErrors((prev) => ({
+        ...prev,
+        enroller_id: "Failed to verify Enroller ID",
+      }));
+      return false;
+    } finally {
+      setCheckingEnroller(false);
+    }
+  };
+
+  const handleEnrollerBlur = () => {
+    if (formData.enroller_id && formData.enroller_id.trim()) {
+      verifyEnroller(formData.enroller_id.trim());
     }
   };
 
@@ -55,6 +101,7 @@ const Register = () => {
       { key: "first_name", label: "First Name" },
       { key: "last_name", label: "Last Name" },
       { key: "password", label: "Password" },
+      { key: "confirm_password", label: "Confirm Password" },
       { key: "enroller_id", label: "Enroller ID" },
       { key: "date_of_birth", label: "Date of Birth" },
       { key: "country", label: "Country" },
@@ -81,6 +128,10 @@ const Register = () => {
       e.password = "Password must be at least 8 characters";
     }
 
+    if (formData.password && formData.confirm_password && formData.password !== formData.confirm_password) {
+      e.confirm_password = "Passwords do not match";
+    }
+
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -91,6 +142,9 @@ const Register = () => {
     setSuccessMessage("");
 
     if (!validate()) return;
+
+    const isEnrollerValid = await verifyEnroller(formData.enroller_id.trim());
+    if (!isEnrollerValid) return;
 
     setLoading(true);
     try {
@@ -115,7 +169,9 @@ const Register = () => {
     label,
     type = "text",
     required = false,
-    placeholder = ""
+    placeholder = "",
+    onBlur = null,
+    extraInfo = null
   ) => (
     <div className="field-group">
       <label htmlFor={name}>
@@ -128,8 +184,10 @@ const Register = () => {
         placeholder={placeholder || label}
         value={formData[name]}
         onChange={handleChange}
+        onBlur={onBlur}
         className={errors[name] ? "input-error" : ""}
       />
+      {extraInfo && <small className="info-text" style={{ color: "#27ae60", marginTop: "2px", fontWeight: 500 }}>{extraInfo}</small>}
       {errors[name] && <small className="error">{errors[name]}</small>}
     </div>
   );
@@ -216,7 +274,38 @@ const Register = () => {
             )}
           </div>
 
-          {renderInput("enroller_id", "Enroller ID", "text", true)}
+          <div className="field-group">
+            <label htmlFor="confirm_password">
+              Confirm Password <span className="required">*</span>
+            </label>
+            <div className="password-box">
+              <input
+                id="confirm_password"
+                type={showConfirmPassword ? "text" : "password"}
+                name="confirm_password"
+                placeholder="Confirm Password"
+                value={formData.confirm_password}
+                onChange={handleChange}
+                className={errors.confirm_password ? "input-error" : ""}
+              />
+              <span onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                {showConfirmPassword ? "🙈" : "👁"}
+              </span>
+            </div>
+            {errors.confirm_password && (
+              <small className="error">{errors.confirm_password}</small>
+            )}
+          </div>
+
+          {renderInput(
+            "enroller_id",
+            "Enroller ID",
+            "text",
+            true,
+            "",
+            handleEnrollerBlur,
+            checkingEnroller ? "Checking Enroller ID..." : enrollerName
+          )}
           {renderInput("date_of_birth", "Date of Birth", "date", true)}
           {renderSelect(
             "country",
