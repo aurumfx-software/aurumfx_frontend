@@ -10,6 +10,7 @@ import ClubBusiness from "./pages/user/genealogy/ClubBusiness";
 import EnrollerBusiness from "./pages/user/genealogy/EnrollerBusiness";
 import StructureBusiness from "./pages/user/genealogy/StructureBusiness";
 import ListBusiness from "./pages/user/genealogy/ListBusiness";
+import EWallet from "./pages/user/financial/EWallet";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./routes/ProtectedRoute";
 
@@ -59,6 +60,18 @@ function App() {
               <ListBusiness />
             </ProtectedRoute>
           }
+        />
+        <Route
+          path="/user/financial/ewallet"
+          element={
+            <ProtectedRoute requiredRole="user">
+              <EWallet />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/financial/e-wallet"
+          element={<Navigate to="/user/financial/ewallet" replace />}
         />
 
         {/* User Route Aliases */}

@@ -8,8 +8,16 @@ function ProtectedRoute({ children, requiredRole }) {
     return <Navigate to={requiredRole === "admin" ? "/admin/login" : "/user/login"} replace />;
   }
 
-  if (requiredRole && role !== requiredRole) {
-    return <Navigate to={role === "admin" ? "/admin/dashboard" : "/user/dashboard"} replace />;
+  // Fallback effective role to requiredRole or 'user' if role in localStorage is unset
+  const currentRole = role || requiredRole || "user";
+
+  // Prevent cross-role navigation loops
+  if (requiredRole === "admin" && currentRole !== "admin") {
+    return <Navigate to="/user/dashboard" replace />;
+  }
+
+  if (requiredRole === "user" && currentRole === "admin") {
+    return <Navigate to="/admin/dashboard" replace />;
   }
 
   return children;

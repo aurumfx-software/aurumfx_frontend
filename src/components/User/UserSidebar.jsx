@@ -129,7 +129,7 @@ function UserSidebar({ isOpen, onClose, user }) {
             {user?.avatar ? (
               <img src={user.avatar} alt={userName} />
             ) : (
-              <div className="avatar-placeholder">{userName.charAt(0)}</div>
+              <div className="avatar-placeholder">{String(userName || "P").charAt(0)}</div>
             )}
           </div>
           <div className="profile-info">

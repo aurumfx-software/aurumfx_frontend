@@ -119,7 +119,6 @@ function AdminDashboard() {
 
   useEffect(() => {
     let isMounted = true;
-    setLoading(true);
 
     getAdminDashboardData(timeframe).then((res) => {
       if (isMounted && res.success) {

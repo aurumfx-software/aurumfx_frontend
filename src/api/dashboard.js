@@ -118,7 +118,14 @@ export const getAdminDashboardData = async (timeframe = "week") => {
 export const getUserDashboardData = async () => {
   try {
     const response = await api.get(`/user/dashboard`);
-    return { success: true, data: response.data };
+    const payload = response.data;
+
+    if (payload && (payload.success === false || payload.status === "error" || payload.status === false)) {
+      throw new Error(payload.message || "Failed to fetch dashboard data");
+    }
+
+    const data = payload?.data || payload;
+    return { success: true, data };
   } catch (error) {
     console.warn(
       "User Dashboard API offline or not reachable, using fallback mock data:",

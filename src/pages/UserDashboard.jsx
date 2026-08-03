@@ -9,7 +9,6 @@ import UserLayout from "../components/User/UserLayout";
 import { IncomePayoutDonutChart, NetworkAreaChart } from "../components/User/UserCharts";
 import UserRankCard from "../components/User/UserRankCard";
 import { getUserDashboardData } from "../api/dashboard";
-import incomeIcon from "../assets/logo.png"; // Fallback/styled icons
 import "./UserDashboard.css";
 
 function UserDashboard() {
@@ -18,40 +17,90 @@ function UserDashboard() {
 
   useEffect(() => {
     let isMounted = true;
-    getUserDashboardData().then((res) => {
-      if (isMounted && res.success) {
-        setDashboardData(res.data);
-        setLoading(false);
-      }
-    });
+    getUserDashboardData()
+      .then((res) => {
+        if (isMounted) {
+          if (res && res.success && res.data) {
+            const dashData = res.data.data || res.data;
+            setDashboardData(dashData);
+          }
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.error("Error loading dashboard data:", err);
+        if (isMounted) {
+          setLoading(false);
+        }
+      });
 
     return () => {
       isMounted = false;
     };
   }, []);
 
-  const user = dashboardData?.user || {
-    name: "PRAVEEN",
-    fullName: "PRAVEEN DINESH",
-    userId: "FX001",
-    rank: "FX Hero",
-    nextRank: "FX Legend",
-    totalLots: 1,
+  const user = {
+    name: dashboardData?.user?.name || "PRAVEEN",
+    fullName:
+      dashboardData?.user?.fullName ||
+      dashboardData?.user?.full_name ||
+      dashboardData?.user?.name ||
+      "PRAVEEN DINESH",
+    userId:
+      dashboardData?.user?.userId ||
+      dashboardData?.user?.user_id ||
+      localStorage.getItem("userId") ||
+      "FX001",
+    rank: dashboardData?.user?.rank || "FX Hero",
+    nextRank:
+      dashboardData?.user?.nextRank ||
+      dashboardData?.user?.next_rank ||
+      "FX Legend",
+    totalLots:
+      dashboardData?.user?.totalLots ??
+      dashboardData?.user?.total_lots ??
+      1,
+    avatar: dashboardData?.user?.avatar || null,
   };
 
-  const financials = dashboardData?.financials || {
-    income: 241550,
-    withdrawals: 233900,
-    balance: 7650,
+  const financials = {
+    income: Number(dashboardData?.financials?.income ?? 241550),
+    withdrawals: Number(dashboardData?.financials?.withdrawals ?? 233900),
+    balance: Number(dashboardData?.financials?.balance ?? 7650),
   };
 
-  const networkStats = dashboardData?.networkStats || {
-    downlineClubUserCount: 258,
-    totalEnrolments: 9,
+  const networkStats = {
+    downlineClubUserCount: Number(
+      dashboardData?.networkStats?.downlineClubUserCount ??
+        dashboardData?.network_stats?.downline_club_user_count ??
+        258
+    ),
+    totalEnrolments: Number(
+      dashboardData?.networkStats?.totalEnrolments ??
+        dashboardData?.network_stats?.total_enrolments ??
+        9
+    ),
   };
 
-  const enrolments = dashboardData?.enrolments || [];
-  const teamPerformance = dashboardData?.teamPerformance || [];
+  const enrolments = Array.isArray(dashboardData?.enrolments)
+    ? dashboardData.enrolments
+    : [
+        { id: 1, user: "SUSHI", userId: "FX150", date: "17 Mar 2026", avatarBg: "#3498db" },
+        { id: 2, user: "MANUJA", userId: "FX144", date: "09 Mar 2026", avatarBg: "#2c3e50" },
+        { id: 3, user: "BINDU", userId: "FX125", date: "11 Feb 2026", avatarBg: "#7f8c8d" },
+        { id: 4, user: "SURESHKUMAR", userId: "FX056", date: "29 Dec 2025", avatarBg: "#e67e22" },
+        { id: 5, user: "VIMAL", userId: "FX055", date: "29 Dec 2025", avatarBg: "#8e44ad" },
+      ];
+
+  const teamPerformance = Array.isArray(dashboardData?.teamPerformance)
+    ? dashboardData.teamPerformance
+    : [
+        { id: 1, user: "AJAYAKUMAR", userId: "FX021", enrolments: 20, earnings: 72500 },
+        { id: 2, user: "SAVITHAMOL", userId: "FX011", enrolments: 8, earnings: 127000 },
+        { id: 3, user: "BINDU", userId: "FX125", enrolments: 2, earnings: 15000 },
+        { id: 4, user: "SOBHANA", userId: "FX018", enrolments: 0, earnings: 0 },
+        { id: 5, user: "AKSHAYA", userId: "FX023", enrolments: 0, earnings: 0 },
+      ];
 
   return (
     <UserLayout user={user}>
@@ -183,7 +232,7 @@ function UserDashboard() {
                                 className="user-table-avatar"
                                 style={{ background: item.avatarBg || "#3498db" }}
                               >
-                                {item.user.charAt(0)}
+                                {String(item.user || "U").charAt(0)}
                               </div>
                               <div className="user-table-meta">
                                 <span className="meta-name">{item.user}</span>
@@ -226,7 +275,7 @@ function UserDashboard() {
                           <td>
                             <div className="user-table-cell">
                               <div className="user-table-avatar dark-avatar">
-                                {item.user.charAt(0)}
+                                {String(item.user || "U").charAt(0)}
                               </div>
                               <div className="user-table-meta">
                                 <span className="meta-name">{item.user}</span>
@@ -236,7 +285,7 @@ function UserDashboard() {
                           </td>
                           <td>{item.enrolments}</td>
                           <td className="text-right earnings-val">
-                            ₹{item.earnings.toLocaleString()}
+                            ₹{Number(item.earnings || 0).toLocaleString()}
                           </td>
                         </tr>
                       ))}

@@ -58,7 +58,7 @@ function Login() {
 
         <form onSubmit={handleSubmit}>
           <div className="input-group">
-            <label htmlFor="userId">User ID</label>
+            <label htmlFor="user_id">User ID</label>
             <input
               id="user_id"
               type="text"

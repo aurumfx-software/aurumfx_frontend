@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiCopy, FiShare2, FiAward } from "react-icons/fi";
+import { FiCopy, FiShare2 } from "react-icons/fi";
 import trophyImg from "../../assets/goldbar.png";
 import "./UserRankCard.css";
 
@@ -14,7 +14,9 @@ function UserRankCard({ user }) {
     user?.referralLink || "https://app.aurumfx.net/auth/register?ref=FX001";
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(referralLink);
+    if (navigator?.clipboard?.writeText) {
+      navigator.clipboard.writeText(referralLink).catch(() => {});
+    }
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -29,7 +31,7 @@ function UserRankCard({ user }) {
           {user?.avatar ? (
             <img src={user.avatar} alt={fullName} />
           ) : (
-            <div className="vip-avatar-fallback">{fullName.charAt(0)}</div>
+            <div className="vip-avatar-fallback">{String(fullName || "P").charAt(0)}</div>
           )}
         </div>
 

@@ -5,7 +5,6 @@ export function IncomePayoutDonutChart({ income = 241550, payout = 233900 }) {
   const circumference = 2 * Math.PI * radius;
   const total = income + payout || 1;
   const incomeRatio = income / total;
-  const payoutRatio = payout / total;
 
   const incomeOffset = circumference * (1 - incomeRatio);
 
@@ -59,7 +58,7 @@ export function IncomePayoutDonutChart({ income = 241550, payout = 233900 }) {
 }
 
 export function NetworkAreaChart({ data }) {
-  const chartData = data && data.length ? data : [
+  const defaultData = [
     { month: "Jan 2026", val: 0.1 },
     { month: "Feb 2026", val: 0.8 },
     { month: "Mar 2026", val: 2.0 },
@@ -67,6 +66,8 @@ export function NetworkAreaChart({ data }) {
     { month: "May 2026", val: 0.1 },
     { month: "Jul 2026", val: 0.1 },
   ];
+
+  const chartData = Array.isArray(data) && data.length > 0 ? data : defaultData;
 
   const width = 500;
   const height = 180;
@@ -77,14 +78,17 @@ export function NetworkAreaChart({ data }) {
 
   const points = chartData.map((d, i) => ({
     x: padding.left + (i / Math.max(chartData.length - 1, 1)) * chartW,
-    y: padding.top + chartH - (d.val / maxVal) * chartH,
+    y: padding.top + chartH - (Number(d?.val || 0) / maxVal) * chartH,
   }));
 
+  const lastPoint = points[points.length - 1] || { x: padding.left, y: padding.top + chartH };
+  const firstPoint = points[0] || { x: padding.left, y: padding.top + chartH };
+
   const linePath = points.map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`).join(" ");
-  const areaPath = `${linePath} L ${points[points.length - 1].x} ${padding.top + chartH} L ${points[0].x} ${padding.top + chartH} Z`;
+  const areaPath = `${linePath} L ${lastPoint.x} ${padding.top + chartH} L ${firstPoint.x} ${padding.top + chartH} Z`;
 
   const yTicks = [0, 1, 2, 3, 4];
-  const xTicks = chartData.map((d) => d.month);
+  const xTicks = chartData.map((d) => d?.month || "");
 
   return (
     <div className="network-area-chart-wrapper">

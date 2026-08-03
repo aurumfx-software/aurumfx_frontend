@@ -7,49 +7,56 @@ import { DEMO_USERS } from "../utils/auth";
  * Fallbacks to demo users if backend is not reachable/404
  */
 export const loginApi = async (userId, password, requiredRole = null) => {
+  const trimmedUserId = String(userId || "").trim();
   try {
     const response = await api.post("/auth/login", {
-      user_id: userId.trim(),
+      user_id: trimmedUserId,
       password,
       role: requiredRole,
     });
 
-    const { token, user, role, redirect } = response.data;
-    const userRole = role || user?.role || requiredRole || "user";
-    const redirectPath = redirect || (userRole === "admin" ? "/admin/dashboard" : "/user/dashboard");
+    const payload = response.data;
+    if (payload && (payload.success === false || payload.status === "error" || payload.status === false)) {
+      throw new Error(payload.message || payload.error || "Login failed");
+    }
 
-    localStorage.setItem("token", token || `token-${userRole}`);
-    localStorage.setItem("role", userRole);
-    localStorage.setItem("userId", userId.trim());
+    const data = payload?.data || payload;
+    const token = payload?.token || data?.token;
+    const user = payload?.user || data?.user;
+    const role = payload?.role || data?.role || user?.role || requiredRole || "user";
+    const redirectPath = payload?.redirect || data?.redirect || (role === "admin" ? "/admin/dashboard" : "/user/dashboard");
+
+    localStorage.setItem("token", token || `token-${role}`);
+    localStorage.setItem("role", role);
+    localStorage.setItem("userId", trimmedUserId);
     if (user) {
       localStorage.setItem("user", JSON.stringify(user));
     }
 
-    return { success: true, redirect: redirectPath, data: response.data };
+    return { success: true, redirect: redirectPath, data: payload };
   } catch (error) {
-    // If backend server is unreachable or endpoint not found (404), fallback to demo accounts
-    if (!error.response || error.response.status === 404) {
-      const demoUser = DEMO_USERS.find(
-        (u) => u.userId === userId.trim() && u.password === password
-      );
+    // Check fallback demo users if API fails or is offline or unauthorized
+    const demoUser = DEMO_USERS.find(
+      (u) => u.userId.toLowerCase() === trimmedUserId.toLowerCase() && u.password === password
+    );
 
-      if (demoUser) {
-        if (requiredRole && demoUser.role !== requiredRole) {
-          return {
-            success: false,
-            error: `Access Denied: This portal is for ${requiredRole} accounts only.`,
-          };
-        }
-        localStorage.setItem("token", `demo-token-${demoUser.role}`);
-        localStorage.setItem("role", demoUser.role);
-        localStorage.setItem("userId", demoUser.userId);
-        return { success: true, redirect: demoUser.redirect };
+    if (demoUser) {
+      if (requiredRole && demoUser.role !== requiredRole) {
+        return {
+          success: false,
+          error: `Access Denied: This portal is for ${requiredRole} accounts only.`,
+        };
       }
+      localStorage.setItem("token", `demo-token-${demoUser.role}`);
+      localStorage.setItem("role", demoUser.role);
+      localStorage.setItem("userId", demoUser.userId);
+      return { success: true, redirect: demoUser.redirect };
     }
 
     const errorMessage =
       error.response?.data?.message ||
       error.response?.data?.error ||
+      error.message ||
       "Invalid User ID or password";
 
     return { success: false, error: errorMessage };
