@@ -225,6 +225,55 @@
   color: #ffc52d !important;
 }
 
+/* Collapsed / Minimized Sidebar Styles */
+.user-sidebar--collapsed {
+  width: 70px;
+}
+
+.user-sidebar--collapsed .user-sidebar-logo {
+  padding: 22px 10px;
+  justify-content: center;
+}
+
+.logo-compact-mark {
+  font-size: 24px;
+  font-weight: 900;
+  color: #ffc52d;
+}
+
+.user-sidebar--collapsed .user-sidebar-profile {
+  margin: 10px 10px 20px 10px;
+  padding: 8px;
+  justify-content: center;
+}
+
+.user-sidebar--collapsed .user-nav-item {
+  padding: 14px 0;
+  justify-content: center;
+  margin: 4px 8px;
+  border-radius: 12px;
+}
+
+.user-sidebar--collapsed .nav-left {
+  justify-content: center;
+  width: 100%;
+}
+
+.user-sidebar--collapsed .nav-icon {
+  font-size: 20px;
+}
+
+.user-sidebar--collapsed .user-nav-item--active {
+  background: #fffdf0;
+  border: 1px solid #ffc52d;
+  color: #f4a000;
+  box-shadow: 0 2px 8px rgba(255, 197, 45, 0.15);
+}
+
+.user-sidebar--collapsed .user-nav-item--active .nav-icon {
+  color: #f4a000;
+}
+
 /* Mobile responsive styles */
 @media (max-width: 991px) {
   .user-sidebar-backdrop {

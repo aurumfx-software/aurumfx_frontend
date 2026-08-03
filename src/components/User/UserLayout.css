@@ -14,6 +14,10 @@
   transition: margin-left 0.3s ease;
 }
 
+.user-layout--collapsed .user-layout-main {
+  margin-left: 70px;
+}
+
 .user-layout-content {
   padding: 10px 30px 40px 30px;
   flex: 1;

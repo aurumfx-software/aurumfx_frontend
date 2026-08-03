@@ -11,6 +11,7 @@ import {
   FiChevronRight,
   FiChevronDown,
   FiChevronsLeft,
+  FiChevronsRight,
 } from "react-icons/fi";
 import logo from "../../assets/logo.png";
 import "./UserSidebar.css";
@@ -69,7 +70,7 @@ const userNavItems = [
   { id: "telegram", label: "Join Telegram", icon: FiSend, external: "https://t.me" },
 ];
 
-function UserSidebar({ isOpen, onClose, user }) {
+function UserSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse, user }) {
   const location = useLocation();
 
   // Determine initial expanded state based on current location
@@ -115,19 +116,28 @@ function UserSidebar({ isOpen, onClose, user }) {
       {/* Mobile backdrop overlay */}
       {isOpen && <div className="user-sidebar-backdrop" onClick={onClose} />}
 
-      <aside className={`user-sidebar ${isOpen ? "user-sidebar--open" : ""}`}>
+      <aside
+        className={`user-sidebar ${isOpen ? "user-sidebar--open" : ""} ${
+          isCollapsed ? "user-sidebar--collapsed" : ""
+        }`}
+      >
         {/* Header Logo */}
         <div className="user-sidebar-logo">
-          <Link to="/user/dashboard">
-            <img src={logo} alt="AurumFX" className="sidebar-logo-img" />
+          <Link to="/user/dashboard" className="sidebar-logo-link">
+            {isCollapsed ? (
+              <span className="logo-compact-mark">A</span>
+            ) : (
+              <img src={logo} alt="AurumFX" className="sidebar-logo-img" />
+            )}
           </Link>
           <button
             type="button"
             className="sidebar-collapse-btn"
-            onClick={onClose}
-            aria-label="Collapse sidebar"
+            onClick={onToggleCollapse || onClose}
+            aria-label="Toggle sidebar collapse"
+            title={isCollapsed ? "Expand sidebar" : "Minimize sidebar"}
           >
-            <FiChevronsLeft />
+            {isCollapsed ? <FiChevronsRight /> : <FiChevronsLeft />}
           </button>
         </div>
 
@@ -140,10 +150,12 @@ function UserSidebar({ isOpen, onClose, user }) {
               <div className="avatar-placeholder">{String(userName || "P").charAt(0)}</div>
             )}
           </div>
-          <div className="profile-info">
-            <h4 className="profile-name">{userName}</h4>
-            <span className="profile-id">{userId}</span>
-          </div>
+          {!isCollapsed && (
+            <div className="profile-info">
+              <h4 className="profile-name">{userName}</h4>
+              <span className="profile-id">{userId}</span>
+            </div>
+          )}
         </div>
 
         {/* Navigation Menu */}
@@ -169,16 +181,18 @@ function UserSidebar({ isOpen, onClose, user }) {
                       isParentActive || isActive ? "user-nav-item--active" : ""
                     } ${isExpanded ? "user-nav-item--expanded" : ""}`}
                     onClick={() => toggleExpand(item.id)}
+                    title={item.label}
                   >
                     <span className="nav-left">
                       <Icon className="nav-icon" />
-                      <span>{item.label}</span>
+                      {!isCollapsed && <span>{item.label}</span>}
                     </span>
-                    {isExpanded ? (
-                      <FiChevronDown className="nav-chevron" />
-                    ) : (
-                      <FiChevronRight className="nav-chevron" />
-                    )}
+                    {!isCollapsed &&
+                      (isExpanded ? (
+                        <FiChevronDown className="nav-chevron" />
+                      ) : (
+                        <FiChevronRight className="nav-chevron" />
+                      ))}
                   </button>
                 ) : item.external ? (
                   <a
@@ -186,10 +200,11 @@ function UserSidebar({ isOpen, onClose, user }) {
                     target="_blank"
                     rel="noreferrer"
                     className="user-nav-item"
+                    title={item.label}
                   >
                     <span className="nav-left">
                       <Icon className="nav-icon" />
-                      <span>{item.label}</span>
+                      {!isCollapsed && <span>{item.label}</span>}
                     </span>
                   </a>
                 ) : (
@@ -198,6 +213,7 @@ function UserSidebar({ isOpen, onClose, user }) {
                     className={`user-nav-item ${
                       isActive ? "user-nav-item--active" : ""
                     }`}
+                    title={item.label}
                     onClick={() => {
                       if (item.hasSubmenu) {
                         toggleExpand(item.id);
@@ -208,16 +224,16 @@ function UserSidebar({ isOpen, onClose, user }) {
                   >
                     <span className="nav-left">
                       <Icon className="nav-icon" />
-                      <span>{item.label}</span>
+                      {!isCollapsed && <span>{item.label}</span>}
                     </span>
-                    {item.hasSubmenu && (
+                    {!isCollapsed && item.hasSubmenu && (
                       <FiChevronRight className="nav-chevron" />
                     )}
                   </Link>
                 )}
 
                 {/* Submenu items */}
-                {item.children && isExpanded && (
+                {!isCollapsed && item.children && isExpanded && (
                   <div className="user-nav-subitems">
                     {item.children.map((child) => {
                       const isChildActive = location.pathname === child.path;
