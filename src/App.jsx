@@ -1,11 +1,16 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
-import Login from "./pages/Login";
-import AdminLogin from "./pages/AdminLogin";
+import Login from "./pages/login/Login";
+import AdminLogin from "./pages/login/AdminLogin";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
-import AdminDashboard from "./pages/AdminDashboard";
-import UserDashboard from "./pages/UserDashboard";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminClubBusiness from "./pages/admin/genealogy/ClubBusiness";
+import AdminEnrollerBusiness from "./pages/admin/genealogy/EnrollerBusiness";
+import AdminStructureBusiness from "./pages/admin/genealogy/StructureBusiness";
+import AdminListBusiness from "./pages/admin/genealogy/ListBusiness";
+
+import UserDashboard from "./pages/user/UserDashboard";
 import ClubBusiness from "./pages/user/genealogy/ClubBusiness";
 import EnrollerBusiness from "./pages/user/genealogy/EnrollerBusiness";
 import StructureBusiness from "./pages/user/genealogy/StructureBusiness";
@@ -224,6 +229,58 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/admin/dashboard/network"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/dashboard/business"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/business/club"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminClubBusiness />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/business/enroller"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminEnrollerBusiness />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/business/structure"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminStructureBusiness />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/business/list"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminListBusiness />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/admin/genealogy/binary" element={<Navigate to="/admin/business/club" replace />} />
+        <Route path="/admin/genealogy/sponsor" element={<Navigate to="/admin/business/enroller" replace />} />
+        <Route path="/admin/genealogy/tree" element={<Navigate to="/admin/business/structure" replace />} />
+        <Route path="/admin/genealogy/list" element={<Navigate to="/admin/business/list" replace />} />
 
         {/* Admin Route Aliases */}
         <Route path="/admin-login" element={<Navigate to="/admin/login" replace />} />

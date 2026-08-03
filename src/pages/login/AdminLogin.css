@@ -1,0 +1,17 @@
+.admin-login-page {
+  background: #f7f7f7;
+}
+
+.admin-login-page .login-card {
+  background: #ffffff;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+}
+
+.admin-login-page .login-btn {
+  background: #ffc52d;
+  color: white;
+}
+
+.admin-login-page .login-btn:hover {
+  background: #f2b500;
+}

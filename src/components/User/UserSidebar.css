@@ -130,6 +130,26 @@
   flex-direction: column;
 }
 
+.user-sidebar a,
+.user-sidebar button,
+.user-nav-item,
+.user-nav-subitem {
+  text-decoration: none !important;
+}
+
+.user-sidebar a:hover,
+.user-sidebar button:hover,
+.user-nav-item:hover,
+.user-nav-subitem:hover,
+.user-sidebar a:focus,
+.user-sidebar button:focus,
+.user-nav-item:focus,
+.user-nav-subitem:focus,
+.user-nav-item--active,
+.user-nav-subitem--active {
+  text-decoration: none !important;
+}
+
 .user-nav-item {
   display: flex;
   align-items: center;
@@ -139,7 +159,7 @@
   color: #5a6578;
   font-weight: 500;
   font-size: 14px;
-  text-decoration: none;
+  text-decoration: none !important;
   background: transparent;
   border: none;
   cursor: pointer;

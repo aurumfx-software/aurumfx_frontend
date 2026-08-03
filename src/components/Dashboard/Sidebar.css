@@ -131,6 +131,26 @@
   gap: 2px;
 }
 
+.dashboard-sidebar a,
+.dashboard-sidebar button,
+.nav-item,
+.nav-subitem {
+  text-decoration: none !important;
+}
+
+.dashboard-sidebar a:hover,
+.dashboard-sidebar button:hover,
+.nav-item:hover,
+.nav-subitem:hover,
+.dashboard-sidebar a:focus,
+.dashboard-sidebar button:focus,
+.nav-item:focus,
+.nav-subitem:focus,
+.nav-item--active,
+.nav-subitem--active {
+  text-decoration: none !important;
+}
+
 .nav-subitem {
   display: flex;
   align-items: center;
@@ -143,6 +163,7 @@
   font-size: 13px;
   color: #666;
   text-align: left;
+  text-decoration: none !important;
   transition: background 0.15s, color 0.15s;
 }
 

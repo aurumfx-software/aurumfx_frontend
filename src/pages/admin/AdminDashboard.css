@@ -1,0 +1,784 @@
+.admin-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+/* Alert Banner */
+.alert-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  background: #ffc52d;
+  border-radius: 10px;
+  color: #333;
+}
+
+.alert-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.alert-banner p {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.alert-link {
+  background: none;
+  border: none;
+  color: #333;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+  font-size: inherit;
+}
+
+/* Admin Business Dashboard Layout */
+.admin-biz-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+/* Main Top 2-Column Grid Layout */
+.biz-layout-main {
+  display: grid;
+  grid-template-columns: 1fr 450px;
+  gap: 20px;
+  align-items: start;
+}
+
+.biz-left-col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.biz-right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: 100%;
+}
+
+/* 6 Stat Cards Grid (4 in row 1, 2 in row 2) */
+.biz-stat-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+/* Sales Performance Card (Orange Gradient) */
+.biz-sales-banner-card {
+  grid-column: span 1;
+  background: linear-gradient(135deg, #ffc52d 0%, #ffb100 100%);
+  border-radius: 12px;
+  padding: 18px 20px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4px 14px rgba(255, 197, 45, 0.25);
+  position: relative;
+  overflow: hidden;
+  min-height: 130px;
+}
+
+.banner-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.banner-card-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.banner-card-select {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: #ffffff;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+}
+
+.banner-card-select option {
+  color: #333;
+  background: #fff;
+}
+
+.banner-card-body {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.banner-values {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.banner-main-val {
+  font-size: 28px;
+  font-weight: 900;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.banner-badges {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.badge-income {
+  font-size: 11px;
+  font-weight: 700;
+  color: #16a34a;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 3px 8px;
+  border-radius: 12px;
+}
+
+.badge-expense {
+  font-size: 11px;
+  font-weight: 700;
+  color: #dc2626;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 3px 8px;
+  border-radius: 12px;
+}
+
+.sales-banner-graphic {
+  width: 90px;
+  height: 70px;
+  margin-right: -10px;
+}
+
+/* White Stat Card Base */
+.biz-stat-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 18px 20px;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 130px;
+}
+
+.stat-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stat-card-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.stat-card-val {
+  font-size: 22px;
+  font-weight: 800;
+  color: #111827;
+}
+
+.stat-card-lbl {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.stat-card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: #fffdf0;
+  border: 1px solid #fef08a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Card Base */
+.biz-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.biz-card-header-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+/* Sales Over View 2x3 Grid */
+.sales-overview-card {
+  width: 100%;
+}
+
+.sales-periods-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.period-box {
+  background: #ffffff;
+  border: 1px solid #f3f4f6;
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+}
+
+.period-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.period-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: #fffdf0;
+  border: 1px solid #fef08a;
+  color: #e5a800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.period-title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.period-name {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.period-date {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.period-amount {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+}
+
+/* Sales Graph Card */
+.sales-graph-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.graph-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.date-picker-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.date-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.date-field-lbl {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.date-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.date-input-wrap input {
+  padding: 6px 30px 6px 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 12px;
+  color: #374151;
+  background: #f9fafb;
+  width: 110px;
+}
+
+.date-icon {
+  position: absolute;
+  right: 8px;
+  font-size: 14px;
+  color: #e5a800;
+  pointer-events: none;
+}
+
+.sales-graph-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+  flex: 1;
+  justify-content: space-between;
+}
+
+.sales-graph-svg {
+  width: 100%;
+  height: 240px;
+}
+
+.graph-tick-text {
+  font-size: 11px;
+  fill: #9ca3af;
+}
+
+.sales-graph-legend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  font-size: 13px;
+  color: #4b5563;
+  margin-top: 10px;
+}
+
+.legend-entry {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legend-box {
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+}
+
+.legend-box--package {
+  background: #78350f;
+}
+
+.legend-box--product {
+  background: #ffc52d;
+}
+
+/* Bottom Grid (Tables) */
+.biz-bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.biz-table-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.biz-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.biz-table th {
+  background: #f9fafb;
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #6b7280;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+/* Empty State Box */
+.empty-state-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 20px;
+  gap: 12px;
+}
+
+.empty-graphic-wrapper {
+  width: 120px;
+  height: 90px;
+}
+
+.empty-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.empty-state-text {
+  font-size: 14px;
+  font-weight: 700;
+  color: #374151;
+}
+
+/* Legacy Dashboard Grid */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 180px 1fr 260px;
+  grid-template-rows: auto auto auto;
+  gap: 16px;
+}
+
+.grid-kpi {
+  grid-row: 1 / 3;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.grid-chart {
+  grid-column: 2;
+  grid-row: 1 / 3;
+}
+
+.grid-users {
+  grid-column: 3;
+  grid-row: 1 / 3;
+}
+
+.grid-tickets {
+  grid-column: 1;
+  grid-row: 3;
+}
+
+.grid-map {
+  grid-column: 2;
+  grid-row: 3;
+}
+
+.grid-table {
+  grid-column: 3;
+  grid-row: 3;
+}
+
+/* Card Base */
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid #f0f0f0;
+}
+
+.card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 16px;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.card-header h3 {
+  margin-bottom: 0;
+}
+
+.card-select {
+  padding: 6px 12px;
+  border: 1px solid #eee;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #555;
+  background: #fff;
+  cursor: pointer;
+}
+
+/* KPI Cards */
+.kpi-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex: 1;
+}
+
+.kpi-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: #fff8e6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffc52d;
+  font-size: 20px;
+}
+
+.kpi-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.kpi-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: #222;
+  letter-spacing: -0.5px;
+}
+
+.kpi-label {
+  font-size: 12.5px;
+  color: #888;
+}
+
+.network-chart {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.chart-axis-label {
+  font-size: 11px;
+  fill: #aaa;
+}
+
+.users-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.users-total {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.users-icon {
+  font-size: 28px;
+  color: #ffc52d;
+}
+
+.users-count {
+  display: block;
+  font-size: 28px;
+  font-weight: 700;
+  color: #222;
+  line-height: 1.1;
+}
+
+.users-label {
+  font-size: 13px;
+  color: #888;
+}
+
+.users-gauges {
+  display: flex;
+  justify-content: space-around;
+  gap: 12px;
+}
+
+.gauge-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.gauge-ring {
+  position: relative;
+  width: 90px;
+  height: 90px;
+}
+
+.gauge-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.gauge-value {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 700;
+  color: #333;
+}
+
+.gauge-label {
+  font-size: 11.5px;
+  color: #888;
+  text-align: center;
+  max-width: 90px;
+}
+
+.tickets-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tickets-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tickets-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #222;
+}
+
+.tickets-label {
+  font-size: 12px;
+  color: #888;
+}
+
+.tickets-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: #666;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.legend-dot--open {
+  background: #ffc52d;
+}
+
+.legend-dot--closed {
+  background: #333;
+}
+
+.members-map {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.registrations-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.registrations-table th {
+  text-align: left;
+  padding: 10px 12px;
+  font-weight: 600;
+  color: #555;
+  border-bottom: 1px solid #eee;
+  white-space: nowrap;
+}
+
+.registrations-table td {
+  padding: 12px;
+  color: #444;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.registrations-table tbody tr:hover {
+  background: #fafafa;
+}
+
+.user-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.user-id {
+  font-weight: 600;
+  color: #333;
+}
+
+.user-email {
+  font-size: 12px;
+  color: #999;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .biz-layout-main {
+    grid-template-columns: 1fr;
+  }
+  .biz-stat-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .biz-bottom-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .biz-stat-cards-grid {
+    grid-template-columns: 1fr;
+  }
+  .sales-periods-grid {
+    grid-template-columns: 1fr;
+  }
+}
