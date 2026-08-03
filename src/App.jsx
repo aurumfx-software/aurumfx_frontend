@@ -15,6 +15,7 @@ import FundTransfer from "./pages/user/financial/FundTransfer";
 import Withdrawals from "./pages/user/financial/Withdrawals";
 import Investments from "./pages/user/financial/Investments";
 import Profile from "./pages/user/Profile";
+import HelpCenterPage from "./pages/user/help/HelpCenterPage";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./routes/ProtectedRoute";
 
@@ -120,6 +121,66 @@ function App() {
         <Route
           path="/user/profile/activity"
           element={<Navigate to="/user/profile" replace />}
+        />
+        <Route
+          path="/user/help/faqs"
+          element={
+            <ProtectedRoute requiredRole="user">
+              <HelpCenterPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/help/knowledge-base"
+          element={
+            <ProtectedRoute requiredRole="user">
+              <HelpCenterPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/help/emails"
+          element={
+            <ProtectedRoute requiredRole="user">
+              <HelpCenterPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/help/tickets"
+          element={
+            <ProtectedRoute requiredRole="user">
+              <HelpCenterPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/help/documents"
+          element={
+            <ProtectedRoute requiredRole="user">
+              <HelpCenterPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/help/videos"
+          element={
+            <ProtectedRoute requiredRole="user">
+              <HelpCenterPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/help"
+          element={<Navigate to="/user/help/faqs" replace />}
+        />
+        <Route
+          path="/user/help-center/mails/inbox"
+          element={<Navigate to="/user/help/emails" replace />}
+        />
+        <Route
+          path="/user/help/mails"
+          element={<Navigate to="/user/help/emails" replace />}
         />
 
         {/* User Route Aliases */}

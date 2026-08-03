@@ -57,6 +57,14 @@ const userNavItems = [
     label: "Help Center",
     icon: FiHelpCircle,
     hasSubmenu: true,
+    children: [
+      { id: "faq", label: "FAQ's", path: "/user/help/faqs" },
+      { id: "knowledge", label: "Knowledge Base", path: "/user/help/knowledge-base" },
+      { id: "emails", label: "Emails", path: "/user/help/emails" },
+      { id: "tickets", label: "Support Tickets", path: "/user/help/tickets" },
+      { id: "documents", label: "Documents", path: "/user/help/documents" },
+      { id: "videos", label: "Videos", path: "/user/help/videos" },
+    ],
   },
   { id: "telegram", label: "Join Telegram", icon: FiSend, external: "https://t.me" },
 ];
