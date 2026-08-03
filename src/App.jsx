@@ -10,6 +10,8 @@ import ClubBusiness from "./pages/user/genealogy/ClubBusiness";
 import EnrollerBusiness from "./pages/user/genealogy/EnrollerBusiness";
 import StructureBusiness from "./pages/user/genealogy/StructureBusiness";
 import ListBusiness from "./pages/user/genealogy/ListBusiness";
+import RankAchievers from "./pages/user/achievers/RankAchievers";
+import CriteriaAchievers from "./pages/user/achievers/CriteriaAchievers";
 import EWallet from "./pages/user/financial/EWallet";
 import FundTransfer from "./pages/user/financial/FundTransfer";
 import Withdrawals from "./pages/user/financial/Withdrawals";
@@ -65,6 +67,30 @@ function App() {
               <ListBusiness />
             </ProtectedRoute>
           }
+        />
+        <Route
+          path="/user/achievers/rank"
+          element={
+            <ProtectedRoute requiredRole="user">
+              <RankAchievers />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/achievers_list/rank_achievers"
+          element={<Navigate to="/user/achievers/rank" replace />}
+        />
+        <Route
+          path="/user/achievers/criteria"
+          element={
+            <ProtectedRoute requiredRole="user">
+              <CriteriaAchievers />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/achievers_list/criteria_achievers"
+          element={<Navigate to="/user/achievers/criteria" replace />}
         />
         <Route
           path="/user/financial/ewallet"
