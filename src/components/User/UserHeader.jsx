@@ -7,17 +7,25 @@ import "./UserHeader.css";
 function UserHeader({ onMenuToggle, user }) {
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [notifOpen, setNotifOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const notifRef = useRef(null);
 
   const userName = user?.name || user?.fullName || "PRAVEEN";
   const userId = user?.userId || localStorage.getItem("userId") || "FX259";
   const userEmail = user?.email || "sreedharan1962@gmail.com";
 
-  // Close dropdown when clicking outside
+  // Notifications state (defaults to 0 unread messages matching screenshot)
+  const [notifications] = useState([]);
+
+  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropdownOpen(false);
+      }
+      if (notifRef.current && !notifRef.current.contains(event.target)) {
+        setNotifOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -49,10 +57,36 @@ function UserHeader({ onMenuToggle, user }) {
           <span>INR ₹</span>
         </button>
 
-        <button type="button" className="header-icon-btn" aria-label="Notifications">
-          <FiBell />
-          <span className="notification-dot" />
-        </button>
+        {/* Notifications Icon Button with Dropdown */}
+        <div className="header-notif-dropdown-container" ref={notifRef}>
+          <button
+            type="button"
+            className={`header-icon-btn ${notifOpen ? "header-icon-btn--active" : ""}`}
+            onClick={() => setNotifOpen((prev) => !prev)}
+            aria-label="Notifications"
+            aria-expanded={notifOpen}
+          >
+            <FiBell className={notifOpen ? "bell-icon--active" : ""} />
+            {notifications.length > 0 && <span className="notification-dot" />}
+          </button>
+
+          {notifOpen && (
+            <div className="notifications-dropdown">
+              <h4 className="notif-title">Notifications</h4>
+              <p className="notif-sub">You have {notifications.length} unread messages</p>
+              {notifications.length > 0 && (
+                <div className="notif-list">
+                  {notifications.map((n) => (
+                    <div key={n.id} className="notif-item">
+                      <span className="notif-msg">{n.message}</span>
+                      <span className="notif-time">{n.time}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
 
         <button type="button" className="header-icon-btn" aria-label="Settings">
           <FiSettings />

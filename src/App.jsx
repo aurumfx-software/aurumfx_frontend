@@ -12,6 +12,9 @@ import StructureBusiness from "./pages/user/genealogy/StructureBusiness";
 import ListBusiness from "./pages/user/genealogy/ListBusiness";
 import EWallet from "./pages/user/financial/EWallet";
 import FundTransfer from "./pages/user/financial/FundTransfer";
+import Withdrawals from "./pages/user/financial/Withdrawals";
+import Investments from "./pages/user/financial/Investments";
+import Profile from "./pages/user/Profile";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./routes/ProtectedRoute";
 
@@ -85,6 +88,38 @@ function App() {
         <Route
           path="/user/financial/funds-transfer"
           element={<Navigate to="/user/financial/transfer" replace />}
+        />
+        <Route
+          path="/user/financial/withdrawals"
+          element={
+            <ProtectedRoute requiredRole="user">
+              <Withdrawals />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/financial/payout"
+          element={<Navigate to="/user/financial/withdrawals" replace />}
+        />
+        <Route
+          path="/user/financial/investments"
+          element={
+            <ProtectedRoute requiredRole="user">
+              <Investments />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/profile"
+          element={
+            <ProtectedRoute requiredRole="user">
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/profile/activity"
+          element={<Navigate to="/user/profile" replace />}
         />
 
         {/* User Route Aliases */}

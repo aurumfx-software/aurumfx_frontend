@@ -1,0 +1,158 @@
+.withdrawals-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-bottom: 40px;
+}
+
+/* Blue Bank Details Info Alert Banner matching screenshot */
+.bank-info-banner {
+  background: #e0f2fe;
+  border: 1px solid #bae6fd;
+  border-radius: 10px;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #0369a1;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.04);
+}
+
+.bank-info-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bank-info-icon-badge {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #0284c7;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.bank-link {
+  color: #0284c7;
+  font-weight: 700;
+  text-decoration: underline;
+  margin-left: 2px;
+}
+
+.bank-link:hover {
+  color: #0369a1;
+}
+
+/* Available Balance Card */
+.balance-badge-card {
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
+  border-radius: 14px;
+  padding: 22px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 280px;
+  max-width: 100%;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+}
+
+.balance-badge-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.balance-badge-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.balance-badge-val {
+  font-size: 26px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.balance-badge-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: #78350f;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+
+/* Withdrawal History Table Card */
+.withdrawals-table-card {
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+  overflow: hidden;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.withdrawals-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.withdrawals-table th {
+  background: #f8fafc;
+  padding: 16px 20px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #94a3b8;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.withdrawals-table td {
+  padding: 16px 20px;
+  font-size: 14px;
+  color: #334155;
+  border-bottom: 1px solid #f8fafc;
+}
+
+.amount-cell {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* Empty State */
+.withdrawals-empty-state {
+  padding: 60px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
+
+.empty-illustration {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.85;
+}
+
+.empty-text {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1e293b;
+}
