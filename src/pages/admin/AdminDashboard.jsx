@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   FiGift,
   FiCreditCard,
   FiUsers,
+  FiBriefcase,
   FiInfo,
   FiCalendar,
 } from "react-icons/fi";

@@ -158,12 +158,6 @@ function Sidebar({ isOpen, onClose }) {
     setExpanded((prev) => ({ ...prev, [itemId]: !prev[itemId] }));
   };
 
-  const handleChildClick = (e, path) => {
-    e.stopPropagation();
-    navigate(path);
-    if (onClose) onClose();
-  };
-
   return (
     <aside className={`dashboard-sidebar ${isOpen ? "sidebar--open" : ""}`}>
       <div className="sidebar-logo">
@@ -231,17 +225,17 @@ function Sidebar({ isOpen, onClose }) {
                         location.pathname === "/admin/dashboard/business");
 
                     return (
-                      <button
+                      <Link
                         key={child.id}
-                        type="button"
+                        to={child.path}
                         className={`nav-subitem ${
                           isChildActive ? "nav-subitem--active" : ""
                         }`}
-                        onClick={(e) => handleChildClick(e, child.path)}
+                        onClick={onClose}
                       >
                         {isChildActive && <span className="nav-dot" />}
                         <span>{child.label}</span>
-                      </button>
+                      </Link>
                     );
                   })}
                 </div>
