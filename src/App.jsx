@@ -281,7 +281,8 @@ function App() {
         <Route path="/admin/genealogy/list" element={<Navigate to="/admin/business/list" replace />} />
 
         {/* Financial Routes */}
-        <Route path="/admin/financial/ewallet" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+        <Route path="/admin/financial/ewallet" element={<ProtectedRoute requiredRole="admin"><AdminEWallet /></ProtectedRoute>} />
+        <Route path="/admin/financial/e-wallet" element={<Navigate to="/admin/financial/ewallet" replace />} />
         <Route path="/admin/financial/deposit" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
         <Route path="/admin/financial/credit" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
         <Route path="/admin/financial/payout" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
