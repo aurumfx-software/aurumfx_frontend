@@ -9,6 +9,7 @@ import AdminClubBusiness from "./pages/admin/genealogy/ClubBusiness";
 import AdminEnrollerBusiness from "./pages/admin/genealogy/EnrollerBusiness";
 import AdminStructureBusiness from "./pages/admin/genealogy/StructureBusiness";
 import AdminListBusiness from "./pages/admin/genealogy/ListBusiness";
+import AdminEWallet from "./pages/admin/financial/AdminEWallet";
 import AdminModulePage from "./pages/admin/AdminModulePage";
 
 import UserDashboard from "./pages/user/UserDashboard";
