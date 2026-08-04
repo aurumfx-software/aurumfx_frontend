@@ -1,0 +1,187 @@
+.admin-documents-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+/* Page Header & Breadcrumb */
+.admin-page-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.admin-page-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #1e293b;
+}
+
+.admin-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  color: #64748b;
+}
+
+.crumb-sep {
+  color: #cbd5e1;
+}
+
+.crumb-active {
+  color: #94a3b8;
+}
+
+/* Main Card Wrapper */
+.admin-documents-card {
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.card-top-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 18px;
+}
+
+.card-header-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+/* Yellow Action Button */
+.upload-file-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffc52d;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #1e293b;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(255, 197, 45, 0.2);
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.upload-file-btn:hover {
+  background: #f5b700;
+  transform: translateY(-1px);
+}
+
+/* Table Design */
+.table-overflow-box {
+  overflow-x: auto;
+}
+
+.admin-documents-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.admin-documents-table th {
+  background: #f8fafc;
+  padding: 14px 18px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #64748b;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.admin-documents-table td {
+  padding: 14px 18px;
+  font-size: 13.5px;
+  color: #334155;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.fw-bold {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* Empty State Box matching Screenshot 2 precisely */
+.docs-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  gap: 16px;
+}
+
+.empty-magnifier-box {
+  width: 120px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.magnifier-art {
+  position: relative;
+  width: 70px;
+  height: 70px;
+}
+
+.folder-back-art {
+  font-size: 64px;
+  color: #e2e8f0;
+  stroke-width: 1.5px;
+}
+
+.glass-lens-art {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 3px solid #94a3b8;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.glass-lens-art::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 80%;
+  width: 4px;
+  height: 14px;
+  background: #94a3b8;
+  transform: rotate(-45deg);
+  transform-origin: top left;
+  border-radius: 2px;
+}
+
+.glass-quest {
+  font-size: 16px;
+  font-weight: 900;
+  color: #64748b;
+}
+
+.empty-state-label {
+  font-size: 15px;
+  font-weight: 800;
+  color: #475569;
+  margin: 0;
+}

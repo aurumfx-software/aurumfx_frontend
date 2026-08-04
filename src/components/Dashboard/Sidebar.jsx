@@ -66,7 +66,6 @@ const navItems = [
     children: [
       { id: "documents", label: "Documents", path: "/admin/tools/documents" },
       { id: "videos", label: "Video Tutorials", path: "/admin/tools/videos" },
-      { id: "faqs", label: "FAQ's", path: "/admin/tools/faqs" },
     ],
   },
   {

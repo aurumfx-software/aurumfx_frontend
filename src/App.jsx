@@ -10,6 +10,7 @@ import AdminEnrollerBusiness from "./pages/admin/genealogy/EnrollerBusiness";
 import AdminStructureBusiness from "./pages/admin/genealogy/StructureBusiness";
 import AdminListBusiness from "./pages/admin/genealogy/ListBusiness";
 import AdminEWallet from "./pages/admin/financial/AdminEWallet";
+import AdminDocuments from "./pages/admin/tools/AdminDocuments";
 import AdminModulePage from "./pages/admin/AdminModulePage";
 
 import UserDashboard from "./pages/user/UserDashboard";
@@ -295,7 +296,7 @@ function App() {
         <Route path="/admin/communication/announcements" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
 
         {/* Tools Routes */}
-        <Route path="/admin/tools/documents" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+        <Route path="/admin/tools/documents" element={<ProtectedRoute requiredRole="admin"><AdminDocuments /></ProtectedRoute>} />
         <Route path="/admin/tools/videos" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
         <Route path="/admin/tools/faqs" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
 
