@@ -19,7 +19,7 @@ function AdminStructureBusiness() {
           </div>
         </div>
 
-        <div className="admin-tree-card full-width-card">
+        <div className="list-page-card">
           <div className="admin-tree-toolbar">
             <input
               type="text"

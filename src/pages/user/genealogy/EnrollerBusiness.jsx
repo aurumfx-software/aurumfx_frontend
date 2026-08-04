@@ -55,7 +55,7 @@ function EnrollerBusiness() {
         </div>
 
         {/* Main Card */}
-        <div className="tree-card full-width-card">
+        <div className="list-page-card">
           {/* Top Search Controls */}
           <div className="tree-search-form">
             <input
