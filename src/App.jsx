@@ -221,15 +221,11 @@ function App() {
         <Route path="/dashboard" element={<Navigate to="/user/dashboard" replace />} />
 
         {/* Admin Routes (/admin prefix) */}
+        <Route path="/admin" element={<Navigate to="/admin/dashboard/business" replace />} />
         <Route path="/admin/login" element={<AdminLogin />} />
-        <Route
-          path="/admin/dashboard"
-          element={
-            <ProtectedRoute requiredRole="admin">
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/admin-login" element={<Navigate to="/admin/login" replace />} />
+        <Route path="/admin-dashboard" element={<Navigate to="/admin/dashboard/business" replace />} />
+        <Route path="/admin/dashboard" element={<Navigate to="/admin/dashboard/business" replace />} />
         <Route
           path="/admin/dashboard/network"
           element={
