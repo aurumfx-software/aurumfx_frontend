@@ -47,7 +47,7 @@ function ListBusiness() {
         </div>
 
         {/* Main Card */}
-        <div className="tree-card full-width-card">
+        <div className="list-page-card">
           {/* Date Filter & Search Form */}
           <form
             className="list-filter-form"

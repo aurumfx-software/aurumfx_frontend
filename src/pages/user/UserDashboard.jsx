@@ -4,6 +4,8 @@ import {
   FiMoreVertical,
   FiUsers,
   FiTrendingUp,
+  FiArrowUpRight,
+  FiBriefcase,
 } from "react-icons/fi";
 import UserLayout from "../../components/User/UserLayout";
 import { IncomePayoutDonutChart, NetworkAreaChart } from "../../components/User/UserCharts";
@@ -126,7 +128,7 @@ function UserDashboard() {
               {/* Income Card */}
               <div className="metric-card">
                 <div className="metric-card-icon icon--income">
-                  💰
+                  <FiTrendingUp style={{ color: "#d97706" }} />
                 </div>
                 <div className="metric-card-info">
                   <span className="metric-label">Income</span>
@@ -139,7 +141,7 @@ function UserDashboard() {
               {/* Withdrawals Card */}
               <div className="metric-card">
                 <div className="metric-card-icon icon--withdraw">
-                  🧮
+                  <FiArrowUpRight style={{ color: "#ef4444" }} />
                 </div>
                 <div className="metric-card-info">
                   <span className="metric-label">Withdrawals</span>
@@ -152,7 +154,7 @@ function UserDashboard() {
               {/* Balance Card */}
               <div className="metric-card">
                 <div className="metric-card-icon icon--balance">
-                  👛
+                  <FiBriefcase style={{ color: "#3b82f6" }} />
                 </div>
                 <div className="metric-card-info">
                   <span className="metric-label">Balance</span>

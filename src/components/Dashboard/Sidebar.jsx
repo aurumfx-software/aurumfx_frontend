@@ -44,7 +44,7 @@ const navItems = [
     children: [
       { id: "ewallet", label: "E-Wallet", path: "/admin/financial/ewallet" },
       { id: "deposit-wallet", label: "Deposit Wallet", path: "/admin/financial/deposit" },
-      { id: "fund-credit", label: "Fund Credit", path: "/admin/financial/credit" },
+      { id: "fund-transfer", label: "Fund Transfer", path: "/admin/financial/transfer" },
       { id: "payout", label: "Payout", path: "/admin/financial/payout" },
       { id: "investments", label: "Investments", path: "/admin/financial/investments" },
     ],

@@ -6,6 +6,7 @@ const moduleTitles = {
   "/admin/financial/ewallet": { title: "E-Wallet", category: "Financial" },
   "/admin/financial/deposit": { title: "Deposit Wallet", category: "Financial" },
   "/admin/financial/credit": { title: "Fund Credit", category: "Financial" },
+  "/admin/financial/transfer": { title: "Fund Transfer", category: "Financial" },
   "/admin/financial/payout": { title: "Payout Management", category: "Financial" },
   "/admin/financial/investments": { title: "Investments Overview", category: "Financial" },
   "/admin/communication/mails": { title: "Emails & Mails", category: "Communication" },

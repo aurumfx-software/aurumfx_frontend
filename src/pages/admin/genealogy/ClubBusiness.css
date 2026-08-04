@@ -101,7 +101,7 @@
 /* Grid Layout (Left Canvas + Right Sidebar) */
 .admin-club-grid {
   display: grid;
-  grid-template-columns: 1fr 280px;
+  grid-template-columns: 1fr 480px;
   gap: 20px;
   align-items: start;
 }
@@ -251,8 +251,8 @@
 
 /* Member Sidebar Stat Cards */
 .admin-member-sidebar {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 10px;
 }
 
