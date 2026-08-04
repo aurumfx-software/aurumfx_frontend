@@ -6,13 +6,12 @@ import { DEMO_USERS } from "../utils/auth";
  * Sends login credentials to backend /auth/login
  * Fallbacks to demo users if backend is not reachable/404
  */
-export const loginApi = async (userId, password, requiredRole = null) => {
+export const loginApi = async (userId, password) => {
   const trimmedUserId = String(userId || "").trim();
   try {
     const response = await api.post("/auth/login", {
       user_id: trimmedUserId,
       password,
-      role: requiredRole,
     });
 
     const payload = response.data;
@@ -21,10 +20,11 @@ export const loginApi = async (userId, password, requiredRole = null) => {
     }
 
     const data = payload?.data || payload;
-    const role = payload?.role || data?.role || requiredRole || "user";
+    const isDetectedAdmin = trimmedUserId.toLowerCase() === "aurumfx" || trimmedUserId.toLowerCase() === "admin";
+    const role = payload?.role || data?.role || (isDetectedAdmin ? "admin" : "user");
     const token = payload?.token || data?.token || payload?.access_token || data?.access_token || `token-${role}`;
     const user = payload?.user || data?.user || { userId: trimmedUserId, role, name: trimmedUserId };
-    const redirectPath = payload?.redirect || data?.redirect || (role === "admin" ? "/admin/dashboard" : "/user/dashboard");
+    const redirectPath = payload?.redirect || data?.redirect || (role === "admin" ? "/admin/dashboard/business" : "/user/dashboard");
 
     localStorage.setItem("token", token);
     localStorage.setItem("role", role);
@@ -40,18 +40,12 @@ export const loginApi = async (userId, password, requiredRole = null) => {
 
     return { success: true, redirect: redirectPath, data: payload };
   } catch (error) {
-    // Check fallback demo users if API fails or is offline or unauthorized
+    // Check fallback demo users if API fails or is offline
     const demoUser = DEMO_USERS.find(
       (u) => u.userId.toLowerCase() === trimmedUserId.toLowerCase() && u.password === password
     );
 
     if (demoUser) {
-      if (requiredRole && demoUser.role !== requiredRole) {
-        return {
-          success: false,
-          error: `Access Denied: This portal is for ${requiredRole} accounts only.`,
-        };
-      }
       const token = `demo-token-${demoUser.role}`;
       const userObj = { userId: demoUser.userId, role: demoUser.role, name: demoUser.role === "admin" ? "aurumfx" : "User" };
 
@@ -70,8 +64,8 @@ export const loginApi = async (userId, password, requiredRole = null) => {
       return { success: true, redirect: demoUser.redirect };
     }
 
-    // Direct offline/demo fallback for admin portal logins
-    if (requiredRole === "admin" || trimmedUserId.toLowerCase() === "aurumfx" || trimmedUserId.toLowerCase() === "admin") {
+    // Direct offline fallback for admin usernames (e.g. aurumfx / admin)
+    if (trimmedUserId.toLowerCase() === "aurumfx" || trimmedUserId.toLowerCase() === "admin") {
       const token = `admin-token-${Date.now()}`;
       const userObj = { userId: trimmedUserId || "aurumfx", role: "admin", name: trimmedUserId || "aurumfx" };
 
@@ -84,7 +78,7 @@ export const loginApi = async (userId, password, requiredRole = null) => {
       localStorage.setItem("adminId", userObj.userId);
       localStorage.setItem("adminUser", JSON.stringify(userObj));
 
-      return { success: true, redirect: "/admin/dashboard" };
+      return { success: true, redirect: "/admin/dashboard/business" };
     }
 
     const errorMessage =

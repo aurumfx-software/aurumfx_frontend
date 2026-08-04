@@ -22,7 +22,7 @@ function AdminLogin() {
     setLoading(true);
 
     try {
-      const result = await loginApi(userId, password, "admin");
+      const result = await loginApi(userId, password);
 
       if (result.success) {
         navigate(result.redirect);
