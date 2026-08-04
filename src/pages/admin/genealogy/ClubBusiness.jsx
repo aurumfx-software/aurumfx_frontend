@@ -140,7 +140,7 @@ function AdminClubBusiness() {
                   onClick={() => handleNodeClick(initialTreeNodes.topAdmin)}
                 >
                   <div className="node-circle bg-purple">A</div>
-                  <span className="node-pill">aurumfx</span>
+                  <span className="node-pill pill-red">aurumfx</span>
                 </div>
               </div>
 

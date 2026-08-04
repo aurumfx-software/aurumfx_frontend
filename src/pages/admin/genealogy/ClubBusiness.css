@@ -220,6 +220,10 @@
   border-left: 3px solid #22c55e;
 }
 
+.pill-red {
+  border-left: 3px solid #ef4444;
+}
+
 /* Connecting Lines */
 .tree-line-v {
   width: 2px;

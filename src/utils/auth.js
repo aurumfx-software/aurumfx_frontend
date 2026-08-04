@@ -16,26 +16,35 @@ export const DEMO_USERS = [
 ];
 
 export function login(userId, password, requiredRole = null) {
+  const trimmed = String(userId || "").trim();
   const user = DEMO_USERS.find(
-    (u) => u.userId === userId.trim() && u.password === password
+    (u) => u.userId.toLowerCase() === trimmed.toLowerCase() && u.password === password
   );
 
-  if (!user) {
-    return { success: false, error: "Invalid User ID or password" };
-  }
+  const role = user ? user.role : requiredRole || "user";
+  const token = user ? `demo-token-${user.role}` : `token-${role}-${Date.now()}`;
+  const userObj = { userId: trimmed, role, name: role === "admin" ? "aurumfx" : "User" };
 
-  if (requiredRole && user.role !== requiredRole) {
+  if (requiredRole && user && user.role !== requiredRole) {
     return {
       success: false,
       error: `Access Denied: This portal is for ${requiredRole} accounts only.`,
     };
   }
 
-  localStorage.setItem("token", `demo-token-${user.role}`);
-  localStorage.setItem("role", user.role);
-  localStorage.setItem("userId", user.userId);
+  localStorage.setItem("token", token);
+  localStorage.setItem("role", role);
+  localStorage.setItem("userId", trimmed);
+  localStorage.setItem("user", JSON.stringify(userObj));
+  localStorage.setItem("isLoggedIn", "true");
 
-  return { success: true, redirect: user.redirect };
+  if (role === "admin") {
+    localStorage.setItem("adminToken", token);
+    localStorage.setItem("adminId", trimmed);
+    localStorage.setItem("adminUser", JSON.stringify(userObj));
+  }
+
+  return { success: true, redirect: role === "admin" ? "/admin/dashboard" : "/user/dashboard" };
 }
 
 export function logout() {

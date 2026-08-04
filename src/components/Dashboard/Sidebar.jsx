@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   FiGrid,
   FiBriefcase,
@@ -112,10 +112,21 @@ const navItems = [
 
 function Sidebar({ isOpen, onClose }) {
   const location = useLocation();
+  const navigate = useNavigate();
 
-  // Expand parent item if active child matches location
-  const getInitialExpanded = () => {
-    const state = { dashboard: true, business: true, financial: true };
+  const [expanded, setExpanded] = useState({
+    dashboard: true,
+    business: true,
+    financial: true,
+    communication: false,
+    tools: false,
+    members: false,
+    achievers: false,
+    settings: false,
+    reports: false,
+  });
+
+  useEffect(() => {
     navItems.forEach((item) => {
       if (item.children) {
         const hasActiveChild = item.children.some(
@@ -123,26 +134,40 @@ function Sidebar({ isOpen, onClose }) {
             location.pathname === child.path ||
             (child.id === "network" &&
               (location.pathname === "/admin/dashboard" ||
-                location.pathname === "/admin/dashboard/network"))
+                location.pathname === "/admin/dashboard/network")) ||
+            (child.id === "business" && location.pathname === "/admin/dashboard/business")
         );
         if (hasActiveChild) {
-          state[item.id] = true;
+          setExpanded((prev) => ({ ...prev, [item.id]: true }));
         }
       }
     });
-    return state;
+  }, [location.pathname]);
+
+  const handleParentClick = (e, item) => {
+    e.stopPropagation();
+    setExpanded((prev) => ({ ...prev, [item.id]: true }));
+    if (item.children && item.children.length > 0 && item.children[0].path) {
+      navigate(item.children[0].path);
+      if (onClose) onClose();
+    }
   };
 
-  const [expanded, setExpanded] = useState(getInitialExpanded);
+  const handleChevronClick = (e, itemId) => {
+    e.stopPropagation();
+    setExpanded((prev) => ({ ...prev, [itemId]: !prev[itemId] }));
+  };
 
-  const toggleExpand = (id) => {
-    setExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
+  const handleChildClick = (e, path) => {
+    e.stopPropagation();
+    navigate(path);
+    if (onClose) onClose();
   };
 
   return (
     <aside className={`dashboard-sidebar ${isOpen ? "sidebar--open" : ""}`}>
       <div className="sidebar-logo">
-        <Link to="/admin/dashboard">
+        <Link to="/admin/dashboard/business" onClick={onClose}>
           <img src={logo} alt="AurumFX Admin" />
         </Link>
       </div>
@@ -161,9 +186,10 @@ function Sidebar({ isOpen, onClose }) {
             item.children.some(
               (child) =>
                 location.pathname === child.path ||
-                (child.id === "network" &&
+                (item.id === "dashboard" &&
                   (location.pathname === "/admin/dashboard" ||
-                    location.pathname === "/admin/dashboard/network"))
+                    location.pathname === "/admin/dashboard/network" ||
+                    location.pathname === "/admin/dashboard/business"))
             );
 
           return (
@@ -173,20 +199,23 @@ function Sidebar({ isOpen, onClose }) {
                 className={`nav-item ${item.children ? "nav-item--parent" : ""} ${
                   isParentActive ? "nav-item--active" : ""
                 } ${isItemExpanded && item.children ? "nav-item--expanded" : ""}`}
-                onClick={() => item.children && toggleExpand(item.id)}
+                onClick={(e) => handleParentClick(e, item)}
               >
                 <span className="nav-item-left">
                   <Icon className="nav-icon" />
                   <span>{item.label}</span>
                 </span>
-                {item.children ? (
-                  isItemExpanded ? (
-                    <FiChevronDown className="nav-chevron" />
-                  ) : (
-                    <FiChevronRight className="nav-chevron" />
-                  )
-                ) : (
-                  item.hasSubmenu && <FiChevronRight className="nav-chevron" />
+                {item.children && (
+                  <span
+                    className="chevron-box"
+                    onClick={(e) => handleChevronClick(e, item.id)}
+                  >
+                    {isItemExpanded ? (
+                      <FiChevronDown className="nav-chevron" />
+                    ) : (
+                      <FiChevronRight className="nav-chevron" />
+                    )}
+                  </span>
                 )}
               </button>
 
@@ -197,20 +226,22 @@ function Sidebar({ isOpen, onClose }) {
                       location.pathname === child.path ||
                       (child.id === "network" &&
                         (location.pathname === "/admin/dashboard" ||
-                          location.pathname === "/admin/dashboard/network"));
+                          location.pathname === "/admin/dashboard/network")) ||
+                      (child.id === "business" &&
+                        location.pathname === "/admin/dashboard/business");
 
                     return (
-                      <Link
+                      <button
                         key={child.id}
-                        to={child.path}
+                        type="button"
                         className={`nav-subitem ${
                           isChildActive ? "nav-subitem--active" : ""
                         }`}
-                        onClick={onClose}
+                        onClick={(e) => handleChildClick(e, child.path)}
                       >
                         {isChildActive && <span className="nav-dot" />}
-                        {child.label}
-                      </Link>
+                        <span>{child.label}</span>
+                      </button>
                     );
                   })}
                 </div>

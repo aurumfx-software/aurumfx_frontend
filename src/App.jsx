@@ -9,6 +9,7 @@ import AdminClubBusiness from "./pages/admin/genealogy/ClubBusiness";
 import AdminEnrollerBusiness from "./pages/admin/genealogy/EnrollerBusiness";
 import AdminStructureBusiness from "./pages/admin/genealogy/StructureBusiness";
 import AdminListBusiness from "./pages/admin/genealogy/ListBusiness";
+import AdminModulePage from "./pages/admin/AdminModulePage";
 
 import UserDashboard from "./pages/user/UserDashboard";
 import ClubBusiness from "./pages/user/genealogy/ClubBusiness";
@@ -281,6 +282,42 @@ function App() {
         <Route path="/admin/genealogy/sponsor" element={<Navigate to="/admin/business/enroller" replace />} />
         <Route path="/admin/genealogy/tree" element={<Navigate to="/admin/business/structure" replace />} />
         <Route path="/admin/genealogy/list" element={<Navigate to="/admin/business/list" replace />} />
+
+        {/* Financial Routes */}
+        <Route path="/admin/financial/ewallet" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+        <Route path="/admin/financial/deposit" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+        <Route path="/admin/financial/credit" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+        <Route path="/admin/financial/payout" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+        <Route path="/admin/financial/investments" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+
+        {/* Communication Routes */}
+        <Route path="/admin/communication/mails" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+        <Route path="/admin/communication/tickets" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+        <Route path="/admin/communication/announcements" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+
+        {/* Tools Routes */}
+        <Route path="/admin/tools/documents" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+        <Route path="/admin/tools/videos" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+        <Route path="/admin/tools/faqs" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+
+        {/* Members Management Routes */}
+        <Route path="/admin/members/list" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+        <Route path="/admin/members/add" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+        <Route path="/admin/members/kyc" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+
+        {/* Achievers List Routes */}
+        <Route path="/admin/achievers/rank" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+        <Route path="/admin/achievers/criteria" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+
+        {/* Settings Routes */}
+        <Route path="/admin/settings/general" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+        <Route path="/admin/settings/payment" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+        <Route path="/admin/settings/commissions" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+
+        {/* Reports Routes */}
+        <Route path="/admin/reports/sales" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+        <Route path="/admin/reports/payout" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+        <Route path="/admin/reports/tax" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
 
         {/* Admin Route Aliases */}
         <Route path="/admin-login" element={<Navigate to="/admin/login" replace />} />
