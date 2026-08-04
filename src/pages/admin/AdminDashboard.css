@@ -5,6 +5,50 @@
   width: 100%;
 }
 
+/* Top Sub-section Navigation Tabs */
+.admin-dashboard-tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  padding: 6px;
+  border-radius: 12px;
+  border: 1px solid #f1f5f9;
+  width: fit-content;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.dashboard-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dashboard-tab:hover {
+  color: #1e293b;
+  background: #f8fafc;
+}
+
+.dashboard-tab--active {
+  background: #fff9e6 !important;
+  color: #d97706 !important;
+  font-weight: 700 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.tab-icon {
+  font-size: 16px;
+}
+
 /* Alert Banner */
 .alert-banner {
   display: flex;

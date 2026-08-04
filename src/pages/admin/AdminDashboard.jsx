@@ -238,7 +238,10 @@ function PayoutTrayIcon() {
 
 function AdminDashboard() {
   const location = useLocation();
-  const isBusinessView = location.pathname.includes("/business");
+  const navigate = useNavigate();
+
+  const isNetworkView = location.pathname.includes("/network");
+  const isBusinessView = !isNetworkView;
 
   const [timeframe, setTimeframe] = useState("week");
   const [dashboardData, setDashboardData] = useState(null);
@@ -268,7 +271,27 @@ function AdminDashboard() {
   return (
     <DashboardLayout>
       <div className="admin-dashboard">
-        {/* Render Business View matching exact screenshots */}
+        {/* Top Sub-section Switcher Tabs */}
+        <div className="admin-dashboard-tabs">
+          <button
+            type="button"
+            className={`dashboard-tab ${isBusinessView ? "dashboard-tab--active" : ""}`}
+            onClick={() => navigate("/admin/dashboard/business")}
+          >
+            <FiBriefcase className="tab-icon" />
+            <span>Business</span>
+          </button>
+          <button
+            type="button"
+            className={`dashboard-tab ${isNetworkView ? "dashboard-tab--active" : ""}`}
+            onClick={() => navigate("/admin/dashboard/network")}
+          >
+            <FiUsers className="tab-icon" />
+            <span>Network</span>
+          </button>
+        </div>
+
+        {/* Render Business View vs Network View */}
         {isBusinessView ? (
           <div className="admin-biz-dashboard">
             {/* Main Top Grid (Left: Stat cards + Sales Overview; Right: Sales Graph) */}
