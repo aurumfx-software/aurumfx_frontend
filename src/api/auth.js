@@ -9,7 +9,8 @@ import { DEMO_USERS } from "../utils/auth";
 export const loginApi = async (userId, password, requiredRole = null) => {
   const trimmedUserId = String(userId || "").trim();
   try {
-    const response = await api.post("/auth/login", {
+    const loginEndpoint = (requiredRole && requiredRole.toLowerCase() === "admin") ? "/auth/admin/login" : "/auth/login";
+    const response = await api.post(loginEndpoint, {
       user_id: trimmedUserId,
       password,
     });
