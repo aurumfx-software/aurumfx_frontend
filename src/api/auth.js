@@ -104,15 +104,24 @@ export const loginApi = async (userId, password, requiredRole = null) => {
       return { success: true, redirect: "/admin/dashboard/business" };
     }
 
-    const errorMessage =
+    let errorMessage =
       error.response?.data?.message ||
-      error.response?.data?.error ||
-      error.message ||
-      "Invalid User ID or password";
+      error.response?.data?.error;
+
+    if (!errorMessage || errorMessage.includes("status code") || errorMessage.includes("Request failed")) {
+      if (error.response?.status === 401 || error.response?.status === 404 || error.message?.includes("401") || error.message?.includes("404")) {
+        errorMessage = "User Not Found";
+      } else if (error.message && !error.message.includes("status code") && !error.message.includes("Request failed")) {
+        errorMessage = error.message;
+      } else {
+        errorMessage = "User Not Found";
+      }
+    }
 
     return { success: false, error: errorMessage };
   }
 };
+
 
 /**
  * Register API call

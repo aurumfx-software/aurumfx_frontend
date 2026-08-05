@@ -259,22 +259,11 @@ function AdminSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse }) {
           );
         })}
       </nav>
-
-      {!isCollapsed && (
-        <div className="sidebar-footer">
-          <button
-            type="button"
-            className="sidebar-toggle-full-btn"
-            onClick={onToggleCollapse}
-          >
-            <FiChevronLeft />
-            <span>Minimize Menu</span>
-          </button>
-        </div>
-      )}
     </aside>
   );
 }
+
+
 
 
 

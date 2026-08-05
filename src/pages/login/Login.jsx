@@ -24,11 +24,13 @@ function Login() {
       if (result.success) {
         navigate(result.redirect);
       } else {
-        setError(result.error);
+        const msg = result.error || "User Not Found";
+        setError(msg.includes("status code") || msg.includes("Request failed") ? "User Not Found" : msg);
       }
     } catch {
-      setError("An unexpected error occurred. Please try again.");
+      setError("User Not Found");
     } finally {
+
       setLoading(false);
     }
   };
