@@ -6,7 +6,7 @@ import { DEMO_USERS } from "../utils/auth";
  * Sends login credentials to backend /auth/login
  * Fallbacks to demo users if backend is not reachable/404
  */
-export const loginApi = async (userId, password) => {
+export const loginApi = async (userId, password, requiredRole = null) => {
   const trimmedUserId = String(userId || "").trim();
   try {
     const response = await api.post("/auth/login", {
@@ -22,6 +22,11 @@ export const loginApi = async (userId, password) => {
     const data = payload?.data || payload;
     const isDetectedAdmin = trimmedUserId.toLowerCase() === "aurumfx" || trimmedUserId.toLowerCase() === "admin";
     const role = String(payload?.role || data?.role || (isDetectedAdmin ? "admin" : "user")).toLowerCase();
+
+    if (requiredRole && role !== requiredRole.toLowerCase()) {
+      throw new Error(`Access Denied: This portal is for ${requiredRole} accounts only.`);
+    }
+
     const token = payload?.token || data?.token || payload?.access_token || data?.access_token || `token-${role}`;
     const user = payload?.user || data?.user || { userId: trimmedUserId, role, name: trimmedUserId };
     const redirectPath = role === "admin" ? "/admin/dashboard/business" : "/user/dashboard";
@@ -40,12 +45,22 @@ export const loginApi = async (userId, password) => {
 
     return { success: true, redirect: redirectPath, data: payload };
   } catch (error) {
+    if (error.message && error.message.includes("Access Denied")) {
+      return { success: false, error: error.message };
+    }
     // Check fallback demo users if API fails or is offline
     const demoUser = DEMO_USERS.find(
       (u) => u.userId.toLowerCase() === trimmedUserId.toLowerCase() && u.password === password
     );
 
     if (demoUser) {
+      if (requiredRole && demoUser.role.toLowerCase() !== requiredRole.toLowerCase()) {
+        return {
+          success: false,
+          error: `Access Denied: This portal is for ${requiredRole} accounts only.`,
+        };
+      }
+
       const token = `demo-token-${demoUser.role}`;
       const userObj = { userId: demoUser.userId, role: demoUser.role, name: demoUser.role === "admin" ? "aurumfx" : "User" };
 
@@ -66,6 +81,13 @@ export const loginApi = async (userId, password) => {
 
     // Direct offline fallback for admin usernames (e.g. aurumfx / admin) ONLY if completely offline
     if (!error.response && (trimmedUserId.toLowerCase() === "aurumfx" || trimmedUserId.toLowerCase() === "admin")) {
+      if (requiredRole && requiredRole.toLowerCase() !== "admin") {
+        return {
+          success: false,
+          error: `Access Denied: This portal is for ${requiredRole} accounts only.`,
+        };
+      }
+
       const token = `admin-token-${Date.now()}`;
       const userObj = { userId: trimmedUserId || "aurumfx", role: "admin", name: trimmedUserId || "aurumfx" };
 

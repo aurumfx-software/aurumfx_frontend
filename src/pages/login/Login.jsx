@@ -19,7 +19,7 @@ function Login() {
     setLoading(true);
 
     try {
-      const result = await loginApi(userId, password);
+      const result = await loginApi(userId, password, "user");
 
       if (result.success) {
         navigate(result.redirect);
