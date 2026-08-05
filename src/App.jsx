@@ -16,6 +16,7 @@ import AdminPayout from "./pages/admin/financial/AdminPayout";
 import AdminInvestments from "./pages/admin/financial/AdminInvestments";
 import AdminFAQs from "./pages/admin/communication/AdminFAQs";
 import AdminEmails from "./pages/admin/communication/AdminEmails";
+import AdminHelpCenter from "./pages/admin/communication/AdminHelpCenter";
 import AdminDocuments from "./pages/admin/tools/AdminDocuments";
 import AdminModulePage from "./pages/admin/AdminModulePage";
 
@@ -310,7 +311,8 @@ function App() {
         <Route path="/admin/communication/mails/sent" element={<ProtectedRoute requiredRole="admin"><AdminEmails /></ProtectedRoute>} />
         <Route path="/admin/communication/emails" element={<Navigate to="/admin/communication/mails/inbox" replace />} />
         <Route path="/admin/communication/mails" element={<Navigate to="/admin/communication/mails/inbox" replace />} />
-        <Route path="/admin/communication/help-center" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+        <Route path="/admin/communication/help-center/tickets/:category" element={<ProtectedRoute requiredRole="admin"><AdminHelpCenter /></ProtectedRoute>} />
+        <Route path="/admin/communication/help-center" element={<Navigate to="/admin/communication/help-center/tickets/inprogress" replace />} />
         <Route path="/admin/communication/article" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
         
         {/* Deprecated redirects */}

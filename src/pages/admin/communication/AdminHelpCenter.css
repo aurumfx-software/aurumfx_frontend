@@ -1,0 +1,563 @@
+.admin-help-center-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+/* Page Header */
+.admin-page-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.admin-page-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #1f2937;
+}
+
+.admin-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.crumb-sep {
+  color: #d1d5db;
+}
+
+.crumb-active {
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* Outer Help Center Split card */
+.help-center-outer-card {
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+  width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.help-center-split-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: 520px;
+}
+
+/* Left Sidebar Options Pane */
+.help-center-left-pane {
+  background: #ffffff;
+  border-right: 1px solid #f1f5f9;
+  padding: 24px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.help-center-create-btn {
+  height: 44px;
+  background: #ffc52d;
+  border: none;
+  border-radius: 10px;
+  color: #1e293b;
+  font-size: 14.5px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(255, 197, 45, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.help-center-create-btn:hover {
+  background: #f5b700;
+  transform: translateY(-1px);
+}
+
+.create-plus-icon {
+  font-size: 16px;
+  stroke-width: 3px;
+}
+
+.help-center-categories-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.help-cat-menu-btn {
+  height: 40px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #64748b;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.help-cat-menu-btn--active {
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+.help-cat-menu-btn:hover:not(.help-cat-menu-btn--active) {
+  background: #fdfdfd;
+  color: #334155;
+}
+
+.help-cat-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+/* Right Content List Pane */
+.help-center-right-pane {
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+/* Filters Card Section */
+.help-filters-card {
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.01);
+}
+
+.help-filters-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  align-items: center;
+}
+
+.filter-field-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.filter-input-field {
+  width: 100%;
+  height: 42px;
+  padding: 0 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #1e293b;
+  background: #ffffff;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.filter-input-field:focus {
+  border-color: #ffc52d;
+}
+
+.field-right-icon {
+  position: absolute;
+  right: 12px;
+  font-size: 16px;
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.text-muted {
+  color: #94a3b8 !important;
+}
+
+.select-field-wrap {
+  position: relative;
+}
+
+.filter-select-field {
+  width: 100%;
+  height: 42px;
+  padding: 0 32px 0 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #1e293b;
+  background: #ffffff;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+}
+
+.filter-select-field:focus {
+  border-color: #ffc52d;
+}
+
+.filter-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: #475569;
+  cursor: pointer;
+  user-select: none;
+}
+
+.filter-checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: #ffc52d;
+  cursor: pointer;
+}
+
+.yellow-get-btn {
+  height: 42px;
+  padding: 0 24px;
+  background: #ffc52d;
+  border: none;
+  border-radius: 8px;
+  color: #1e293b;
+  font-size: 13.5px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(255, 197, 45, 0.2);
+  transition: background 0.15s ease, transform 0.1s ease;
+  white-space: nowrap;
+  justify-self: start;
+}
+
+.yellow-get-btn:hover {
+  background: #f5b700;
+}
+
+/* Tickets list card panel */
+.help-tickets-list-card {
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.help-tickets-list-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 16px 0;
+}
+
+/* Table Design */
+.table-overflow-box {
+  overflow-x: auto;
+}
+
+.admin-help-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.admin-help-table th {
+  background: #f8fafc;
+  padding: 12px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #8c98a4;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.admin-help-table td {
+  padding: 12px 14px;
+  font-size: 13px;
+  color: #334155;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+}
+
+.ticket-num-cell {
+  font-weight: 700;
+  color: #ffc52d;
+}
+
+.username-cell {
+  font-weight: 600;
+  color: #1a1d1e;
+}
+
+.ticket-subject-cell {
+  font-weight: 700;
+  color: #0f172a;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ticket-status-badge {
+  display: inline-flex;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 700;
+}
+
+.badge-inprogress {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+/* Action button icons styling */
+.action-buttons-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-action-view {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  font-size: 14px;
+  cursor: pointer;
+  transition: color 0.15s ease;
+  padding: 4px;
+}
+
+.btn-action-view:hover {
+  color: #ffc52d;
+}
+
+.btn-action-delete {
+  background: transparent;
+  border: none;
+  color: #ef4444;
+  font-size: 14px;
+  cursor: pointer;
+  transition: color 0.15s ease;
+  padding: 4px;
+}
+
+.btn-action-delete:hover {
+  color: #b91c1c;
+}
+
+/* Empty state styling */
+.docs-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 50px 20px;
+  gap: 14px;
+  flex: 1;
+}
+
+.empty-magnifier-box {
+  width: 100px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.magnifier-art {
+  position: relative;
+  width: 60px;
+  height: 60px;
+}
+
+.folder-back-art {
+  font-size: 54px;
+  color: #e2e8f0;
+  stroke-width: 1.5px;
+}
+
+.glass-lens-art {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 3px solid #94a3b8;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.glass-lens-art::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 80%;
+  width: 3.5px;
+  height: 12px;
+  background: #94a3b8;
+  transform: rotate(-45deg);
+  transform-origin: top left;
+  border-radius: 2px;
+}
+
+.glass-quest {
+  font-size: 14px;
+  font-weight: 900;
+  color: #64748b;
+}
+
+.empty-state-label {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: #475569;
+  margin: 0;
+}
+
+/* Create Ticket Modal Overlay */
+.ticket-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.3);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.ticket-modal-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 28px;
+  max-width: 520px;
+  width: 90%;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.ticket-modal-card h3 {
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+}
+
+.ticket-modal-input-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.ticket-modal-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ticket-modal-input-group label {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.ticket-modal-input, .ticket-modal-select, .ticket-modal-textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #1e293b;
+  outline: none;
+  background: #ffffff;
+  box-sizing: border-box;
+}
+
+.ticket-modal-input:focus, .ticket-modal-select:focus, .ticket-modal-textarea:focus {
+  border-color: #ffc52d;
+}
+
+.ticket-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.btn-ticket-modal-cancel {
+  height: 38px;
+  padding: 0 18px;
+  background: #f1f5f9;
+  border: none;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #64748b;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.btn-ticket-modal-cancel:hover {
+  background: #e2e8f0;
+}
+
+.btn-ticket-modal-submit {
+  height: 38px;
+  padding: 0 18px;
+  background: #ffc52d;
+  border: none;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #1e293b;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.btn-ticket-modal-submit:hover {
+  background: #f5b700;
+}
+
+/* Responsive grid layouts */
+@media (max-width: 1024px) {
+  .help-filters-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .help-center-split-layout {
+    grid-template-columns: 1fr;
+  }
+  .help-center-left-pane {
+    border-right: none;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .help-filters-grid {
+    grid-template-columns: 1fr;
+  }
+  .ticket-modal-input-row {
+    grid-template-columns: 1fr;
+  }
+}
