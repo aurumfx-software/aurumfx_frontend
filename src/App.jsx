@@ -20,6 +20,10 @@ import AdminHelpCenter from "./pages/admin/communication/AdminHelpCenter";
 import AdminArticles from "./pages/admin/communication/AdminArticles";
 import AdminDocuments from "./pages/admin/tools/AdminDocuments";
 import AdminVideos from "./pages/admin/tools/AdminVideos";
+import AdminNetworkMembers from "./pages/admin/members/AdminNetworkMembers";
+import AdminHoldingTank from "./pages/admin/members/AdminHoldingTank";
+import AdminBankApprove from "./pages/admin/members/AdminBankApprove";
+import AdminKYCDetails from "./pages/admin/members/AdminKYCDetails";
 import AdminModulePage from "./pages/admin/AdminModulePage";
 
 import UserDashboard from "./pages/user/UserDashboard";
@@ -328,9 +332,14 @@ function App() {
         <Route path="/admin/tools/faqs" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
 
         {/* Members Management Routes */}
-        <Route path="/admin/members/list" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
-        <Route path="/admin/members/add" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
-        <Route path="/admin/members/kyc" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+        <Route path="/admin/members/network" element={<ProtectedRoute requiredRole="admin"><AdminNetworkMembers /></ProtectedRoute>} />
+        <Route path="/admin/members/holding-tank" element={<ProtectedRoute requiredRole="admin"><AdminHoldingTank /></ProtectedRoute>} />
+        <Route path="/admin/members/bank-approve" element={<ProtectedRoute requiredRole="admin"><AdminBankApprove /></ProtectedRoute>} />
+        <Route path="/admin/members/bank-account" element={<Navigate to="/admin/members/bank-approve" replace />} />
+        <Route path="/admin/members/kyc-details" element={<ProtectedRoute requiredRole="admin"><AdminKYCDetails /></ProtectedRoute>} />
+        <Route path="/admin/members/kyc" element={<Navigate to="/admin/members/kyc-details" replace />} />
+        <Route path="/admin/members/list" element={<Navigate to="/admin/members/network" replace />} />
+        <Route path="/admin/members/add" element={<Navigate to="/admin/members/network" replace />} />
 
         {/* Achievers List Routes */}
         <Route path="/admin/achievers/rank" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />

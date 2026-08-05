@@ -74,9 +74,10 @@ const navItems = [
     label: "Members Management",
     icon: FiUsers,
     children: [
-      { id: "member-list", label: "Members List", path: "/admin/members/list" },
-      { id: "add-member", label: "Add New Member", path: "/admin/members/add" },
-      { id: "kyc", label: "KYC Verification", path: "/admin/members/kyc" },
+      { id: "network-members", label: "Network Members", path: "/admin/members/network" },
+      { id: "holding-tank", label: "Holding Tank", path: "/admin/members/holding-tank" },
+      { id: "bank-account", label: "Bank Account", path: "/admin/members/bank-approve" },
+      { id: "kyc-details", label: "KYC Details", path: "/admin/members/kyc-details" },
     ],
   },
   {
