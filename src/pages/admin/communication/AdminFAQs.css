@@ -1,0 +1,374 @@
+.admin-faqs-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+/* Page Header */
+.admin-page-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.admin-page-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #1f2937;
+}
+
+.admin-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.crumb-sep {
+  color: #d1d5db;
+}
+
+.crumb-active {
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* Content Card Wrap */
+.faqs-content-card {
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Tabs Navigation Styling */
+.faqs-tabs-header {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #f1f5f9;
+  padding: 0 24px;
+}
+
+.faq-tab-btn {
+  height: 52px;
+  background: transparent;
+  border: none;
+  border-bottom: 3.5px solid transparent;
+  padding: 0 16px;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  top: 1.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.faq-tab-btn--active {
+  color: #ffc52d;
+  border-color: #ffc52d;
+}
+
+.faq-tab-btn:hover:not(.faq-tab-btn--active) {
+  color: #334155;
+}
+
+.tab-icon {
+  font-size: 16px;
+}
+
+/* Tab Panel Wrap */
+.faq-tab-panel {
+  padding: 24px;
+}
+
+/* Panel actions */
+.panel-actions-row {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.yellow-add-faq-btn {
+  height: 38px;
+  padding: 0 20px;
+  background: #ffc52d;
+  border: none;
+  border-radius: 8px;
+  color: #1e293b;
+  font-size: 13.5px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(255, 197, 45, 0.25);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.yellow-add-faq-btn:hover {
+  background: #f5b700;
+  transform: translateY(-1px);
+}
+
+/* Table Design */
+.table-overflow-box {
+  overflow-x: auto;
+}
+
+.admin-faqs-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.admin-faqs-table th {
+  background: #f8fafc;
+  padding: 14px 18px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #8c98a4;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.admin-faqs-table td {
+  padding: 14px 18px;
+  font-size: 13.5px;
+  color: #334155;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+}
+
+.faq-q-cell {
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.faq-a-cell {
+  color: #475569;
+  max-width: 400px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Action buttons wrapper */
+.action-buttons-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-action-edit {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  font-size: 15px;
+  cursor: pointer;
+  transition: color 0.15s ease;
+  padding: 4px;
+}
+
+.btn-action-edit:hover {
+  color: #ffc52d;
+}
+
+.btn-action-delete {
+  background: transparent;
+  border: none;
+  color: #ef4444;
+  font-size: 15px;
+  cursor: pointer;
+  transition: color 0.15s ease;
+  padding: 4px;
+}
+
+.btn-action-delete:hover:not(:disabled) {
+  color: #b91c1c;
+}
+
+.btn-action-delete:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Empty state magnifier styling */
+.docs-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  gap: 16px;
+}
+
+.empty-magnifier-box {
+  width: 120px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.magnifier-art {
+  position: relative;
+  width: 70px;
+  height: 70px;
+}
+
+.folder-back-art {
+  font-size: 64px;
+  color: #e2e8f0;
+  stroke-width: 1.5px;
+}
+
+.glass-lens-art {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 3px solid #94a3b8;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.glass-lens-art::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 80%;
+  width: 4px;
+  height: 14px;
+  background: #94a3b8;
+  transform: rotate(-45deg);
+  transform-origin: top left;
+  border-radius: 2px;
+}
+
+.glass-quest {
+  font-size: 16px;
+  font-weight: 900;
+  color: #64748b;
+}
+
+.empty-state-label {
+  font-size: 15px;
+  font-weight: 800;
+  color: #475569;
+  margin: 0;
+}
+
+/* Modals design */
+.faq-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.3);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.faq-modal-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 28px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.faq-modal-card h3 {
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+}
+
+.modal-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.modal-input-group label {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.modal-input, .modal-select, .modal-textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #1e293b;
+  outline: none;
+  background: #ffffff;
+  box-sizing: border-box;
+}
+
+.modal-input:focus, .modal-select:focus, .modal-textarea:focus {
+  border-color: #ffc52d;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.btn-modal-cancel {
+  height: 38px;
+  padding: 0 18px;
+  background: #f1f5f9;
+  border: none;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #64748b;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.btn-modal-cancel:hover {
+  background: #e2e8f0;
+}
+
+.btn-modal-submit {
+  height: 38px;
+  padding: 0 18px;
+  background: #ffc52d;
+  border: none;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #1e293b;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.btn-modal-submit:hover {
+  background: #f5b700;
+}

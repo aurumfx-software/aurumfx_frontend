@@ -14,6 +14,7 @@ import AdminDepositWallet from "./pages/admin/financial/AdminDepositWallet";
 import AdminFundCredits from "./pages/admin/financial/AdminFundCredits";
 import AdminPayout from "./pages/admin/financial/AdminPayout";
 import AdminInvestments from "./pages/admin/financial/AdminInvestments";
+import AdminFAQs from "./pages/admin/communication/AdminFAQs";
 import AdminDocuments from "./pages/admin/tools/AdminDocuments";
 import AdminModulePage from "./pages/admin/AdminModulePage";
 
@@ -302,7 +303,8 @@ function App() {
         <Route path="/admin/financial/investments" element={<Navigate to="/admin/financial/investments/request" replace />} />
 
         {/* Communication Routes */}
-        <Route path="/admin/communication/faq" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+        <Route path="/admin/communication/faqs" element={<ProtectedRoute requiredRole="admin"><AdminFAQs /></ProtectedRoute>} />
+        <Route path="/admin/communication/faq" element={<Navigate to="/admin/communication/faqs" replace />} />
         <Route path="/admin/communication/emails" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
         <Route path="/admin/communication/help-center" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
         <Route path="/admin/communication/article" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
