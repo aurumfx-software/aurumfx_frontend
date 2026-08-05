@@ -8,7 +8,7 @@ import {
   FiInfo,
   FiCalendar,
 } from "react-icons/fi";
-import DashboardLayout from "../../components/Dashboard/DashboardLayout";
+import AdminLayout from "../../components/Admin/AdminLayout";
 import { getAdminDashboardData } from "../../api/dashboard";
 import "./AdminDashboard.css";
 
@@ -269,7 +269,7 @@ function AdminDashboard() {
   const registrations = dashboardData?.latestRegistrations || [];
 
   return (
-    <DashboardLayout>
+    <AdminLayout>
       <div className="admin-dashboard">
         {/* Top Sub-section Switcher Tabs */}
         <div className="admin-dashboard-tabs">
@@ -686,7 +686,7 @@ function AdminDashboard() {
           </div>
         )}
       </div>
-    </DashboardLayout>
+    </AdminLayout>
   );
 }
 

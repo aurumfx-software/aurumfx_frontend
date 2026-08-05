@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FiSearch, FiRotateCcw } from "react-icons/fi";
-import DashboardLayout from "../../../components/Dashboard/DashboardLayout";
+import AdminLayout from "../../../components/Admin/AdminLayout";
 import "./EnrollerBusiness.css";
 
 const enrollerNodesLeft = [
@@ -30,7 +30,7 @@ function AdminEnrollerBusiness() {
   const [searchQuery, setSearchQuery] = useState("");
 
   return (
-    <DashboardLayout>
+    <AdminLayout>
       <div className="admin-genealogy-page">
         <div className="admin-page-header">
           <h1 className="admin-page-title">Enroller: Business</h1>
@@ -111,7 +111,7 @@ function AdminEnrollerBusiness() {
           </div>
         </div>
       </div>
-    </DashboardLayout>
+    </AdminLayout>
   );
 }
 

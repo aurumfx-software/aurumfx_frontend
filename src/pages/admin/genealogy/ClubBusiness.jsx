@@ -8,7 +8,7 @@ import {
   FiLayers,
   FiUsers,
 } from "react-icons/fi";
-import DashboardLayout from "../../../components/Dashboard/DashboardLayout";
+import AdminLayout from "../../../components/Admin/AdminLayout";
 import "./ClubBusiness.css";
 
 const initialTreeNodes = {
@@ -99,7 +99,7 @@ function AdminClubBusiness() {
   };
 
   return (
-    <DashboardLayout>
+    <AdminLayout>
       <div className="admin-club-page">
         {/* Page Title & Breadcrumbs */}
         <div className="admin-page-header">
@@ -341,7 +341,7 @@ function AdminClubBusiness() {
           </div>
         </div>
       </div>
-    </DashboardLayout>
+    </AdminLayout>
   );
 }
 

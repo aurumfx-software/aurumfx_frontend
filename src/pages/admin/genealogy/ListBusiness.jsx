@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FiCalendar } from "react-icons/fi";
-import DashboardLayout from "../../../components/Dashboard/DashboardLayout";
+import AdminLayout from "../../../components/Admin/AdminLayout";
 import "./ListBusiness.css";
 
 const adminListData = [
@@ -22,7 +22,7 @@ function AdminListBusiness() {
   const [selectedUsername, setSelectedUsername] = useState("");
 
   return (
-    <DashboardLayout>
+    <AdminLayout>
       <div className="admin-genealogy-page">
         <div className="admin-page-header">
           <h1 className="admin-page-title">List: Business</h1>
@@ -107,7 +107,7 @@ function AdminListBusiness() {
           </div>
         </div>
       </div>
-    </DashboardLayout>
+    </AdminLayout>
   );
 }
 

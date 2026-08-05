@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FiSearch, FiRotateCcw, FiChevronRight, FiChevronDown } from "react-icons/fi";
-import DashboardLayout from "../../../components/Dashboard/DashboardLayout";
+import AdminLayout from "../../../components/Admin/AdminLayout";
 import "./StructureBusiness.css";
 
 function AdminStructureBusiness() {
@@ -8,7 +8,7 @@ function AdminStructureBusiness() {
   const [isExpanded, setIsExpanded] = useState(true);
 
   return (
-    <DashboardLayout>
+    <AdminLayout>
       <div className="admin-genealogy-page">
         <div className="admin-page-header">
           <h1 className="admin-page-title">Structure: Business</h1>
@@ -97,7 +97,7 @@ function AdminStructureBusiness() {
           </div>
         </div>
       </div>
-    </DashboardLayout>
+    </AdminLayout>
   );
 }
 

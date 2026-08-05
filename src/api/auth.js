@@ -21,10 +21,10 @@ export const loginApi = async (userId, password) => {
 
     const data = payload?.data || payload;
     const isDetectedAdmin = trimmedUserId.toLowerCase() === "aurumfx" || trimmedUserId.toLowerCase() === "admin";
-    const role = payload?.role || data?.role || (isDetectedAdmin ? "admin" : "user");
+    const role = String(payload?.role || data?.role || (isDetectedAdmin ? "admin" : "user")).toLowerCase();
     const token = payload?.token || data?.token || payload?.access_token || data?.access_token || `token-${role}`;
     const user = payload?.user || data?.user || { userId: trimmedUserId, role, name: trimmedUserId };
-    const redirectPath = payload?.redirect || data?.redirect || (role === "admin" ? "/admin/dashboard/business" : "/user/dashboard");
+    const redirectPath = role === "admin" ? "/admin/dashboard/business" : "/user/dashboard";
 
     localStorage.setItem("token", token);
     localStorage.setItem("role", role);
@@ -61,11 +61,11 @@ export const loginApi = async (userId, password) => {
         localStorage.setItem("adminUser", JSON.stringify(userObj));
       }
 
-      return { success: true, redirect: demoUser.redirect };
+      return { success: true, redirect: demoUser.role === "admin" ? "/admin/dashboard/business" : "/user/dashboard" };
     }
 
-    // Direct offline fallback for admin usernames (e.g. aurumfx / admin)
-    if (trimmedUserId.toLowerCase() === "aurumfx" || trimmedUserId.toLowerCase() === "admin") {
+    // Direct offline fallback for admin usernames (e.g. aurumfx / admin) ONLY if completely offline
+    if (!error.response && (trimmedUserId.toLowerCase() === "aurumfx" || trimmedUserId.toLowerCase() === "admin")) {
       const token = `admin-token-${Date.now()}`;
       const userObj = { userId: trimmedUserId || "aurumfx", role: "admin", name: trimmedUserId || "aurumfx" };
 

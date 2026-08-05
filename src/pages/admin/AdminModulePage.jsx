@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import DashboardLayout from "../../components/Dashboard/DashboardLayout";
+import AdminLayout from "../../components/Admin/AdminLayout";
 import "./AdminDashboard.css";
 
 const moduleTitles = {
@@ -43,7 +43,7 @@ function AdminModulePage() {
   ];
 
   return (
-    <DashboardLayout>
+    <AdminLayout>
       <div className="admin-dashboard">
         <div className="admin-page-header" style={{ marginBottom: "20px" }}>
           <h1 className="admin-page-title" style={{ fontSize: "24px", fontWeight: "800", color: "#1f2937" }}>
@@ -153,7 +153,7 @@ function AdminModulePage() {
           </div>
         </div>
       </div>
-    </DashboardLayout>
+    </AdminLayout>
   );
 }
 

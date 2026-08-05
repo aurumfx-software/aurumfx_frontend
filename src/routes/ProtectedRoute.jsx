@@ -8,15 +8,16 @@ function ProtectedRoute({ children, requiredRole }) {
     return <Navigate to={requiredRole === "admin" ? "/admin/login" : "/user/login"} replace />;
   }
 
-  // Determine effective role from stored role or token fallback
-  const currentRole = role || (token && token.includes("admin") ? "admin" : requiredRole) || "user";
+  // Determine effective role from stored role or token fallback, converting to lowercase
+  const normalizedRequiredRole = String(requiredRole || "").toLowerCase();
+  const normalizedCurrentRole = String(role || (token && token.toLowerCase().includes("admin") ? "admin" : requiredRole) || "user").toLowerCase();
 
   // Prevent cross-role navigation loops
-  if (requiredRole === "admin" && currentRole !== "admin") {
+  if (normalizedRequiredRole === "admin" && normalizedCurrentRole !== "admin") {
     return <Navigate to="/user/dashboard" replace />;
   }
 
-  if (requiredRole === "user" && currentRole === "admin") {
+  if (normalizedRequiredRole === "user" && normalizedCurrentRole === "admin") {
     return <Navigate to="/admin/dashboard/business" replace />;
   }
 

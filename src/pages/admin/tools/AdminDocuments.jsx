@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { FiPlus, FiFolder } from "react-icons/fi";
-import DashboardLayout from "../../../components/Dashboard/DashboardLayout";
+import AdminLayout from "../../../components/Admin/AdminLayout";
 import "./AdminDocuments.css";
 
 function AdminDocuments() {
   const [documents] = useState([]);
 
   return (
-    <DashboardLayout>
+    <AdminLayout>
       <div className="admin-documents-page">
         {/* Page Title & Breadcrumbs */}
         <div className="admin-page-header">
@@ -82,7 +82,7 @@ function AdminDocuments() {
           )}
         </div>
       </div>
-    </DashboardLayout>
+    </AdminLayout>
   );
 }
 

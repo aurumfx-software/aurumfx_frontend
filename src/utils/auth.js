@@ -21,7 +21,7 @@ export function login(userId, password, requiredRole = null) {
     (u) => u.userId.toLowerCase() === trimmed.toLowerCase() && u.password === password
   );
 
-  const role = user ? user.role : requiredRole || "user";
+  const role = String(user ? user.role : requiredRole || "user").toLowerCase();
   const token = user ? `demo-token-${user.role}` : `token-${role}-${Date.now()}`;
   const userObj = { userId: trimmed, role, name: role === "admin" ? "aurumfx" : "User" };
 

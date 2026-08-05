@@ -1,39 +1,45 @@
 import { useState } from "react";
-import {
-  FiCalendar,
-  FiLogOut,
-  FiLogIn,
-  FiCreditCard,
-  FiAward,
-  FiDollarSign,
-  FiChevronDown,
-  FiInfo,
-} from "react-icons/fi";
-import DashboardLayout from "../../../components/Dashboard/DashboardLayout";
+import { FiCalendar, FiChevronDown } from "react-icons/fi";
+import AdminLayout from "../../../components/Admin/AdminLayout";
 import "./AdminEWallet.css";
 
+const adminEWalletData = [
+  { no: 1, username: "FX245", fromUser: "aurumfx", amountType: "Club Bonus", paymentType: "Credit", amount: 400, status: "Complete", date: "04 Aug 2026" },
+  { no: 2, username: "FX179", fromUser: "aurumfx", amountType: "Club Bonus", paymentType: "Credit", amount: 400, status: "Complete", date: "04 Aug 2026" },
+  { no: 3, username: "FX021", fromUser: "aurumfx", amountType: "Club Bonus", paymentType: "Credit", amount: 400, status: "Complete", date: "04 Aug 2026" },
+  { no: 4, username: "FX011", fromUser: "aurumfx", amountType: "Club Bonus", paymentType: "Credit", amount: 4000, status: "Complete", date: "04 Aug 2026" },
+  { no: 5, username: "FX001", fromUser: "aurumfx", amountType: "Club Bonus", paymentType: "Credit", amount: 4400, status: "Complete", date: "04 Aug 2026" },
+  { no: 6, username: "FX011", fromUser: "FX128", amountType: "Enrolment Bonus", paymentType: "Credit", amount: 5000, status: "Complete", date: "04 Aug 2026" },
+  { no: 7, username: "FX245", fromUser: "FX247", amountType: "Enrolment Bonus", paymentType: "Credit", amount: 500, status: "Complete", date: "04 Aug 2026" },
+  { no: 8, username: "FX167", fromUser: "aurumfx", amountType: "Club Bonus", paymentType: "Credit", amount: 4000, status: "Complete", date: "01 Aug 2026" },
+  { no: 9, username: "FX152", fromUser: "aurumfx", amountType: "Club Bonus", paymentType: "Credit", amount: 600, status: "Complete", date: "01 Aug 2026" },
+  { no: 10, username: "FX034", fromUser: "aurumfx", amountType: "Club Bonus", paymentType: "Credit", amount: 4000, status: "Complete", date: "01 Aug 2026" },
+  { no: 11, username: "FX033", fromUser: "aurumfx", amountType: "Club Bonus", paymentType: "Credit", amount: 4000, status: "Complete", date: "01 Aug 2026" },
+  { no: 12, username: "FX002", fromUser: "aurumfx", amountType: "Club Bonus", paymentType: "Credit", amount: 4000, status: "Complete", date: "01 Aug 2026" },
+];
+
 function AdminEWallet() {
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [searchUser, setSearchUser] = useState("");
+  const [startDate, setStartDate] = useState("2026-08-01");
+  const [endDate, setEndDate] = useState("2026-08-31");
+  const [usernameFilter, setUsernameFilter] = useState("");
   const [amountType, setAmountType] = useState("All");
 
-  const [walletStats] = useState({
-    balance: 0,
-    transferOut: 0,
-    transferIn: 0,
-    totalPayout: 0,
-    bonus: 0,
-  });
+  const [transactions, setTransactions] = useState(adminEWalletData);
 
-  const [transactions] = useState([]);
-
-  const handleFilterSubmit = (e) => {
+  const handleGetReport = (e) => {
     e.preventDefault();
+    let filtered = adminEWalletData;
+    if (usernameFilter) {
+      filtered = filtered.filter((t) => t.username.toLowerCase() === usernameFilter.toLowerCase());
+    }
+    if (amountType !== "All") {
+      filtered = filtered.filter((t) => t.amountType === amountType);
+    }
+    setTransactions(filtered);
   };
 
   return (
-    <DashboardLayout>
+    <AdminLayout>
       <div className="admin-ewallet-page">
         {/* Page Header & Breadcrumb */}
         <div className="admin-page-header">
@@ -45,80 +51,16 @@ function AdminEWallet() {
           </div>
         </div>
 
-        {/* 5 Stat Cards Row */}
-        <div className="admin-ewallet-stats-grid">
-          {/* 1. Balance Card */}
-          <div className="ewallet-stat-card">
-            <div className="stat-meta">
-              <span className="stat-lbl">Balance</span>
-              <h3 className="stat-val">₹{walletStats.balance.toLocaleString()}</h3>
-            </div>
-            <div className="stat-icon-box icon-pink">
-              <FiDollarSign />
-            </div>
-          </div>
-
-          {/* 2. Transfer Out Card */}
-          <div className="ewallet-stat-card">
-            <div className="stat-meta">
-              <span className="stat-lbl">Transfer Out</span>
-              <h3 className="stat-val">₹{walletStats.transferOut.toLocaleString()}</h3>
-            </div>
-            <div className="stat-icon-box icon-blue">
-              <FiLogOut />
-            </div>
-          </div>
-
-          {/* 3. Transfer In Card */}
-          <div className="ewallet-stat-card">
-            <div className="stat-meta">
-              <span className="stat-lbl">Transfer in</span>
-              <h3 className="stat-val">₹{walletStats.transferIn.toLocaleString()}</h3>
-            </div>
-            <div className="stat-icon-box icon-green">
-              <FiLogIn />
-            </div>
-          </div>
-
-          {/* 4. Total Payout Card */}
-          <div className="ewallet-stat-card">
-            <div className="stat-meta">
-              <span className="stat-lbl">Total Payout</span>
-              <h3 className="stat-val">₹{walletStats.totalPayout.toLocaleString()}</h3>
-            </div>
-            <div className="stat-icon-box icon-purple">
-              <FiCreditCard />
-            </div>
-          </div>
-
-          {/* 5. Bonus Card */}
-          <div className="ewallet-stat-card">
-            <div className="stat-meta">
-              <span className="stat-lbl">Bonus</span>
-              <h3 className="stat-val">₹{walletStats.bonus.toLocaleString()}</h3>
-            </div>
-            <div className="stat-icon-box icon-gold">
-              <FiAward />
-            </div>
-          </div>
-        </div>
-
-        {/* History Filters Card */}
-        <div className="admin-ewallet-card">
-          <h3 className="card-section-title">History</h3>
-
-          <form onSubmit={handleFilterSubmit} className="history-filter-row">
+        {/* Filters and Table in List page card container */}
+        <div className="list-page-card">
+          <form onSubmit={handleGetReport} className="history-filter-row">
             {/* Pick Start Date */}
             <div className="filter-field-wrap">
+              <span className="floating-top-label">Pick Start Date</span>
               <input
-                type="text"
-                placeholder="Pick Start Date"
+                type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                onFocus={(e) => (e.target.type = "date")}
-                onBlur={(e) => {
-                  if (!e.target.value) e.target.type = "text";
-                }}
                 className="filter-input-field"
               />
               <FiCalendar className="field-right-icon" />
@@ -126,29 +68,32 @@ function AdminEWallet() {
 
             {/* Pick End Date */}
             <div className="filter-field-wrap">
+              <span className="floating-top-label">Pick End Date</span>
               <input
-                type="text"
-                placeholder="Pick End Date"
+                type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                onFocus={(e) => (e.target.type = "date")}
-                onBlur={(e) => {
-                  if (!e.target.value) e.target.type = "text";
-                }}
                 className="filter-input-field"
               />
               <FiCalendar className="field-right-icon" />
             </div>
 
-            {/* Search User */}
-            <div className="filter-field-wrap">
-              <input
-                type="text"
-                placeholder="Search User"
-                value={searchUser}
-                onChange={(e) => setSearchUser(e.target.value)}
-                className="filter-input-field"
-              />
+            {/* Username selector */}
+            <div className="filter-field-wrap select-field-wrap">
+              <select
+                value={usernameFilter}
+                onChange={(e) => setUsernameFilter(e.target.value)}
+                className="filter-select-field"
+              >
+                <option value="">Username</option>
+                <option value="FX245">FX245</option>
+                <option value="FX179">FX179</option>
+                <option value="FX021">FX021</option>
+                <option value="FX011">FX011</option>
+                <option value="FX001">FX001</option>
+                <option value="FX167">FX167</option>
+                <option value="FX152">FX152</option>
+              </select>
               <FiChevronDown className="field-right-icon text-muted" />
             </div>
 
@@ -161,27 +106,25 @@ function AdminEWallet() {
                 className="filter-select-field"
               >
                 <option value="All">All</option>
-                <option value="Bonus">Bonus</option>
-                <option value="Transfer In">Transfer In</option>
-                <option value="Transfer Out">Transfer Out</option>
-                <option value="Payout">Payout</option>
+                <option value="Club Bonus">Club Bonus</option>
+                <option value="Enrolment Bonus">Enrolment Bonus</option>
               </select>
+              <FiChevronDown className="field-right-icon text-muted" />
             </div>
 
-            {/* Yellow Get Button */}
+            {/* Yellow Get Report Button */}
             <button type="submit" className="yellow-get-btn">
-              Get
+              Get Report
             </button>
           </form>
-        </div>
 
-        {/* Transactions Table & Oops Empty State */}
-        <div className="admin-ewallet-card table-card-wrap">
-          <div className="table-overflow-box">
+          {/* Transactions Table */}
+          <div className="table-overflow-box" style={{ marginTop: "10px" }}>
             <table className="admin-ewallet-table">
               <thead>
                 <tr>
                   <th>No</th>
+                  <th>Username</th>
                   <th>From User</th>
                   <th>Amount Type</th>
                   <th>Payment Type</th>
@@ -190,41 +133,25 @@ function AdminEWallet() {
                   <th>Date</th>
                 </tr>
               </thead>
-              {transactions.length > 0 && (
-                <tbody>
-                  {transactions.map((tx, idx) => (
-                    <tr key={tx.id || idx}>
-                      <td>{idx + 1}</td>
-                      <td className="fw-bold">{tx.fromUser}</td>
-                      <td>{tx.amountType}</td>
-                      <td>{tx.paymentType}</td>
-                      <td className="fw-bold">₹{tx.amount?.toLocaleString()}</td>
-                      <td>
-                        <span className={`status-pill pill-${tx.status?.toLowerCase()}`}>
-                          {tx.status}
-                        </span>
-                      </td>
-                      <td>{tx.date}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              )}
+              <tbody>
+                {transactions.map((tx) => (
+                  <tr key={tx.no}>
+                    <td>{tx.no}</td>
+                    <td className="username-cell">{tx.username}</td>
+                    <td>{tx.fromUser}</td>
+                    <td>{tx.amountType}</td>
+                    <td>{tx.paymentType}</td>
+                    <td className="amount-cell-val">₹{tx.amount}</td>
+                    <td className="status-cell-val">{tx.status}</td>
+                    <td>{tx.date}</td>
+                  </tr>
+                ))}
+              </tbody>
             </table>
           </div>
-
-          {/* Oops Empty State Box matching user screenshot */}
-          {transactions.length === 0 && (
-            <div className="oops-empty-container">
-              <div className="oops-icon-circle">
-                <FiInfo className="oops-icon" />
-              </div>
-              <h2 className="oops-title">Oops !!!</h2>
-              <p className="oops-desc">Something went wrong. Please try again later</p>
-            </div>
-          )}
         </div>
       </div>
-    </DashboardLayout>
+    </AdminLayout>
   );
 }
 
