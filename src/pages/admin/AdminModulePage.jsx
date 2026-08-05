@@ -23,6 +23,7 @@ const moduleTitles = {
   "/admin/communication/mails/sent": { title: "Emails", category: "Communication" },
   "/admin/communication/emails": { title: "Emails", category: "Communication" },
   "/admin/communication/help-center": { title: "Help Center", category: "Communication" },
+  "/admin/communication/articles": { title: "Articles", category: "Communication" },
   "/admin/communication/article": { title: "Articles", category: "Communication" },
   "/admin/tools/documents": { title: "Documents Library", category: "Tools" },
   "/admin/tools/videos": { title: "Video Tutorials", category: "Tools" },

@@ -17,6 +17,7 @@ import AdminInvestments from "./pages/admin/financial/AdminInvestments";
 import AdminFAQs from "./pages/admin/communication/AdminFAQs";
 import AdminEmails from "./pages/admin/communication/AdminEmails";
 import AdminHelpCenter from "./pages/admin/communication/AdminHelpCenter";
+import AdminArticles from "./pages/admin/communication/AdminArticles";
 import AdminDocuments from "./pages/admin/tools/AdminDocuments";
 import AdminModulePage from "./pages/admin/AdminModulePage";
 
@@ -313,11 +314,12 @@ function App() {
         <Route path="/admin/communication/mails" element={<Navigate to="/admin/communication/mails/inbox" replace />} />
         <Route path="/admin/communication/help-center/tickets/:category" element={<ProtectedRoute requiredRole="admin"><AdminHelpCenter /></ProtectedRoute>} />
         <Route path="/admin/communication/help-center" element={<Navigate to="/admin/communication/help-center/tickets/inprogress" replace />} />
-        <Route path="/admin/communication/article" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+        <Route path="/admin/communication/articles" element={<ProtectedRoute requiredRole="admin"><AdminArticles /></ProtectedRoute>} />
+        <Route path="/admin/communication/article" element={<Navigate to="/admin/communication/articles" replace />} />
         
         {/* Deprecated redirects */}
         <Route path="/admin/communication/tickets" element={<Navigate to="/admin/communication/help-center" replace />} />
-        <Route path="/admin/communication/announcements" element={<Navigate to="/admin/communication/article" replace />} />
+        <Route path="/admin/communication/announcements" element={<Navigate to="/admin/communication/articles" replace />} />
 
         {/* Tools Routes */}
         <Route path="/admin/tools/documents" element={<ProtectedRoute requiredRole="admin"><AdminDocuments /></ProtectedRoute>} />

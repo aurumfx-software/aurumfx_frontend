@@ -57,7 +57,7 @@ const navItems = [
       { id: "faq", label: "FAQ's", path: "/admin/communication/faqs" },
       { id: "emails", label: "Emails", path: "/admin/communication/mails/inbox" },
       { id: "help-center", label: "Help Center", path: "/admin/communication/help-center/tickets/inprogress" },
-      { id: "article", label: "Article", path: "/admin/communication/article" },
+      { id: "article", label: "Article", path: "/admin/communication/articles" },
     ],
   },
   {
