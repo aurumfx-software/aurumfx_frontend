@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { loginApi } from "../../api/auth";
-import { DEMO_USERS } from "../../utils/auth";
 import logo from "../../assets/logo.png";
 import "./Login.css";
 
@@ -13,8 +12,6 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const userCred = DEMO_USERS.filter((u) => u.role === "user");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,12 +31,6 @@ function Login() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const fillDemo = (cred) => {
-    setUserId(cred.userId);
-    setPassword(cred.password);
-    setError("");
   };
 
   return (
@@ -109,24 +100,6 @@ function Login() {
             {loading ? "Signing in..." : "Sign In"}
           </button>
         </form>
-
-        <div className="demo-credentials">
-          <p className="demo-title">Demo user credentials</p>
-          <div className="demo-cards">
-            {userCred.map((cred) => (
-              <button
-                key={cred.userId}
-                type="button"
-                className="demo-card"
-                onClick={() => fillDemo(cred)}
-              >
-                <span className="demo-role">{cred.role}</span>
-                <span className="demo-id">{cred.userId}</span>
-                <span className="demo-pass">{cred.password}</span>
-              </button>
-            ))}
-          </div>
-        </div>
       </div>
     </div>
   );

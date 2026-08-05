@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { loginApi } from "../../api/auth";
-import { DEMO_USERS } from "../../utils/auth";
 import logo from "../../assets/logo.png";
 import "./AdminLogin.css";
 
@@ -13,8 +12,6 @@ function AdminLogin() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const adminCred = DEMO_USERS.find((u) => u.role === "admin");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,14 +30,6 @@ function AdminLogin() {
       setError("An unexpected error occurred. Please try again.");
     } finally {
       setLoading(false);
-    }
-  };
-
-  const fillAdminDemo = () => {
-    if (adminCred) {
-      setUserId(adminCred.userId);
-      setPassword(adminCred.password);
-      setError("");
     }
   };
 
@@ -102,23 +91,6 @@ function AdminLogin() {
             {loading ? "Signing in..." : "Sign In as Admin"}
           </button>
         </form>
-
-        {adminCred && (
-          <div className="demo-credentials">
-            <p className="demo-title">Admin demo credentials</p>
-            <div className="demo-cards" style={{ gridTemplateColumns: "1fr" }}>
-              <button
-                type="button"
-                className="demo-card"
-                onClick={fillAdminDemo}
-              >
-                <span className="demo-role">admin</span>
-                <span className="demo-id">{adminCred.userId}</span>
-                <span className="demo-pass">{adminCred.password}</span>
-              </button>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
