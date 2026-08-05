@@ -15,6 +15,7 @@ import AdminFundCredits from "./pages/admin/financial/AdminFundCredits";
 import AdminPayout from "./pages/admin/financial/AdminPayout";
 import AdminInvestments from "./pages/admin/financial/AdminInvestments";
 import AdminFAQs from "./pages/admin/communication/AdminFAQs";
+import AdminEmails from "./pages/admin/communication/AdminEmails";
 import AdminDocuments from "./pages/admin/tools/AdminDocuments";
 import AdminModulePage from "./pages/admin/AdminModulePage";
 
@@ -305,12 +306,14 @@ function App() {
         {/* Communication Routes */}
         <Route path="/admin/communication/faqs" element={<ProtectedRoute requiredRole="admin"><AdminFAQs /></ProtectedRoute>} />
         <Route path="/admin/communication/faq" element={<Navigate to="/admin/communication/faqs" replace />} />
-        <Route path="/admin/communication/emails" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+        <Route path="/admin/communication/mails/inbox" element={<ProtectedRoute requiredRole="admin"><AdminEmails /></ProtectedRoute>} />
+        <Route path="/admin/communication/mails/sent" element={<ProtectedRoute requiredRole="admin"><AdminEmails /></ProtectedRoute>} />
+        <Route path="/admin/communication/emails" element={<Navigate to="/admin/communication/mails/inbox" replace />} />
+        <Route path="/admin/communication/mails" element={<Navigate to="/admin/communication/mails/inbox" replace />} />
         <Route path="/admin/communication/help-center" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
         <Route path="/admin/communication/article" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
         
         {/* Deprecated redirects */}
-        <Route path="/admin/communication/mails" element={<Navigate to="/admin/communication/emails" replace />} />
         <Route path="/admin/communication/tickets" element={<Navigate to="/admin/communication/help-center" replace />} />
         <Route path="/admin/communication/announcements" element={<Navigate to="/admin/communication/article" replace />} />
 

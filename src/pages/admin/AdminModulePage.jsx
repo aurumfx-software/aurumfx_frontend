@@ -19,6 +19,8 @@ const moduleTitles = {
   "/admin/financial/investments": { title: "Investments Overview", category: "Financial" },
   "/admin/communication/faqs": { title: "FAQ's", category: "Communication" },
   "/admin/communication/faq": { title: "FAQ's", category: "Communication" },
+  "/admin/communication/mails/inbox": { title: "Emails", category: "Communication" },
+  "/admin/communication/mails/sent": { title: "Emails", category: "Communication" },
   "/admin/communication/emails": { title: "Emails", category: "Communication" },
   "/admin/communication/help-center": { title: "Help Center", category: "Communication" },
   "/admin/communication/article": { title: "Articles", category: "Communication" },
