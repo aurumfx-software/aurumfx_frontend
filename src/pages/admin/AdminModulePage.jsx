@@ -26,7 +26,7 @@ const moduleTitles = {
   "/admin/communication/articles": { title: "Articles", category: "Communication" },
   "/admin/communication/article": { title: "Articles", category: "Communication" },
   "/admin/tools/documents": { title: "Documents Library", category: "Tools" },
-  "/admin/tools/videos": { title: "Video Tutorials", category: "Tools" },
+  "/admin/tools/videos": { title: "Videos", category: "Tools" },
   "/admin/tools/faqs": { title: "FAQ Management", category: "Tools" },
   "/admin/members/list": { title: "Members List", category: "Members Management" },
   "/admin/members/add": { title: "Add New Member", category: "Members Management" },

@@ -66,7 +66,7 @@ const navItems = [
     icon: FiTool,
     children: [
       { id: "documents", label: "Documents", path: "/admin/tools/documents" },
-      { id: "videos", label: "Video Tutorials", path: "/admin/tools/videos" },
+      { id: "videos", label: "Videos", path: "/admin/tools/videos" },
     ],
   },
   {

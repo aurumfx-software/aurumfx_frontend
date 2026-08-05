@@ -1,4 +1,4 @@
-.admin-documents-page {
+.admin-videos-page {
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -35,7 +35,7 @@
 }
 
 /* Main Card Wrapper */
-.admin-documents-card {
+.admin-videos-card {
   background: #ffffff;
   border: 1px solid #f1f5f9;
   border-radius: 16px;
@@ -61,7 +61,7 @@
 }
 
 /* Yellow Action Button */
-.upload-file-btn {
+.add-video-btn {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -77,7 +77,7 @@
   transition: background 0.15s ease, transform 0.1s ease;
 }
 
-.upload-file-btn:hover {
+.add-video-btn:hover {
   background: #f5b700;
   transform: translateY(-1px);
 }
@@ -87,13 +87,13 @@
   overflow-x: auto;
 }
 
-.admin-documents-table {
+.admin-videos-table {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
 }
 
-.admin-documents-table th {
+.admin-videos-table th {
   background: #f8fafc;
   padding: 14px 18px;
   font-size: 13px;
@@ -102,16 +102,47 @@
   border-bottom: 1px solid #e2e8f0;
 }
 
-.admin-documents-table td {
+.admin-videos-table td {
   padding: 14px 18px;
   font-size: 13.5px;
   color: #334155;
   border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
 }
 
 .fw-bold {
   font-weight: 700;
   color: #0f172a;
+}
+
+/* Action link/buttons */
+.view-video-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #ffc52d;
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 13.5px;
+  transition: color 0.15s ease;
+}
+
+.view-video-link:hover {
+  color: #f5b700;
+}
+
+.table-action-delete-btn {
+  background: transparent;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  padding: 4px;
+  font-size: 15px;
+  transition: color 0.15s ease;
+}
+
+.table-action-delete-btn:hover {
+  color: #b91c1c;
 }
 
 /* Empty State Box matching Screenshot 2 precisely */
@@ -186,38 +217,8 @@
   margin: 0;
 }
 
-/* Action link/buttons */
-.download-link-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: #ffc52d;
-  font-weight: 700;
-  text-decoration: none;
-  font-size: 13.5px;
-  transition: color 0.15s ease;
-}
-
-.download-link-btn:hover {
-  color: #f5b700;
-}
-
-.table-action-delete-btn {
-  background: transparent;
-  border: none;
-  color: #ef4444;
-  cursor: pointer;
-  padding: 4px;
-  font-size: 15px;
-  transition: color 0.15s ease;
-}
-
-.table-action-delete-btn:hover {
-  color: #b91c1c;
-}
-
 /* Modal styling */
-.docs-modal-overlay {
+.videos-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -231,7 +232,7 @@
   z-index: 9999;
 }
 
-.docs-modal-card {
+.videos-modal-card {
   background: #ffffff;
   border-radius: 16px;
   padding: 28px;
@@ -243,7 +244,7 @@
   gap: 20px;
 }
 
-.docs-modal-card h3 {
+.videos-modal-card h3 {
   font-size: 18px;
   font-weight: 800;
   color: #0f172a;
@@ -277,11 +278,6 @@
 
 .modal-input:focus {
   border-color: #ffc52d;
-}
-
-.modal-input-file {
-  font-size: 13px;
-  color: #64748b;
 }
 
 .modal-actions {
@@ -323,4 +319,3 @@
 .btn-modal-submit:hover {
   background: #f5b700;
 }
-

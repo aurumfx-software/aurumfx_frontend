@@ -1,25 +1,24 @@
 import { useState } from "react";
-import { FiPlus, FiFolder, FiTrash2, FiDownload } from "react-icons/fi";
+import { FiPlus, FiFolder, FiTrash2, FiPlay } from "react-icons/fi";
 import AdminLayout from "../../../components/Admin/AdminLayout";
-import "./AdminDocuments.css";
+import "./AdminVideos.css";
 
-function AdminDocuments() {
-  const [documents, setDocuments] = useState([]);
-  const [showUploadModal, setShowUploadModal] = useState(false);
-  const [fileTitle, setFileTitle] = useState("");
+function AdminVideos() {
+  const [videos, setVideos] = useState([]);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [videoTitle, setVideoTitle] = useState("");
+  const [videoUrl, setVideoUrl] = useState("");
   const [sortOrder, setSortOrder] = useState("1");
-  const [fileName, setFileName] = useState("");
 
-  const handleFileUpload = (e) => {
+  const handleAddVideo = (e) => {
     e.preventDefault();
-    if (!fileTitle) return;
+    if (!videoTitle || !videoUrl) return;
 
-    const newDoc = {
+    const newVideo = {
       id: Date.now(),
-      title: fileTitle,
+      title: videoTitle,
+      url: videoUrl,
       sortOrder: sortOrder || "1",
-      url: "#",
-      fileName: fileName || "document.pdf",
       createdDate: new Date().toLocaleDateString("en-GB", {
         day: "2-digit",
         month: "short",
@@ -27,83 +26,81 @@ function AdminDocuments() {
       })
     };
 
-    setDocuments([...documents, newDoc]);
-    setFileTitle("");
+    setVideos([...videos, newVideo]);
+    setVideoTitle("");
+    setVideoUrl("");
     setSortOrder("1");
-    setFileName("");
-    setShowUploadModal(false);
+    setShowAddModal(false);
   };
 
   const handleDelete = (id) => {
-    setDocuments(documents.filter((doc) => doc.id !== id));
+    setVideos(videos.filter((vid) => vid.id !== id));
   };
 
   return (
     <AdminLayout>
-      <div className="admin-documents-page">
+      <div className="admin-videos-page">
         {/* Page Title & Breadcrumbs */}
         <div className="admin-page-header">
-          <h1 className="admin-page-title">Documents</h1>
+          <h1 className="admin-page-title">Videos</h1>
           <div className="admin-breadcrumb">
             <span>Dashboard</span>
             <span className="crumb-sep">•</span>
-            <span className="crumb-active">Documents</span>
+            <span className="crumb-active">Videos</span>
           </div>
         </div>
 
         {/* Main Card Wrapper */}
-        <div className="admin-documents-card">
+        <div className="admin-videos-card">
           <div className="card-top-header">
-            <h3 className="card-header-title">Documents</h3>
+            <h3 className="card-header-title">Videos</h3>
             <button
               type="button"
-              className="upload-file-btn"
-              onClick={() => setShowUploadModal(true)}
+              className="add-video-btn"
+              onClick={() => setShowAddModal(true)}
             >
-              <FiPlus /> File Upload
+              <FiPlus /> Add Video
             </button>
           </div>
 
           {/* Table Container */}
           <div className="table-overflow-box">
-            <table className="admin-documents-table">
+            <table className="admin-videos-table">
               <thead>
                 <tr>
                   <th>No</th>
-                  <th>File Title</th>
-                  <th>Sort Order</th>
-                  <th>Download</th>
+                  <th>Video Title</th>
+                  <th>View</th>
                   <th>Created Date</th>
                   <th>Action</th>
                 </tr>
               </thead>
               <tbody>
-                {documents.map((doc, idx) => (
-                  <tr key={doc.id}>
+                {videos.map((vid, idx) => (
+                  <tr key={vid.id}>
                     <td>{idx + 1}</td>
-                    <td className="fw-bold">{doc.title}</td>
-                    <td>{doc.sortOrder}</td>
+                    <td className="fw-bold">{vid.title}</td>
                     <td>
-                      <a href={doc.url} download className="download-link-btn" title="Download Document">
-                        <FiDownload /> Download
+                      <a href={vid.url} target="_blank" rel="noreferrer" className="view-video-link" title="Play Video">
+                        <FiPlay /> View
                       </a>
                     </td>
-                    <td>{doc.createdDate}</td>
+                    <td>{vid.createdDate}</td>
                     <td>
                       <button
                         type="button"
                         className="table-action-delete-btn"
-                        onClick={() => handleDelete(doc.id)}
-                        title="Delete Document"
+                        onClick={() => handleDelete(vid.id)}
+                        title="Delete Video"
                       >
                         <FiTrash2 />
                       </button>
                     </td>
                   </tr>
                 ))}
-                {documents.length === 0 && (
+                {videos.length === 0 && (
                   <tr>
-                    <td colSpan="6" style={{ padding: 0 }}>
+                    <td colSpan="5" style={{ padding: 0 }}>
                       <div className="docs-empty-state">
                         <div className="empty-magnifier-box">
                           <div className="magnifier-art">
@@ -123,20 +120,32 @@ function AdminDocuments() {
           </div>
         </div>
 
-        {/* Upload File Modal */}
-        {showUploadModal && (
-          <div className="docs-modal-overlay">
-            <div className="docs-modal-card">
-              <h3>Upload Document</h3>
-              <form onSubmit={handleFileUpload}>
+        {/* Add Video Modal */}
+        {showAddModal && (
+          <div className="videos-modal-overlay">
+            <div className="videos-modal-card">
+              <h3>Add Video Tutorial</h3>
+              <form onSubmit={handleAddVideo}>
                 <div className="modal-input-group">
-                  <label>File Title</label>
+                  <label>Video Title</label>
                   <input
                     type="text"
                     required
-                    placeholder="Enter File Title"
-                    value={fileTitle}
-                    onChange={(e) => setFileTitle(e.target.value)}
+                    placeholder="Enter Video Title"
+                    value={videoTitle}
+                    onChange={(e) => setVideoTitle(e.target.value)}
+                    className="modal-input"
+                  />
+                </div>
+
+                <div className="modal-input-group">
+                  <label>Video URL / Embed Link</label>
+                  <input
+                    type="url"
+                    required
+                    placeholder="https://example.com/video.mp4"
+                    value={videoUrl}
+                    onChange={(e) => setVideoUrl(e.target.value)}
                     className="modal-input"
                   />
                 </div>
@@ -152,25 +161,16 @@ function AdminDocuments() {
                   />
                 </div>
 
-                <div className="modal-input-group">
-                  <label>Choose File</label>
-                  <input
-                    type="file"
-                    onChange={(e) => setFileName(e.target.files[0]?.name || "")}
-                    className="modal-input-file"
-                  />
-                </div>
-
                 <div className="modal-actions">
                   <button
                     type="button"
                     className="btn-modal-cancel"
-                    onClick={() => setShowUploadModal(false)}
+                    onClick={() => setShowAddModal(false)}
                   >
                     Cancel
                   </button>
                   <button type="submit" className="btn-modal-submit">
-                    Upload
+                    Add
                   </button>
                 </div>
               </form>
@@ -182,4 +182,4 @@ function AdminDocuments() {
   );
 }
 
-export default AdminDocuments;
+export default AdminVideos;

@@ -19,6 +19,7 @@ import AdminEmails from "./pages/admin/communication/AdminEmails";
 import AdminHelpCenter from "./pages/admin/communication/AdminHelpCenter";
 import AdminArticles from "./pages/admin/communication/AdminArticles";
 import AdminDocuments from "./pages/admin/tools/AdminDocuments";
+import AdminVideos from "./pages/admin/tools/AdminVideos";
 import AdminModulePage from "./pages/admin/AdminModulePage";
 
 import UserDashboard from "./pages/user/UserDashboard";
@@ -323,7 +324,7 @@ function App() {
 
         {/* Tools Routes */}
         <Route path="/admin/tools/documents" element={<ProtectedRoute requiredRole="admin"><AdminDocuments /></ProtectedRoute>} />
-        <Route path="/admin/tools/videos" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+        <Route path="/admin/tools/videos" element={<ProtectedRoute requiredRole="admin"><AdminVideos /></ProtectedRoute>} />
         <Route path="/admin/tools/faqs" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
 
         {/* Members Management Routes */}
