@@ -27,6 +27,10 @@ import AdminKYCDetails from "./pages/admin/members/AdminKYCDetails";
 import AdminModulePage from "./pages/admin/AdminModulePage";
 import AdminRankAchievers from "./pages/admin/achievers/RankAchievers";
 import AdminCriteriaAchievers from "./pages/admin/achievers/CriteriaAchievers";
+import BrandSettings from "./pages/admin/settings/BrandSettings";
+import NetworkSettings from "./pages/admin/settings/NetworkSettings";
+import WithdrawalSettings from "./pages/admin/settings/WithdrawalSettings";
+import AdvancedSettings from "./pages/admin/settings/AdvancedSettings";
 
 import UserDashboard from "./pages/user/UserDashboard";
 import ClubBusiness from "./pages/user/genealogy/ClubBusiness";
@@ -356,9 +360,15 @@ function App() {
         />
 
         {/* Settings Routes */}
-        <Route path="/admin/settings/general" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
-        <Route path="/admin/settings/payment" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
-        <Route path="/admin/settings/commissions" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+        <Route path="/admin/settings/brand" element={<ProtectedRoute requiredRole="admin"><BrandSettings /></ProtectedRoute>} />
+        <Route path="/admin/settings/network" element={<ProtectedRoute requiredRole="admin"><NetworkSettings /></ProtectedRoute>} />
+        <Route path="/admin/settings/network/binaryMatching" element={<ProtectedRoute requiredRole="admin"><NetworkSettings /></ProtectedRoute>} />
+        <Route path="/admin/settings/network/*" element={<ProtectedRoute requiredRole="admin"><NetworkSettings /></ProtectedRoute>} />
+        <Route path="/admin/settings/withdrawal" element={<ProtectedRoute requiredRole="admin"><WithdrawalSettings /></ProtectedRoute>} />
+        <Route path="/admin/settings/advanced" element={<ProtectedRoute requiredRole="admin"><AdvancedSettings /></ProtectedRoute>} />
+        <Route path="/admin/settings/general" element={<Navigate to="/admin/settings/brand" replace />} />
+        <Route path="/admin/settings/payment" element={<Navigate to="/admin/settings/withdrawal" replace />} />
+        <Route path="/admin/settings/commissions" element={<Navigate to="/admin/settings/network" replace />} />
 
         {/* Reports Routes */}
         <Route path="/admin/reports/sales" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />

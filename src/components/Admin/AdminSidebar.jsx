@@ -94,9 +94,10 @@ const navItems = [
     label: "Settings",
     icon: FiSettings,
     children: [
-      { id: "general", label: "General Settings", path: "/admin/settings/general" },
-      { id: "payment", label: "Payment Methods", path: "/admin/settings/payment" },
-      { id: "commissions", label: "Commission Structure", path: "/admin/settings/commissions" },
+      { id: "brand", label: "Brand", path: "/admin/settings/brand" },
+      { id: "network", label: "Network", path: "/admin/settings/network" },
+      { id: "withdrawal", label: "Withdrawal", path: "/admin/settings/withdrawal" },
+      { id: "advanced", label: "Advanced Settings", path: "/admin/settings/advanced" },
     ],
   },
   {

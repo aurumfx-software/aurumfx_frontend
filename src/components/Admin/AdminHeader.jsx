@@ -80,7 +80,7 @@ function AdminHeader({ onMenuToggle }) {
           type="button"
           className="header-icon-btn header-settings-btn"
           aria-label="Settings"
-          onClick={() => navigate("/admin/settings/general")}
+          onClick={() => navigate("/admin/settings/brand")}
         >
           <FiSettings />
         </button>

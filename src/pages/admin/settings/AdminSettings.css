@@ -1,0 +1,465 @@
+.admin-settings-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+/* Page Header & Breadcrumb */
+.admin-page-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.admin-page-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #1f2937;
+}
+
+.admin-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  color: #64748b;
+}
+
+.crumb-sep {
+  color: #cbd5e1;
+}
+
+.crumb-active {
+  color: #94a3b8;
+}
+
+/* Settings Main Card Container */
+.settings-main-card {
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.settings-section-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 8px;
+}
+
+/* Logo Upload Section matching Screenshots */
+.logo-upload-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.logo-drop-box {
+  border: 1px solid #f1f5f9;
+  border-radius: 12px;
+  padding: 32px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: #ffffff;
+}
+
+.logo-drop-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.logo-circle-area {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  border: 2px dashed #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 24px 0 20px 0;
+  cursor: pointer;
+  background: #ffffff;
+  transition: all 0.2s ease;
+  overflow: hidden;
+  position: relative;
+}
+
+.logo-circle-area:hover {
+  border-color: #ffc52d;
+  background: #fffdf5;
+}
+
+.logo-preview-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.logo-drop-hint {
+  font-size: 12px;
+  color: #94a3b8;
+  line-height: 1.5;
+}
+
+/* Form Outlined Inputs matching Screenshot 1 & 2 */
+.settings-form-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.settings-field-group {
+  position: relative;
+  width: 100%;
+}
+
+.settings-field-box {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px;
+  position: relative;
+  background: #ffffff;
+  transition: border-color 0.2s ease;
+}
+
+.settings-field-box:focus-within {
+  border-color: #ffc52d;
+}
+
+.settings-field-label {
+  position: absolute;
+  top: -9px;
+  left: 14px;
+  background: #ffffff;
+  padding: 0 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #64748b;
+  z-index: 1;
+}
+
+.settings-input-control {
+  width: 100%;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  color: #1e293b;
+  font-weight: 500;
+  background: transparent;
+}
+
+.settings-select-control {
+  width: 100%;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  color: #1e293b;
+  font-weight: 500;
+  background: transparent;
+  cursor: pointer;
+}
+
+/* Toggle Control styling */
+.settings-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.toggle-info-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.toggle-info-desc {
+  font-size: 12.5px;
+  color: #64748b;
+}
+
+.switch-btn {
+  width: 44px;
+  height: 24px;
+  border-radius: 12px;
+  background: #cbd5e1;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.2s ease;
+}
+
+.switch-btn.active {
+  background: #ffc52d;
+}
+
+.switch-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  transition: transform 0.2s ease;
+}
+
+.switch-btn.active .switch-thumb {
+  transform: translateX(20px);
+}
+
+/* Save Actions */
+.settings-actions-bar {
+  display: flex;
+  justify-content: flex-start;
+  padding-top: 8px;
+}
+
+.settings-save-btn {
+  background: #ffc52d;
+  color: #1e293b;
+  font-weight: 700;
+  font-size: 14px;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 28px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(255, 197, 45, 0.25);
+  transition: all 0.2s ease;
+}
+
+.settings-save-btn:hover {
+  background: #f5b316;
+  transform: translateY(-1px);
+}
+
+/* Horizontal Sub-Tabs bar for Network Settings */
+.network-tabs-container {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 0;
+  margin-bottom: 24px;
+  overflow-x: auto;
+}
+
+.network-tab-btn {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 12px 4px 14px 4px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.network-tab-btn:hover {
+  color: #1e293b;
+}
+
+.network-tab-btn--active {
+  color: #1e293b;
+  font-weight: 700;
+  border-bottom: 2.5px solid #ffc52d;
+}
+
+.network-tab-icon {
+  font-size: 16px;
+  color: #64748b;
+}
+
+.network-tab-btn--active .network-tab-icon {
+  color: #ffc52d;
+}
+
+/* Blue Bordered Settings Card matching screenshot */
+.blue-bordered-card {
+  border: 1.5px solid #2563eb;
+  border-radius: 10px;
+  background: #ffffff;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.05);
+}
+
+.card-grey-header {
+  background: #f8fafc;
+  padding: 14px 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.header-col-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.card-input-row {
+  padding: 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.network-bordered-input {
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 14px;
+  color: #1e293b;
+  font-weight: 500;
+  outline: none;
+  width: 100%;
+  max-width: 320px;
+  background: #ffffff;
+  transition: border-color 0.2s ease;
+}
+
+.network-bordered-input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.card-actions-row {
+  padding: 0 24px 24px 24px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.yellow-update-btn {
+  background: #ffc52d;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 14px;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 26px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(255, 197, 45, 0.3);
+}
+
+.yellow-update-btn:hover {
+  background: #f5b316;
+  transform: translateY(-1px);
+}
+
+/* ── Investment & Payout Settings ── */
+
+/* Floating-label input wrapper */
+.invest-field-box {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: relative;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px 14px 10px;
+  background: #fff;
+  transition: border-color 0.2s;
+}
+
+.invest-field-box:focus-within {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+}
+
+.invest-field-label {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: #64748b;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.settings-input-control {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e293b;
+  padding: 0;
+  width: 100%;
+  line-height: 1.4;
+}
+
+/* Payout Schedule Table */
+.payout-schedule-table {
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.payout-table-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  background: #f8fafc;
+  padding: 12px 20px;
+  gap: 16px;
+  border-bottom: 1.5px solid #e2e8f0;
+}
+
+.payout-table-header span {
+  font-size: 13px;
+  font-weight: 700;
+  color: #475569;
+}
+
+.payout-table-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.payout-table-row:last-child {
+  border-bottom: none;
+}
+
+.payout-table-input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1e293b;
+  padding: 14px 20px;
+  width: 100%;
+  border-right: 1px solid #f1f5f9;
+}
+
+.payout-table-input:last-child {
+  border-right: none;
+}
+
+.payout-table-input:focus {
+  background: #f8fafc;
+}
