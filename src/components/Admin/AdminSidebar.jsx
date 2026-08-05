@@ -54,9 +54,10 @@ const navItems = [
     label: "Communication",
     icon: FiMessageSquare,
     children: [
-      { id: "mails", label: "Emails & Mails", path: "/admin/communication/mails" },
-      { id: "tickets", label: "Support Tickets", path: "/admin/communication/tickets" },
-      { id: "announcements", label: "Announcements", path: "/admin/communication/announcements" },
+      { id: "faq", label: "FAQ's", path: "/admin/communication/faq" },
+      { id: "emails", label: "Emails", path: "/admin/communication/emails" },
+      { id: "help-center", label: "Help Center", path: "/admin/communication/help-center" },
+      { id: "article", label: "Article", path: "/admin/communication/article" },
     ],
   },
   {

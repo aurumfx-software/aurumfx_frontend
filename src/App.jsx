@@ -302,9 +302,15 @@ function App() {
         <Route path="/admin/financial/investments" element={<Navigate to="/admin/financial/investments/request" replace />} />
 
         {/* Communication Routes */}
-        <Route path="/admin/communication/mails" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
-        <Route path="/admin/communication/tickets" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
-        <Route path="/admin/communication/announcements" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+        <Route path="/admin/communication/faq" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+        <Route path="/admin/communication/emails" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+        <Route path="/admin/communication/help-center" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+        <Route path="/admin/communication/article" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+        
+        {/* Deprecated redirects */}
+        <Route path="/admin/communication/mails" element={<Navigate to="/admin/communication/emails" replace />} />
+        <Route path="/admin/communication/tickets" element={<Navigate to="/admin/communication/help-center" replace />} />
+        <Route path="/admin/communication/announcements" element={<Navigate to="/admin/communication/article" replace />} />
 
         {/* Tools Routes */}
         <Route path="/admin/tools/documents" element={<ProtectedRoute requiredRole="admin"><AdminDocuments /></ProtectedRoute>} />
