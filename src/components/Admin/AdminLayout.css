@@ -21,7 +21,13 @@
   flex-direction: column;
   min-width: 0;
   width: 100%;
+  transition: margin-left 0.25s ease;
 }
+
+.admin-layout.sidebar-collapsed .dashboard-main {
+  margin-left: 70px;
+}
+
 
 .dashboard-content {
   flex: 1;

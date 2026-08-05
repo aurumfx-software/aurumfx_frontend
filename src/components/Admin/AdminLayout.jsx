@@ -4,37 +4,60 @@ import AdminHeader from "./AdminHeader";
 import "./AdminLayout.css";
 
 function AdminLayout({ children }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   useEffect(() => {
-    const closeOnDesktop = () => {
-      if (window.innerWidth > 1024) {
-        setSidebarOpen(false);
+    const handleResize = () => {
+      if (window.innerWidth <= 1024) {
+        setIsMobileOpen(false);
       }
     };
 
-    window.addEventListener("resize", closeOnDesktop);
-    return () => window.removeEventListener("resize", closeOnDesktop);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = sidebarOpen ? "hidden" : "";
+    if (window.innerWidth <= 1024) {
+      document.body.style.overflow = isMobileOpen ? "hidden" : "";
+    } else {
+      document.body.style.overflow = "";
+    }
     return () => {
       document.body.style.overflow = "";
     };
-  }, [sidebarOpen]);
+  }, [isMobileOpen]);
+
+  const handleMenuToggle = () => {
+    if (window.innerWidth <= 1024) {
+      setIsMobileOpen((prev) => !prev);
+    } else {
+      setIsCollapsed((prev) => !prev);
+    }
+  };
 
   return (
-    <div className={`admin-layout ${sidebarOpen ? "sidebar-open" : ""}`}>
+    <div
+      className={`admin-layout ${isCollapsed ? "sidebar-collapsed" : ""} ${
+        isMobileOpen ? "sidebar-open" : ""
+      }`}
+    >
       <button
         type="button"
         className="sidebar-overlay"
         aria-label="Close menu"
-        onClick={() => setSidebarOpen(false)}
+        onClick={() => setIsMobileOpen(false)}
       />
-      <AdminSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <AdminSidebar
+        isOpen={isMobileOpen}
+        isCollapsed={isCollapsed}
+        onClose={() => setIsMobileOpen(false)}
+        onToggleCollapse={() => setIsCollapsed((prev) => !prev)}
+      />
+
       <div className="dashboard-main">
-        <AdminHeader onMenuToggle={() => setSidebarOpen((open) => !open)} />
+        <AdminHeader onMenuToggle={handleMenuToggle} />
         <main className="dashboard-content">{children}</main>
       </div>
     </div>

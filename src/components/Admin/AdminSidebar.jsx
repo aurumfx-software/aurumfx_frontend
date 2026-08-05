@@ -12,9 +12,12 @@ import {
   FiFileText,
   FiChevronDown,
   FiChevronRight,
+  FiChevronLeft,
+  FiX,
 } from "react-icons/fi";
 import logo from "../../assets/logo.png";
 import "./AdminSidebar.css";
+
 
 const navItems = [
   {
@@ -115,7 +118,7 @@ const navItems = [
   },
 ];
 
-function AdminSidebar({ isOpen, onClose }) {
+function AdminSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse }) {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -154,6 +157,14 @@ function AdminSidebar({ isOpen, onClose }) {
   };
 
   const handleParentClick = (item) => {
+    if (isCollapsed) {
+      if (item.children && item.children.length > 0) {
+        navigate(item.children[0].path);
+      } else if (item.path) {
+        navigate(item.path);
+      }
+      return;
+    }
     if (item.children && item.children.length > 0) {
       toggleExpand(item.id);
     } else if (item.path) {
@@ -163,10 +174,25 @@ function AdminSidebar({ isOpen, onClose }) {
   };
 
   return (
-    <aside className={`admin-sidebar ${isOpen ? "admin-sidebar--open" : ""}`}>
+    <aside className={`admin-sidebar ${isOpen ? "admin-sidebar--open" : ""} ${isCollapsed ? "admin-sidebar--collapsed" : ""}`}>
       <div className="sidebar-header">
-        <img src={logo} alt="AurumFX Logo" className="sidebar-logo" />
+        <img src={logo} alt="AurumFX Logo" className="sidebar-logo" onClick={onToggleCollapse} style={{ cursor: "pointer" }} />
+        <button
+          type="button"
+          className="sidebar-collapse-btn"
+          onClick={onToggleCollapse}
+          aria-label={isCollapsed ? "Expand Sidebar" : "Minimize Sidebar"}
+          title={isCollapsed ? "Expand Sidebar" : "Minimize Sidebar"}
+        >
+          {isCollapsed ? <FiChevronRight /> : <FiChevronLeft />}
+        </button>
       </div>
+
+      {isCollapsed && (
+        <div className="sidebar-avatar">
+          <div className="sidebar-avatar-circle">A</div>
+        </div>
+      )}
 
       <nav className="sidebar-nav">
         {navItems.map((item) => {
@@ -191,6 +217,7 @@ function AdminSidebar({ isOpen, onClose }) {
                 type="button"
                 className={`nav-item ${isItemActive ? "nav-item--active" : ""}`}
                 onClick={() => handleParentClick(item)}
+                title={item.label}
               >
                 <item.icon className="nav-icon" />
                 <span className="nav-label">{item.label}</span>
@@ -201,7 +228,7 @@ function AdminSidebar({ isOpen, onClose }) {
                 )}
               </button>
 
-              {item.children && isExpanded && (
+              {!isCollapsed && item.children && isExpanded && (
                 <div className="nav-submenu">
                   {item.children.map((child) => {
                     const isChildActive =
@@ -232,8 +259,23 @@ function AdminSidebar({ isOpen, onClose }) {
           );
         })}
       </nav>
+
+      {!isCollapsed && (
+        <div className="sidebar-footer">
+          <button
+            type="button"
+            className="sidebar-toggle-full-btn"
+            onClick={onToggleCollapse}
+          >
+            <FiChevronLeft />
+            <span>Minimize Menu</span>
+          </button>
+        </div>
+      )}
     </aside>
   );
 }
+
+
 
 export default AdminSidebar;
