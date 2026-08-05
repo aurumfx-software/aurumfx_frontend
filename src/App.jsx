@@ -383,6 +383,7 @@ function App() {
         <Route path="/admin/report/income"        element={<ProtectedRoute requiredRole="admin"><MemberIncome /></ProtectedRoute>} />
         <Route path="/admin/report/payout"        element={<ProtectedRoute requiredRole="admin"><PayoutReport /></ProtectedRoute>} />
         <Route path="/admin/report/point-history" element={<ProtectedRoute requiredRole="admin"><PointHistory /></ProtectedRoute>} />
+        <Route path="/admin/report/point/history" element={<ProtectedRoute requiredRole="admin"><PointHistory /></ProtectedRoute>} />
         <Route path="/admin/report/earners"       element={<ProtectedRoute requiredRole="admin"><TopEarners /></ProtectedRoute>} />
         {/* Legacy report route aliases */}
         <Route path="/admin/reports/sales"  element={<Navigate to="/admin/report/joining" replace />} />
