@@ -31,6 +31,12 @@ import BrandSettings from "./pages/admin/settings/BrandSettings";
 import NetworkSettings from "./pages/admin/settings/NetworkSettings";
 import WithdrawalSettings from "./pages/admin/settings/WithdrawalSettings";
 import AdvancedSettings from "./pages/admin/settings/AdvancedSettings";
+import FundTransferReport from "./pages/admin/reports/FundTransfer";
+import JoiningReport from "./pages/admin/reports/JoiningReport";
+import MemberIncome from "./pages/admin/reports/MemberIncome";
+import PayoutReport from "./pages/admin/reports/PayoutReport";
+import PointHistory from "./pages/admin/reports/PointHistory";
+import TopEarners from "./pages/admin/reports/TopEarners";
 
 import UserDashboard from "./pages/user/UserDashboard";
 import ClubBusiness from "./pages/user/genealogy/ClubBusiness";
@@ -371,9 +377,16 @@ function App() {
         <Route path="/admin/settings/commissions" element={<Navigate to="/admin/settings/network" replace />} />
 
         {/* Reports Routes */}
-        <Route path="/admin/reports/sales" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
-        <Route path="/admin/reports/payout" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
-        <Route path="/admin/reports/tax" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+        <Route path="/admin/report/fund-transfer" element={<ProtectedRoute requiredRole="admin"><FundTransferReport /></ProtectedRoute>} />
+        <Route path="/admin/report/joining"       element={<ProtectedRoute requiredRole="admin"><JoiningReport /></ProtectedRoute>} />
+        <Route path="/admin/report/member-income" element={<ProtectedRoute requiredRole="admin"><MemberIncome /></ProtectedRoute>} />
+        <Route path="/admin/report/payout"        element={<ProtectedRoute requiredRole="admin"><PayoutReport /></ProtectedRoute>} />
+        <Route path="/admin/report/point-history" element={<ProtectedRoute requiredRole="admin"><PointHistory /></ProtectedRoute>} />
+        <Route path="/admin/report/earners"       element={<ProtectedRoute requiredRole="admin"><TopEarners /></ProtectedRoute>} />
+        {/* Legacy report route aliases */}
+        <Route path="/admin/reports/sales"  element={<Navigate to="/admin/report/joining" replace />} />
+        <Route path="/admin/reports/payout" element={<Navigate to="/admin/report/payout"  replace />} />
+        <Route path="/admin/reports/tax"    element={<Navigate to="/admin/report/earners" replace />} />
 
         {/* Admin Route Aliases */}
         <Route path="/admin-login" element={<Navigate to="/admin/login" replace />} />

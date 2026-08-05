@@ -105,9 +105,12 @@ const navItems = [
     label: "Reports",
     icon: FiFileText,
     children: [
-      { id: "sales-report", label: "Sales Reports", path: "/admin/reports/sales" },
-      { id: "payout-report", label: "Payout Reports", path: "/admin/reports/payout" },
-      { id: "tax-report", label: "Tax & Analytics", path: "/admin/reports/tax" },
+      { id: "fund-transfer",   label: "Fund Transfer",   path: "/admin/report/fund-transfer" },
+      { id: "joining-report",  label: "Joining Report",  path: "/admin/report/joining" },
+      { id: "member-income",   label: "Member Income",   path: "/admin/report/member-income" },
+      { id: "payout-report",   label: "Payout",          path: "/admin/report/payout" },
+      { id: "point-history",   label: "Point History",   path: "/admin/report/point-history" },
+      { id: "top-earners",     label: "Top Earners",     path: "/admin/report/earners" },
     ],
   },
 ];
