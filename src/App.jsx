@@ -380,6 +380,7 @@ function App() {
         <Route path="/admin/report/fund-transfer" element={<ProtectedRoute requiredRole="admin"><FundTransferReport /></ProtectedRoute>} />
         <Route path="/admin/report/joining"       element={<ProtectedRoute requiredRole="admin"><JoiningReport /></ProtectedRoute>} />
         <Route path="/admin/report/member-income" element={<ProtectedRoute requiredRole="admin"><MemberIncome /></ProtectedRoute>} />
+        <Route path="/admin/report/income"        element={<ProtectedRoute requiredRole="admin"><MemberIncome /></ProtectedRoute>} />
         <Route path="/admin/report/payout"        element={<ProtectedRoute requiredRole="admin"><PayoutReport /></ProtectedRoute>} />
         <Route path="/admin/report/point-history" element={<ProtectedRoute requiredRole="admin"><PointHistory /></ProtectedRoute>} />
         <Route path="/admin/report/earners"       element={<ProtectedRoute requiredRole="admin"><TopEarners /></ProtectedRoute>} />

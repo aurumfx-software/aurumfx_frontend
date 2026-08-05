@@ -107,7 +107,7 @@ const navItems = [
     children: [
       { id: "fund-transfer",   label: "Fund Transfer",   path: "/admin/report/fund-transfer" },
       { id: "joining-report",  label: "Joining Report",  path: "/admin/report/joining" },
-      { id: "member-income",   label: "Member Income",   path: "/admin/report/member-income" },
+      { id: "member-income",   label: "Member Income",   path: "/admin/report/income" },
       { id: "payout-report",   label: "Payout",          path: "/admin/report/payout" },
       { id: "point-history",   label: "Point History",   path: "/admin/report/point-history" },
       { id: "top-earners",     label: "Top Earners",     path: "/admin/report/earners" },
