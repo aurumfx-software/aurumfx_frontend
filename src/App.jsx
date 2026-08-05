@@ -25,6 +25,8 @@ import AdminHoldingTank from "./pages/admin/members/AdminHoldingTank";
 import AdminBankApprove from "./pages/admin/members/AdminBankApprove";
 import AdminKYCDetails from "./pages/admin/members/AdminKYCDetails";
 import AdminModulePage from "./pages/admin/AdminModulePage";
+import AdminRankAchievers from "./pages/admin/achievers/RankAchievers";
+import AdminCriteriaAchievers from "./pages/admin/achievers/CriteriaAchievers";
 
 import UserDashboard from "./pages/user/UserDashboard";
 import ClubBusiness from "./pages/user/genealogy/ClubBusiness";
@@ -342,8 +344,16 @@ function App() {
         <Route path="/admin/members/add" element={<Navigate to="/admin/members/network" replace />} />
 
         {/* Achievers List Routes */}
-        <Route path="/admin/achievers/rank" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
-        <Route path="/admin/achievers/criteria" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+        <Route path="/admin/achievers/rank" element={<ProtectedRoute requiredRole="admin"><AdminRankAchievers /></ProtectedRoute>} />
+        <Route
+          path="/admin/achievers_list/rank_achievers"
+          element={<Navigate to="/admin/achievers/rank" replace />}
+        />
+        <Route path="/admin/achievers/criteria" element={<ProtectedRoute requiredRole="admin"><AdminCriteriaAchievers /></ProtectedRoute>} />
+        <Route
+          path="/admin/achievers_list/criteria_achievers"
+          element={<Navigate to="/admin/achievers/criteria" replace />}
+        />
 
         {/* Settings Routes */}
         <Route path="/admin/settings/general" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
