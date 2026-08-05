@@ -3,11 +3,19 @@ import AdminLayout from "../../components/Admin/AdminLayout";
 import "./AdminDashboard.css";
 
 const moduleTitles = {
+  "/admin/financial/e-wallet": { title: "E-Wallet", category: "Financial" },
   "/admin/financial/ewallet": { title: "E-Wallet", category: "Financial" },
+  "/admin/financial/deposit-wallet": { title: "Deposit Wallet", category: "Financial" },
   "/admin/financial/deposit": { title: "Deposit Wallet", category: "Financial" },
+  "/admin/financial/fund-credits": { title: "Fund Credit", category: "Financial" },
+  "/admin/financial/fund-credit": { title: "Fund Credit", category: "Financial" },
   "/admin/financial/credit": { title: "Fund Credit", category: "Financial" },
   "/admin/financial/transfer": { title: "Fund Transfer", category: "Financial" },
+  "/admin/financial/payout/request": { title: "Payout Management", category: "Financial" },
+  "/admin/financial/payout/history": { title: "Payout History", category: "Financial" },
   "/admin/financial/payout": { title: "Payout Management", category: "Financial" },
+  "/admin/financial/investments/request": { title: "Investments Overview", category: "Financial" },
+  "/admin/financial/investments/history": { title: "Investment History", category: "Financial" },
   "/admin/financial/investments": { title: "Investments Overview", category: "Financial" },
   "/admin/communication/mails": { title: "Emails & Mails", category: "Communication" },
   "/admin/communication/tickets": { title: "Support Tickets", category: "Communication" },

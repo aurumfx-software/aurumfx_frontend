@@ -10,6 +10,10 @@ import AdminEnrollerBusiness from "./pages/admin/genealogy/EnrollerBusiness";
 import AdminStructureBusiness from "./pages/admin/genealogy/StructureBusiness";
 import AdminListBusiness from "./pages/admin/genealogy/ListBusiness";
 import AdminEWallet from "./pages/admin/financial/AdminEWallet";
+import AdminDepositWallet from "./pages/admin/financial/AdminDepositWallet";
+import AdminFundCredits from "./pages/admin/financial/AdminFundCredits";
+import AdminPayout from "./pages/admin/financial/AdminPayout";
+import AdminInvestments from "./pages/admin/financial/AdminInvestments";
 import AdminDocuments from "./pages/admin/tools/AdminDocuments";
 import AdminModulePage from "./pages/admin/AdminModulePage";
 
@@ -282,13 +286,20 @@ function App() {
         <Route path="/admin/genealogy/list" element={<Navigate to="/admin/business/list" replace />} />
 
         {/* Financial Routes */}
-        <Route path="/admin/financial/ewallet" element={<ProtectedRoute requiredRole="admin"><AdminEWallet /></ProtectedRoute>} />
-        <Route path="/admin/financial/e-wallet" element={<Navigate to="/admin/financial/ewallet" replace />} />
-        <Route path="/admin/financial/deposit" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
-        <Route path="/admin/financial/credit" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+        <Route path="/admin/financial/e-wallet" element={<ProtectedRoute requiredRole="admin"><AdminEWallet /></ProtectedRoute>} />
+        <Route path="/admin/financial/ewallet" element={<Navigate to="/admin/financial/e-wallet" replace />} />
+        <Route path="/admin/financial/deposit-wallet" element={<ProtectedRoute requiredRole="admin"><AdminDepositWallet /></ProtectedRoute>} />
+        <Route path="/admin/financial/deposit" element={<Navigate to="/admin/financial/deposit-wallet" replace />} />
+        <Route path="/admin/financial/fund-credits" element={<ProtectedRoute requiredRole="admin"><AdminFundCredits /></ProtectedRoute>} />
+        <Route path="/admin/financial/fund-credit" element={<Navigate to="/admin/financial/fund-credits" replace />} />
+        <Route path="/admin/financial/credit" element={<Navigate to="/admin/financial/fund-credits" replace />} />
         <Route path="/admin/financial/transfer" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
-        <Route path="/admin/financial/payout" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
-        <Route path="/admin/financial/investments" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />
+        <Route path="/admin/financial/payout/request" element={<ProtectedRoute requiredRole="admin"><AdminPayout /></ProtectedRoute>} />
+        <Route path="/admin/financial/payout/history" element={<ProtectedRoute requiredRole="admin"><AdminPayout /></ProtectedRoute>} />
+        <Route path="/admin/financial/payout" element={<Navigate to="/admin/financial/payout/request" replace />} />
+        <Route path="/admin/financial/investments/request" element={<ProtectedRoute requiredRole="admin"><AdminInvestments /></ProtectedRoute>} />
+        <Route path="/admin/financial/investments/history" element={<ProtectedRoute requiredRole="admin"><AdminInvestments /></ProtectedRoute>} />
+        <Route path="/admin/financial/investments" element={<Navigate to="/admin/financial/investments/request" replace />} />
 
         {/* Communication Routes */}
         <Route path="/admin/communication/mails" element={<ProtectedRoute requiredRole="admin"><AdminModulePage /></ProtectedRoute>} />

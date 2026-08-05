@@ -1,0 +1,304 @@
+.admin-payout-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+/* Page Header */
+.admin-page-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.admin-page-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #1f2937;
+}
+
+.admin-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.crumb-sep {
+  color: #d1d5db;
+}
+
+.crumb-active {
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* Content Card Wrap */
+.payout-content-card {
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Tabs Navigation Styling */
+.payout-tabs-header {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #f1f5f9;
+  padding: 0 24px;
+}
+
+.payout-tab-btn {
+  height: 52px;
+  background: transparent;
+  border: none;
+  border-bottom: 3.5px solid transparent;
+  padding: 0 16px;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  top: 1.5px;
+}
+
+.payout-tab-btn--active {
+  color: #ffc52d;
+  border-color: #ffc52d;
+}
+
+.payout-tab-btn:hover:not(.payout-tab-btn--active) {
+  color: #334155;
+}
+
+/* Tab Panel Wrap */
+.payout-tab-content {
+  padding: 24px;
+}
+
+/* Table Design */
+.table-overflow-box {
+  overflow-x: auto;
+}
+
+.admin-payout-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.admin-payout-table th {
+  background: #f8fafc;
+  padding: 14px 18px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #8c98a4;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.admin-payout-table td {
+  padding: 14px 18px;
+  font-size: 13.5px;
+  color: #334155;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: top;
+}
+
+/* User Column Cell */
+.payout-user-cell {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.payout-user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 800;
+  color: #ffffff;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.payout-user-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.payout-user-fullname {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.payout-user-idsub {
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.text-gray {
+  color: #94a3b8;
+}
+
+/* Bank Details Column */
+.payout-bank-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: #475569;
+}
+
+.payout-bank-block div {
+  line-height: 1.4;
+}
+
+.payout-bank-block strong {
+  color: #1e293b;
+}
+
+.copyable-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.inline-copy-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  font-size: 13px;
+  transition: color 0.15s ease;
+}
+
+.inline-copy-btn:hover {
+  color: #ffc52d;
+}
+
+/* Document view button */
+.text-center-cell {
+  text-align: center;
+}
+
+.view-document-btn {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  font-size: 16px;
+  cursor: pointer;
+  transition: color 0.15s ease;
+  padding: 4px;
+}
+
+.view-document-btn:hover {
+  color: #ffc52d;
+}
+
+/* Confirm Action Button */
+.payout-confirm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: #ffc52d;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  color: #1e293b;
+  font-size: 12.5px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(255, 197, 45, 0.2);
+  transition: background 0.2s, transform 0.1s;
+}
+
+.payout-confirm-btn:hover {
+  background: #f5b700;
+  transform: translateY(-1px);
+}
+
+.confirm-check {
+  font-size: 14px;
+  stroke-width: 3px;
+}
+
+/* History Payout Status Badge */
+.payout-status-badge {
+  display: inline-flex;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.badge-confirmed {
+  background: #f0fdf4;
+  color: #16a34a;
+}
+
+.payout-empty-row {
+  text-align: center;
+  padding: 40px 0 !important;
+  color: #64748b;
+  font-weight: 600;
+}
+
+/* History Tab Additions */
+.payout-history-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.history-actions-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -4px;
+}
+
+.print-report-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #1e293b;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.print-report-btn:hover {
+  background: #f8fafc;
+}
+
+.payout-status-green {
+  color: #10b981;
+  font-weight: 700;
+  font-size: 13.5px;
+}
+
+.font-italic {
+  font-style: italic;
+}
+
