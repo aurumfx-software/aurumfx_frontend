@@ -89,52 +89,110 @@ const MOCK_USER_DASHBOARD = {
   ],
 };
 
-/**
- * Fetch Admin Dashboard data from API
- * @param {string} timeframe - 'week' | 'month' | 'year'
- */
-export const getAdminDashboardData = async (timeframe = "week") => {
-  try {
-    const response = await api.get(`/admin/dashboard`, {
-      params: { timeframe },
-    });
-    return { success: true, data: response.data };
-  } catch (error) {
-    console.warn(
-      "Admin Dashboard API offline or not reachable, using fallback mock data:",
-      error.message
-    );
-    return {
-      success: true,
-      isMock: true,
-      data: MOCK_ADMIN_DASHBOARD,
-    };
-  }
+const CACHE_TTL = 5000; // 5 seconds cache to prevent duplicate rapid requests
+
+const adminCache = new Map();
+const adminInFlight = new Map();
+
+const userCache = { data: null, timestamp: 0 };
+let userInFlight = null;
+
+export const clearDashboardCache = () => {
+  adminCache.clear();
+  adminInFlight.clear();
+  userCache.data = null;
+  userCache.timestamp = 0;
+  userInFlight = null;
 };
 
 /**
- * Fetch User Dashboard data from API
+ * Fetch Admin Dashboard data from API with request deduplication & short caching
+ * @param {string} timeframe - 'week' | 'month' | 'year'
+ */
+export const getAdminDashboardData = async (timeframe = "week") => {
+  const now = Date.now();
+  const cached = adminCache.get(timeframe);
+  if (cached && now - cached.timestamp < CACHE_TTL) {
+    return cached.data;
+  }
+
+  if (adminInFlight.has(timeframe)) {
+    return adminInFlight.get(timeframe);
+  }
+
+  const requestPromise = (async () => {
+    try {
+      const response = await api.get(`/admin/dashboard`, {
+        params: { timeframe },
+      });
+      const resData = { success: true, data: response.data };
+      adminCache.set(timeframe, { data: resData, timestamp: Date.now() });
+      return resData;
+    } catch (error) {
+      console.warn(
+        "Admin Dashboard API offline or not reachable, using fallback mock data:",
+        error.message
+      );
+      const mockRes = {
+        success: true,
+        isMock: true,
+        data: MOCK_ADMIN_DASHBOARD,
+      };
+      adminCache.set(timeframe, { data: mockRes, timestamp: Date.now() });
+      return mockRes;
+    } finally {
+      adminInFlight.delete(timeframe);
+    }
+  })();
+
+  adminInFlight.set(timeframe, requestPromise);
+  return requestPromise;
+};
+
+/**
+ * Fetch User Dashboard data from API with request deduplication & short caching
  */
 export const getUserDashboardData = async () => {
-  try {
-    const response = await api.get(`/user/dashboard`);
-    const payload = response.data;
-
-    if (payload && (payload.success === false || payload.status === "error" || payload.status === false)) {
-      throw new Error(payload.message || "Failed to fetch dashboard data");
-    }
-
-    const data = payload?.data || payload;
-    return { success: true, data };
-  } catch (error) {
-    console.warn(
-      "User Dashboard API offline or not reachable, using fallback mock data:",
-      error.message
-    );
-    return {
-      success: true,
-      isMock: true,
-      data: MOCK_USER_DASHBOARD,
-    };
+  const now = Date.now();
+  if (userCache.data && now - userCache.timestamp < CACHE_TTL) {
+    return userCache.data;
   }
+
+  if (userInFlight) {
+    return userInFlight;
+  }
+
+  userInFlight = (async () => {
+    try {
+      const response = await api.get(`/dashboard`);
+      const payload = response.data;
+
+      if (payload && (payload.success === false || payload.status === "error" || payload.status === false)) {
+        throw new Error(payload.message || "Failed to fetch dashboard data");
+      }
+
+      const data = payload?.data || payload;
+      const resData = { success: true, data };
+      userCache.data = resData;
+      userCache.timestamp = Date.now();
+      return resData;
+    } catch (error) {
+      console.warn(
+        "User Dashboard API offline or not reachable, using fallback mock data:",
+        error.message
+      );
+      const mockRes = {
+        success: true,
+        isMock: true,
+        data: MOCK_USER_DASHBOARD,
+      };
+      userCache.data = mockRes;
+      userCache.timestamp = Date.now();
+      return mockRes;
+    } finally {
+      userInFlight = null;
+    }
+  })();
+
+  return userInFlight;
 };

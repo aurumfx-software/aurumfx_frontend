@@ -168,6 +168,8 @@ export const checkEnrollerApi = async (enrollerId) => {
   }
 };
 
+import { clearDashboardCache } from "./dashboard";
+
 /**
  * Logout API call
  * Sends POST /auth/logout to backend and clears session
@@ -181,8 +183,10 @@ export const logoutApi = async () => {
   } catch (error) {
     console.warn("Logout API call failed or offline:", error.message);
   } finally {
+    clearDashboardCache();
     localStorage.clear();
   }
 };
+
 
 
