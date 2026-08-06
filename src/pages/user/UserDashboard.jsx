@@ -179,7 +179,8 @@ function UserDashboard() {
                   <FiTrendingUp style={{ color: "#d97706" }} />
                 </div>
                 <div className="metric-card-info">
-                  <span className="metric-label">Investments</span>
+                  <span className="metric-label">Total Investment</span>
+
                   <h3 className="metric-value">
                     {loading ? "..." : `₹${financials.income.toLocaleString()}`}
                   </h3>
@@ -205,8 +206,9 @@ function UserDashboard() {
                   }}
                 >
                   <FiPlusCircle size={13} />
-                  <span>Invest</span>
+                  <span>Split</span>
                 </button>
+
               </div>
 
 

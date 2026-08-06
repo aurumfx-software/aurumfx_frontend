@@ -179,8 +179,9 @@ function Investments() {
             }}
           >
             <FiPlusCircle size={16} />
-            <span>Do Investment</span>
+            <span>Split</span>
           </button>
+
         </div>
 
         {/* Investment Popup Modal */}
@@ -215,35 +216,7 @@ function Investments() {
               />
             </div>
 
-            {/* Total Investment Split Breakdown */}
-            {Number(amount) >= 5000 && Number(amount) % 5000 === 0 && (
-              <div className="calc-preview-card" style={{ background: "#fffdf5", border: "1px solid #fde68a", borderRadius: "10px", padding: "12px 16px" }}>
-                <div className="calc-preview-title" style={{ fontWeight: 700, fontSize: "13px", color: "#1e293b", marginBottom: "8px" }}>
-                  Total Investment Split
-                </div>
-                <div className="calc-preview-item" style={{ display: "flex", justifyContent: "space-between", fontSize: "12.5px", marginBottom: "4px" }}>
-                  <span className="calc-lbl" style={{ color: "#64748b" }}>Invested Principal:</span>
-                  <span className="calc-val" style={{ fontWeight: 700, color: "#1e293b" }}>₹{Number(amount).toLocaleString()}</span>
-                </div>
-                <div className="calc-preview-item" style={{ display: "flex", justifyContent: "space-between", fontSize: "12.5px", marginBottom: "4px" }}>
-                  <span className="calc-lbl" style={{ color: "#64748b" }}>Total Lots (₹5,000 / Lot):</span>
-                  <span className="calc-val" style={{ fontWeight: 700, color: "#1e293b" }}>{Math.floor(Number(amount) / 5000)} Lots</span>
-                </div>
-                <div className="calc-preview-item" style={{ display: "flex", justifyContent: "space-between", fontSize: "12.5px", marginBottom: "4px" }}>
-                  <span className="calc-lbl" style={{ color: "#64748b" }}>Monthly Return (14%):</span>
-                  <span className="calc-val text-green" style={{ fontWeight: 700, color: "#16a34a" }}>₹{Math.round(Number(amount) * 0.14).toLocaleString()} / mo</span>
-                </div>
-                <div className="calc-preview-item" style={{ display: "flex", justifyContent: "space-between", fontSize: "12.5px", marginBottom: "4px" }}>
-                  <span className="calc-lbl" style={{ color: "#64748b" }}>Total Returns (10 Months):</span>
-                  <span className="calc-val text-gold" style={{ fontWeight: 700, color: "#d97706" }}>₹{(Math.round(Number(amount) * 0.14) * 10).toLocaleString()}</span>
-                </div>
-                <div className="calc-preview-divider" style={{ height: "1px", background: "#fde68a", margin: "8px 0" }} />
-                <div className="calc-preview-item" style={{ display: "flex", justifyContent: "space-between", fontSize: "12.5px" }}>
-                  <span className="calc-lbl" style={{ fontWeight: 700, color: "#1e293b" }}>Total Expected Payout:</span>
-                  <span className="calc-val text-gold" style={{ fontSize: "14px", fontWeight: 800, color: "#d97706" }}>₹{(Number(amount) + Math.round(Number(amount) * 0.14) * 10).toLocaleString()}</span>
-                </div>
-              </div>
-            )}
+
 
 
             {/* Bank Transaction ID Field */}
@@ -258,43 +231,7 @@ function Investments() {
               />
             </div>
 
-            {/* Upload File Field */}
-            <div className="form-group file-upload-group">
-              <label className="separated-label">Upload File</label>
-              <div className="file-input-wrapper">
-                <label htmlFor="proof-file" className="file-button">
-                  Choose file
-                </label>
-                <span className="file-name">
-                  {selectedFile ? selectedFile.name : "No file chosen"}
-                </span>
-                <input
-                  id="proof-file"
-                  type="file"
-                  onChange={handleFileChange}
-                  accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xlsx"
-                  className="hidden-file-input"
-                />
-              </div>
-              <small className="file-hint">
-                Only .jpg / .jpeg / .png / .pdf / .doc / .docx / .xlsx files
-                allowed
-                <br />
-                Max Size: 2MB
-              </small>
-            </div>
 
-            {/* Return Type Select */}
-            <div className="form-group select-group">
-              <label className="separated-label">Return Type</label>
-              <select
-                value={returnType}
-                onChange={(e) => setReturnType(e.target.value)}
-                className="form-select"
-              >
-                <option value="Monthly">Monthly</option>
-              </select>
-            </div>
 
 
 
