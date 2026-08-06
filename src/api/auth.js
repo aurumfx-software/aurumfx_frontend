@@ -35,13 +35,8 @@ export const loginApi = async (userId, password, requiredRole = null) => {
     localStorage.setItem("token", token);
     localStorage.setItem("role", role);
     localStorage.setItem("userId", trimmedUserId);
-    localStorage.setItem("user", JSON.stringify(user));
-    localStorage.setItem("isLoggedIn", "true");
-
-    if (role === "admin") {
-      localStorage.setItem("adminToken", token);
-      localStorage.setItem("adminId", trimmedUserId);
-      localStorage.setItem("adminUser", JSON.stringify(user));
+    if (user?.name || payload?.name || data?.name) {
+      localStorage.setItem("userName", user?.name || payload?.name || data?.name);
     }
 
     return { success: true, redirect: redirectPath, data: payload };
@@ -63,19 +58,10 @@ export const loginApi = async (userId, password, requiredRole = null) => {
       }
 
       const token = `demo-token-${demoUser.role}`;
-      const userObj = { userId: demoUser.userId, role: demoUser.role, name: demoUser.role === "admin" ? "aurumfx" : "User" };
 
       localStorage.setItem("token", token);
       localStorage.setItem("role", demoUser.role);
       localStorage.setItem("userId", demoUser.userId);
-      localStorage.setItem("user", JSON.stringify(userObj));
-      localStorage.setItem("isLoggedIn", "true");
-
-      if (demoUser.role === "admin") {
-        localStorage.setItem("adminToken", token);
-        localStorage.setItem("adminId", demoUser.userId);
-        localStorage.setItem("adminUser", JSON.stringify(userObj));
-      }
 
       return { success: true, redirect: demoUser.role === "admin" ? "/admin/dashboard/business" : "/user/dashboard" };
     }
@@ -90,16 +76,11 @@ export const loginApi = async (userId, password, requiredRole = null) => {
       }
 
       const token = `admin-token-${Date.now()}`;
-      const userObj = { userId: trimmedUserId || "aurumfx", role: "admin", name: trimmedUserId || "aurumfx" };
+      const uId = trimmedUserId || "aurumfx";
 
       localStorage.setItem("token", token);
       localStorage.setItem("role", "admin");
-      localStorage.setItem("userId", userObj.userId);
-      localStorage.setItem("user", JSON.stringify(userObj));
-      localStorage.setItem("isLoggedIn", "true");
-      localStorage.setItem("adminToken", token);
-      localStorage.setItem("adminId", userObj.userId);
-      localStorage.setItem("adminUser", JSON.stringify(userObj));
+      localStorage.setItem("userId", uId);
 
       return { success: true, redirect: "/admin/dashboard/business" };
     }
