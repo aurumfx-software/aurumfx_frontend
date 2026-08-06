@@ -200,10 +200,8 @@ export const logoutApi = async () => {
   } catch (error) {
     console.warn("Logout API call failed or offline:", error.message);
   } finally {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("user");
+    localStorage.clear();
   }
 };
+
 

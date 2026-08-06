@@ -48,8 +48,10 @@ export function login(userId, password, requiredRole = null) {
 }
 
 export function logout() {
+  localStorage.clear();
   logoutApi();
 }
+
 
 export { logoutApi };
 
