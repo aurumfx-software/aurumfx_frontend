@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { FiInfo, FiCalendar, FiDownload, FiSearch, FiPlusCircle } from "react-icons/fi";
+import {
+  FiInfo,
+  FiCalendar,
+  FiDownload,
+  FiSearch,
+  FiPlusCircle,
+} from "react-icons/fi";
 import UserLayout from "../../../components/User/UserLayout";
 import DoInvestmentModal from "../../../components/User/DoInvestmentModal";
 import "./Investments.css";
@@ -10,7 +16,6 @@ function Investments() {
   const [bankTxId, setBankTxId] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [returnType, setReturnType] = useState("Monthly");
-
 
   // History filters
   const [startDate, setStartDate] = useState("");
@@ -126,7 +131,14 @@ function Investments() {
         </div>
 
         {/* Page Title & Breadcrumb */}
-        <div className="page-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div
+          className="page-header"
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <div>
             <h1 className="page-title">Investments</h1>
             <div className="breadcrumb">
@@ -169,20 +181,21 @@ function Investments() {
           }}
         />
 
-
         {/* Invest Amount Form Card */}
         <div className="invest-form-card">
           <h2 className="card-title">Invest Amount</h2>
           <p className="card-subtitle">
-            Invest 5000.00 or more (in multiples of 5000.00) and earn 14.00% of the invested amount every month for 10 months.
+            Invest 5000.00 or more (in multiples of 5000.00) and earn 14.00% of
+            the invested amount every month for 10 months.
           </p>
 
           <form onSubmit={handleSubmit} className="invest-form">
             {/* Amount Field */}
-            <div className="form-group">
+            <div className="form-group floating-group">
+              {amount && <label className="floating-border-label">Amount</label>}
               <input
                 type="number"
-                placeholder="Amount"
+                placeholder={amount ? "" : "Amount"}
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 className="form-input"
@@ -192,10 +205,13 @@ function Investments() {
             </div>
 
             {/* Bank Transaction ID Field */}
-            <div className="form-group">
+            <div className="form-group floating-group">
+              {bankTxId && (
+                <label className="floating-border-label">Bank Transaction ID</label>
+              )}
               <input
                 type="text"
-                placeholder="Bank Transaction ID"
+                placeholder={bankTxId ? "" : "Bank Transaction ID"}
                 value={bankTxId}
                 onChange={(e) => setBankTxId(e.target.value)}
                 className="form-input"
@@ -203,8 +219,8 @@ function Investments() {
             </div>
 
             {/* Upload File Field */}
-            <div className="form-group file-upload-group">
-              <label className="floating-label">Upload File</label>
+            <div className="form-group file-upload-group floating-group">
+              <label className="floating-border-label">Upload File</label>
               <div className="file-input-wrapper">
                 <label htmlFor="proof-file" className="file-button">
                   Choose file
@@ -221,15 +237,16 @@ function Investments() {
                 />
               </div>
               <small className="file-hint">
-                Only .jpg / .jpeg / .png / .pdf / .doc / .docx / .xlsx files allowed
+                Only .jpg / .jpeg / .png / .pdf / .doc / .docx / .xlsx files
+                allowed
                 <br />
                 Max Size: 2MB
               </small>
             </div>
 
             {/* Return Type Select */}
-            <div className="form-group select-group">
-              <label className="floating-label">Return Type</label>
+            <div className="form-group select-group floating-group">
+              <label className="floating-border-label">Return Type</label>
               <select
                 value={returnType}
                 onChange={(e) => setReturnType(e.target.value)}
@@ -239,12 +256,17 @@ function Investments() {
               </select>
             </div>
 
+
             {/* Error / Success Notifications */}
             {errorMsg && <p className="form-error-msg">{errorMsg}</p>}
             {successMsg && <p className="form-success-msg">{successMsg}</p>}
 
             {/* Submit Button */}
-            <button type="submit" className="invest-submit-btn" disabled={loading}>
+            <button
+              type="submit"
+              className="invest-submit-btn"
+              disabled={loading}
+            >
               {loading ? "Submitting..." : "Submit"}
             </button>
           </form>
@@ -344,13 +366,19 @@ function Investments() {
                   <tr key={inv.id}>
                     <td>{idx + 1}</td>
                     <td>{inv.enrollerName}</td>
-                    <td className="amount-cell">₹{inv.investAmount.toLocaleString()}</td>
+                    <td className="amount-cell">
+                      ₹{inv.investAmount.toLocaleString()}
+                    </td>
                     <td>{inv.bankTxId}</td>
                     <td>{inv.lots}</td>
                     <td>₹{inv.monthlyReturn.toLocaleString()}</td>
                     <td>{inv.returnDuration}</td>
                     <td className="proof-cell">
-                      <button type="button" className="download-btn" title="Download Proof">
+                      <button
+                        type="button"
+                        className="download-btn"
+                        title="Download Proof"
+                      >
                         <FiDownload />
                       </button>
                     </td>
