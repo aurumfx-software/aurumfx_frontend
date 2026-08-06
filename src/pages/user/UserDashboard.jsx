@@ -6,16 +6,22 @@ import {
   FiTrendingUp,
   FiArrowUpRight,
   FiBriefcase,
+  FiPlusCircle,
 } from "react-icons/fi";
 import UserLayout from "../../components/User/UserLayout";
-import { IncomePayoutDonutChart, NetworkAreaChart } from "../../components/User/UserCharts";
+import {
+  IncomePayoutDonutChart,
+  NetworkAreaChart,
+} from "../../components/User/UserCharts";
 import UserRankCard from "../../components/User/UserRankCard";
+import DoInvestmentModal from "../../components/User/DoInvestmentModal";
 import { getUserDashboardData } from "../../api/dashboard";
 import "./UserDashboard.css";
 
 function UserDashboard() {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isInvestModalOpen, setIsInvestModalOpen] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -42,12 +48,8 @@ function UserDashboard() {
   }, []);
 
   const user = {
-    name: dashboardData?.user?.name || "PRAVEEN",
-    fullName:
-      dashboardData?.user?.fullName ||
-      dashboardData?.user?.full_name ||
-      dashboardData?.user?.name ||
-      "PRAVEEN DINESH",
+    name: dashboardData?.name || "PRAVEEN",
+    fullName: dashboardData?.name || "PRAVEEN DINESH",
     userId:
       dashboardData?.user?.userId ||
       dashboardData?.user?.user_id ||
@@ -59,9 +61,7 @@ function UserDashboard() {
       dashboardData?.user?.next_rank ||
       "FX Legend",
     totalLots:
-      dashboardData?.user?.totalLots ??
-      dashboardData?.user?.total_lots ??
-      1,
+      dashboardData?.user?.totalLots ?? dashboardData?.user?.total_lots ?? 1,
     avatar: dashboardData?.user?.avatar || null,
   };
 
@@ -87,19 +87,67 @@ function UserDashboard() {
   const enrolments = Array.isArray(dashboardData?.enrolments)
     ? dashboardData.enrolments
     : [
-        { id: 1, user: "SUSHI", userId: "FX150", date: "17 Mar 2026", avatarBg: "#3498db" },
-        { id: 2, user: "MANUJA", userId: "FX144", date: "09 Mar 2026", avatarBg: "#2c3e50" },
-        { id: 3, user: "BINDU", userId: "FX125", date: "11 Feb 2026", avatarBg: "#7f8c8d" },
-        { id: 4, user: "SURESHKUMAR", userId: "FX056", date: "29 Dec 2025", avatarBg: "#e67e22" },
-        { id: 5, user: "VIMAL", userId: "FX055", date: "29 Dec 2025", avatarBg: "#8e44ad" },
+        {
+          id: 1,
+          user: "SUSHI",
+          userId: "FX150",
+          date: "17 Mar 2026",
+          avatarBg: "#3498db",
+        },
+        {
+          id: 2,
+          user: "MANUJA",
+          userId: "FX144",
+          date: "09 Mar 2026",
+          avatarBg: "#2c3e50",
+        },
+        {
+          id: 3,
+          user: "BINDU",
+          userId: "FX125",
+          date: "11 Feb 2026",
+          avatarBg: "#7f8c8d",
+        },
+        {
+          id: 4,
+          user: "SURESHKUMAR",
+          userId: "FX056",
+          date: "29 Dec 2025",
+          avatarBg: "#e67e22",
+        },
+        {
+          id: 5,
+          user: "VIMAL",
+          userId: "FX055",
+          date: "29 Dec 2025",
+          avatarBg: "#8e44ad",
+        },
       ];
 
   const teamPerformance = Array.isArray(dashboardData?.teamPerformance)
     ? dashboardData.teamPerformance
     : [
-        { id: 1, user: "AJAYAKUMAR", userId: "FX021", enrolments: 20, earnings: 72500 },
-        { id: 2, user: "SAVITHAMOL", userId: "FX011", enrolments: 8, earnings: 127000 },
-        { id: 3, user: "BINDU", userId: "FX125", enrolments: 2, earnings: 15000 },
+        {
+          id: 1,
+          user: "AJAYAKUMAR",
+          userId: "FX021",
+          enrolments: 20,
+          earnings: 72500,
+        },
+        {
+          id: 2,
+          user: "SAVITHAMOL",
+          userId: "FX011",
+          enrolments: 8,
+          earnings: 127000,
+        },
+        {
+          id: 3,
+          user: "BINDU",
+          userId: "FX125",
+          enrolments: 2,
+          earnings: 15000,
+        },
         { id: 4, user: "SOBHANA", userId: "FX018", enrolments: 0, earnings: 0 },
         { id: 5, user: "AKSHAYA", userId: "FX023", enrolments: 0, earnings: 0 },
       ];
@@ -125,18 +173,42 @@ function UserDashboard() {
           <div className="grid-main-column">
             {/* Top Row: Metric Cards & Income Payout Donut */}
             <div className="top-metrics-row">
-              {/* Income Card */}
-              <div className="metric-card">
+              {/* Income / Investments Card */}
+              <div className="metric-card" style={{ position: "relative" }}>
                 <div className="metric-card-icon icon--income">
                   <FiTrendingUp style={{ color: "#d97706" }} />
                 </div>
                 <div className="metric-card-info">
-                  <span className="metric-label">Income</span>
+                  <span className="metric-label">Investments</span>
                   <h3 className="metric-value">
                     {loading ? "..." : `₹${financials.income.toLocaleString()}`}
                   </h3>
                 </div>
+                <button
+                  type="button"
+                  onClick={() => setIsInvestModalOpen(true)}
+                  title="Do Investment"
+                  style={{
+                    marginLeft: "auto",
+                    background: "#fff8e6",
+                    color: "#d97706",
+                    border: "1px solid #fde68a",
+                    borderRadius: "6px",
+                    padding: "5px 10px",
+                    fontSize: "12px",
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "4px",
+                    transition: "all 0.15s ease",
+                  }}
+                >
+                  <FiPlusCircle size={13} />
+                  <span>Invest</span>
+                </button>
               </div>
+
 
               {/* Withdrawals Card */}
               <div className="metric-card">
@@ -146,7 +218,9 @@ function UserDashboard() {
                 <div className="metric-card-info">
                   <span className="metric-label">Withdrawals</span>
                   <h3 className="metric-value">
-                    {loading ? "..." : `₹${financials.withdrawals.toLocaleString()}`}
+                    {loading
+                      ? "..."
+                      : `₹${financials.withdrawals.toLocaleString()}`}
                   </h3>
                 </div>
               </div>
@@ -159,7 +233,9 @@ function UserDashboard() {
                 <div className="metric-card-info">
                   <span className="metric-label">Balance</span>
                   <h3 className="metric-value">
-                    {loading ? "..." : `₹${financials.balance.toLocaleString()}`}
+                    {loading
+                      ? "..."
+                      : `₹${financials.balance.toLocaleString()}`}
                   </h3>
                 </div>
               </div>
@@ -232,7 +308,9 @@ function UserDashboard() {
                             <div className="user-table-cell">
                               <div
                                 className="user-table-avatar"
-                                style={{ background: item.avatarBg || "#3498db" }}
+                                style={{
+                                  background: item.avatarBg || "#3498db",
+                                }}
                               >
                                 {String(item.user || "U").charAt(0)}
                               </div>
@@ -304,8 +382,15 @@ function UserDashboard() {
           </div>
         </div>
       </div>
+
+      {/* Investment Popup Modal */}
+      <DoInvestmentModal
+        isOpen={isInvestModalOpen}
+        onClose={() => setIsInvestModalOpen(false)}
+      />
     </UserLayout>
   );
 }
 
 export default UserDashboard;
+

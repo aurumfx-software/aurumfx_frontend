@@ -1,13 +1,16 @@
 import { useState } from "react";
-import { FiInfo, FiCalendar, FiDownload, FiSearch } from "react-icons/fi";
+import { FiInfo, FiCalendar, FiDownload, FiSearch, FiPlusCircle } from "react-icons/fi";
 import UserLayout from "../../../components/User/UserLayout";
+import DoInvestmentModal from "../../../components/User/DoInvestmentModal";
 import "./Investments.css";
 
 function Investments() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [amount, setAmount] = useState("");
   const [bankTxId, setBankTxId] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [returnType, setReturnType] = useState("Monthly");
+
 
   // History filters
   const [startDate, setStartDate] = useState("");
@@ -123,14 +126,49 @@ function Investments() {
         </div>
 
         {/* Page Title & Breadcrumb */}
-        <div className="page-header">
-          <h1 className="page-title">Investments</h1>
-          <div className="breadcrumb">
-            <span>Dashboard</span>
-            <span className="separator">•</span>
-            <span className="current">Investments</span>
+        <div className="page-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div>
+            <h1 className="page-title">Investments</h1>
+            <div className="breadcrumb">
+              <span>Dashboard</span>
+              <span className="separator">•</span>
+              <span className="current">Investments</span>
+            </div>
           </div>
+          <button
+            type="button"
+            className="do-invest-popup-btn"
+            onClick={() => setIsModalOpen(true)}
+            style={{
+              background: "#ffc52d",
+              color: "#fff",
+              fontWeight: 700,
+              fontSize: "14px",
+              border: "none",
+              borderRadius: "8px",
+              padding: "10px 20px",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              boxShadow: "0 4px 12px rgba(255, 197, 45, 0.35)",
+              transition: "all 0.15s ease",
+            }}
+          >
+            <FiPlusCircle size={16} />
+            <span>Do Investment</span>
+          </button>
         </div>
+
+        {/* Investment Popup Modal */}
+        <DoInvestmentModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSuccess={(newInv) => {
+            setInvestments([newInv, ...investments]);
+          }}
+        />
+
 
         {/* Invest Amount Form Card */}
         <div className="invest-form-card">
