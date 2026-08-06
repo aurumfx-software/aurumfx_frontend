@@ -50,6 +50,8 @@ const navItems = [
       { id: "fund-credit", label: "Fund Credit", path: "/admin/financial/fund-credits" },
       { id: "payout", label: "Payout", path: "/admin/financial/payout/request" },
       { id: "investments", label: "Investments", path: "/admin/financial/investments/request" },
+      { id: "investment-plan", label: "Investment Plan", path: "investment-plan" },
+      { id: "investment-type", label: "Investment Type", path: "/admin/financial/investment-type" },
     ],
   },
   {
