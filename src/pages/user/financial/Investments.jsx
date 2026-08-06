@@ -8,7 +8,9 @@ import {
 } from "react-icons/fi";
 import UserLayout from "../../../components/User/UserLayout";
 import DoInvestmentModal from "../../../components/User/DoInvestmentModal";
+import { createInvestmentApi } from "../../../api/investments";
 import "./Investments.css";
+
 
 function Investments() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -57,7 +59,7 @@ function Investments() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setSuccessMsg("");
     setErrorMsg("");
@@ -75,37 +77,46 @@ function Investments() {
 
     setLoading(true);
 
-    setTimeout(() => {
-      const lots = Math.floor(numAmount / 5000);
-      const monthlyReturn = Math.round(numAmount * 0.14);
+    const apiRes = await createInvestmentApi({
+      investment_plan_id: 0,
+      return_type_id: 0,
+      amount: numAmount,
+      bank_transaction_id: bankTxId.trim(),
+      enroller_id: localStorage.getItem("userId") || "FX034",
+      investment_date: new Date().toISOString().split("T")[0],
+    });
 
-      const newInv = {
-        id: investments.length + 1,
-        enrollerName: localStorage.getItem("enrollerId") || "FX034",
-        investAmount: numAmount,
-        bankTxId: bankTxId.trim(),
-        lots: lots,
-        monthlyReturn: monthlyReturn,
-        returnDuration: 10,
-        investmentStatus: "Active",
-        periodsInvested: 0,
-        totalMonthlyReturn: 0,
-        status: "Approved",
-        date: new Date().toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        }),
-      };
+    const lots = Math.floor(numAmount / 5000);
+    const monthlyReturn = Math.round(numAmount * 0.14);
 
-      setInvestments([newInv, ...investments]);
-      setSuccessMsg("Investment request submitted successfully!");
-      setAmount("");
-      setBankTxId("");
-      setSelectedFile(null);
-      setLoading(false);
-    }, 800);
+    const newInv = {
+      id: investments.length + 1,
+      enrollerName: localStorage.getItem("enrollerId") || "FX034",
+      investAmount: numAmount,
+      bankTxId: bankTxId.trim(),
+      lots: lots,
+      monthlyReturn: monthlyReturn,
+      returnDuration: 10,
+      investmentStatus: "Active",
+      periodsInvested: 0,
+      totalMonthlyReturn: 0,
+      status: "Approved",
+      date: new Date().toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      }),
+    };
+
+    setInvestments([newInv, ...investments]);
+    setSuccessMsg("Investment request submitted successfully!");
+    setAmount("");
+    setBankTxId("");
+    setProofText("");
+    setSelectedFile(null);
+    setLoading(false);
   };
+
 
   const handleFilterSubmit = (e) => {
     e.preventDefault();
@@ -191,11 +202,11 @@ function Investments() {
 
           <form onSubmit={handleSubmit} className="invest-form">
             {/* Amount Field */}
-            <div className="form-group floating-group">
-              {amount && <label className="floating-border-label">Amount</label>}
+            <div className="form-group">
+              <label className="separated-label">Amount</label>
               <input
                 type="number"
-                placeholder={amount ? "" : "Amount"}
+                placeholder="Amount"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 className="form-input"
@@ -204,14 +215,43 @@ function Investments() {
               />
             </div>
 
+            {/* Total Investment Split Breakdown */}
+            {Number(amount) >= 5000 && Number(amount) % 5000 === 0 && (
+              <div className="calc-preview-card" style={{ background: "#fffdf5", border: "1px solid #fde68a", borderRadius: "10px", padding: "12px 16px" }}>
+                <div className="calc-preview-title" style={{ fontWeight: 700, fontSize: "13px", color: "#1e293b", marginBottom: "8px" }}>
+                  Total Investment Split
+                </div>
+                <div className="calc-preview-item" style={{ display: "flex", justifyContent: "space-between", fontSize: "12.5px", marginBottom: "4px" }}>
+                  <span className="calc-lbl" style={{ color: "#64748b" }}>Invested Principal:</span>
+                  <span className="calc-val" style={{ fontWeight: 700, color: "#1e293b" }}>₹{Number(amount).toLocaleString()}</span>
+                </div>
+                <div className="calc-preview-item" style={{ display: "flex", justifyContent: "space-between", fontSize: "12.5px", marginBottom: "4px" }}>
+                  <span className="calc-lbl" style={{ color: "#64748b" }}>Total Lots (₹5,000 / Lot):</span>
+                  <span className="calc-val" style={{ fontWeight: 700, color: "#1e293b" }}>{Math.floor(Number(amount) / 5000)} Lots</span>
+                </div>
+                <div className="calc-preview-item" style={{ display: "flex", justifyContent: "space-between", fontSize: "12.5px", marginBottom: "4px" }}>
+                  <span className="calc-lbl" style={{ color: "#64748b" }}>Monthly Return (14%):</span>
+                  <span className="calc-val text-green" style={{ fontWeight: 700, color: "#16a34a" }}>₹{Math.round(Number(amount) * 0.14).toLocaleString()} / mo</span>
+                </div>
+                <div className="calc-preview-item" style={{ display: "flex", justifyContent: "space-between", fontSize: "12.5px", marginBottom: "4px" }}>
+                  <span className="calc-lbl" style={{ color: "#64748b" }}>Total Returns (10 Months):</span>
+                  <span className="calc-val text-gold" style={{ fontWeight: 700, color: "#d97706" }}>₹{(Math.round(Number(amount) * 0.14) * 10).toLocaleString()}</span>
+                </div>
+                <div className="calc-preview-divider" style={{ height: "1px", background: "#fde68a", margin: "8px 0" }} />
+                <div className="calc-preview-item" style={{ display: "flex", justifyContent: "space-between", fontSize: "12.5px" }}>
+                  <span className="calc-lbl" style={{ fontWeight: 700, color: "#1e293b" }}>Total Expected Payout:</span>
+                  <span className="calc-val text-gold" style={{ fontSize: "14px", fontWeight: 800, color: "#d97706" }}>₹{(Number(amount) + Math.round(Number(amount) * 0.14) * 10).toLocaleString()}</span>
+                </div>
+              </div>
+            )}
+
+
             {/* Bank Transaction ID Field */}
-            <div className="form-group floating-group">
-              {bankTxId && (
-                <label className="floating-border-label">Bank Transaction ID</label>
-              )}
+            <div className="form-group">
+              <label className="separated-label">Bank Transaction ID</label>
               <input
                 type="text"
-                placeholder={bankTxId ? "" : "Bank Transaction ID"}
+                placeholder="Bank Transaction ID"
                 value={bankTxId}
                 onChange={(e) => setBankTxId(e.target.value)}
                 className="form-input"
@@ -219,8 +259,8 @@ function Investments() {
             </div>
 
             {/* Upload File Field */}
-            <div className="form-group file-upload-group floating-group">
-              <label className="floating-border-label">Upload File</label>
+            <div className="form-group file-upload-group">
+              <label className="separated-label">Upload File</label>
               <div className="file-input-wrapper">
                 <label htmlFor="proof-file" className="file-button">
                   Choose file
@@ -245,8 +285,8 @@ function Investments() {
             </div>
 
             {/* Return Type Select */}
-            <div className="form-group select-group floating-group">
-              <label className="floating-border-label">Return Type</label>
+            <div className="form-group select-group">
+              <label className="separated-label">Return Type</label>
               <select
                 value={returnType}
                 onChange={(e) => setReturnType(e.target.value)}
@@ -255,6 +295,7 @@ function Investments() {
                 <option value="Monthly">Monthly</option>
               </select>
             </div>
+
 
 
             {/* Error / Success Notifications */}

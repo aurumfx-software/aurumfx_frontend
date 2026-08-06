@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FiX, FiDollarSign, FiUpload, FiCheckCircle, FiAlertCircle } from "react-icons/fi";
+import { createInvestmentApi } from "../../api/investments";
 import "./DoInvestmentModal.css";
 
 function DoInvestmentModal({ isOpen, onClose, onSuccess }) {
@@ -30,7 +31,7 @@ function DoInvestmentModal({ isOpen, onClose, onSuccess }) {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg("");
     setSuccessMsg("");
@@ -47,7 +48,16 @@ function DoInvestmentModal({ isOpen, onClose, onSuccess }) {
 
     setLoading(true);
 
-    setTimeout(() => {
+    try {
+      await createInvestmentApi({
+        investment_plan_id: 0,
+        return_type_id: 0,
+        amount: numAmount,
+        bank_transaction_id: bankTxId.trim(),
+        enroller_id: localStorage.getItem("userId") || "FX034",
+        investment_date: new Date().toISOString().split("T")[0],
+      });
+
       const newInvestment = {
         id: Date.now(),
         enrollerName: localStorage.getItem("enrollerId") || "FX034",
@@ -81,7 +91,10 @@ function DoInvestmentModal({ isOpen, onClose, onSuccess }) {
         setSuccessMsg("");
         onClose();
       }, 1200);
-    }, 800);
+    } catch (err) {
+      setLoading(false);
+      setErrorMsg(err.message || "Failed to submit investment.");
+    }
   };
 
   return (
@@ -107,15 +120,15 @@ function DoInvestmentModal({ isOpen, onClose, onSuccess }) {
         <form onSubmit={handleSubmit} className="modal-body">
           {/* Amount Field */}
           <div className="form-field">
-            <label htmlFor="modal_amount">
-              Investment Amount (₹) <span className="req">*</span>
+            <label className="separated-label" htmlFor="modal_amount">
+              Amount <span className="req">*</span>
             </label>
             <div className="input-with-affix">
               <span className="affix">₹</span>
               <input
                 id="modal_amount"
                 type="number"
-                placeholder="Enter amount (e.g. 5000, 10000)"
+                placeholder="Amount"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 step="5000"
@@ -126,33 +139,46 @@ function DoInvestmentModal({ isOpen, onClose, onSuccess }) {
             <span className="field-hint">Min ₹5,000 in multiples of ₹5,000</span>
           </div>
 
-          {/* Calculations Preview Box */}
+          {/* Calculations Preview Box - Total Investment Split */}
           {numAmount >= 5000 && numAmount % 5000 === 0 && (
             <div className="calc-preview-card">
+              <div className="calc-preview-title" style={{ fontWeight: 700, fontSize: "13px", color: "#1e293b", marginBottom: "8px" }}>
+                Total Investment Split
+              </div>
               <div className="calc-preview-item">
-                <span className="calc-lbl">Lots:</span>
-                <span className="calc-val">{lots}</span>
+                <span className="calc-lbl">Invested Principal:</span>
+                <span className="calc-val">₹{numAmount.toLocaleString()}</span>
+              </div>
+              <div className="calc-preview-item">
+                <span className="calc-lbl">Total Lots (₹5,000 / Lot):</span>
+                <span className="calc-val">{lots} Lots</span>
               </div>
               <div className="calc-preview-item">
                 <span className="calc-lbl">Monthly Return (14%):</span>
                 <span className="calc-val text-green">₹{monthlyReturn.toLocaleString()} / mo</span>
               </div>
               <div className="calc-preview-item">
-                <span className="calc-lbl">Total (10 Months):</span>
+                <span className="calc-lbl">Total Returns (10 Months):</span>
                 <span className="calc-val text-gold">₹{totalReturn.toLocaleString()}</span>
+              </div>
+              <div className="calc-preview-divider" style={{ height: "1px", background: "#fde68a", margin: "8px 0" }} />
+              <div className="calc-preview-item">
+                <span className="calc-lbl" style={{ fontWeight: 700, color: "#1e293b" }}>Total Expected Payout:</span>
+                <span className="calc-val text-gold" style={{ fontSize: "14px", fontWeight: 800 }}>₹{(numAmount + totalReturn).toLocaleString()}</span>
               </div>
             </div>
           )}
 
+
           {/* Bank Transaction ID Field */}
           <div className="form-field">
-            <label htmlFor="modal_bank_tx_id">
+            <label className="separated-label" htmlFor="modal_bank_tx_id">
               Bank Transaction ID <span className="req">*</span>
             </label>
             <input
               id="modal_bank_tx_id"
               type="text"
-              placeholder="e.g. TXN9876543210"
+              placeholder="Bank Transaction ID"
               value={bankTxId}
               onChange={(e) => setBankTxId(e.target.value)}
               required
@@ -161,10 +187,10 @@ function DoInvestmentModal({ isOpen, onClose, onSuccess }) {
 
           {/* File Upload */}
           <div className="form-field">
-            <label>Payment Proof (Optional)</label>
+            <label className="separated-label">Upload File</label>
             <div className="modal-file-box">
               <label htmlFor="modal-proof-file" className="file-choose-btn">
-                <FiUpload size={14} /> Choose File
+                <FiUpload size={14} /> Choose file
               </label>
               <span className="file-chosen-text">
                 {selectedFile ? selectedFile.name : "No file chosen"}
@@ -177,12 +203,12 @@ function DoInvestmentModal({ isOpen, onClose, onSuccess }) {
                 className="hidden-file-input"
               />
             </div>
-            <span className="field-hint">Formats: .jpg, .png, .pdf, .docx (Max 2MB)</span>
+            <span className="field-hint">Only .jpg / .jpeg / .png / .pdf / .doc / .docx / .xlsx files allowed (Max 2MB)</span>
           </div>
 
           {/* Return Type Select */}
           <div className="form-field">
-            <label htmlFor="modal_return_type">Return Type</label>
+            <label className="separated-label" htmlFor="modal_return_type">Return Type</label>
             <select
               id="modal_return_type"
               value={returnType}

@@ -105,11 +105,21 @@
   gap: 6px;
 }
 
+.separated-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 6px;
+}
+
+
 .form-field label {
   font-size: 13px;
   font-weight: 600;
   color: #334155;
 }
+
 
 .req {
   color: #ef4444;
