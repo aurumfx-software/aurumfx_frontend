@@ -18,7 +18,6 @@ import {
 import logo from "../../assets/logo.png";
 import "./AdminSidebar.css";
 
-
 const navItems = [
   {
     id: "dashboard",
@@ -36,7 +35,11 @@ const navItems = [
     children: [
       { id: "club", label: "Club", path: "/admin/business/club" },
       { id: "enroller", label: "Enroller", path: "/admin/business/enroller" },
-      { id: "structure", label: "Structure", path: "/admin/business/structure" },
+      {
+        id: "structure",
+        label: "Structure",
+        path: "/admin/business/structure",
+      },
       { id: "list", label: "List", path: "/admin/business/list" },
     ],
   },
@@ -46,23 +49,60 @@ const navItems = [
     icon: FiDollarSign,
     children: [
       { id: "ewallet", label: "E-Wallet", path: "/admin/financial/e-wallet" },
-      { id: "deposit-wallet", label: "Deposit Wallet", path: "/admin/financial/deposit-wallet" },
-      { id: "fund-credit", label: "Fund Credit", path: "/admin/financial/fund-credits" },
-      { id: "payout", label: "Payout", path: "/admin/financial/payout/request" },
-      { id: "investments", label: "Investments", path: "/admin/financial/investments/request" },
-      { id: "investment-plan", label: "Investment Plan", path: "investment-plan" },
-      { id: "investment-type", label: "Investment Type", path: "/admin/financial/investment-type" },
+      {
+        id: "deposit-wallet",
+        label: "Deposit Wallet",
+        path: "/admin/financial/deposit-wallet",
+      },
+      {
+        id: "fund-credit",
+        label: "Fund Credit",
+        path: "/admin/financial/fund-credits",
+      },
+      {
+        id: "payout",
+        label: "Payout",
+        path: "/admin/financial/payout/request",
+      },
+      {
+        id: "investments",
+        label: "Investments",
+        path: "/admin/financial/investments/request",
+      },
+      {
+        id: "investment-plan",
+        label: "Investment Plan",
+        path: "/admin/financial/investment-plan",
+      },
+      {
+        id: "investment-type",
+        label: "Investment Type",
+        path: "/admin/financial/investment-type",
+      },
     ],
   },
+
   {
     id: "communication",
     label: "Communication",
     icon: FiMessageSquare,
     children: [
       { id: "faq", label: "FAQ's", path: "/admin/communication/faqs" },
-      { id: "emails", label: "Emails", path: "/admin/communication/mails/inbox" },
-      { id: "help-center", label: "Help Center", path: "/admin/communication/help-center/tickets/inprogress" },
-      { id: "article", label: "Article", path: "/admin/communication/articles" },
+      {
+        id: "emails",
+        label: "Emails",
+        path: "/admin/communication/mails/inbox",
+      },
+      {
+        id: "help-center",
+        label: "Help Center",
+        path: "/admin/communication/help-center/tickets/inprogress",
+      },
+      {
+        id: "article",
+        label: "Article",
+        path: "/admin/communication/articles",
+      },
     ],
   },
   {
@@ -79,10 +119,26 @@ const navItems = [
     label: "Members Management",
     icon: FiUsers,
     children: [
-      { id: "network-members", label: "Network Members", path: "/admin/members/network" },
-      { id: "holding-tank", label: "Holding Tank", path: "/admin/members/holding-tank" },
-      { id: "bank-account", label: "Bank Account", path: "/admin/members/bank-approve" },
-      { id: "kyc-details", label: "KYC Details", path: "/admin/members/kyc-details" },
+      {
+        id: "network-members",
+        label: "Network Members",
+        path: "/admin/members/network",
+      },
+      {
+        id: "holding-tank",
+        label: "Holding Tank",
+        path: "/admin/members/holding-tank",
+      },
+      {
+        id: "bank-account",
+        label: "Bank Account",
+        path: "/admin/members/bank-approve",
+      },
+      {
+        id: "kyc-details",
+        label: "KYC Details",
+        path: "/admin/members/kyc-details",
+      },
     ],
   },
   {
@@ -90,8 +146,16 @@ const navItems = [
     label: "Achievers List",
     icon: FiAward,
     children: [
-      { id: "rank-achievers", label: "Rank Achievers", path: "/admin/achievers/rank" },
-      { id: "criteria-achievers", label: "Criteria Achievers", path: "/admin/achievers/criteria" },
+      {
+        id: "rank-achievers",
+        label: "Rank Achievers",
+        path: "/admin/achievers/rank",
+      },
+      {
+        id: "criteria-achievers",
+        label: "Criteria Achievers",
+        path: "/admin/achievers/criteria",
+      },
     ],
   },
   {
@@ -101,8 +165,16 @@ const navItems = [
     children: [
       { id: "brand", label: "Brand", path: "/admin/settings/brand" },
       { id: "network", label: "Network", path: "/admin/settings/network" },
-      { id: "withdrawal", label: "Withdrawal", path: "/admin/settings/withdrawal" },
-      { id: "advanced", label: "Advanced Settings", path: "/admin/settings/advanced" },
+      {
+        id: "withdrawal",
+        label: "Withdrawal",
+        path: "/admin/settings/withdrawal",
+      },
+      {
+        id: "advanced",
+        label: "Advanced Settings",
+        path: "/admin/settings/advanced",
+      },
     ],
   },
   {
@@ -110,12 +182,32 @@ const navItems = [
     label: "Reports",
     icon: FiFileText,
     children: [
-      { id: "fund-transfer",   label: "Fund Transfer",   path: "/admin/report/fund-transfer" },
-      { id: "joining-report",  label: "Joining Report",  path: "/admin/report/joining" },
-      { id: "member-income",   label: "Member Income",   path: "/admin/report/income" },
-      { id: "payout-report",   label: "Payout",          path: "/admin/report/payout" },
-      { id: "point-history",   label: "Point History",   path: "/admin/report/point/history" },
-      { id: "top-earners",     label: "Top Earners",     path: "/admin/report/earners" },
+      {
+        id: "fund-transfer",
+        label: "Fund Transfer",
+        path: "/admin/report/fund-transfer",
+      },
+      {
+        id: "joining-report",
+        label: "Joining Report",
+        path: "/admin/report/joining",
+      },
+      {
+        id: "member-income",
+        label: "Member Income",
+        path: "/admin/report/income",
+      },
+      { id: "payout-report", label: "Payout", path: "/admin/report/payout" },
+      {
+        id: "point-history",
+        label: "Point History",
+        path: "/admin/report/point/history",
+      },
+      {
+        id: "top-earners",
+        label: "Top Earners",
+        path: "/admin/report/earners",
+      },
     ],
   },
 ];
@@ -145,7 +237,8 @@ function AdminSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse }) {
             (child.id === "network" &&
               (location.pathname === "/admin/dashboard" ||
                 location.pathname === "/admin/dashboard/network")) ||
-            (child.id === "business" && location.pathname === "/admin/dashboard/business")
+            (child.id === "business" &&
+              location.pathname === "/admin/dashboard/business")
         );
         if (hasActiveChild) {
           setExpanded((prev) => ({ ...prev, [item.id]: true }));
@@ -176,9 +269,19 @@ function AdminSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse }) {
   };
 
   return (
-    <aside className={`admin-sidebar ${isOpen ? "admin-sidebar--open" : ""} ${isCollapsed ? "admin-sidebar--collapsed" : ""}`}>
+    <aside
+      className={`admin-sidebar ${isOpen ? "admin-sidebar--open" : ""} ${
+        isCollapsed ? "admin-sidebar--collapsed" : ""
+      }`}
+    >
       <div className="sidebar-header">
-        <img src={logo} alt="AurumFX Logo" className="sidebar-logo" onClick={onToggleCollapse} style={{ cursor: "pointer" }} />
+        <img
+          src={logo}
+          alt="AurumFX Logo"
+          className="sidebar-logo"
+          onClick={onToggleCollapse}
+          style={{ cursor: "pointer" }}
+        />
         <button
           type="button"
           className="sidebar-collapse-btn"
@@ -264,9 +367,5 @@ function AdminSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse }) {
     </aside>
   );
 }
-
-
-
-
 
 export default AdminSidebar;
