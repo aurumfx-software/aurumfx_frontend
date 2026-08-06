@@ -1,5 +1,4 @@
 import api from "./axios";
-import { DEMO_USERS } from "../utils/auth";
 
 /**
  * Login API call
@@ -9,34 +8,58 @@ import { DEMO_USERS } from "../utils/auth";
 export const loginApi = async (userId, password, requiredRole = null) => {
   const trimmedUserId = String(userId || "").trim();
   try {
-    const loginEndpoint = (requiredRole && requiredRole.toLowerCase() === "admin") ? "/auth/admin/login" : "/auth/login";
+    const loginEndpoint =
+      requiredRole && requiredRole.toLowerCase() === "admin"
+        ? "/auth/admin/login"
+        : "/auth/login";
     const response = await api.post(loginEndpoint, {
       user_id: trimmedUserId,
       password,
     });
 
     const payload = response.data;
-    if (payload && (payload.success === false || payload.status === "error" || payload.status === false)) {
+    if (
+      payload &&
+      (payload.success === false ||
+        payload.status === "error" ||
+        payload.status === false)
+    ) {
       throw new Error(payload.message || payload.error || "Login failed");
     }
 
     const data = payload?.data || payload;
-    const isDetectedAdmin = trimmedUserId.toLowerCase() === "aurumfx" || trimmedUserId.toLowerCase() === "admin";
-    const role = String(payload?.role || data?.role || (isDetectedAdmin ? "admin" : "user")).toLowerCase();
+    const isDetectedAdmin =
+      trimmedUserId.toLowerCase() === "aurumfx" ||
+      trimmedUserId.toLowerCase() === "admin";
+    const role = String(
+      payload?.role || data?.role || (isDetectedAdmin ? "admin" : "user")
+    ).toLowerCase();
 
     if (requiredRole && role !== requiredRole.toLowerCase()) {
-      throw new Error(`Access Denied: This portal is for ${requiredRole} accounts only.`);
+      throw new Error(
+        `Access Denied: This portal is for ${requiredRole} accounts only.`
+      );
     }
 
-    const token = payload?.token || data?.token || payload?.access_token || data?.access_token || `token-${role}`;
-    const user = payload?.user || data?.user || { userId: trimmedUserId, role, name: trimmedUserId };
-    const redirectPath = role === "admin" ? "/admin/dashboard/business" : "/user/dashboard";
+    const token =
+      payload?.token ||
+      data?.token ||
+      payload?.access_token ||
+      data?.access_token ||
+      `token-${role}`;
+    const user = payload?.user ||
+      data?.user || { userId: trimmedUserId, role, name: trimmedUserId };
+    const redirectPath =
+      role === "admin" ? "/admin/dashboard/business" : "/user/dashboard";
 
     localStorage.setItem("token", token);
     localStorage.setItem("role", role);
     localStorage.setItem("userId", trimmedUserId);
     if (user?.name || payload?.name || data?.name) {
-      localStorage.setItem("userName", user?.name || payload?.name || data?.name);
+      localStorage.setItem(
+        "userName",
+        user?.name || payload?.name || data?.name
+      );
     }
 
     return { success: true, redirect: redirectPath, data: payload };
@@ -44,30 +67,13 @@ export const loginApi = async (userId, password, requiredRole = null) => {
     if (error.message && error.message.includes("Access Denied")) {
       return { success: false, error: error.message };
     }
-    // Check fallback demo users if API fails or is offline
-    const demoUser = DEMO_USERS.find(
-      (u) => u.userId.toLowerCase() === trimmedUserId.toLowerCase() && u.password === password
-    );
-
-    if (demoUser) {
-      if (requiredRole && demoUser.role.toLowerCase() !== requiredRole.toLowerCase()) {
-        return {
-          success: false,
-          error: `Access Denied: This portal is for ${requiredRole} accounts only.`,
-        };
-      }
-
-      const token = `demo-token-${demoUser.role}`;
-
-      localStorage.setItem("token", token);
-      localStorage.setItem("role", demoUser.role);
-      localStorage.setItem("userId", demoUser.userId);
-
-      return { success: true, redirect: demoUser.role === "admin" ? "/admin/dashboard/business" : "/user/dashboard" };
-    }
 
     // Direct offline fallback for admin usernames (e.g. aurumfx / admin) ONLY if completely offline
-    if (!error.response && (trimmedUserId.toLowerCase() === "aurumfx" || trimmedUserId.toLowerCase() === "admin")) {
+    if (
+      !error.response &&
+      (trimmedUserId.toLowerCase() === "aurumfx" ||
+        trimmedUserId.toLowerCase() === "admin")
+    ) {
       if (requiredRole && requiredRole.toLowerCase() !== "admin") {
         return {
           success: false,
@@ -86,13 +92,25 @@ export const loginApi = async (userId, password, requiredRole = null) => {
     }
 
     let errorMessage =
-      error.response?.data?.message ||
-      error.response?.data?.error;
+      error.response?.data?.message || error.response?.data?.error;
 
-    if (!errorMessage || errorMessage.includes("status code") || errorMessage.includes("Request failed")) {
-      if (error.response?.status === 401 || error.response?.status === 404 || error.message?.includes("401") || error.message?.includes("404")) {
+    if (
+      !errorMessage ||
+      errorMessage.includes("status code") ||
+      errorMessage.includes("Request failed")
+    ) {
+      if (
+        error.response?.status === 401 ||
+        error.response?.status === 404 ||
+        error.message?.includes("401") ||
+        error.message?.includes("404")
+      ) {
         errorMessage = "User Not Found";
-      } else if (error.message && !error.message.includes("status code") && !error.message.includes("Request failed")) {
+      } else if (
+        error.message &&
+        !error.message.includes("status code") &&
+        !error.message.includes("Request failed")
+      ) {
         errorMessage = error.message;
       } else {
         errorMessage = "User Not Found";
@@ -102,7 +120,6 @@ export const loginApi = async (userId, password, requiredRole = null) => {
     return { success: false, error: errorMessage };
   }
 };
-
 
 /**
  * Register API call
@@ -137,10 +154,20 @@ export const registerApi = async (formData) => {
  */
 export const checkEnrollerApi = async (enrollerId) => {
   try {
-    const response = await api.get(`/auth/check-enroller/${encodeURIComponent(enrollerId)}`);
+    const response = await api.get(
+      `/auth/check-enroller/${encodeURIComponent(enrollerId)}`
+    );
     const data = response.data;
-    const exists = data?.exists !== undefined ? data.exists : (data?.success !== false && data?.status !== "error");
-    const name = data?.name || data?.enroller_name || data?.user?.name || data?.data?.name || "";
+    const exists =
+      data?.exists !== undefined
+        ? data.exists
+        : data?.success !== false && data?.status !== "error";
+    const name =
+      data?.name ||
+      data?.enroller_name ||
+      data?.user?.name ||
+      data?.data?.name ||
+      "";
 
     return {
       success: true,
@@ -187,6 +214,3 @@ export const logoutApi = async () => {
     localStorage.clear();
   }
 };
-
-
-
