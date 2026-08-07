@@ -5,6 +5,7 @@ const DEFAULT_INVESTMENT_LIST = [
   {
     id: 1,
     enrollerName: "FX034",
+    investmentType: "Standard Package",
     investAmount: 250000,
     bankTxId: "29072026250000",
     lots: 50,
@@ -17,6 +18,7 @@ const DEFAULT_INVESTMENT_LIST = [
   {
     id: 2,
     enrollerName: "FX034",
+    investmentType: "Network Investment",
     investAmount: 100000,
     bankTxId: "15072026100000",
     lots: 20,
@@ -29,6 +31,7 @@ const DEFAULT_INVESTMENT_LIST = [
   {
     id: 3,
     enrollerName: "FX034",
+    investmentType: "Holding Tank",
     investAmount: 50000,
     bankTxId: "0107202650000",
     lots: 10,
@@ -91,6 +94,7 @@ function DoInvestmentModal({ isOpen, onClose, investmentsList = DEFAULT_INVESTME
                 <tr>
                   <th>No</th>
                   <th>Enroller Name</th>
+                  <th>Investment Type</th>
                   <th>Invest Amount</th>
                   <th>Bank Tx ID</th>
                   <th>Lots</th>
@@ -109,6 +113,11 @@ function DoInvestmentModal({ isOpen, onClose, investmentsList = DEFAULT_INVESTME
                     <tr key={item.id || index}>
                       <td>{index + 1}</td>
                       <td>{item.enrollerName || "FX034"}</td>
+                      <td>
+                        <span className="modal-type-badge">
+                          {item.investmentType || "Standard Package"}
+                        </span>
+                      </td>
                       <td className="amount-cell">₹{amt.toLocaleString()}</td>
                       <td>{item.bankTxId || "-"}</td>
                       <td>{lots}</td>
@@ -125,6 +134,7 @@ function DoInvestmentModal({ isOpen, onClose, investmentsList = DEFAULT_INVESTME
               </tbody>
             </table>
           </div>
+
 
           {/* Footer Actions */}
           <div className="modal-footer">

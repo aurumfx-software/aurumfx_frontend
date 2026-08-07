@@ -24,6 +24,7 @@ function Investments() {
   const [endDate, setEndDate] = useState("");
   const [searchUser, setSearchUser] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
+  const [typeFilter, setTypeFilter] = useState("All");
 
   const [loading, setLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
@@ -34,6 +35,7 @@ function Investments() {
     {
       id: 1,
       enrollerName: "FX034",
+      investmentType: "Standard Package",
       investAmount: 250000,
       bankTxId: "29072026250000",
       lots: 50,
@@ -43,6 +45,7 @@ function Investments() {
       periodsInvested: 0,
       totalMonthlyReturn: 0,
       status: "Approved",
+
       date: "29 Jul 2026",
     },
   ]);
@@ -297,6 +300,20 @@ function Investments() {
               </div>
             </div>
 
+            {/* Investment Type Select */}
+            <div className="filter-input-group select-group">
+              <select
+                value={typeFilter}
+                onChange={(e) => setTypeFilter(e.target.value)}
+                className="filter-select"
+              >
+                <option value="All">Type of Investment</option>
+                <option value="Standard Package">Standard Package</option>
+                <option value="Network Investment">Network Investment</option>
+                <option value="Holding Tank">Holding Tank</option>
+              </select>
+            </div>
+
             {/* Status Select */}
             <div className="filter-input-group select-group">
               <select
@@ -326,6 +343,7 @@ function Investments() {
                 <tr>
                   <th>No</th>
                   <th>Enroller Name</th>
+                  <th>Type of Investment</th>
                   <th>Invest Amount</th>
                   <th>Bank Transaction ID</th>
                   <th>Lots</th>
@@ -344,9 +362,15 @@ function Investments() {
                   <tr key={inv.id}>
                     <td>{idx + 1}</td>
                     <td>{inv.enrollerName}</td>
+                    <td>
+                      <span className="modal-type-badge">
+                        {inv.investmentType || "Standard Package"}
+                      </span>
+                    </td>
                     <td className="amount-cell">
                       ₹{inv.investAmount.toLocaleString()}
                     </td>
+
                     <td>{inv.bankTxId}</td>
                     <td>{inv.lots}</td>
                     <td>₹{inv.monthlyReturn.toLocaleString()}</td>
