@@ -168,6 +168,8 @@ function PlanInvestments() {
     );
   };
 
+
+
   // Filter plans by search and status
   const filteredPlans = plans.filter((p) => {
     const matchesSearch = String(p.plan_name || "")
@@ -280,11 +282,11 @@ function PlanInvestments() {
                       </td>
                       <td>{Number(plan.admin_fee_percentage || 0).toFixed(2)}%</td>
                       <td>
-
                         <button
                           type="button"
-                          className={`status-badge-btn ${plan.status ? "status--active" : "status--inactive"
-                            }`}
+                          className={`status-badge-btn ${
+                            plan.status ? "status--active" : "status--inactive"
+                          }`}
                           onClick={() => handleToggleStatus(plan)}
                           title="Click to toggle status"
                         >
@@ -299,6 +301,8 @@ function PlanInvestments() {
                           )}
                         </button>
                       </td>
+
+
                       <td className="text-right actions-cell">
                         <button
                           type="button"

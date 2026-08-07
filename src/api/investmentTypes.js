@@ -4,37 +4,21 @@ export const MOCK_INVESTMENT_TYPES = [
   {
     id: 1,
     return_type: "Monthly Return",
-    type_name: "Monthly Return",
-    return_percentage: 14.0,
-    duration_months: 10,
-    description: "Standard monthly return payout at 14.0% for 10 months",
     status: true,
   },
   {
     id: 2,
     return_type: "Weekly Payout",
-    type_name: "Weekly Payout",
-    return_percentage: 3.5,
-    duration_months: 12,
-    description: "Weekly return payout at 3.5% per week for 12 months",
     status: true,
   },
   {
     id: 3,
     return_type: "Daily Yield",
-    type_name: "Daily Yield",
-    return_percentage: 0.5,
-    duration_months: 6,
-    description: "Daily return yield payout at 0.5% per trading day",
     status: true,
   },
   {
     id: 4,
     return_type: "Annual Fixed Growth",
-    type_name: "Annual Fixed Growth",
-    return_percentage: 180.0,
-    duration_months: 12,
-    description: "Compounded annual fixed return payout at 180%",
     status: false,
   },
 ];
@@ -65,15 +49,11 @@ export const getInvestmentTypesApi = async () => {
 
 /**
  * Create a new Return Type via POST /return-type
+ * Sends ONLY return_type key to the API
  */
 export const createInvestmentTypeApi = async (typeData) => {
   const payload = {
     return_type: String(typeData.return_type || typeData.type_name || "").trim(),
-    type_name: String(typeData.return_type || typeData.type_name || "").trim(),
-    return_percentage: Number(typeData.return_percentage) || 0,
-    duration_months: Number(typeData.duration_months) || 0,
-    description: String(typeData.description || "").trim(),
-    status: Boolean(typeData.status ?? true),
   };
 
   try {
@@ -93,22 +73,18 @@ export const createInvestmentTypeApi = async (typeData) => {
     return {
       success: true,
       isMock: true,
-      data: { id: Date.now(), ...payload },
+      data: { id: Date.now(), ...payload, status: Boolean(typeData.status ?? true) },
     };
   }
 };
 
 /**
  * Update a Return Type via PUT /return-type/:id
+ * Sends ONLY return_type key to the API
  */
 export const updateInvestmentTypeApi = async (typeId, typeData) => {
   const payload = {
     return_type: String(typeData.return_type || typeData.type_name || "").trim(),
-    type_name: String(typeData.return_type || typeData.type_name || "").trim(),
-    return_percentage: Number(typeData.return_percentage) || 0,
-    duration_months: Number(typeData.duration_months) || 0,
-    description: String(typeData.description || "").trim(),
-    status: Boolean(typeData.status ?? true),
   };
 
   try {
@@ -128,7 +104,7 @@ export const updateInvestmentTypeApi = async (typeId, typeData) => {
     return {
       success: true,
       isMock: true,
-      data: { id: typeId, ...payload },
+      data: { id: typeId, ...payload, status: Boolean(typeData.status ?? true) },
     };
   }
 };

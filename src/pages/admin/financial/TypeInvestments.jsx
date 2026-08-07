@@ -146,6 +146,8 @@ function TypeInvestments() {
     );
   };
 
+
+
   // Filter types by search and status
   const filteredTypes = types.filter((t) => {
     const typeLabel = t.return_type || t.type_name || "";
@@ -156,8 +158,8 @@ function TypeInvestments() {
       statusFilter === "All"
         ? true
         : statusFilter === "Active"
-        ? t.status === true
-        : t.status === false;
+          ? t.status === true
+          : t.status === false;
     return matchesSearch && matchesStatus;
   });
 
@@ -237,9 +239,8 @@ function TypeInvestments() {
                       <td>
                         <button
                           type="button"
-                          className={`status-badge-btn ${
-                            t.status ? "status--active" : "status--inactive"
-                          }`}
+                          className={`status-badge-btn ${t.status ? "status--active" : "status--inactive"
+                            }`}
                           onClick={() => handleToggleStatus(t)}
                           title="Click to toggle status"
                         >
@@ -254,6 +255,8 @@ function TypeInvestments() {
                           )}
                         </button>
                       </td>
+
+
                       <td className="text-right actions-cell">
                         <button
                           type="button"
@@ -369,8 +372,8 @@ function TypeInvestments() {
                     {loading
                       ? "Saving..."
                       : editingType
-                      ? "Update Return Type"
-                      : "Create Return Type"}
+                        ? "Update Return Type"
+                        : "Create Return Type"}
                   </button>
                 </div>
               </form>
