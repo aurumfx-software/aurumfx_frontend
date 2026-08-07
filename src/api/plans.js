@@ -11,6 +11,7 @@ export const MOCK_INVESTMENT_PLANS = [
     commission_percentage: 5.0,
     daily_commission_limit: 10000,
     admin_fee_percentage: 2.0,
+    return_type: "Monthly",
     status: true,
   },
   {
@@ -22,6 +23,7 @@ export const MOCK_INVESTMENT_PLANS = [
     commission_percentage: 7.5,
     daily_commission_limit: 25000,
     admin_fee_percentage: 1.5,
+    return_type: "Monthly",
     status: true,
   },
   {
@@ -33,6 +35,7 @@ export const MOCK_INVESTMENT_PLANS = [
     commission_percentage: 10.0,
     daily_commission_limit: 50000,
     admin_fee_percentage: 1.0,
+    return_type: "Monthly",
     status: true,
   },
   {
@@ -44,6 +47,7 @@ export const MOCK_INVESTMENT_PLANS = [
     commission_percentage: 3.0,
     daily_commission_limit: 5000,
     admin_fee_percentage: 2.5,
+    return_type: "Monthly",
     status: false,
   },
 ];
@@ -78,6 +82,7 @@ export const getInvestmentPlansApi = async () => {
  * @param {number} planData.commission_percentage
  * @param {number} planData.daily_commission_limit
  * @param {number} planData.admin_fee_percentage
+ * @param {string} planData.return_type
  * @param {boolean} planData.status
  */
 export const createInvestmentPlanApi = async (planData) => {
@@ -89,6 +94,7 @@ export const createInvestmentPlanApi = async (planData) => {
     commission_percentage: Number(planData.commission_percentage) || 0,
     daily_commission_limit: Number(planData.daily_commission_limit) || 0,
     admin_fee_percentage: Number(planData.admin_fee_percentage) || 0,
+    return_type: String(planData.return_type || "Monthly").trim(),
     status: Boolean(planData.status ?? true),
   };
 
@@ -122,6 +128,7 @@ export const updateInvestmentPlanApi = async (planId, planData) => {
     commission_percentage: Number(planData.commission_percentage) || 0,
     daily_commission_limit: Number(planData.daily_commission_limit) || 0,
     admin_fee_percentage: Number(planData.admin_fee_percentage) || 0,
+    return_type: String(planData.return_type || "Monthly").trim(),
     status: Boolean(planData.status ?? true),
   };
 
