@@ -38,6 +38,7 @@ function PlanInvestments() {
     commission_percentage: "",
     daily_commission_limit: "",
     status: true,
+    admin_fee_percentage: "",
   });
 
   const [formError, setFormError] = useState("");
@@ -68,6 +69,7 @@ function PlanInvestments() {
         minimum_amount: plan.minimum_amount ?? "",
         commission_percentage: plan.commission_percentage ?? "",
         daily_commission_limit: plan.daily_commission_limit ?? "",
+        admin_fee_percentage: plan.admin_fee_percentage ?? "",
         status: plan.status ?? true,
       });
     } else {
@@ -79,11 +81,13 @@ function PlanInvestments() {
         minimum_amount: 5000,
         commission_percentage: 5.0,
         daily_commission_limit: 10000,
+        admin_fee_percentage: 2.0,
         status: true,
       });
     }
     setIsModalOpen(true);
   };
+
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -99,11 +103,6 @@ function PlanInvestments() {
 
     if (!formData.plan_name.trim()) {
       setFormError("Please enter a Plan Name.");
-      return;
-    }
-
-    if (Number(formData.minimum_amount) <= 0) {
-      setFormError("Minimum amount must be greater than 0.");
       return;
     }
 
@@ -131,6 +130,7 @@ function PlanInvestments() {
           minimum_amount: Number(formData.minimum_amount),
           commission_percentage: Number(formData.commission_percentage),
           daily_commission_limit: Number(formData.daily_commission_limit),
+          admin_fee_percentage: Number(formData.admin_fee_percentage),
         };
         setPlans([newPlan, ...plans]);
         setFormSuccess("Investment plan created successfully!");
@@ -140,11 +140,13 @@ function PlanInvestments() {
       }
     }
 
-    setLoading(false);
+    setLoading(true);
   };
 
   const handleDeletePlan = async (id) => {
-    if (window.confirm("Are you sure you want to delete this investment plan?")) {
+    if (
+      window.confirm("Are you sure you want to delete this investment plan?")
+    ) {
       await deleteInvestmentPlanApi(id);
       setPlans((prev) => prev.filter((p) => p.id !== id));
     }
@@ -168,8 +170,8 @@ function PlanInvestments() {
       statusFilter === "All"
         ? true
         : statusFilter === "Active"
-        ? p.status === true
-        : p.status === false;
+          ? p.status === true
+          : p.status === false;
     return matchesSearch && matchesStatus;
   });
 
@@ -238,6 +240,7 @@ function PlanInvestments() {
                   <th>Minimum Amount</th>
                   <th>Commission (%)</th>
                   <th>Daily Commission Limit</th>
+                  <th>Admin Fee (%)</th>
                   <th>Status</th>
                   <th className="text-right">Actions</th>
                 </tr>
@@ -262,12 +265,12 @@ function PlanInvestments() {
                       <td>
                         ₹{Number(plan.daily_commission_limit).toLocaleString()}
                       </td>
+                      <td>{Number(plan.admin_fee_percentage || 0).toFixed(2)}%</td>
                       <td>
                         <button
                           type="button"
-                          className={`status-badge-btn ${
-                            plan.status ? "status--active" : "status--inactive"
-                          }`}
+                          className={`status-badge-btn ${plan.status ? "status--active" : "status--inactive"
+                            }`}
                           onClick={() => handleToggleStatus(plan)}
                           title="Click to toggle status"
                         >
@@ -323,7 +326,9 @@ function PlanInvestments() {
             >
               {/* Modal Header */}
               <div className="plan-modal-header">
-                <h3>{editingPlan ? "Edit Investment Plan" : "Add Investment Plan"}</h3>
+                <h3>
+                  {editingPlan ? "Edit Investment Plan" : "Add Investment Plan"}
+                </h3>
                 <button
                   type="button"
                   className="modal-close-btn"
@@ -358,9 +363,11 @@ function PlanInvestments() {
                       placeholder="e.g. 10"
                       value={formData.duration_months}
                       onChange={(e) =>
-                        setFormData({ ...formData, duration_months: e.target.value })
+                        setFormData({
+                          ...formData,
+                          duration_months: e.target.value,
+                        })
                       }
-                      min="1"
                       required
                     />
                   </div>
@@ -376,8 +383,7 @@ function PlanInvestments() {
                           return_percentage: e.target.value,
                         })
                       }
-                      step="0.1"
-                      min="0"
+                      step="any"
                       required
                     />
                   </div>
@@ -385,19 +391,21 @@ function PlanInvestments() {
 
                 {/* 4. Minimum Amount */}
                 <div className="modal-field">
-                  <label className="field-label">Minimum Amount (₹) *</label>
+                  <label className="field-label">Minimum Amount (₹)</label>
                   <input
                     type="number"
                     placeholder="e.g. 5000"
                     value={formData.minimum_amount}
                     onChange={(e) =>
-                      setFormData({ ...formData, minimum_amount: e.target.value })
+                      setFormData({
+                        ...formData,
+                        minimum_amount: e.target.value,
+                      })
                     }
-                    step="500"
-                    min="1"
-                    required
+                    step="any"
                   />
                 </div>
+
 
                 {/* 5 & 6. Commission % & Daily Commission Limit */}
                 <div className="modal-field-row">
@@ -413,12 +421,13 @@ function PlanInvestments() {
                           commission_percentage: e.target.value,
                         })
                       }
-                      step="0.1"
-                      min="0"
+                      step="any"
                     />
                   </div>
                   <div className="modal-field">
-                    <label className="field-label">Daily Commission Limit (₹)</label>
+                    <label className="field-label">
+                      Daily Commission Limit (₹)
+                    </label>
                     <input
                       type="number"
                       placeholder="e.g. 10000"
@@ -429,11 +438,28 @@ function PlanInvestments() {
                           daily_commission_limit: e.target.value,
                         })
                       }
-                      step="500"
-                      min="0"
+                      step="any"
                     />
                   </div>
                 </div>
+
+                {/* Admin Fee (%) */}
+                <div className="modal-field">
+                  <label className="field-label">Admin Fee (%)</label>
+                  <input
+                    type="number"
+                    placeholder="e.g. 2.0"
+                    value={formData.admin_fee_percentage}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        admin_fee_percentage: e.target.value,
+                      })
+                    }
+                    step="any"
+                  />
+                </div>
+
 
                 {/* 7. Status Toggle */}
                 <div className="modal-field status-toggle-field">
@@ -447,7 +473,10 @@ function PlanInvestments() {
                         setFormData({ ...formData, status: e.target.checked })
                       }
                     />
-                    <label htmlFor="plan_status_toggle" className="toggle-slider" />
+                    <label
+                      htmlFor="plan_status_toggle"
+                      className="toggle-slider"
+                    />
                     <span className="toggle-text">
                       {formData.status ? "Active" : "Inactive"}
                     </span>
@@ -455,7 +484,9 @@ function PlanInvestments() {
                 </div>
 
                 {/* Error & Success Messages */}
-                {formError && <div className="modal-alert error">{formError}</div>}
+                {formError && (
+                  <div className="modal-alert error">{formError}</div>
+                )}
                 {formSuccess && (
                   <div className="modal-alert success">{formSuccess}</div>
                 )}
@@ -477,8 +508,8 @@ function PlanInvestments() {
                     {loading
                       ? "Saving..."
                       : editingPlan
-                      ? "Update Plan"
-                      : "Create Plan"}
+                        ? "Update Plan"
+                        : "Create Plan"}
                   </button>
                 </div>
               </form>
