@@ -58,8 +58,10 @@ function PlanInvestments() {
   };
 
   const handleOpenModal = (plan = null) => {
+    setLoading(false);
     setFormError("");
     setFormSuccess("");
+
     if (plan) {
       setEditingPlan(plan);
       setFormData({
@@ -140,8 +142,9 @@ function PlanInvestments() {
       }
     }
 
-    setLoading(true);
+    setLoading(false);
   };
+
 
   const handleDeletePlan = async (id) => {
     if (
