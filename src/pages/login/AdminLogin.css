@@ -1,0 +1,59 @@
+.admin-login-page {
+  background: #000000;
+}
+
+.admin-login-page::before {
+  background: radial-gradient(circle, rgba(148, 163, 184, 0.1) 0%, transparent 70%);
+}
+
+.admin-login-page::after {
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 70%);
+}
+
+.admin-login-page .login-card {
+  border-color: rgba(148, 163, 184, 0.25);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(148, 163, 184, 0.06);
+}
+
+.admin-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: fit-content;
+  margin: 0 auto 20px;
+  padding: 6px 16px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.08);
+  color: #cbd5e1;
+  font-size: 12.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.admin-login-page .input-group input:focus {
+  border-color: rgba(148, 163, 184, 0.55);
+  box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.12);
+}
+
+.admin-login-page .eye-btn:hover {
+  color: #cbd5e1;
+}
+
+.admin-login-page .remember input[type="checkbox"] {
+  accent-color: #94a3b8;
+}
+
+.admin-login-page .login-btn {
+  background: linear-gradient(135deg, #64748b 0%, #475569 60%, #334155 100%);
+  color: #f8fafc;
+  box-shadow: 0 8px 24px rgba(71, 85, 105, 0.35);
+}
+
+.admin-login-page .login-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #94a3b8 0%, #64748b 60%, #475569 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(71, 85, 105, 0.45);
+}

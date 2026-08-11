@@ -1,0 +1,929 @@
+.admin-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+/* Top Sub-section Navigation Tabs */
+.admin-dashboard-tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #111111;
+  padding: 6px;
+  border-radius: 12px;
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  width: fit-content;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.dashboard-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dashboard-tab:hover {
+  color: #f1f5f9;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.dashboard-tab--active {
+  background: rgba(212, 175, 55, 0.14) !important;
+  color: #f5d061 !important;
+  font-weight: 700 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.tab-icon {
+  font-size: 16px;
+}
+
+/* Alert Banner */
+.alert-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, #f5d061 0%, #e5b80b 50%, #c59b27 100%);
+  border-radius: 10px;
+  color: #1a1608;
+}
+
+.alert-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.alert-banner p {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.alert-link {
+  background: none;
+  border: none;
+  color: #1a1608;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+  font-size: inherit;
+}
+
+/* Admin Business Dashboard Layout */
+.admin-biz-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  min-width: 0;
+}
+
+/* Main Top 2-Column Grid Layout */
+.biz-layout-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 450px);
+  gap: 20px;
+  align-items: start;
+}
+
+.biz-left-col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+.biz-right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: 100%;
+  min-width: 0;
+}
+
+/* 6 Stat Cards Grid (4 in row 1, 2 in row 2) */
+.biz-stat-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  min-width: 0;
+}
+
+/* Sales Performance Card (Gold Gradient) */
+.biz-sales-banner-card {
+  grid-column: span 1;
+  background: linear-gradient(135deg, #f5d061 0%, #e5b80b 50%, #c59b27 100%);
+  border-radius: 12px;
+  padding: 18px 20px;
+  color: #1a1608;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4px 18px rgba(212, 175, 55, 0.3);
+  position: relative;
+  overflow: hidden;
+  min-height: 130px;
+}
+
+.banner-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.banner-card-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a1608;
+}
+
+.banner-card-select {
+  background: rgba(0, 0, 0, 0.15);
+  border: none;
+  color: #1a1608;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+}
+
+.banner-card-select option {
+  color: #1a1608;
+  background: #f5d061;
+}
+
+.banner-card-body {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.banner-values {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.banner-main-val {
+  font-size: 28px;
+  font-weight: 900;
+  color: #1a1608;
+  line-height: 1;
+}
+
+.banner-badges {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.badge-income {
+  font-size: 11px;
+  font-weight: 700;
+  color: #16a34a;
+  background: rgba(0, 0, 0, 0.85);
+  padding: 3px 8px;
+  border-radius: 12px;
+}
+
+.badge-expense {
+  font-size: 11px;
+  font-weight: 700;
+  color: #ef4444;
+  background: rgba(0, 0, 0, 0.85);
+  padding: 3px 8px;
+  border-radius: 12px;
+}
+
+.sales-banner-graphic {
+  width: 90px;
+  height: 70px;
+  margin-right: -10px;
+}
+
+/* Dark Stat Card Base */
+.biz-stat-card {
+  background: #111111;
+  border-radius: 12px;
+  padding: 18px 20px;
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 130px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.stat-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.stat-card-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+.stat-card-val {
+  font-size: clamp(16px, 1.6vw, 22px);
+  font-weight: 800;
+  color: #f8fafc;
+  overflow-wrap: anywhere;
+}
+
+.stat-card-lbl {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.stat-card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Card Base */
+.biz-card {
+  background: #111111;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.biz-card-header-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #e2e8f0;
+}
+
+/* Sales Over View 2x3 Grid */
+.sales-overview-card {
+  width: 100%;
+}
+
+.sales-periods-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.period-box {
+  background: #141414;
+  border: 1px solid rgba(212, 175, 55, 0.12);
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.period-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.period-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  color: #f5d061;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.period-title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.period-name {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #e2e8f0;
+}
+
+.period-date {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.period-amount {
+  font-size: 15px;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+/* Sales Graph Card */
+.sales-graph-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.graph-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.date-picker-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.date-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.date-field-lbl {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.date-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.date-input-wrap input {
+  padding: 6px 30px 6px 10px;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 8px;
+  font-size: 12px;
+  color: #e2e8f0;
+  background: #1a1a1a;
+  width: 110px;
+}
+
+.date-icon {
+  position: absolute;
+  right: 8px;
+  font-size: 14px;
+  color: #f5d061;
+  pointer-events: none;
+}
+
+.sales-graph-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+  flex: 1;
+  justify-content: space-between;
+}
+
+.sales-graph-svg {
+  width: 100%;
+  height: 240px;
+  max-width: 100%;
+}
+
+.graph-tick-text {
+  font-size: 11px;
+  fill: #94a3b8;
+}
+
+.sales-graph-legend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  font-size: 13px;
+  color: #cbd5e1;
+  margin-top: 10px;
+}
+
+.legend-entry {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legend-box {
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+}
+
+.legend-box--package {
+  background: #b8860b;
+}
+
+.legend-box--product {
+  background: #f5d061;
+}
+
+/* Bottom Grid (Tables) */
+.biz-bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.biz-table-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.biz-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.biz-table th {
+  background: #141414;
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #94a3b8;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.12);
+}
+
+/* Empty State Box */
+.empty-state-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 20px;
+  gap: 12px;
+}
+
+.empty-graphic-wrapper {
+  width: 120px;
+  height: 90px;
+}
+
+.empty-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.empty-state-text {
+  font-size: 14px;
+  font-weight: 700;
+  color: #cbd5e1;
+}
+
+/* Legacy Dashboard Grid */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 180px 1fr 260px;
+  grid-template-rows: auto auto auto;
+  gap: 16px;
+}
+
+.grid-kpi {
+  grid-row: 1 / 3;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.grid-chart {
+  grid-column: 2;
+  grid-row: 1 / 3;
+}
+
+.grid-users {
+  grid-column: 3;
+  grid-row: 1 / 3;
+}
+
+.grid-tickets {
+  grid-column: 1;
+  grid-row: 3;
+}
+
+.grid-map {
+  grid-column: 2;
+  grid-row: 3;
+}
+
+.grid-table {
+  grid-column: 3;
+  grid-row: 3;
+}
+
+/* Card Base */
+.card {
+  background: #111111;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(212, 175, 55, 0.15);
+}
+
+.card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #e2e8f0;
+  margin-bottom: 16px;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.card-header h3 {
+  margin-bottom: 0;
+}
+
+.card-select {
+  padding: 6px 12px;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 6px;
+  font-size: 13px;
+  color: #cbd5e1;
+  background: #1a1a1a;
+  cursor: pointer;
+}
+
+/* KPI Cards */
+.kpi-card {
+  background: #111111;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex: 1;
+}
+
+.kpi-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: rgba(212, 175, 55, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #f5d061;
+  font-size: 20px;
+}
+
+.kpi-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.kpi-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: #f8fafc;
+  letter-spacing: -0.5px;
+}
+
+.kpi-label {
+  font-size: 12.5px;
+  color: #94a3b8;
+}
+
+.network-chart {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.chart-axis-label {
+  font-size: 11px;
+  fill: #64748b;
+}
+
+.users-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.users-total {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.users-icon {
+  font-size: 28px;
+  color: #f5d061;
+}
+
+.users-count {
+  display: block;
+  font-size: 28px;
+  font-weight: 700;
+  color: #f8fafc;
+  line-height: 1.1;
+}
+
+.users-label {
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.users-gauges {
+  display: flex;
+  justify-content: space-around;
+  gap: 12px;
+}
+
+.gauge-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.gauge-ring {
+  position: relative;
+  width: 90px;
+  height: 90px;
+}
+
+.gauge-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.gauge-value {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.gauge-label {
+  font-size: 11.5px;
+  color: #94a3b8;
+  text-align: center;
+  max-width: 90px;
+}
+
+.tickets-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tickets-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tickets-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.tickets-label {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.tickets-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: #cbd5e1;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.legend-dot--open {
+  background: #f5d061;
+}
+
+.legend-dot--closed {
+  background: #94a3b8;
+}
+
+.members-map {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.registrations-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.registrations-table th {
+  text-align: left;
+  padding: 10px 12px;
+  font-weight: 600;
+  color: #94a3b8;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+  white-space: nowrap;
+}
+
+.registrations-table td {
+  padding: 12px;
+  color: #cbd5e1;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.registrations-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.user-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.user-id {
+  font-weight: 600;
+  color: #f1f5f9;
+}
+
+.user-email {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .biz-layout-main {
+    grid-template-columns: 1fr;
+  }
+  .biz-stat-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .biz-bottom-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .grid-kpi,
+  .grid-chart,
+  .grid-users,
+  .grid-tickets,
+  .grid-map,
+  .grid-table {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .grid-kpi {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .card {
+    padding: 16px;
+  }
+
+  .card-header {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .card-select {
+    width: 100%;
+  }
+
+  .network-chart {
+    width: 100%;
+    height: auto;
+    min-height: 180px;
+    display: block;
+  }
+
+  .members-map {
+    width: 100%;
+    height: auto;
+    min-height: 180px;
+  }
+
+  .users-summary {
+    gap: 18px;
+  }
+
+  .users-gauges {
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .biz-stat-cards-grid {
+    grid-template-columns: 1fr;
+  }
+  .sales-periods-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .graph-card-header {
+    align-items: flex-start;
+  }
+
+  .date-picker-group {
+    width: 100%;
+    gap: 8px;
+  }
+
+  .date-field {
+    flex: 1 1 140px;
+    min-width: 0;
+  }
+
+  .date-input-wrap {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .date-input-wrap input {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .sales-graph-svg {
+    height: auto;
+    min-height: 180px;
+  }
+}

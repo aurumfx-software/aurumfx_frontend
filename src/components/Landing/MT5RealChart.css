@@ -1,0 +1,661 @@
+.mt5-section {
+  padding: 90px 24px;
+  background: #000000;
+  color: #ffffff;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle ambient gold glow in the background */
+.mt5-section::before {
+  content: "";
+  position: absolute;
+  top: -10%;
+  right: -10%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.12) 0%, transparent 70%);
+  filter: blur(60px);
+  pointer-events: none;
+  animation: floatGlow 8s ease-in-out infinite alternate;
+  z-index: 0;
+}
+
+.mt5-section::after {
+  content: "";
+  position: absolute;
+  bottom: -15%;
+  left: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 70%);
+  filter: blur(70px);
+  pointer-events: none;
+  animation: floatGlow 10s ease-in-out infinite alternate-reverse;
+  z-index: 0;
+}
+
+@keyframes floatGlow {
+  0% { transform: translate(0, 0) scale(1); opacity: 0.7; }
+  100% { transform: translate(-20px, 20px) scale(1.15); opacity: 1; }
+}
+
+.mt5-section.fullscreen-mode {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  padding: 20px;
+  background: #000000;
+  overflow-y: auto;
+}
+
+.mt5-container {
+  position: relative;
+  z-index: 1;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+
+.mt5-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 20px;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.mt5-section.in-view .mt5-header {
+  animation: fadeSlideUp 0.7s ease forwards;
+}
+
+.mt5-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: 999px;
+  color: #f5d061;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  position: relative;
+}
+
+.mt5-badge::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 999px;
+  border: 1px solid rgba(212, 175, 55, 0.6);
+  animation: badgePulse 2.4s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+  0% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 0; transform: scale(1.12); }
+  100% { opacity: 0; transform: scale(1.12); }
+}
+
+.mt5-header-left h2 {
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.mt5-header-left h2 span {
+  background: linear-gradient(135deg, #f5d061 0%, #e5b80b 45%, #d4af37 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-size: 200% auto;
+  animation: shimmer 4s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+.mt5-header-left p {
+  color: #94a3b8;
+  font-size: 16px;
+  margin-top: 8px;
+  max-width: 600px;
+}
+
+.mt5-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: rgba(212, 175, 55, 0.06);
+  border: 1.5px solid #d4af37;
+  border-radius: 8px;
+  color: #f5d061;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mt5-icon-btn:hover {
+  background: linear-gradient(135deg, #f5d061, #e5b80b);
+  border-color: #c59b27;
+  color: #1e1b10;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(212, 175, 55, 0.35);
+}
+
+/* Terminal Container */
+.mt5-terminal-wrapper {
+  background: #0a0a0a;
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(212, 175, 55, 0.1), 0 4px 20px rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+.mt5-section.in-view .mt5-terminal-wrapper {
+  animation: fadeSlideUp 0.8s ease forwards;
+  animation-delay: 0.2s;
+}
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Control Bar */
+.mt5-control-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #111111;
+  padding: 12px 18px;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.mt5-symbols-scroll {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: thin;
+}
+
+.mt5-symbol-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: #1a1a1a;
+  border: 1px solid #2b2b2b;
+  border-radius: 8px;
+  color: #cbd5e1;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.mt5-symbol-tab:hover {
+  background: rgba(212, 175, 55, 0.1);
+  color: #f5d061;
+  border-color: rgba(212, 175, 55, 0.4);
+}
+
+.mt5-symbol-tab.active {
+  background: linear-gradient(135deg, #f5d061 0%, #e5b80b 100%);
+  border-color: #c59b27;
+  color: #1e1b10;
+  font-weight: 700;
+  box-shadow: 0 2px 12px rgba(212, 175, 55, 0.4);
+}
+
+.tab-change.up {
+  color: #10b981;
+  font-size: 11px;
+}
+
+.tab-change.down {
+  color: #ef4444;
+  font-size: 11px;
+}
+
+.mt5-tf-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tf-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #94a3b8;
+  margin-right: 4px;
+}
+
+.mt5-tf-btn {
+  padding: 6px 12px;
+  background: #1a1a1a;
+  border: 1px solid #2b2b2b;
+  border-radius: 6px;
+  color: #cbd5e1;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mt5-tf-btn:hover {
+  color: #f5d061;
+  background: rgba(212, 175, 55, 0.1);
+  border-color: rgba(212, 175, 55, 0.4);
+}
+
+.mt5-tf-btn.active {
+  background: linear-gradient(135deg, #f5d061, #e5b80b);
+  color: #1e1b10;
+  font-weight: 700;
+  border-color: #c59b27;
+}
+
+/* Stats Bar */
+.mt5-stats-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background: #0a0a0a;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.stat-main {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-symbol {
+  font-size: 13px;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.stat-price-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.stat-price {
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffffff;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.stat-badge.up {
+  background: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+}
+
+.stat-badge.down {
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+}
+
+.stat-grid {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.stat-box {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stat-title {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.stat-val {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.stat-val.bid {
+  color: #10b981;
+}
+
+.stat-val.ask {
+  color: #ef4444;
+}
+
+.stat-val.instant {
+  color: #f5d061;
+  font-weight: 700;
+}
+
+/* Toast */
+.mt5-order-toast {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  background: rgba(212, 175, 55, 0.1);
+  border-left: 4px solid #d4af37;
+  color: #f5d061;
+  font-size: 14px;
+  font-weight: 600;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Chart Layout */
+.mt5-chart-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  min-height: 520px;
+  width: 100%;
+}
+
+.mt5-chart-viewport {
+  width: 100%;
+  height: 520px;
+  background: #0a0a0a;
+  position: relative;
+}
+
+.mt5-chart-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #64748b;
+  gap: 12px;
+}
+
+.spin-icon {
+  font-size: 28px;
+  animation: spin 1.5s linear infinite;
+  color: #d4af37;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Quick Order Panel */
+.mt5-order-panel {
+  background: #111111;
+  border-left: 1px solid rgba(212, 175, 55, 0.2);
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 20px;
+  background: #151515;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  color: #f5d061;
+}
+
+.panel-head h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.panel-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1;
+}
+
+.form-group label {
+  display: block;
+  font-size: 12px;
+  color: #94a3b8;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.volume-selector {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.vol-btn {
+  padding: 8px 4px;
+  background: #1a1a1a;
+  border: 1px solid #2b2b2b;
+  border-radius: 6px;
+  color: #cbd5e1;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.vol-btn.active,
+.vol-btn:hover {
+  background: linear-gradient(135deg, #f5d061, #e5b80b);
+  border-color: #c59b27;
+  color: #1e1b10;
+  font-weight: 700;
+}
+
+.price-quote-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #1a1a1a;
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: 10px;
+  padding: 12px 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+
+.quote-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  text-align: center;
+}
+
+.quote-col.sell .q-label {
+  font-size: 11px;
+  color: #ef4444;
+  font-weight: 700;
+}
+
+.quote-col.sell .q-price {
+  font-size: 15px;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.quote-col.buy .q-label {
+  font-size: 11px;
+  color: #10b981;
+  font-weight: 700;
+}
+
+.quote-col.buy .q-price {
+  font-size: 15px;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.quote-divider {
+  width: 1px;
+  height: 32px;
+  background: #2b2b2b;
+}
+
+.order-action-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.btn-order {
+  padding: 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.1s, opacity 0.2s, box-shadow 0.2s;
+}
+
+.btn-order:active {
+  transform: scale(0.97);
+}
+
+.btn-sell {
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+}
+
+.btn-sell:hover {
+  background: #ef4444;
+  color: #fff;
+}
+
+.btn-buy {
+  background: linear-gradient(135deg, #f5d061, #e5b80b);
+  color: #1e1b10;
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.35);
+}
+
+.btn-buy:hover {
+  background: linear-gradient(135deg, #ffe082, #f5d061);
+}
+
+.panel-footer-info {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid rgba(212, 175, 55, 0.2);
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+}
+
+.panel-footer-info div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.panel-footer-info span {
+  color: #94a3b8;
+}
+
+.panel-footer-info strong {
+  color: #f5d061;
+  font-weight: 700;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .mt5-chart-layout {
+    grid-template-columns: 1fr;
+  }
+  .mt5-chart-viewport {
+    height: 420px;
+  }
+  .mt5-order-panel {
+    border-left: none;
+    border-top: 1px solid #2b2b2b;
+  }
+}
+
+@media (max-width: 600px) {
+  .mt5-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .mt5-stats-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .stat-grid {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .mt5-section {
+    padding: 60px 16px;
+  }
+
+  .mt5-terminal-wrapper {
+    border-radius: 12px;
+  }
+
+  .mt5-control-bar {
+    padding: 10px 12px;
+  }
+
+  .mt5-symbols-scroll {
+    width: 100%;
+  }
+
+  .mt5-tf-group {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+
+  .mt5-chart-viewport {
+    height: 380px;
+  }
+}
