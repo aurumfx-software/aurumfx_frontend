@@ -198,20 +198,36 @@
 .hero-btn-primary,
 .hero-btn-secondary {
   position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   padding: 14px 28px;
   border-radius: 10px;
   font-size: 16px;
   font-weight: 700;
   text-decoration: none;
   overflow: hidden;
-  transition: transform 0.2s, background 0.2s, box-shadow 0.2s, border-color 0.2s;
+  transition: transform 0.2s, background 0.2s, box-shadow 0.2s, border-color 0.2s, gap 0.2s;
 }
 
 .hero-btn-primary {
-  background: linear-gradient(135deg, #f5d061 0%, #e5b80b 50%, #c59b27 100%);
+  background: linear-gradient(135deg, #f7d772 0%, #f3c249 45%, #d8a926 100%);
   color: #1a1608;
-  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.35);
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.28);
   border: none;
+}
+
+.hero-btn-primary svg {
+  font-size: 17px;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+.hero-btn-secondary svg {
+  font-size: 17px;
+  flex-shrink: 0;
+  transition: transform 0.2s;
 }
 
 /* NEW — shimmer sweep on hover, echoes the headline's shine so the
@@ -240,7 +256,7 @@
 
 .hero-btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 28px rgba(212, 175, 55, 0.5);
+  box-shadow: 0 10px 28px rgba(212, 175, 55, 0.45);
 }
 
 .hero-btn-secondary {
@@ -274,9 +290,6 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* ==========================================================
-   RESPONSIVE / MOBILE
-   ========================================================== */
 @media (max-width: 992px) {
   .landing-hero {
     display: flex;
@@ -284,7 +297,7 @@
     row-gap: 0;
     align-items: start;
     min-height: auto;
-    padding: 150px 20px 24px;
+    padding: 130px 24px 32px;
   }
 
   .hero-inner {
@@ -299,39 +312,41 @@
 
   .hero-copy {
     max-width: 100%;
-    text-align: center;
-  }
-
-  /* NEW — body copy reads better left-aligned even under a centered
-     headline; keep the badge/headline/CTAs centered but let the
-     paragraph breathe naturally */
-  .hero-copy > p {
     text-align: left;
   }
 
-  .hero-copy h1 {
-    font-size: clamp(30px, 8vw, 42px);
+  .hero-badge {
     margin-bottom: 24px;
-    line-height: 1.1;
   }
 
+  .hero-copy h1 {
+    font-size: clamp(36px, 10vw, 48px);
+    line-height: 1.15;
+    margin-bottom: 20px;
+    text-align: left;
+  }
+
+  /* no override needed here — base rule already sets display: block,
+     which is exactly what keeps "Gold Trading" on its own line */
+
   .hero-copy > p {
-    margin: 0 auto 30px;
-    font-size: 15px;
+    text-align: left;
+    margin: 0 0 28px;
+    font-size: 16px;
     line-height: 1.7;
-    max-width: 600px;
+    max-width: 100%;
   }
 
   .hero-trust {
-    justify-content: center;
+    justify-content: flex-start;
     margin-bottom: 28px;
   }
 
   .hero-actions {
-    justify-content: center;
+    justify-content: flex-start;
     flex-direction: column;
     width: 100%;
-    gap: 12px;
+    gap: 14px;
   }
 
   .hero-btn-primary,
@@ -339,13 +354,10 @@
     width: 100%;
     text-align: center;
     box-sizing: border-box;
-    padding: 17px 18px;
+    padding: 18px 18px;
+    font-size: 16px;
   }
 
-  /* CHANGED — swapped fixed pixel heights for aspect-ratio so the
-     image never letterboxes oddly on unusual viewport widths, and
-     added a soft top fade so it dissolves out of the copy section
-     instead of sitting as a separate boxed card */
   .hero-bg-image {
     order: 2;
     display: block;
@@ -354,7 +366,7 @@
     width: 100%;
     aspect-ratio: 4 / 3;
     height: auto;
-    margin: 12px auto 0;
+    margin: 20px auto 0;
     border-radius: 0;
     background-image: var(--bg-mobile);
     background-size: contain;
@@ -369,47 +381,6 @@
   }
 
   .hero-bg-image::before {
-    display: none; /* desktop scrim not needed once image is below text */
-  }
-}
-
-@media (max-width: 480px) {
-  .landing-hero {
-    padding-top: 136px;
-    padding-bottom: 18px;
-    row-gap: 12px;
-  }
-
-  .hero-copy h1 {
-    font-size: 30px;
-    margin-bottom: 18px;
-  }
-
-  .hero-copy > p {
-    font-size: 15px;
-    margin-bottom: 24px;
-  }
-
-  .hero-trust {
-    gap: 12px;
-    font-size: 11.5px;
-  }
-
-  .hero-actions {
-    flex-direction: column;
-    width: 100%;
-    gap: 14px;
-  }
-
-  .hero-btn-primary,
-  .hero-btn-secondary {
-    text-align: center;
-    width: 100%;
-    padding: 16px 18px;
-  }
-
-  .hero-bg-image {
-    aspect-ratio: 5 / 4;
-    margin-top: 16px;
+    display: none;
   }
 }

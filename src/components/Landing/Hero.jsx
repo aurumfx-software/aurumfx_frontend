@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FiZap } from "react-icons/fi";
+import { FiZap, FiArrowRight, FiActivity } from "react-icons/fi";
 import heroImageDesktop from "../../assets/image.png";
 import heroImageMobile from "../../assets/mobile.png";
 import "./Hero.css";
@@ -39,8 +39,10 @@ function Hero() {
             <div className="hero-actions anim-item delay-4">
               <Link to="/register" className="hero-btn-primary">
                 Start Investing Now
+                <FiArrowRight />
               </Link>
               <a href="#calculator" className="hero-btn-secondary">
+                <FiActivity />
                 Calculate Returns
               </a>
             </div>
