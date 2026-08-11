@@ -8,11 +8,7 @@
   align-items: center;
 }
 
-/* ===== FULL BACKGROUND IMAGE =====
-   The actual image URLs come in as --bg-desktop / --bg-mobile
-   custom properties (set inline from Hero.jsx). Which one is
-   used is decided right here, purely in CSS, via the media
-   query further down. */
+/* ===== FULL BACKGROUND IMAGE ===== */
 .hero-bg-image {
   position: absolute;
   inset: 0;
@@ -23,6 +19,53 @@
   background-position: center;
   background-repeat: no-repeat;
   z-index: 0;
+}
+
+/* NEW — scrim so copy is always legible regardless of image content,
+   plus it's what gives the "image dissolving into black" premium look */
+.hero-bg-image::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    #000000 0%,
+    rgba(0, 0, 0, 0.85) 22%,
+    rgba(0, 0, 0, 0.35) 48%,
+    transparent 68%
+  );
+  z-index: 1;
+}
+
+/* NEW — fine grain texture, the cheapest way to make a flat black
+   background feel like material rather than a solid color fill */
+.landing-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* NEW — soft ambient glow behind the image side, mimics studio
+   product lighting instead of a flat cutout */
+.landing-hero {
+  isolation: isolate;
+}
+
+.landing-hero::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -10%;
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, rgba(245, 208, 97, 0.14) 0%, transparent 70%);
+  transform: translateY(-50%);
+  z-index: 0;
+  pointer-events: none;
 }
 
 .hero-inner {
@@ -38,7 +81,6 @@
   max-width: 620px;
 }
 
-/* ===== COPY (left side, sits over background image) ===== */
 .hero-copy {
   position: relative;
   max-width: 560px;
@@ -66,7 +108,6 @@
   50% { box-shadow: 0 0 16px rgba(245, 208, 97, 0.35); }
 }
 
-/* ===== HEADING — modern, clean, white with subtle shine ===== */
 .hero-copy h1 {
   font-family: "Sora", "Poppins", "Inter", sans-serif;
   font-size: clamp(38px, 5.5vw, 62px);
@@ -124,6 +165,31 @@
   font-weight: 700;
 }
 
+/* NEW — trust strip: small, quiet, sits right under the paragraph.
+   This is often the single highest-leverage element on a fintech
+   hero — it's what separates "template" from "we looked legit". */
+.hero-trust {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.hero-trust-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: #b8c0cc;
+  letter-spacing: 0.2px;
+}
+
+.hero-trust-item svg {
+  color: #f5d061;
+  font-size: 14px;
+}
+
 .hero-actions {
   display: flex;
   gap: 14px;
@@ -131,11 +197,13 @@
 
 .hero-btn-primary,
 .hero-btn-secondary {
+  position: relative;
   padding: 14px 28px;
   border-radius: 10px;
   font-size: 16px;
   font-weight: 700;
   text-decoration: none;
+  overflow: hidden;
   transition: transform 0.2s, background 0.2s, box-shadow 0.2s, border-color 0.2s;
 }
 
@@ -144,6 +212,30 @@
   color: #1a1608;
   box-shadow: 0 8px 24px rgba(212, 175, 55, 0.35);
   border: none;
+}
+
+/* NEW — shimmer sweep on hover, echoes the headline's shine so the
+   whole hero feels like one coherent light-motif instead of separate
+   effects bolted on in different places */
+.hero-btn-primary::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.55) 50%,
+    transparent 100%
+  );
+  transform: skewX(-20deg);
+  transition: left 0.55s ease;
+}
+
+.hero-btn-primary:hover::after {
+  left: 130%;
 }
 
 .hero-btn-primary:hover {
@@ -165,7 +257,6 @@
   transform: translateY(-2px);
 }
 
-/* ===== TEXT ENTRANCE ANIMATIONS ===== */
 .anim-item {
   opacity: 0;
   transform: translateY(24px);
@@ -176,26 +267,15 @@
 .delay-2 { animation-delay: 0.3s; }
 .delay-3 { animation-delay: 0.5s; }
 .delay-4 { animation-delay: 0.7s; }
+.delay-5 { animation-delay: 0.85s; }
 
 @keyframes fadeSlideUp {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* ==========================================================
    RESPONSIVE / MOBILE
-   - Text + buttons on top, cropped image pinned to the right
-     below it on a black background with a gold glow.
-   - Swaps in the dedicated mobile.png asset instead of
-     stretching/cropping the desktop image.
-  The background image is resized for mobile while the copy
-  remains above it in the responsive layout.
    ========================================================== */
 @media (max-width: 992px) {
   .landing-hero {
@@ -222,24 +302,36 @@
     text-align: center;
   }
 
+  /* NEW — body copy reads better left-aligned even under a centered
+     headline; keep the badge/headline/CTAs centered but let the
+     paragraph breathe naturally */
+  .hero-copy > p {
+    text-align: left;
+  }
+
   .hero-copy h1 {
     font-size: clamp(30px, 8vw, 42px);
-    margin-bottom: 20px;
-    line-height: 1.08;
+    margin-bottom: 24px;
+    line-height: 1.1;
   }
 
   .hero-copy > p {
-    margin: 0 auto 26px;
+    margin: 0 auto 30px;
     font-size: 15px;
-    line-height: 1.6;
+    line-height: 1.7;
     max-width: 600px;
+  }
+
+  .hero-trust {
+    justify-content: center;
+    margin-bottom: 28px;
   }
 
   .hero-actions {
     justify-content: center;
     flex-direction: column;
     width: 100%;
-    gap: 16px;
+    gap: 12px;
   }
 
   .hero-btn-primary,
@@ -250,14 +342,19 @@
     padding: 17px 18px;
   }
 
+  /* CHANGED — swapped fixed pixel heights for aspect-ratio so the
+     image never letterboxes oddly on unusual viewport widths, and
+     added a soft top fade so it dissolves out of the copy section
+     instead of sitting as a separate boxed card */
   .hero-bg-image {
     order: 2;
     display: block;
     position: relative;
     inset: auto;
     width: 100%;
-    height: 460px;
-    margin: 28px auto 0;
+    aspect-ratio: 4 / 3;
+    height: auto;
+    margin: 12px auto 0;
     border-radius: 0;
     background-image: var(--bg-mobile);
     background-size: contain;
@@ -267,8 +364,13 @@
     box-shadow: none;
     opacity: 1;
     transform: none;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 12%);
+    mask-image: linear-gradient(to bottom, transparent 0%, black 12%);
   }
 
+  .hero-bg-image::before {
+    display: none; /* desktop scrim not needed once image is below text */
+  }
 }
 
 @media (max-width: 480px) {
@@ -288,6 +390,11 @@
     margin-bottom: 24px;
   }
 
+  .hero-trust {
+    gap: 12px;
+    font-size: 11.5px;
+  }
+
   .hero-actions {
     flex-direction: column;
     width: 100%;
@@ -302,9 +409,7 @@
   }
 
   .hero-bg-image {
-    width: 100%;
-    height: 340px;
-    margin-top: 20px;
-    transform: none;
+    aspect-ratio: 5 / 4;
+    margin-top: 16px;
   }
 }
