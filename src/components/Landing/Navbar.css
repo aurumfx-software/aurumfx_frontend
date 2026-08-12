@@ -15,7 +15,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 32px;
-  background: rgba(10, 10, 10, 0.85);
+  background: rgba(0, 0, 0, 0.92);
   backdrop-filter: blur(14px);
   border-bottom: 1.5px solid rgba(212, 175, 55, 0.28);
   box-sizing: border-box;
@@ -151,7 +151,7 @@ section[id] {
     bottom: 0;
     width: 100%;
     height: calc(100vh - 76px);
-    background: rgba(0, 0, 0, 0.96);
+    background: rgba(0, 0, 0, 0.98);
     flex-direction: column;
     align-items: stretch;
     justify-content: flex-start;
