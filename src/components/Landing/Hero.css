@@ -2,35 +2,88 @@
   position: relative;
   min-height: 100vh;
   padding: 140px 24px 80px;
-  background: radial-gradient(circle at 80% 25%, rgba(255, 223, 0, 0.16) 0%, rgba(245, 208, 97, 0.08) 35%, transparent 70%),
-    radial-gradient(circle at 20% 75%, rgba(212, 175, 55, 0.1) 0%, transparent 60%),
-    linear-gradient(180deg, #fffdf7 0%, #ffffff 100%);
+  background: #000000;
   overflow: hidden;
+  display: flex;
+  align-items: center;
 }
 
-.hero-glow {
+/* ===== FULL BACKGROUND IMAGE ===== */
+.hero-bg-image {
   position: absolute;
-  top: -15%;
-  right: -5%;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-image: var(--bg-desktop);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 0;
+}
+
+/* NEW — scrim so copy is always legible regardless of image content,
+   plus it's what gives the "image dissolving into black" premium look */
+.hero-bg-image::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    #000000 0%,
+    rgba(0, 0, 0, 0.85) 22%,
+    rgba(0, 0, 0, 0.35) 48%,
+    transparent 68%
+  );
+  z-index: 1;
+}
+
+/* NEW — fine grain texture, the cheapest way to make a flat black
+   background feel like material rather than a solid color fill */
+.landing-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* NEW — soft ambient glow behind the image side, mimics studio
+   product lighting instead of a flat cutout */
+.landing-hero {
+  isolation: isolate;
+}
+
+.landing-hero::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -10%;
   width: 700px;
   height: 700px;
-  background: radial-gradient(circle, rgba(255, 215, 0, 0.22) 0%, rgba(229, 184, 11, 0.08) 50%, transparent 75%);
+  background: radial-gradient(circle, rgba(245, 208, 97, 0.14) 0%, transparent 70%);
+  transform: translateY(-50%);
+  z-index: 0;
   pointer-events: none;
-  filter: blur(50px);
 }
 
 .hero-inner {
+  position: relative;
+  z-index: 2;
   max-width: 1280px;
+  width: 100%;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
-  align-items: center;
+}
+
+.hero-layout {
+  display: block;
+  max-width: 620px;
 }
 
 .hero-copy {
   position: relative;
-  z-index: 1;
+  max-width: 560px;
 }
 
 .hero-badge {
@@ -39,488 +92,295 @@
   gap: 8px;
   padding: 8px 16px;
   background: rgba(212, 175, 55, 0.12);
-  border: 1px solid rgba(212, 175, 55, 0.35);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(212, 175, 55, 0.45);
   border-radius: 999px;
-  color: #966f0d;
+  color: #f5d061;
   font-size: 13px;
   font-weight: 600;
+  letter-spacing: 0.3px;
   margin-bottom: 28px;
+  animation: badgePulse 2.6s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+  0%, 100% { box-shadow: 0 0 0 rgba(245, 208, 97, 0); }
+  50% { box-shadow: 0 0 16px rgba(245, 208, 97, 0.35); }
 }
 
 .hero-copy h1 {
-  font-size: clamp(40px, 5vw, 58px);
-  font-weight: 700;
-  line-height: 1.1;
-  color: #0f172a;
+  font-family: "Sora", "Poppins", "Inter", sans-serif;
+  font-size: clamp(38px, 5.5vw, 62px);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.5px;
   margin-bottom: 24px;
+  color: #ffffff;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
 }
 
 .hero-copy h1 span {
   display: block;
-  background: linear-gradient(135deg, #d4af37 0%, #e5b80b 50%, #966f0d 100%);
+  color: #f5d061;
+  position: relative;
+  background-image: linear-gradient(
+    100deg,
+    #f5d061 0%,
+    #f5d061 40%,
+    #fff8e1 50%,
+    #f5d061 60%,
+    #f5d061 100%
+  );
+  background-size: 250% 100%;
+  background-position: 100% 0;
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shineSweep 3.5s ease-in-out infinite;
 }
 
-.hero-copy>p {
+@keyframes shineSweep {
+  0% { background-position: 160% 0; }
+  60% { background-position: -60% 0; }
+  100% { background-position: -60% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-copy h1 span {
+    animation: none !important;
+  }
+}
+
+.hero-copy > p {
+  font-family: "Inter", sans-serif;
   font-size: 18px;
   line-height: 1.7;
-  color: #475569;
-  max-width: 520px;
+  color: #e2e8f0;
   margin-bottom: 36px;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+
+.hero-copy > p strong {
+  color: #f5d061;
+  font-weight: 700;
+}
+
+/* NEW — trust strip: small, quiet, sits right under the paragraph.
+   This is often the single highest-leverage element on a fintech
+   hero — it's what separates "template" from "we looked legit". */
+.hero-trust {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.hero-trust-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: #b8c0cc;
+  letter-spacing: 0.2px;
+}
+
+.hero-trust-item svg {
+  color: #f5d061;
+  font-size: 14px;
 }
 
 .hero-actions {
   display: flex;
   gap: 14px;
-  margin-bottom: 40px;
 }
 
 .hero-btn-primary,
 .hero-btn-secondary {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   padding: 14px 28px;
   border-radius: 10px;
   font-size: 16px;
   font-weight: 700;
   text-decoration: none;
-  transition: transform 0.2s, background 0.2s, box-shadow 0.2s, border-color 0.2s;
+  overflow: hidden;
+  transition: transform 0.2s, background 0.2s, box-shadow 0.2s, border-color 0.2s, gap 0.2s;
 }
 
 .hero-btn-primary {
-  background: linear-gradient(135deg, #f5d061 0%, #e5b80b 50%, #c59b27 100%);
-  color: #1e1b10;
-  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35);
+  background: linear-gradient(135deg, #f7d772 0%, #f3c249 45%, #d8a926 100%);
+  color: #1a1608;
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.28);
   border: none;
 }
 
+.hero-btn-primary svg {
+  font-size: 17px;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+.hero-btn-secondary svg {
+  font-size: 17px;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+/* NEW — shimmer sweep on hover, echoes the headline's shine so the
+   whole hero feels like one coherent light-motif instead of separate
+   effects bolted on in different places */
+.hero-btn-primary::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.55) 50%,
+    transparent 100%
+  );
+  transform: skewX(-20deg);
+  transition: left 0.55s ease;
+}
+
+.hero-btn-primary:hover::after {
+  left: 130%;
+}
+
 .hero-btn-primary:hover {
-  background: linear-gradient(135deg, #ffe082 0%, #f5d061 50%, #d4af37 100%);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.45);
+  box-shadow: 0 10px 28px rgba(212, 175, 55, 0.45);
 }
 
 .hero-btn-secondary {
-  background: rgba(212, 175, 55, 0.06);
-  color: #966f0d;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(6px);
+  color: #f5d061;
   border: 1.5px solid #d4af37;
 }
 
 .hero-btn-secondary:hover {
-  background: rgba(212, 175, 55, 0.15);
-  border-color: #c59b27;
-  color: #785806;
+  background: rgba(212, 175, 55, 0.18);
+  border-color: #f5d061;
+  color: #ffe082;
   transform: translateY(-2px);
 }
 
-.hero-trust {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 24px;
+.anim-item {
+  opacity: 0;
+  transform: translateY(24px);
+  animation: fadeSlideUp 0.7s ease forwards;
 }
 
-.trust-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #475569;
-  font-size: 14px;
-  font-weight: 600;
-}
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.3s; }
+.delay-3 { animation-delay: 0.5s; }
+.delay-4 { animation-delay: 0.7s; }
+.delay-5 { animation-delay: 0.85s; }
 
-.trust-item svg {
-  color: #d4af37;
-  font-size: 18px;
-}
-
-/* Trading Terminal White Golden Mockup */
-.hero-terminal {
-  background: #ffffff;
-  border: 1px solid rgba(212, 175, 55, 0.25);
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 20px 50px rgba(212, 175, 55, 0.12), 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.terminal-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 18px;
-  background: #fdfbf7;
-  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-}
-
-.terminal-dots {
-  display: flex;
-  gap: 6px;
-}
-
-.terminal-dots span {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: #cbd5e1;
-}
-
-.terminal-dots span:first-child {
-  background: #ef4444;
-}
-
-.terminal-dots span:nth-child(2) {
-  background: #e5b80b;
-}
-
-.terminal-dots span:nth-child(3) {
-  background: #10b981;
-}
-
-.terminal-pair-tabs {
-  display: flex;
-  gap: 6px;
-  flex: 1;
-  justify-content: center;
-}
-
-.terminal-tab-btn {
-  padding: 4px 10px;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  color: #64748b;
-  font-size: 11px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.terminal-tab-btn:hover {
-  color: #966f0d;
-  background: rgba(212, 175, 55, 0.08);
-}
-
-.terminal-tab-btn.active {
-  background: linear-gradient(135deg, #f5d061 0%, #e5b80b 100%);
-  border-color: #c59b27;
-  color: #1e1b10;
-  font-weight: 700;
-}
-
-.terminal-fullscreen-link {
-  color: #966f0d;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  transition: color 0.2s ease;
-}
-
-.terminal-fullscreen-link:hover {
-  color: #c59b27;
-}
-
-.terminal-body {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  padding: 44px;
-}
-
-/* Golden Ambient Radial Glow */
-.gold-glow-ring {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 420px;
-  height: 420px;
-  background: radial-gradient(circle, rgba(255, 215, 0, 0.35) 0%, rgba(229, 184, 11, 0.15) 50%, transparent 75%);
-  border-radius: 50%;
-  filter: blur(40px);
-  pointer-events: none;
-  animation: goldPulse 4s ease-in-out infinite alternate;
-  z-index: 0;
-}
-
-.gold-glow-ring.secondary {
-  width: 480px;
-  height: 480px;
-  background: radial-gradient(circle, rgba(212, 175, 55, 0.2) 0%, transparent 70%);
-  filter: blur(60px);
-  animation: goldPulse 6s ease-in-out infinite alternate-reverse;
-}
-
-/* Golden Sparkle 4-Point Stars */
-.sparkle-star {
-  position: absolute;
-  color: #ffe082;
-  filter: drop-shadow(0 0 10px #ffd700) drop-shadow(0 0 20px #ffb300);
-  pointer-events: none;
-  z-index: 3;
-  animation: starTwinkle 2.5s ease-in-out infinite alternate;
-}
-
-.star-1 { top: 6%; left: 14%; width: 32px; height: 32px; animation-delay: 0s; }
-.star-2 { top: 16%; right: 10%; width: 38px; height: 38px; animation-delay: 0.6s; }
-.star-3 { bottom: 16%; left: 8%; width: 32px; height: 32px; animation-delay: 1.2s; }
-.star-4 { bottom: 10%; right: 12%; width: 28px; height: 28px; animation-delay: 1.8s; }
-.star-5 { top: 48%; left: 3%; width: 26px; height: 26px; animation-delay: 0.9s; }
-
-@keyframes starTwinkle {
-  0% { transform: scale(0.5) rotate(0deg); opacity: 0.2; filter: drop-shadow(0 0 4px #ffd700); }
-  50% { transform: scale(1.3) rotate(45deg); opacity: 1; filter: drop-shadow(0 0 18px #ffd700) drop-shadow(0 0 32px #ffab00); }
-  100% { transform: scale(0.6) rotate(90deg); opacity: 0.3; filter: drop-shadow(0 0 6px #ffd700); }
-}
-
-/* Floating Sparkle Particles */
-.gold-sparkle {
-  position: absolute;
-  border-radius: 50%;
-  background: #ffffff;
-  box-shadow: 0 0 12px #ffd700, 0 0 24px #ffe082, 0 0 36px #ffb300;
-  pointer-events: none;
-  animation: sparkleFloat 3s ease-in-out infinite alternate;
-  z-index: 2;
-}
-
-.sparkle-1 { top: 12%; left: 22%; width: 10px; height: 10px; animation-delay: 0s; }
-.sparkle-2 { top: 22%; right: 20%; width: 12px; height: 12px; animation-delay: 0.5s; }
-.sparkle-3 { bottom: 22%; left: 18%; width: 8px; height: 8px; animation-delay: 1.1s; }
-.sparkle-4 { bottom: 14%; right: 25%; width: 11px; height: 11px; animation-delay: 1.6s; }
-.sparkle-5 { top: 38%; left: 12%; width: 9px; height: 9px; animation-delay: 2.1s; }
-.sparkle-6 { top: 42%; right: 14%; width: 10px; height: 10px; animation-delay: 0.3s; }
-.sparkle-7 { top: 75%; left: 35%; width: 8px; height: 8px; animation-delay: 1.4s; }
-.sparkle-8 { top: 10%; right: 40%; width: 12px; height: 12px; animation-delay: 2.4s; }
-
-/* Light Rays */
-.gold-light-rays {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%;
-  height: 100%;
-  background: conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(255, 215, 0, 0.08) 30deg, transparent 60deg, rgba(255, 215, 0, 0.08) 120deg, transparent 150deg, rgba(255, 215, 0, 0.08) 210deg, transparent 240deg);
-  filter: blur(20px);
-  pointer-events: none;
-  animation: spinRays 25s linear infinite;
-  z-index: 0;
-}
-
-@keyframes goldPulse {
-  0% {
-    transform: translate(-50%, -50%) scale(0.92);
-    opacity: 0.7;
-  }
-
-  100% {
-    transform: translate(-50%, -50%) scale(1.15);
-    opacity: 1;
-  }
-}
-
-@keyframes sparkleFloat {
-  0% {
-    transform: translateY(0) scale(0.8);
-    opacity: 0.4;
-  }
-
-  100% {
-    transform: translateY(-12px) scale(1.3);
-    opacity: 1;
-  }
-}
-
-@keyframes spinRays {
-  from {
-    transform: translate(-50%, -50%) rotate(0deg);
-  }
-
-  to {
-    transform: translate(-50%, -50%) rotate(360deg);
-  }
-}
-
-.terminal-gold-img {
-  position: relative;
-  z-index: 2;
-  width: 120%;
-  max-width: 900px;
-  height: auto;
-  object-fit: contain;
-  mix-blend-mode: multiply;
-  -webkit-mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 1) 65%, rgba(0, 0, 0, 0) 92%);
-  mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 1) 65%, rgba(0, 0, 0, 0) 92%);
-  filter: contrast(1.06) brightness(1.03) drop-shadow(0 25px 50px rgba(212, 175, 55, 0.45));
-  animation: floatImage 5s ease-in-out infinite alternate;
-  transition: transform 0.4s ease, filter 0.4s ease;
-}
-
-@keyframes floatImage {
-  0% {
-    transform: translateY(0px);
-  }
-
-  100% {
-    transform: translateY(-10px);
-  }
-}
-
-.terminal-gold-img:hover {
-  transform: translateY(-10px) scale(1.04);
-  filter: contrast(1.08) brightness(1.04) drop-shadow(0 30px 60px rgba(212, 175, 55, 0.65));
-}
-
-.terminal-price-row {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-
-.terminal-label {
-  font-size: 12px;
-  color: #64748b;
-  font-weight: 500;
-}
-
-.terminal-price {
-  font-size: 36px;
-  font-weight: 700;
-  color: #0f172a;
-  margin-top: 4px;
-  font-variant-numeric: tabular-nums;
-}
-
-.terminal-change {
-  font-size: 16px;
-  font-weight: 600;
-  padding: 6px 12px;
-  border-radius: 6px;
-}
-
-.terminal-change.up {
-  color: #10b981;
-  background: rgba(16, 185, 129, 0.1);
-}
-
-.terminal-change.down {
-  color: #ef4444;
-  background: rgba(239, 68, 68, 0.1);
-}
-
-.terminal-chart {
-  width: 100%;
-  height: 140px;
-  margin-bottom: 20px;
-}
-
-.terminal-stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-.terminal-stats div {
-  background: #fdfbf7;
-  border: 1px solid rgba(212, 175, 55, 0.18);
-  border-radius: 8px;
-  padding: 12px;
-}
-
-.terminal-stats span {
-  display: block;
-  font-size: 11px;
-  color: #64748b;
-  margin-bottom: 4px;
-}
-
-.terminal-stats strong {
-  font-size: 14px;
-  color: #966f0d;
-  font-variant-numeric: tabular-nums;
-}
-
-.terminal-order-toast {
-  padding: 8px 12px;
-  background: rgba(212, 175, 55, 0.12);
-  border-left: 3px solid #d4af37;
-  color: #8c6707;
-  font-size: 12px;
-  font-weight: 600;
-  margin-bottom: 14px;
-  border-radius: 4px;
-}
-
-.terminal-order {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.order-buy,
-.order-sell {
-  padding: 14px;
-  border: none;
-  border-radius: 8px;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: opacity 0.2s, transform 0.1s;
-}
-
-.order-buy {
-  background: linear-gradient(135deg, #f5d061, #e5b80b);
-  color: #1e1b10;
-  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.25);
-}
-
-.order-sell {
-  background: rgba(239, 68, 68, 0.1);
-  color: #ef4444;
-  border: 1px solid rgba(239, 68, 68, 0.3);
-}
-
-.order-buy:hover,
-.order-sell:hover {
-  opacity: 0.92;
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @media (max-width: 992px) {
-  .hero-inner {
-    grid-template-columns: 1fr;
-    text-align: center;
-  }
-
-  .hero-copy>p {
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .hero-actions,
-  .hero-trust {
-    justify-content: center;
-  }
-
-  .hero-terminal {
-    max-width: 480px;
-    margin: 0 auto;
-  }
-}
-
-@media (max-width: 480px) {
   .landing-hero {
-    padding-top: 120px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 0;
+    align-items: start;
+    min-height: auto;
+    padding: 130px 24px 32px;
+  }
+
+  .hero-inner {
+    order: 1;
+    width: 100%;
+    margin: 0;
+  }
+
+  .hero-layout {
+    max-width: 100%;
+  }
+
+  .hero-copy {
+    max-width: 100%;
+    text-align: left;
+  }
+
+  .hero-badge {
+    margin-bottom: 24px;
+  }
+
+  .hero-copy h1 {
+    font-size: clamp(36px, 10vw, 48px);
+    line-height: 1.15;
+    margin-bottom: 20px;
+    text-align: left;
+  }
+
+  /* no override needed here — base rule already sets display: block,
+     which is exactly what keeps "Gold Trading" on its own line */
+
+  .hero-copy > p {
+    text-align: left;
+    margin: 0 0 28px;
+    font-size: 16px;
+    line-height: 1.7;
+    max-width: 100%;
+  }
+
+  .hero-trust {
+    justify-content: flex-start;
+    margin-bottom: 28px;
   }
 
   .hero-actions {
+    justify-content: flex-start;
     flex-direction: column;
+    width: 100%;
+    gap: 14px;
   }
 
   .hero-btn-primary,
   .hero-btn-secondary {
+    width: 100%;
     text-align: center;
+    box-sizing: border-box;
+    padding: 18px 18px;
+    font-size: 16px;
+  }
+
+  .hero-bg-image {
+    order: 2;
+    display: block;
+    position: relative;
+    inset: auto;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    height: auto;
+    margin: 20px auto 0;
+    border-radius: 0;
+    background-image: var(--bg-mobile);
+    background-size: contain;
+    background-position: center bottom;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    box-shadow: none;
+    opacity: 1;
+    transform: none;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 12%);
+    mask-image: linear-gradient(to bottom, transparent 0%, black 12%);
+  }
+
+  .hero-bg-image::before {
+    display: none;
   }
 }

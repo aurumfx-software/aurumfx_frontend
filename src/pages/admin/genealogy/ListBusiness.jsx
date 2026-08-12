@@ -33,7 +33,7 @@ function AdminListBusiness() {
           </div>
         </div>
 
-        <div className="list-page-card">
+        <div className="business-list-card">
           <form
             className="list-filter-form"
             onSubmit={(e) => e.preventDefault()}

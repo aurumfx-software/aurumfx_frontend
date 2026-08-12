@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useEffect } from "react";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 
 import Login from "./pages/login/Login";
 import AdminLogin from "./pages/login/AdminLogin";
@@ -58,10 +59,23 @@ import Profile from "./pages/user/Profile";
 import HelpCenterPage from "./pages/user/help/HelpCenterPage";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./routes/ProtectedRoute";
+import GoldenCursor from "./components/GoldenCursor/GoldenCursor";
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [pathname]);
+
+  return null;
+}
 
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
+      <GoldenCursor />
       <Routes>
         {/* User Routes (/user prefix) */}
         <Route path="/user/login" element={<Login />} />

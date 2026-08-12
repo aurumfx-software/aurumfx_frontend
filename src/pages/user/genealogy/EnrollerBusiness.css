@@ -2,15 +2,30 @@
   width: 100%;
 }
 
+.genealogy-page .tree-search-form .search-input {
+  color: #f1f5f9;
+  background: #1a1a1a;
+  border: 1px solid rgba(212, 175, 55, 0.24);
+}
+
+.genealogy-page .tree-search-form .search-input::placeholder {
+  color: #94a3b8;
+}
+
+.genealogy-page .tree-search-form .search-input:focus {
+  border-color: #f5d061;
+  box-shadow: 0 0 0 3px rgba(245, 208, 97, 0.12);
+}
+
 .sponsor-tree-container {
-  border: 1px dashed #e2e8f0;
+  border: 1px dashed rgba(212, 175, 55, 0.28);
   border-radius: 16px;
   padding: 40px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 48px;
-  background: #fafbfc;
+  background: #1a1a1a;
   position: relative;
   overflow-x: auto;
 }

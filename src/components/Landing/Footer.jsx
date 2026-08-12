@@ -8,6 +8,7 @@ import {
   FaEnvelope,
   FaPhoneAlt,
 } from "react-icons/fa";
+import logo from "../../assets/logo.png";
 import "./Footer.css";
 
 const Footer = () => {
@@ -15,7 +16,7 @@ const Footer = () => {
     <footer className="footer" id="contact">
       <div className="footer-container">
         <div className="footer-column">
-          <h2 className="footer-logo">AurumFX</h2>
+          <img src={logo} alt="AurumFX" className="footer-logo" />
           <p>
             Professional gold and forex trading platform with real-time markets,
             secure wallets, and transparent returns.

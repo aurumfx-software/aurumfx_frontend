@@ -1,5 +1,6 @@
 import Navbar from "../components/Landing/Navbar";
 import Hero from "../components/Landing/Hero";
+import AboutSection from "../components/Landing/AboutSection";
 import MT5RealChart from "../components/Landing/MT5RealChart";
 import ReturnsCalculator from "../components/Landing/ReturnsCalculator";
 import InvestmentTiers from "../components/Landing/InvestmentTiers";
@@ -17,6 +18,7 @@ const Home = () => {
       <Navbar />
       {/* <TickerBar /> */}
       <Hero />
+      <AboutSection />
       <MT5RealChart />
       <ReturnsCalculator />
       <InvestmentTiers />

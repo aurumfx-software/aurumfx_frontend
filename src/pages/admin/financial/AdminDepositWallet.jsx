@@ -87,7 +87,7 @@ function AdminDepositWallet() {
         </div>
 
         {/* Filter and Table Card */}
-        <div className="list-page-card">
+        <div className="deposit-wallet-card">
           <form onSubmit={handleGetReport} className="history-filter-row">
             {/* Pick Start Date */}
             <div className="filter-field-wrap">

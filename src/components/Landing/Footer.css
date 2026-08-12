@@ -1,11 +1,28 @@
 .footer {
-  background: #fdfbf7;
-  color: #0f172a;
+  position: relative;
+  background: #000000;
+  color: #ffffff;
   padding-top: 64px;
   border-top: 1px solid rgba(212, 175, 55, 0.2);
+  overflow: hidden;
+}
+
+.footer::before {
+  content: "";
+  position: absolute;
+  bottom: -15%;
+  left: -8%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 70%);
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
 }
 
 .footer-container {
+  position: relative;
+  z-index: 1;
   width: 90%;
   max-width: 1280px;
   margin: auto;
@@ -15,32 +32,35 @@
 }
 
 .footer-column h3 {
-  color: #966f0d;
+  color: #f5d061;
   margin-bottom: 20px;
   font-size: 16px;
   font-weight: 700;
 }
 
 .footer-logo {
-  background: linear-gradient(135deg, #d4af37 0%, #e5b80b 50%, #966f0d 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  font-size: 28px;
-  font-weight: 700;
+  height: 40px;
+  width: auto;
+  object-fit: contain;
   margin-bottom: 16px;
+  display: block;
 }
 
 .footer-column p,
 .footer-column ul li span {
-  color: #64748b;
+  color: #94a3b8;
   line-height: 1.8;
   margin-bottom: 12px;
   font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .footer-column ul {
   list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .footer-column ul li {
@@ -48,14 +68,14 @@
 }
 
 .footer-column ul li a {
-  color: #475569;
+  color: #cbd5e1;
   text-decoration: none;
   font-size: 14px;
   transition: color 0.2s;
 }
 
 .footer-column ul li a:hover {
-  color: #c59b27;
+  color: #f5d061;
   font-weight: 600;
 }
 
@@ -70,7 +90,7 @@
   height: 38px;
   border-radius: 8px;
   background: linear-gradient(135deg, #f5d061 0%, #e5b80b 100%);
-  color: #1e1b10;
+  color: #1a1608;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -86,6 +106,8 @@
 }
 
 .footer-bottom {
+  position: relative;
+  z-index: 1;
   border-top: 1px solid rgba(212, 175, 55, 0.18);
   margin-top: 48px;
   text-align: center;
@@ -93,13 +115,18 @@
 }
 
 .footer-bottom p {
-  color: #94a3b8;
+  color: #64748b;
   font-size: 13px;
 }
 
 @media (max-width: 768px) {
   .footer-container {
     text-align: center;
+  }
+
+  .footer-column p,
+  .footer-column ul li span {
+    justify-content: center;
   }
 
   .social-icons {

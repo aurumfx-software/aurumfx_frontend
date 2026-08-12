@@ -211,3 +211,70 @@
 .reports-page-btn:hover { border-color: #ffc52d; color: #ffc52d; }
 .reports-page-btn--active { background: #ffc52d; border-color: #ffc52d; color: #fff; }
 .reports-page-btn:disabled { opacity: 0.4; cursor: default; }
+
+/* Black/gold theme */
+.admin-reports-page .admin-page-title,
+.admin-reports-page .reports-date-input,
+.admin-reports-page .reports-user-select,
+.admin-reports-page .reports-table td {
+  color: #f1f5f9;
+}
+
+.admin-reports-page .admin-breadcrumb { color: #94a3b8; }
+.admin-reports-page .crumb-sep { color: #475569; }
+.admin-reports-page .crumb-active { color: #f5d061; }
+
+.admin-reports-page .reports-filter-bar,
+.admin-reports-page .reports-table-card {
+  background: #111111;
+  border-color: rgba(212, 175, 55, 0.15);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.admin-reports-page .reports-date-field,
+.admin-reports-page .reports-user-select {
+  background: #1a1a1a;
+  border-color: rgba(212, 175, 55, 0.25);
+}
+
+.admin-reports-page .reports-date-label,
+.admin-reports-page .reports-date-icon,
+.admin-reports-page .reports-total-label,
+.admin-reports-page .reports-table td:first-child {
+  color: #94a3b8;
+}
+
+.admin-reports-page .reports-search-btn,
+.admin-reports-page .reports-page-btn--active {
+  background: #f5d061;
+  border-color: #f5d061;
+  color: #1a1608;
+}
+
+.admin-reports-page .reports-reset-btn { color: #f5d061; }
+.admin-reports-page .reports-reset-btn:hover { background: rgba(245, 208, 97, 0.12); }
+
+.admin-reports-page .reports-table thead tr {
+  background: #141414;
+  border-bottom-color: rgba(212, 175, 55, 0.2);
+}
+
+.admin-reports-page .reports-table th { color: #f1f5f9; }
+
+.admin-reports-page .reports-table tbody tr {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.admin-reports-page .reports-table tbody tr:hover {
+  background: rgba(245, 208, 97, 0.06);
+}
+
+.admin-reports-page .reports-pagination {
+  border-top-color: rgba(212, 175, 55, 0.18);
+}
+
+.admin-reports-page .reports-page-btn {
+  background: #1a1a1a;
+  border-color: rgba(212, 175, 55, 0.25);
+  color: #cbd5e1;
+}

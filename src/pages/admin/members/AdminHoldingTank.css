@@ -404,3 +404,74 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Black/gold theme */
+.admin-holding-page .admin-page-title,
+.admin-holding-page .admin-holding-table td,
+.admin-holding-page .fw-bold { color: #f1f5f9; }
+
+.admin-holding-page .admin-breadcrumb { color: #94a3b8; }
+.admin-holding-page .crumb-sep { color: #475569; }
+.admin-holding-page .crumb-active { color: #f5d061; }
+
+.admin-holding-page .holding-filters-card,
+.admin-holding-page .holding-list-card {
+  background: #111111;
+  border-color: rgba(212, 175, 55, 0.15);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.admin-holding-page .filter-date-field,
+.admin-holding-page .filter-select-field,
+.admin-holding-page .modal-input {
+  color: #f1f5f9;
+  background: #1a1a1a;
+  border-color: rgba(212, 175, 55, 0.25);
+}
+
+.admin-holding-page .field-date-icon,
+.admin-holding-page .field-arrow,
+.admin-holding-page .modal-input-group label { color: #cbd5e1; }
+
+.admin-holding-page .admin-holding-table th {
+  color: #f1f5f9;
+  background: #141414;
+  border-bottom-color: rgba(212, 175, 55, 0.2);
+}
+
+.admin-holding-page .admin-holding-table td {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.admin-holding-page .holding-modal-overlay { background: rgba(0, 0, 0, 0.72); }
+
+.admin-holding-page .holding-modal-card {
+  background: #111111;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.admin-holding-page .card-top-header {
+  border-bottom-color: rgba(212, 175, 55, 0.18);
+}
+
+.admin-holding-page .card-header-title {
+  color: #f8fafc;
+}
+
+.admin-holding-page .folder-back-art {
+  color: rgba(245, 208, 97, 0.55);
+}
+
+.admin-holding-page .glass-lens-art {
+  border-color: rgba(245, 208, 97, 0.35);
+  background: #111111;
+}
+
+.admin-holding-page .glass-lens-art::after {
+  background: #f5d061;
+}
+
+.admin-holding-page .glass-quest,
+.admin-holding-page .empty-state-label {
+  color: #cbd5e1;
+}

@@ -15,7 +15,7 @@
 .admin-page-title {
   font-size: 24px;
   font-weight: 800;
-  color: #1f2937;
+  color: #ffffff;
 }
 
 .admin-breadcrumb {
@@ -23,15 +23,15 @@
   align-items: center;
   gap: 8px;
   font-size: 13px;
-  color: #9ca3af;
+  color: #94a3b8;
 }
 
 .crumb-sep {
-  color: #d1d5db;
+  color: #475569;
 }
 
 .crumb-active {
-  color: #6b7280;
+  color: #f5d061;
   font-weight: 600;
 }
 
@@ -43,20 +43,20 @@
 }
 
 .ewallet-stat-card {
-  background: #ffffff;
-  border: 1px solid #f1f5f9;
+  background: #111111;
+  border: 1px solid rgba(212, 175, 55, 0.15);
   border-radius: 14px;
   padding: 20px 22px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .ewallet-stat-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.15);
 }
 
 .stat-meta {
@@ -68,13 +68,13 @@
 .stat-lbl {
   font-size: 13px;
   font-weight: 700;
-  color: #1e293b;
+  color: #cbd5e1;
 }
 
 .stat-val {
   font-size: 24px;
   font-weight: 900;
-  color: #0f172a;
+  color: #f8fafc;
   line-height: 1;
 }
 
@@ -90,47 +90,43 @@
 }
 
 .icon-pink {
-  background: #fdf2f8;
-  color: #ec4899;
+  background: rgba(236, 72, 153, 0.14);
+  color: #f472b6;
 }
 
 .icon-blue {
-  background: #eff6ff;
-  color: #3b82f6;
+  background: rgba(59, 130, 246, 0.14);
+  color: #60a5fa;
 }
 
 .icon-green {
-  background: #f0fdf4;
-  color: #22c55e;
+  background: rgba(34, 197, 94, 0.14);
+  color: #4ade80;
 }
 
 .icon-purple {
-  background: #faf5ff;
-  color: #a855f7;
+  background: rgba(168, 85, 247, 0.14);
+  color: #c084fc;
 }
 
 .icon-gold {
-  background: #fffdf0;
-  color: #e5a800;
-  border: 1px solid #fef08a;
+  background: rgba(212, 175, 55, 0.14);
+  color: #f5d061;
+  border: 1px solid rgba(212, 175, 55, 0.35);
 }
 
-/* Card Section Wrap */
+/* Filters & Table Card */
 .admin-ewallet-card {
-  background: #ffffff;
-  border: 1px solid #f1f5f9;
+  background: #111111;
+  border: 1px solid rgba(212, 175, 55, 0.15);
   border-radius: 16px;
   padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-direction: column;
   gap: 20px;
-}
-
-.card-section-title {
-  font-size: 16px;
-  font-weight: 800;
-  color: #0f172a;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* History Filter Form Row */
@@ -153,29 +149,29 @@
   width: 100%;
   height: 44px;
   padding: 0 38px 0 14px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid rgba(212, 175, 55, 0.2);
   border-radius: 10px;
   font-size: 13.5px;
-  color: #1e293b;
-  background: #ffffff;
+  color: #f1f5f9;
+  background: #1a1a1a;
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .filter-input-field:focus {
-  border-color: #ffc52d;
-  box-shadow: 0 0 0 3px rgba(255, 197, 45, 0.15);
+  border-color: #f5d061;
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.18);
 }
 
 .filter-input-field::placeholder {
-  color: #94a3b8;
+  color: #64748b;
 }
 
 .field-right-icon {
   position: absolute;
   right: 12px;
   font-size: 16px;
-  color: #ffc52d;
+  color: #f5d061;
   pointer-events: none;
 }
 
@@ -192,47 +188,49 @@
   position: absolute;
   top: -9px;
   left: 12px;
-  background: #ffffff;
+  background: #111111;
   padding: 0 6px;
   font-size: 11px;
   font-weight: 600;
-  color: #64748b;
+  color: #94a3b8;
   z-index: 2;
 }
 
 .filter-select-field {
   width: 100%;
   height: 44px;
-  padding: 0 14px;
-  border: 1px solid #e2e8f0;
+  padding: 0 32px 0 14px;
+  border: 1px solid rgba(212, 175, 55, 0.2);
   border-radius: 10px;
   font-size: 13.5px;
-  color: #1e293b;
-  background: #ffffff;
+  color: #f1f5f9;
+  background: #1a1a1a;
   outline: none;
   cursor: pointer;
+  appearance: none;
 }
 
 .filter-select-field:focus {
-  border-color: #ffc52d;
+  border-color: #f5d061;
 }
 
 .yellow-get-btn {
   height: 44px;
   padding: 0 28px;
-  background: #ffc52d;
+  background: linear-gradient(135deg, #f5d061 0%, #e5b80b 50%, #c59b27 100%);
   border: none;
   border-radius: 10px;
-  color: #1e293b;
+  color: #1a1608;
   font-size: 14px;
   font-weight: 800;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(255, 197, 45, 0.25);
+  box-shadow: 0 4px 14px rgba(212, 175, 55, 0.3);
   transition: background 0.2s ease, transform 0.1s ease;
+  white-space: nowrap;
 }
 
 .yellow-get-btn:hover {
-  background: #f5b700;
+  background: linear-gradient(135deg, #ffe082 0%, #f5d061 50%, #d4af37 100%);
   transform: translateY(-1px);
 }
 
@@ -244,36 +242,85 @@
 
 .table-overflow-box {
   overflow-x: auto;
+  background: #111111;
+  border-radius: 16px;
+  padding: 12px;
 }
 
 .admin-ewallet-table {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
+  background: transparent;
 }
 
-.admin-ewallet-table th {
-  background: #f8fafc;
-  padding: 14px 18px;
-  font-size: 13px;
-  font-weight: 700;
-  color: #64748b;
-  border-bottom: 1px solid #e2e8f0;
-}
-
+.admin-ewallet-table th,
 .admin-ewallet-table td {
   padding: 14px 18px;
   font-size: 13.5px;
-  color: #334155;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  white-space: nowrap;
+}
+
+.admin-ewallet-table th {
+  background: #0f172a;
+  font-size: 13px;
+  font-weight: 700;
+  color: #e2e8f0;
+}
+
+.admin-ewallet-table td {
+  color: #e2e8f0;
 }
 
 .fw-bold {
   font-weight: 700;
-  color: #0f172a;
+  color: #f1f5f9;
 }
 
-/* Oops Empty State Container matching screenshot */
+/* Keep E-wallet controls isolated from other page styles */
+.admin-ewallet-page .admin-ewallet-card,
+.admin-ewallet-page .filter-input-field,
+.admin-ewallet-page .filter-select-field {
+  background: #111111;
+}
+
+.admin-ewallet-page .admin-ewallet-card {
+  border-color: rgba(212, 175, 55, 0.15);
+}
+
+.admin-ewallet-page .filter-input-field,
+.admin-ewallet-page .filter-select-field {
+  color: #f1f5f9;
+  background: #1a1a1a;
+  border-color: rgba(212, 175, 55, 0.2);
+}
+
+.admin-ewallet-page .filter-input-field::placeholder {
+  color: #94a3b8;
+}
+
+.admin-ewallet-page .floating-top-label {
+  background: #111111;
+  color: #cbd5e1;
+}
+
+.username-cell {
+  font-weight: 600;
+  color: #f1f5f9;
+}
+
+.amount-cell-val {
+  font-weight: 700;
+  color: #f5d061;
+}
+
+.status-cell-val {
+  color: #4ade80;
+  font-weight: 600;
+}
+
+/* Oops Empty State Container */
 .oops-empty-container {
   display: flex;
   flex-direction: column;
@@ -288,7 +335,7 @@
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: #fef2f2;
+  background: rgba(239, 68, 68, 0.14);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -296,20 +343,20 @@
 
 .oops-icon {
   font-size: 26px;
-  color: #ef4444;
+  color: #f87171;
 }
 
 .oops-title {
   font-size: 22px;
   font-weight: 900;
-  color: #ef4444;
+  color: #f87171;
   margin: 0;
 }
 
 .oops-desc {
   font-size: 14px;
   font-weight: 500;
-  color: #64748b;
+  color: #94a3b8;
   margin: 0;
 }
 

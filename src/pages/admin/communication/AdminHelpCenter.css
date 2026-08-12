@@ -3,6 +3,7 @@
   flex-direction: column;
   gap: 20px;
   width: 100%;
+  color: #e2e8f0;
 }
 
 /* Page Header */
@@ -15,7 +16,7 @@
 .admin-page-title {
   font-size: 24px;
   font-weight: 800;
-  color: #1f2937;
+  color: #ffffff;
 }
 
 .admin-breadcrumb {
@@ -23,24 +24,24 @@
   align-items: center;
   gap: 8px;
   font-size: 13px;
-  color: #9ca3af;
+  color: #94a3b8;
 }
 
 .crumb-sep {
-  color: #d1d5db;
+  color: #475569;
 }
 
 .crumb-active {
-  color: #6b7280;
+  color: #f5d061;
   font-weight: 500;
 }
 
 /* Outer Help Center Split card */
 .help-center-outer-card {
-  background: #ffffff;
-  border: 1px solid #f1f5f9;
+  background: #111111;
+  border: 1px solid rgba(212, 175, 55, 0.15);
   border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
   width: 100%;
   overflow: hidden;
   box-sizing: border-box;
@@ -54,8 +55,8 @@
 
 /* Left Sidebar Options Pane */
 .help-center-left-pane {
-  background: #ffffff;
-  border-right: 1px solid #f1f5f9;
+  background: #0a0a0a;
+  border-right: 1px solid rgba(212, 175, 55, 0.15);
   padding: 24px 18px;
   display: flex;
   flex-direction: column;
@@ -64,14 +65,14 @@
 
 .help-center-create-btn {
   height: 44px;
-  background: #ffc52d;
+  background: linear-gradient(135deg, #f5d061 0%, #e5b80b 50%, #c59b27 100%);
   border: none;
   border-radius: 10px;
-  color: #1e293b;
+  color: #1a1608;
   font-size: 14.5px;
   font-weight: 800;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(255, 197, 45, 0.25);
+  box-shadow: 0 4px 14px rgba(212, 175, 55, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -81,7 +82,7 @@
 }
 
 .help-center-create-btn:hover {
-  background: #f5b700;
+  background: linear-gradient(135deg, #ffe082 0%, #f5d061 50%, #d4af37 100%);
   transform: translateY(-1px);
 }
 
@@ -102,7 +103,7 @@
   border: none;
   border-radius: 8px;
   background: transparent;
-  color: #64748b;
+  color: #cbd5e1;
   font-size: 13.5px;
   font-weight: 700;
   cursor: pointer;
@@ -114,13 +115,13 @@
 }
 
 .help-cat-menu-btn--active {
-  background: #f8fafc;
-  color: #0f172a;
+  background: rgba(245, 208, 97, 0.15);
+  color: #f5d061;
 }
 
 .help-cat-menu-btn:hover:not(.help-cat-menu-btn--active) {
-  background: #fdfdfd;
-  color: #334155;
+  background: rgba(255, 255, 255, 0.04);
+  color: #f8fafc;
 }
 
 .help-cat-icon {
@@ -130,7 +131,7 @@
 
 /* Right Content List Pane */
 .help-center-right-pane {
-  background: #ffffff;
+  background: #111111;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -140,11 +141,11 @@
 
 /* Filters Card Section */
 .help-filters-card {
-  background: #ffffff;
-  border: 1px solid #f1f5f9;
+  background: #111111;
+  border: 1px solid rgba(212, 175, 55, 0.15);
   border-radius: 12px;
   padding: 20px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.01);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
 }
 
 .help-filters-grid {
@@ -165,17 +166,17 @@
   width: 100%;
   height: 42px;
   padding: 0 14px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid rgba(212, 175, 55, 0.2);
   border-radius: 8px;
   font-size: 13px;
-  color: #1e293b;
-  background: #ffffff;
+  color: #e2e8f0;
+  background: #1a1a1a;
   outline: none;
   transition: border-color 0.2s;
 }
 
 .filter-input-field:focus {
-  border-color: #ffc52d;
+  border-color: #f5d061;
 }
 
 .field-right-icon {
@@ -198,18 +199,18 @@
   width: 100%;
   height: 42px;
   padding: 0 32px 0 14px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid rgba(212, 175, 55, 0.2);
   border-radius: 8px;
   font-size: 13px;
-  color: #1e293b;
-  background: #ffffff;
+  color: #e2e8f0;
+  background: #1a1a1a;
   outline: none;
   cursor: pointer;
   appearance: none;
 }
 
 .filter-select-field:focus {
-  border-color: #ffc52d;
+  border-color: #f5d061;
 }
 
 .filter-checkbox-label {
@@ -217,7 +218,7 @@
   align-items: center;
   gap: 8px;
   font-size: 12.5px;
-  color: #475569;
+  color: #94a3b8;
   cursor: pointer;
   user-select: none;
 }
@@ -225,34 +226,34 @@
 .filter-checkbox {
   width: 16px;
   height: 16px;
-  accent-color: #ffc52d;
+  accent-color: #f5d061;
   cursor: pointer;
 }
 
 .yellow-get-btn {
   height: 42px;
   padding: 0 24px;
-  background: #ffc52d;
+  background: linear-gradient(135deg, #f5d061 0%, #e5b80b 50%, #c59b27 100%);
   border: none;
   border-radius: 8px;
-  color: #1e293b;
+  color: #1a1608;
   font-size: 13.5px;
   font-weight: 800;
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(255, 197, 45, 0.2);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
   transition: background 0.15s ease, transform 0.1s ease;
   white-space: nowrap;
   justify-self: start;
 }
 
 .yellow-get-btn:hover {
-  background: #f5b700;
+  background: linear-gradient(135deg, #ffe082 0%, #f5d061 50%, #d4af37 100%);
 }
 
 /* Tickets list card panel */
 .help-tickets-list-card {
-  background: #ffffff;
-  border: 1px solid #f1f5f9;
+  background: #0a0a0a;
+  border: 1px solid rgba(212, 175, 55, 0.15);
   border-radius: 12px;
   padding: 20px;
 }
@@ -260,7 +261,7 @@
 .help-tickets-list-title {
   font-size: 15px;
   font-weight: 800;
-  color: #0f172a;
+  color: #f8fafc;
   margin: 0 0 16px 0;
 }
 
@@ -276,35 +277,35 @@
 }
 
 .admin-help-table th {
-  background: #f8fafc;
+  background: rgba(255, 255, 255, 0.04);
   padding: 12px 14px;
   font-size: 12px;
   font-weight: 700;
-  color: #8c98a4;
-  border-bottom: 1px solid #e2e8f0;
+  color: #f8fafc;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .admin-help-table td {
   padding: 12px 14px;
   font-size: 13px;
-  color: #334155;
-  border-bottom: 1px solid #f1f5f9;
+  color: #cbd5e1;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   vertical-align: middle;
 }
 
 .ticket-num-cell {
   font-weight: 700;
-  color: #ffc52d;
+  color: #f5d061;
 }
 
 .username-cell {
   font-weight: 600;
-  color: #1a1d1e;
+  color: #f1f5f9;
 }
 
 .ticket-subject-cell {
   font-weight: 700;
-  color: #0f172a;
+  color: #f8fafc;
   max-width: 180px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -320,8 +321,8 @@
 }
 
 .badge-inprogress {
-  background: #eff6ff;
-  color: #2563eb;
+  background: rgba(59, 130, 246, 0.16);
+  color: #60a5fa;
 }
 
 /* Action button icons styling */
@@ -334,7 +335,7 @@
 .btn-action-view {
   background: transparent;
   border: none;
-  color: #64748b;
+  color: #94a3b8;
   font-size: 14px;
   cursor: pointer;
   transition: color 0.15s ease;
@@ -342,7 +343,7 @@
 }
 
 .btn-action-view:hover {
-  color: #ffc52d;
+  color: #f5d061;
 }
 
 .btn-action-delete {
@@ -356,7 +357,7 @@
 }
 
 .btn-action-delete:hover {
-  color: #b91c1c;
+  color: #f87171;
 }
 
 /* Empty state styling */
@@ -387,7 +388,7 @@
 
 .folder-back-art {
   font-size: 54px;
-  color: #e2e8f0;
+  color: #334155;
   stroke-width: 1.5px;
 }
 
@@ -399,7 +400,7 @@
   height: 28px;
   border-radius: 50%;
   border: 3px solid #94a3b8;
-  background: #ffffff;
+  background: #111111;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -421,13 +422,13 @@
 .glass-quest {
   font-size: 14px;
   font-weight: 900;
-  color: #64748b;
+  color: #cbd5e1;
 }
 
 .empty-state-label {
   font-size: 14.5px;
   font-weight: 800;
-  color: #475569;
+  color: #e2e8f0;
   margin: 0;
 }
 
@@ -438,7 +439,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(15, 23, 42, 0.3);
+  background: rgba(0, 0, 0, 0.75);
   backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
@@ -447,12 +448,13 @@
 }
 
 .ticket-modal-card {
-  background: #ffffff;
+  background: #111111;
+  border: 1px solid rgba(212, 175, 55, 0.2);
   border-radius: 16px;
   padding: 28px;
   max-width: 520px;
   width: 90%;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -461,7 +463,7 @@
 .ticket-modal-card h3 {
   font-size: 18px;
   font-weight: 800;
-  color: #0f172a;
+  color: #f8fafc;
   margin: 0;
 }
 
@@ -480,23 +482,23 @@
 .ticket-modal-input-group label {
   font-size: 12.5px;
   font-weight: 700;
-  color: #64748b;
+  color: #94a3b8;
 }
 
 .ticket-modal-input, .ticket-modal-select, .ticket-modal-textarea {
   width: 100%;
   padding: 10px 14px;
-  border: 1.5px solid #cbd5e1;
+  border: 1.5px solid #334155;
   border-radius: 8px;
   font-size: 14px;
-  color: #1e293b;
+  color: #e2e8f0;
   outline: none;
-  background: #ffffff;
+  background: #1a1a1a;
   box-sizing: border-box;
 }
 
 .ticket-modal-input:focus, .ticket-modal-select:focus, .ticket-modal-textarea:focus {
-  border-color: #ffc52d;
+  border-color: #f5d061;
 }
 
 .ticket-modal-actions {
@@ -508,35 +510,35 @@
 .btn-ticket-modal-cancel {
   height: 38px;
   padding: 0 18px;
-  background: #f1f5f9;
-  border: none;
+  background: #1a1a1a;
+  border: 1px solid rgba(212, 175, 55, 0.2);
   border-radius: 8px;
   font-size: 13.5px;
   font-weight: 700;
-  color: #64748b;
+  color: #cbd5e1;
   cursor: pointer;
   transition: background 0.15s ease;
 }
 
 .btn-ticket-modal-cancel:hover {
-  background: #e2e8f0;
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .btn-ticket-modal-submit {
   height: 38px;
   padding: 0 18px;
-  background: #ffc52d;
+  background: linear-gradient(135deg, #f5d061 0%, #e5b80b 50%, #c59b27 100%);
   border: none;
   border-radius: 8px;
   font-size: 13.5px;
   font-weight: 800;
-  color: #1e293b;
+  color: #1a1608;
   cursor: pointer;
   transition: background 0.15s ease;
 }
 
 .btn-ticket-modal-submit:hover {
-  background: #f5b700;
+  background: linear-gradient(135deg, #ffe082 0%, #f5d061 50%, #d4af37 100%);
 }
 
 /* Responsive grid layouts */
@@ -552,7 +554,7 @@
   }
   .help-center-left-pane {
     border-right: none;
-    border-bottom: 1px solid #f1f5f9;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.15);
   }
   .help-filters-grid {
     grid-template-columns: 1fr;

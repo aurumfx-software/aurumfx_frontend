@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { loginApi } from "../../api/auth";
 import logo from "../../assets/logo.png";
+import "./Login.css";
 import "./AdminLogin.css";
 
 function AdminLogin() {
@@ -30,7 +31,6 @@ function AdminLogin() {
     } catch {
       setError("User Not Found");
     } finally {
-
       setLoading(false);
     }
   };
@@ -39,6 +39,8 @@ function AdminLogin() {
     <div className="login-page admin-login-page">
       <div className="login-card">
         <img src={logo} alt="AurumFX Logo" className="logo" />
+
+        <div className="admin-badge">🔒 Restricted Access</div>
 
         <h1>Admin Portal</h1>
         <p>Sign in to AurumFX Administration Dashboard</p>

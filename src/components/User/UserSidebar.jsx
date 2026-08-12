@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   FiGrid,
@@ -72,6 +72,8 @@ const userNavItems = [
 
 function UserSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse, user }) {
   const location = useLocation();
+  const itemRefs = useRef({});
+  const lastExpandedId = useRef(null);
 
   // Determine initial expanded state based on current location
   const getInitialExpanded = () => {
@@ -92,20 +94,48 @@ function UserSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse, user }) {
   const [expanded, setExpanded] = useState(getInitialExpanded);
 
   useEffect(() => {
+    const nextExpanded = {};
     userNavItems.forEach((item) => {
       if (item.children) {
         const hasActiveChild = item.children.some(
           (child) => location.pathname === child.path
         );
         if (hasActiveChild) {
-          setExpanded((prev) => ({ ...prev, [item.id]: true }));
+          nextExpanded[item.id] = true;
         }
       }
     });
+    setExpanded((prev) => {
+      const nextState = userNavItems.reduce((state, item) => {
+        state[item.id] = Boolean(nextExpanded[item.id]);
+        return state;
+      }, {});
+      return JSON.stringify(prev) === JSON.stringify(nextState) ? prev : nextState;
+    });
   }, [location.pathname]);
 
+  useEffect(() => {
+    if (!lastExpandedId.current) return;
+    const id = lastExpandedId.current;
+    if (expanded[id] && itemRefs.current[id]) {
+      itemRefs.current[id].scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
+    }
+  }, [expanded]);
+
   const toggleExpand = (id) => {
-    setExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
+    lastExpandedId.current = id;
+    setExpanded((prev) => {
+      const isOpen = prev[id];
+      const nextState = userNavItems.reduce((state, item) => {
+        state[item.id] = false;
+        return state;
+      }, {});
+      nextState[id] = !isOpen;
+      return nextState;
+    });
   };
 
   const userName = user?.name || "PRAVEEN";
@@ -177,6 +207,9 @@ function UserSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse, user }) {
                 {item.children ? (
                   <button
                     type="button"
+                    ref={(element) => {
+                      if (element) itemRefs.current[item.id] = element;
+                    }}
                     className={`user-nav-item ${
                       isParentActive || isActive ? "user-nav-item--active" : ""
                     } ${isExpanded ? "user-nav-item--expanded" : ""}`}

@@ -10,7 +10,6 @@ import {
   FiCalendar,
   FiPhone,
   FiMapPin,
-  FiCamera,
 } from "react-icons/fi";
 import UserLayout from "../../components/User/UserLayout";
 import "./Profile.css";
@@ -71,14 +70,8 @@ function Profile() {
           </div>
         </div>
 
-        {/* Header Cover Banner Card */}
+        {/* Profile Header Card */}
         <div className="profile-hero-card">
-          <div className="cover-banner">
-            <button type="button" className="cover-cam-btn" title="Change Cover Photo">
-              <FiCamera />
-            </button>
-          </div>
-
           <div className="profile-hero-info">
             <div className="avatar-overlap">
               <span>{profileData.userName.charAt(0)}</span>

@@ -283,3 +283,39 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Black/gold theme */
+.admin-kyc-page .admin-page-title,
+.admin-kyc-page .admin-kyc-table td,
+.admin-kyc-page .fw-bold { color: #f1f5f9; }
+
+.admin-kyc-page .admin-breadcrumb { color: #94a3b8; }
+.admin-kyc-page .crumb-sep { color: #475569; }
+.admin-kyc-page .crumb-active { color: #f5d061; }
+
+.admin-kyc-page .kyc-filters-card,
+.admin-kyc-page .kyc-list-card {
+  background: #111111;
+  border-color: rgba(212, 175, 55, 0.15);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.admin-kyc-page .filter-date-field,
+.admin-kyc-page .filter-select-field {
+  color: #f1f5f9;
+  background: #1a1a1a;
+  border-color: rgba(212, 175, 55, 0.25);
+}
+
+.admin-kyc-page .field-date-icon,
+.admin-kyc-page .field-arrow { color: #f5d061; }
+
+.admin-kyc-page .admin-kyc-table th {
+  color: #f1f5f9;
+  background: #141414;
+  border-bottom-color: rgba(212, 175, 55, 0.2);
+}
+
+.admin-kyc-page .admin-kyc-table td {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}

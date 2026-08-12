@@ -256,3 +256,51 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Black/gold theme */
+.admin-network-page .admin-page-title,
+.admin-network-page .admin-network-table td,
+.admin-network-page .user-fullname { color: #f1f5f9; }
+
+.admin-network-page .admin-breadcrumb { color: #94a3b8; }
+.admin-network-page .crumb-sep { color: #475569; }
+.admin-network-page .crumb-active { color: #f5d061; }
+
+.admin-network-page .network-filters-card,
+.admin-network-page .network-list-card {
+  background: #111111;
+  border-color: rgba(212, 175, 55, 0.15);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.admin-network-page .filter-input-field,
+.admin-network-page .filter-select-field {
+  color: #f1f5f9;
+  background: #1a1a1a;
+  border-color: rgba(212, 175, 55, 0.25);
+}
+
+.admin-network-page .field-arrow { color: #f5d061; }
+
+.admin-network-page .admin-network-table th {
+  color: #f1f5f9;
+  background: #141414;
+  border-bottom-color: rgba(212, 175, 55, 0.2);
+}
+
+.admin-network-page .admin-network-table td {
+  color: #e2e8f0;
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.admin-network-page .user-name-label,
+.admin-network-page .user-email-text { color: #94a3b8; }
+
+.admin-network-page .action-dropdown-menu {
+  background: #1a1a1a;
+  border-color: rgba(212, 175, 55, 0.2);
+}
+
+.admin-network-page .action-dropdown-menu button:hover {
+  background: rgba(245, 208, 97, 0.12);
+}

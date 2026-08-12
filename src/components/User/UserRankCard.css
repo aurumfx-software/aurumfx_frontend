@@ -1,8 +1,9 @@
 .user-rank-widget {
-  background: #ffffff;
+  background: #111111;
   border-radius: 16px;
   padding: 20px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(212, 175, 55, 0.16);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.28);
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -155,8 +156,8 @@
 
 /* Rank Badges Box */
 .rank-badges {
-  background: #f8fafc;
-  border: 1px solid #edf2f7;
+  background: #1a1a1a;
+  border: 1px solid rgba(212, 175, 55, 0.18);
   border-radius: 12px;
   padding: 12px 16px;
   width: 100%;
@@ -174,29 +175,29 @@
 }
 
 .badge-lbl {
-  color: #718096;
+  color: #94a3b8;
 }
 
 .badge-val {
   font-weight: 700;
-  color: #2d3748;
+  color: #f1f5f9;
   display: flex;
   align-items: center;
   gap: 4px;
 }
 
 .total-lots-badge {
-  background: #f8fafc;
-  border: 1px solid #edf2f7;
+  background: #1a1a1a;
+  border: 1px solid rgba(212, 175, 55, 0.18);
   border-radius: 20px;
   padding: 8px 18px;
   font-size: 13px;
-  color: #718096;
+  color: #94a3b8;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
 .total-lots-badge strong {
-  color: #2d3748;
+  color: #f5d061;
 }

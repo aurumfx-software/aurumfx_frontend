@@ -51,13 +51,13 @@
 .legend-val {
   font-size: 15px;
   font-weight: 700;
-  color: #1a1d1e;
+  color: #f8fafc;
   line-height: 1.2;
 }
 
 .legend-lbl {
   font-size: 12px;
-  color: #8c98a4;
+  color: #cbd5e1;
 }
 
 /* Network Area Chart */

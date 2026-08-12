@@ -5,18 +5,23 @@
   padding-bottom: 40px;
 }
 
+.profile-page .page-title {
+  color: #f8fafc;
+}
+
 /* Header Cover Banner Card */
 .profile-hero-card {
-  background: #ffffff;
-  border: 1px solid #f1f5f9;
+  background: #111111;
+  border: 1px solid rgba(212, 175, 55, 0.16);
   border-radius: 14px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
   overflow: hidden;
 }
 
 .cover-banner {
-  height: 210px;
-  background: #957d34;
+  height: 180px;
+  background: linear-gradient(135deg, #171717 0%, #24200f 55%, #111111 100%);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.28);
   position: relative;
 }
 
@@ -47,23 +52,23 @@
   display: flex;
   align-items: center;
   gap: 20px;
-  padding: 0 30px 16px 30px;
-  border-bottom: 1px solid #f1f5f9;
+  padding: 24px 30px 16px 30px;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.18);
 }
 
 .avatar-overlap {
   width: 130px;
   height: 130px;
   border-radius: 50%;
-  background: #cbd5e1;
-  color: #334155;
+  background: #24344d;
+  color: #f1f5f9;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 48px;
   font-weight: 500;
-  border: 4px solid #ffffff;
-  margin-top: -65px;
+  border: 4px solid #111111;
+  margin-top: 0;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   flex-shrink: 0;
 }
@@ -78,13 +83,13 @@
 .hero-name {
   font-size: 22px;
   font-weight: 800;
-  color: #1e293b;
+  color: #f8fafc;
   letter-spacing: 0.5px;
 }
 
 .hero-phone {
   font-size: 13.5px;
-  color: #64748b;
+  color: #94a3b8;
   font-weight: 500;
 }
 
@@ -94,7 +99,7 @@
   align-items: center;
   gap: 32px;
   padding: 0 30px;
-  background: #ffffff;
+  background: #111111;
   overflow-x: auto;
 }
 
@@ -107,7 +112,7 @@
   border: none;
   font-size: 14px;
   font-weight: 600;
-  color: #64748b;
+  color: #94a3b8;
   cursor: pointer;
   border-bottom: 3px solid transparent;
   transition: all 0.2s ease;
@@ -115,12 +120,12 @@
 }
 
 .tab-btn:hover {
-  color: #1e293b;
+  color: #f5d061;
 }
 
 .tab-btn--active {
-  color: #0f172a;
-  border-bottom-color: #f4b400;
+  color: #f5d061;
+  border-bottom-color: #f5d061;
 }
 
 /* Profile 2-Column Content Grid */
@@ -132,8 +137,8 @@
 
 /* Left Column: Personal Info Card */
 .profile-info-card {
-  background: #ffffff;
-  border: 1px solid #f1f5f9;
+  background: #111111;
+  border: 1px solid rgba(212, 175, 55, 0.16);
   border-radius: 14px;
   padding: 24px;
   display: flex;
@@ -147,13 +152,13 @@
   display: flex;
   align-items: center;
   gap: 14px;
-  color: #334155;
+  color: #e2e8f0;
   font-size: 14px;
 }
 
 .info-row-icon {
   font-size: 18px;
-  color: #64748b;
+  color: #f5d061;
   flex-shrink: 0;
   width: 20px;
   text-align: center;
@@ -166,14 +171,14 @@
 
 .info-row-val {
   font-weight: 500;
-  color: #334155;
+  color: #f1f5f9;
   word-break: break-all;
 }
 
 /* Right Column: Activity History Card */
 .activity-card {
-  background: #ffffff;
-  border: 1px solid #f1f5f9;
+  background: #111111;
+  border: 1px solid rgba(212, 175, 55, 0.16);
   border-radius: 14px;
   padding: 24px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
@@ -194,8 +199,8 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: #cbd5e1;
-  color: #334155;
+  background: #24344d;
+  color: #f1f5f9;
   font-size: 18px;
   font-weight: 700;
   display: flex;
@@ -212,7 +217,7 @@
 .meta-id {
   font-size: 15px;
   font-weight: 700;
-  color: #0f172a;
+  color: #f1f5f9;
 }
 
 .meta-last-seen {
@@ -223,7 +228,7 @@
 .activity-section-title {
   font-size: 16px;
   font-weight: 700;
-  color: #1e293b;
+  color: #f8fafc;
   margin-bottom: 16px;
 }
 
@@ -233,8 +238,8 @@
 
 /* Tab Forms */
 .tab-form-card {
-  background: #ffffff;
-  border: 1px solid #f1f5f9;
+  background: #111111;
+  border: 1px solid rgba(212, 175, 55, 0.16);
   border-radius: 14px;
   padding: 32px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
@@ -244,7 +249,7 @@
 .form-card-title {
   font-size: 18px;
   font-weight: 700;
-  color: #1e293b;
+  color: #f8fafc;
   margin-bottom: 20px;
 }
 
@@ -269,31 +274,41 @@
 .form-label {
   font-size: 13.5px;
   font-weight: 600;
-  color: #475569;
+  color: #cbd5e1;
 }
 
 .form-input {
   width: 100%;
   height: 48px;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
+  background: #1a1a1a;
+  border: 1px solid rgba(212, 175, 55, 0.24);
   border-radius: 10px;
   padding: 0 16px;
   font-size: 14px;
-  color: #334155;
+  color: #f1f5f9;
   outline: none;
   font-family: inherit;
   transition: all 0.2s ease;
   box-sizing: border-box;
 }
 
+.profile-page .form-input {
+  background: #1a1a1a;
+  border-color: rgba(212, 175, 55, 0.24);
+  color: #f1f5f9;
+}
+
+.profile-page .form-input::placeholder {
+  color: #94a3b8;
+}
+
 .read-only-input {
-  background: #f8fafc;
-  color: #64748b;
+  background: #141414;
+  color: #94a3b8;
 }
 
 .form-input:focus:not(.read-only-input) {
-  border-color: #ffc52d;
+  border-color: #f5d061;
   box-shadow: 0 0 0 3px rgba(255, 197, 45, 0.15);
 }
 
@@ -302,7 +317,7 @@
   height: 46px;
   padding: 0 32px;
   background: linear-gradient(90deg, #ffc52d, #f4a000);
-  color: #ffffff;
+  color: #1a1608;
   font-size: 15px;
   font-weight: 700;
   border: none;
@@ -325,7 +340,7 @@
   margin-top: 20px;
   font-size: 14px;
   font-weight: 600;
-  color: #334155;
+  color: #e2e8f0;
 }
 
 .kyc-badge {
@@ -333,9 +348,9 @@
   font-weight: 700;
   padding: 4px 12px;
   border-radius: 20px;
-  background: #f0fdf4;
-  color: #16a34a;
-  border: 1px solid #bbf7d0;
+  background: rgba(245, 208, 97, 0.14);
+  color: #f5d061;
+  border: 1px solid rgba(245, 208, 97, 0.3);
 }
 
 /* Pagination Bar */
@@ -345,16 +360,16 @@
   align-items: center;
   gap: 8px;
   padding-top: 16px;
-  border-top: 1px solid #f1f5f9;
+  border-top: 1px solid rgba(212, 175, 55, 0.18);
 }
 
 .page-nav-btn {
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  border: 1px solid #e2e8f0;
-  background: #ffffff;
-  color: #64748b;
+  border: 1px solid rgba(212, 175, 55, 0.24);
+  background: #1a1a1a;
+  color: #cbd5e1;
   font-weight: 600;
   cursor: pointer;
   display: flex;
@@ -371,9 +386,9 @@
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  border: 1px solid #ffc52d;
-  background: #fffdf0;
-  color: #d97706;
+  border: 1px solid #f5d061;
+  background: #f5d061;
+  color: #1a1608;
   font-weight: 700;
   display: flex;
   align-items: center;

@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { FaUserPlus, FaChartBar, FaWallet } from "react-icons/fa";
 import "./InvestmentJourney.css";
@@ -24,17 +25,47 @@ const steps = [
 ];
 
 const InvestmentJourney = () => {
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { threshold: 0.15 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section className="journey" id="how-it-works">
+    <section
+      ref={sectionRef}
+      className={`journey ${isVisible ? "in-view" : ""}`}
+      id="how-it-works"
+    >
+      <div className="gold-line-beam" />
+
       <div className="journey-container">
         <div className="section-head">
-          <h2>Start Trading in 3 Steps</h2>
+          <h2>
+            Start Trading in <span>3 Steps</span>
+          </h2>
           <p>From signup to your first trade — fast, simple, and secure.</p>
         </div>
 
         <div className="journey-grid">
-          {steps.map((item) => (
-            <div className="journey-card" key={item.step}>
+          {steps.map((item, index) => (
+            <div
+              className="journey-card"
+              key={item.step}
+              style={{ animationDelay: `${0.15 + index * 0.15}s` }}
+            >
               <span className="journey-step">{item.step}</span>
               <div className="journey-icon">{item.icon}</div>
               <h3>{item.title}</h3>
@@ -44,15 +75,15 @@ const InvestmentJourney = () => {
         </div>
 
         <div className="journey-summary">
-          <div className="summary-box">
+          <div className="summary-box" style={{ animationDelay: "0.55s" }}>
             <h3>₹5,000</h3>
             <span>Min. Deposit</span>
           </div>
-          <div className="summary-box">
+          <div className="summary-box" style={{ animationDelay: "0.7s" }}>
             <h3>14%</h3>
             <span>Monthly Returns</span>
           </div>
-          <div className="summary-box">
+          <div className="summary-box" style={{ animationDelay: "0.85s" }}>
             <h3>24/7</h3>
             <span>Market Access</span>
           </div>

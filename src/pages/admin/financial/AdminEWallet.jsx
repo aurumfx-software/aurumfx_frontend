@@ -52,7 +52,7 @@ function AdminEWallet() {
         </div>
 
         {/* Filters and Table in List page card container */}
-        <div className="list-page-card">
+        <div className="admin-ewallet-card">
           <form onSubmit={handleGetReport} className="history-filter-row">
             {/* Pick Start Date */}
             <div className="filter-field-wrap">

@@ -1,30 +1,106 @@
 .journey {
   padding: 80px 24px;
-  background: #ffffff;
+  background: #000000;
+  position: relative;
+  overflow: hidden;
+}
+
+.journey::before {
+  content: "";
+  position: absolute;
+  bottom: -10%;
+  left: -8%;
+  width: 550px;
+  height: 550px;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+  filter: blur(70px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Moving gold light beam across the top removed */
+.journey .gold-line-beam {
+  display: none;
+}
+
+.journey .gold-line-beam::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -30%;
+  width: 30%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, #f5d061 40%, #ffe082 50%, #f5d061 60%, transparent);
+  box-shadow: 0 0 16px 2px rgba(245, 208, 97, 0.8);
+  opacity: 0;
+}
+
+.journey.in-view .gold-line-beam::after {
+  animation: none;
+}
+
+@keyframes beamSweep {
+  0% { left: -30%; opacity: 0; }
+  10% { opacity: 1; }
+  50% { left: 50%; opacity: 1; }
+  90% { opacity: 1; }
+  100% { left: 130%; opacity: 0; }
 }
 
 .journey-container {
+  position: relative;
+  z-index: 1;
   max-width: 1280px;
   margin: auto;
 }
 
+/* ===== Heading — left aligned, gold accent span ===== */
 .journey .section-head {
-  text-align: center;
+  text-align: left;
+  max-width: 640px;
   margin-bottom: 48px;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.journey.in-view .section-head {
+  animation: fadeSlideUp 0.7s ease forwards;
 }
 
 .journey .section-head h2 {
-  font-size: 36px;
+  font-size: clamp(28px, 4vw, 36px);
   font-weight: 700;
-  color: #0f172a;
+  color: #ffffff;
+  line-height: 1.2;
   margin-bottom: 12px;
+}
+
+.journey .section-head h2 span {
+  background: linear-gradient(135deg, #f5d061 0%, #e5b80b 45%, #d4af37 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-size: 200% auto;
+  animation: shimmer 4s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
 }
 
 .journey .section-head p {
   font-size: 16px;
-  color: #64748b;
+  color: #94a3b8;
+  line-height: 1.6;
 }
 
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== Steps Grid ===== */
 .journey-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -34,27 +110,40 @@
 
 .journey-card {
   position: relative;
-  background: #fdfbf7;
+  background: linear-gradient(145deg, #0d0d0d 0%, #0a0a0a 100%);
   border: 1px solid rgba(212, 175, 55, 0.2);
-  border-radius: 14px;
+  border-radius: 16px;
   padding: 32px 28px;
   text-align: center;
-  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  transform: translateY(40px) scale(0.95);
+}
+
+.journey.in-view .journey-card {
+  animation: cardPopIn 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes cardPopIn {
+  from { opacity: 0; transform: translateY(40px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .journey-card:hover {
-  transform: translateY(-4px);
-  border-color: #d4af37;
-  box-shadow: 0 12px 30px rgba(212, 175, 55, 0.15);
+  transform: translateY(-8px);
+  border-color: rgba(212, 175, 55, 0.5);
+  box-shadow: 0 20px 44px rgba(212, 175, 55, 0.18);
 }
 
 .journey-step {
   position: absolute;
   top: 20px;
-  right: 20px;
-  font-size: 13px;
-  font-weight: 700;
-  color: #966f0d;
+  right: 24px;
+  font-size: 32px;
+  font-weight: 800;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(212, 175, 55, 0.35);
 }
 
 .journey-icon {
@@ -62,28 +151,34 @@
   height: 58px;
   margin: 0 auto 20px;
   background: linear-gradient(135deg, #f5d061 0%, #e5b80b 100%);
-  color: #1e1b10;
+  color: #1a1608;
   border-radius: 14px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 22px;
-  box-shadow: 0 4px 14px rgba(212, 175, 55, 0.3);
+  box-shadow: 0 4px 14px rgba(212, 175, 55, 0.4);
+  transition: transform 0.3s ease;
+}
+
+.journey-card:hover .journey-icon {
+  transform: scale(1.08) rotate(-4deg);
 }
 
 .journey-card h3 {
   font-size: 20px;
-  color: #0f172a;
+  color: #ffffff;
   margin-bottom: 12px;
   font-weight: 600;
 }
 
 .journey-card p {
-  color: #475569;
+  color: #94a3b8;
   font-size: 14px;
   line-height: 1.7;
 }
 
+/* ===== Summary Stats ===== */
 .journey-summary {
   display: flex;
   justify-content: center;
@@ -93,34 +188,44 @@
 }
 
 .summary-box {
-  background: #fdfbf7;
+  background: linear-gradient(145deg, #0d0d0d 0%, #0a0a0a 100%);
   border: 1px solid rgba(212, 175, 55, 0.25);
   border-radius: 12px;
   padding: 24px 40px;
   text-align: center;
   min-width: 160px;
-  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.08);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+.journey.in-view .summary-box {
+  animation: fadeSlideUp 0.6s ease forwards;
 }
 
 .summary-box h3 {
   font-size: 28px;
   font-weight: 700;
-  color: #966f0d;
+  background: linear-gradient(135deg, #f5d061 0%, #e5b80b 60%, #d4af37 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin-bottom: 6px;
 }
 
 .summary-box span {
   font-size: 13px;
-  color: #64748b;
+  color: #94a3b8;
 }
 
+/* ===== CTA Button ===== */
 .journey-btn {
   display: block;
   width: fit-content;
   margin: 0 auto;
   padding: 14px 36px;
   background: linear-gradient(135deg, #f5d061 0%, #e5b80b 50%, #c59b27 100%);
-  color: #1e1b10;
+  color: #1a1608;
   border-radius: 10px;
   font-size: 16px;
   font-weight: 700;
@@ -139,5 +244,25 @@
 @media (max-width: 768px) {
   .journey .section-head h2 {
     font-size: 28px;
+  }
+
+  .journey-card {
+    padding: 28px 22px;
+  }
+
+  .summary-box {
+    padding: 20px 32px;
+    min-width: 140px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-head,
+  .journey-card,
+  .summary-box,
+  .gold-line-beam::after {
+    opacity: 1;
+    transform: none;
+    animation: none;
   }
 }

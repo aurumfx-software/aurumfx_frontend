@@ -189,7 +189,7 @@ function TypeInvestments() {
         </div>
 
         {/* List Card Container */}
-        <div className="list-page-card">
+        <div className="plan-list-card">
           {/* Top Actions Row */}
           <div className="plans-filter-row">
             {/* Search Input */}

@@ -7,14 +7,14 @@
 
 /* Blue Bank Details Info Alert Banner matching screenshot */
 .bank-info-banner {
-  background: #e0f2fe;
-  border: 1px solid #bae6fd;
+  background: rgba(245, 208, 97, 0.12);
+  border: 1px solid rgba(245, 208, 97, 0.28);
   border-radius: 10px;
   padding: 14px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: #0369a1;
+  color: #f1f5f9;
   font-size: 14px;
   box-shadow: 0 2px 8px rgba(2, 132, 199, 0.04);
 }
@@ -29,8 +29,8 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: #0284c7;
-  color: #ffffff;
+  background: #f5d061;
+  color: #1a1608;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -39,20 +39,20 @@
 }
 
 .bank-link {
-  color: #0284c7;
+  color: #f5d061;
   font-weight: 700;
   text-decoration: underline;
   margin-left: 2px;
 }
 
 .bank-link:hover {
-  color: #0369a1;
+  color: #ffe082;
 }
 
 /* Available Balance Card */
 .balance-badge-card {
-  background: #ffffff;
-  border: 1px solid #f1f5f9;
+  background: #1a1a1a;
+  border: 1px solid rgba(212, 175, 55, 0.2);
   border-radius: 14px;
   padding: 22px 24px;
   display: flex;
@@ -72,13 +72,13 @@
 .balance-badge-label {
   font-size: 14px;
   font-weight: 700;
-  color: #1e293b;
+  color: #e2e8f0;
 }
 
 .balance-badge-val {
   font-size: 26px;
   font-weight: 800;
-  color: #0f172a;
+  color: #f8fafc;
 }
 
 .balance-badge-icon {
@@ -95,8 +95,8 @@
 
 /* Withdrawal History Table Card */
 .withdrawals-table-card {
-  background: #ffffff;
-  border: 1px solid #f1f5f9;
+  background: #111111;
+  border: 1px solid rgba(212, 175, 55, 0.16);
   border-radius: 14px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
   overflow: hidden;
@@ -114,24 +114,24 @@
 }
 
 .withdrawals-table th {
-  background: #f8fafc;
+  background: #141414;
   padding: 16px 20px;
   font-size: 12.5px;
   font-weight: 700;
-  color: #94a3b8;
-  border-bottom: 1px solid #f1f5f9;
+  color: #f1f5f9;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.18);
 }
 
 .withdrawals-table td {
   padding: 16px 20px;
   font-size: 14px;
-  color: #334155;
-  border-bottom: 1px solid #f8fafc;
+  color: #e2e8f0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .amount-cell {
   font-weight: 700;
-  color: #0f172a;
+  color: #f5d061;
 }
 
 /* Empty State */
@@ -154,5 +154,5 @@
 .empty-text {
   font-size: 15px;
   font-weight: 700;
-  color: #1e293b;
+  color: #cbd5e1;
 }

@@ -1,10 +1,30 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { FiTrendingUp, FiDollarSign, FiArrowRight } from "react-icons/fi";
 import "./ReturnsCalculator.css";
 
 function ReturnsCalculator() {
   const [amount, setAmount] = useState(5000);
-  const [tenure, setTenure] = useState(10); // 10 or 30 months
+  const [tenure, setTenure] = useState(10);
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.15 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const plan =
     tenure === 30
@@ -19,7 +39,11 @@ function ReturnsCalculator() {
   const quickAmounts = [5000, 10000, 25000, 50000, 100000];
 
   return (
-    <section className="calculator-section" id="calculator">
+    <section
+      ref={sectionRef}
+      className={`calculator-section ${isVisible ? "in-view" : ""}`}
+      id="calculator"
+    >
       <div className="calculator-container">
         <div className="section-head">
           <div className="section-badge">Profit Estimation</div>
@@ -34,8 +58,6 @@ function ReturnsCalculator() {
 
         <div className="calculator-card">
           <div className="calculator-left">
-            {/* Tenure Plan Selector */}
-
             <div className="form-group">
               <label htmlFor="inv-amount">Investment Amount (₹)</label>
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   FiGrid,
@@ -215,11 +215,13 @@ const navItems = [
 function AdminSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse }) {
   const location = useLocation();
   const navigate = useNavigate();
+  const itemRefs = useRef({});
+  const lastExpandedId = useRef(null);
 
   const [expanded, setExpanded] = useState({
     dashboard: true,
-    business: true,
-    financial: true,
+    business: false,
+    financial: false,
     communication: false,
     tools: false,
     members: false,
@@ -229,6 +231,18 @@ function AdminSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse }) {
   });
 
   useEffect(() => {
+    const newExpanded = {
+      dashboard: false,
+      business: false,
+      financial: false,
+      communication: false,
+      tools: false,
+      members: false,
+      achievers: false,
+      settings: false,
+      reports: false,
+    };
+
     navItems.forEach((item) => {
       if (item.children) {
         const hasActiveChild = item.children.some(
@@ -241,14 +255,48 @@ function AdminSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse }) {
               location.pathname === "/admin/dashboard/business")
         );
         if (hasActiveChild) {
-          setExpanded((prev) => ({ ...prev, [item.id]: true }));
+          newExpanded[item.id] = true;
         }
       }
     });
+
+    setExpanded((prev) => {
+      const hasChange = Object.keys(newExpanded).some(
+        (key) => newExpanded[key] !== prev[key]
+      );
+      return hasChange ? newExpanded : prev;
+    });
   }, [location.pathname]);
 
+  useEffect(() => {
+    if (!lastExpandedId.current) return;
+    const id = lastExpandedId.current;
+    if (expanded[id] && itemRefs.current[id]) {
+      itemRefs.current[id].scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
+    }
+  }, [expanded]);
+
   const toggleExpand = (id) => {
-    setExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
+    lastExpandedId.current = id;
+    setExpanded((prev) => {
+      const isOpen = prev[id];
+      const nextState = {
+        dashboard: false,
+        business: false,
+        financial: false,
+        communication: false,
+        tools: false,
+        members: false,
+        achievers: false,
+        settings: false,
+        reports: false,
+      };
+      nextState[id] = !isOpen;
+      return nextState;
+    });
   };
 
   const handleParentClick = (item) => {
@@ -320,6 +368,9 @@ function AdminSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse }) {
             <div key={item.id} className="nav-group">
               <button
                 type="button"
+                ref={(el) => {
+                  if (el) itemRefs.current[item.id] = el;
+                }}
                 className={`nav-item ${isItemActive ? "nav-item--active" : ""}`}
                 onClick={() => handleParentClick(item)}
                 title={item.label}

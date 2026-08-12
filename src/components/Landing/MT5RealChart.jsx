@@ -25,14 +25,34 @@ function MT5RealChart() {
   const [selectedSymbol, setSelectedSymbol] = useState(SYMBOLS[0]);
   const [selectedInterval, setSelectedInterval] = useState("D");
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   const containerRef = useRef(null);
+  const sectionRef = useRef(null);
+
+  // Trigger heading/badge animation when section scrolls into view
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect(); // animate once
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
-    // Clear previous widget
     container.innerHTML = "";
 
     const widget = document.createElement("div");
@@ -41,6 +61,8 @@ function MT5RealChart() {
     widget.style.height = "100%";
 
     container.appendChild(widget);
+
+    const isMobile = window.innerWidth <= 600;
 
     const script = document.createElement("script");
     script.src =
@@ -53,16 +75,16 @@ function MT5RealChart() {
       symbol: selectedSymbol.tvSymbol,
       interval: selectedInterval,
       timezone: "Etc/UTC",
-      theme: "light",
+      theme: "dark",
       style: "1",
       locale: "en",
       allow_symbol_change: true,
       hide_top_toolbar: false,
-      hide_side_toolbar: false,
-      hide_legend: false,
+      hide_side_toolbar: isMobile,
+      hide_legend: isMobile,
       save_image: false,
-      backgroundColor: "#ffffff",
-      gridColor: "rgba(0,0,0,0.05)",
+      backgroundColor: "#0a0a0a",
+      gridColor: "rgba(255,255,255,0.06)",
       support_host: "https://www.tradingview.com",
     });
 
@@ -76,7 +98,11 @@ function MT5RealChart() {
   }, [selectedSymbol, selectedInterval]);
 
   return (
-    <section className={`mt5-section ${isFullscreen ? "fullscreen-mode" : ""}`} id="mt5-chart">
+    <section
+      ref={sectionRef}
+      className={`mt5-section ${isFullscreen ? "fullscreen-mode" : ""} ${isVisible ? "in-view" : ""}`}
+      id="mt5-chart"
+    >
       <div className="mt5-container">
         {/* Header */}
         <div className="mt5-header">
@@ -107,9 +133,7 @@ function MT5RealChart() {
 
         {/* Terminal Wrapper */}
         <div className="mt5-terminal-wrapper">
-          {/* Top Control Bar */}
           <div className="mt5-control-bar">
-            {/* Symbol Selector Tabs */}
             <div className="mt5-symbols-scroll">
               {SYMBOLS.map((s) => (
                 <button
@@ -124,7 +148,6 @@ function MT5RealChart() {
               ))}
             </div>
 
-            {/* Timeframe Buttons */}
             <div className="mt5-tf-group">
               <span className="tf-label">
                 <FiClock /> Timeframe:
@@ -142,40 +165,8 @@ function MT5RealChart() {
             </div>
           </div>
 
-          {/* Price Bar & Live Ticker */}
-          <div className="mt5-stats-bar">
-            {/* <div className="stat-main">
-              <span className="stat-symbol">{selectedSymbol.name}</span>
-              <div className="stat-price-wrap">
-                <span className="stat-price">${selectedSymbol.price}</span>
-                <span className={`stat-badge ${selectedSymbol.up ? "up" : "down"}`}>
-                  {selectedSymbol.up ? <FiTrendingUp /> : <FiTrendingDown />}
-                  {selectedSymbol.change}
-                </span>
-              </div>
-            </div> */}
+          <div className="mt5-stats-bar"></div>
 
-            {/* <div className="stat-grid">
-              <div className="stat-box">
-                <span className="stat-title">Bid Price</span>
-                <strong className="stat-val bid">${selectedSymbol.bid}</strong>
-              </div>
-              <div className="stat-box">
-                <span className="stat-title">Ask Price</span>
-                <strong className="stat-val ask">${selectedSymbol.ask}</strong>
-              </div>
-              <div className="stat-box">
-                <span className="stat-title">Spread</span>
-                <strong className="stat-val">{selectedSymbol.spread} pts</strong>
-              </div>
-              <div className="stat-box">
-                <span className="stat-title">Execution</span>
-                <strong className="stat-val instant">STP / ECN Live</strong>
-              </div>
-            </div> */}
-          </div>
-
-          {/* Chart Viewport */}
           <div className="mt5-chart-layout">
             <div className="mt5-chart-viewport" ref={containerRef}>
               <p>Loading MT5 Real-Time Data Stream for {selectedSymbol.id}...</p>

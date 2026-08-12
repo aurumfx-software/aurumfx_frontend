@@ -10,12 +10,12 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background: #ffffff;
+  background: #111111;
   padding: 6px;
   border-radius: 12px;
-  border: 1px solid #f1f5f9;
+  border: 1px solid rgba(212, 175, 55, 0.15);
   width: fit-content;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .dashboard-tab {
@@ -26,7 +26,7 @@
   border-radius: 8px;
   border: none;
   background: transparent;
-  color: #64748b;
+  color: #94a3b8;
   font-size: 13.5px;
   font-weight: 600;
   cursor: pointer;
@@ -34,15 +34,15 @@
 }
 
 .dashboard-tab:hover {
-  color: #1e293b;
-  background: #f8fafc;
+  color: #f1f5f9;
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .dashboard-tab--active {
-  background: #fff9e6 !important;
-  color: #d97706 !important;
+  background: rgba(212, 175, 55, 0.14) !important;
+  color: #f5d061 !important;
   font-weight: 700 !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .tab-icon {
@@ -55,9 +55,9 @@
   align-items: center;
   gap: 12px;
   padding: 14px 20px;
-  background: #ffc52d;
+  background: linear-gradient(135deg, #f5d061 0%, #e5b80b 50%, #c59b27 100%);
   border-radius: 10px;
-  color: #333;
+  color: #1a1608;
 }
 
 .alert-icon {
@@ -73,7 +73,7 @@
 .alert-link {
   background: none;
   border: none;
-  color: #333;
+  color: #1a1608;
   font-weight: 600;
   text-decoration: underline;
   cursor: pointer;
@@ -87,12 +87,13 @@
   flex-direction: column;
   gap: 20px;
   width: 100%;
+  min-width: 0;
 }
 
 /* Main Top 2-Column Grid Layout */
 .biz-layout-main {
   display: grid;
-  grid-template-columns: 1fr 450px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 450px);
   gap: 20px;
   align-items: start;
 }
@@ -101,6 +102,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  min-width: 0;
 }
 
 .biz-right-col {
@@ -108,6 +110,7 @@
   flex-direction: column;
   gap: 20px;
   height: 100%;
+  min-width: 0;
 }
 
 /* 6 Stat Cards Grid (4 in row 1, 2 in row 2) */
@@ -115,19 +118,20 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
+  min-width: 0;
 }
 
-/* Sales Performance Card (Orange Gradient) */
+/* Sales Performance Card (Gold Gradient) */
 .biz-sales-banner-card {
   grid-column: span 1;
-  background: linear-gradient(135deg, #ffc52d 0%, #ffb100 100%);
+  background: linear-gradient(135deg, #f5d061 0%, #e5b80b 50%, #c59b27 100%);
   border-radius: 12px;
   padding: 18px 20px;
-  color: #fff;
+  color: #1a1608;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  box-shadow: 0 4px 14px rgba(255, 197, 45, 0.25);
+  box-shadow: 0 4px 18px rgba(212, 175, 55, 0.3);
   position: relative;
   overflow: hidden;
   min-height: 130px;
@@ -142,13 +146,13 @@
 .banner-card-title {
   font-size: 14px;
   font-weight: 700;
-  color: #ffffff;
+  color: #1a1608;
 }
 
 .banner-card-select {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.15);
   border: none;
-  color: #ffffff;
+  color: #1a1608;
   padding: 4px 8px;
   border-radius: 6px;
   font-size: 12px;
@@ -158,8 +162,8 @@
 }
 
 .banner-card-select option {
-  color: #333;
-  background: #fff;
+  color: #1a1608;
+  background: #f5d061;
 }
 
 .banner-card-body {
@@ -178,7 +182,7 @@
 .banner-main-val {
   font-size: 28px;
   font-weight: 900;
-  color: #ffffff;
+  color: #1a1608;
   line-height: 1;
 }
 
@@ -192,7 +196,7 @@
   font-size: 11px;
   font-weight: 700;
   color: #16a34a;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(0, 0, 0, 0.85);
   padding: 3px 8px;
   border-radius: 12px;
 }
@@ -200,8 +204,8 @@
 .badge-expense {
   font-size: 11px;
   font-weight: 700;
-  color: #dc2626;
-  background: rgba(255, 255, 255, 0.9);
+  color: #ef4444;
+  background: rgba(0, 0, 0, 0.85);
   padding: 3px 8px;
   border-radius: 12px;
 }
@@ -212,48 +216,52 @@
   margin-right: -10px;
 }
 
-/* White Stat Card Base */
+/* Dark Stat Card Base */
 .biz-stat-card {
-  background: #ffffff;
+  background: #111111;
   border-radius: 12px;
   padding: 18px 20px;
-  border: 1px solid #f0f0f0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   display: flex;
   align-items: center;
   justify-content: space-between;
   min-height: 130px;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .stat-card-text {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  min-width: 0;
 }
 
 .stat-card-title {
   font-size: 13.5px;
   font-weight: 600;
-  color: #1f2937;
+  color: #e2e8f0;
 }
 
 .stat-card-val {
-  font-size: 22px;
+  font-size: clamp(16px, 1.6vw, 22px);
   font-weight: 800;
-  color: #111827;
+  color: #f8fafc;
+  overflow-wrap: anywhere;
 }
 
 .stat-card-lbl {
   font-size: 12px;
-  color: #9ca3af;
+  color: #94a3b8;
 }
 
 .stat-card-icon {
   width: 48px;
   height: 48px;
   border-radius: 12px;
-  background: #fffdf0;
-  border: 1px solid #fef08a;
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -261,11 +269,11 @@
 
 /* Card Base */
 .biz-card {
-  background: #ffffff;
+  background: #111111;
   border-radius: 12px;
   padding: 20px;
-  border: 1px solid #f0f0f0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -274,7 +282,7 @@
 .biz-card-header-title {
   font-size: 15px;
   font-weight: 700;
-  color: #1f2937;
+  color: #e2e8f0;
 }
 
 /* Sales Over View 2x3 Grid */
@@ -289,14 +297,14 @@
 }
 
 .period-box {
-  background: #ffffff;
-  border: 1px solid #f3f4f6;
+  background: #141414;
+  border: 1px solid rgba(212, 175, 55, 0.12);
   border-radius: 10px;
   padding: 14px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 }
 
 .period-header {
@@ -309,9 +317,9 @@
   width: 36px;
   height: 36px;
   border-radius: 8px;
-  background: #fffdf0;
-  border: 1px solid #fef08a;
-  color: #e5a800;
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  color: #f5d061;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -327,18 +335,18 @@
 .period-name {
   font-size: 13.5px;
   font-weight: 700;
-  color: #1f2937;
+  color: #e2e8f0;
 }
 
 .period-date {
   font-size: 11px;
-  color: #9ca3af;
+  color: #94a3b8;
 }
 
 .period-amount {
   font-size: 15px;
   font-weight: 700;
-  color: #111827;
+  color: #f8fafc;
 }
 
 /* Sales Graph Card */
@@ -347,18 +355,23 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  min-width: 0;
 }
 
 .graph-card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .date-picker-group {
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-wrap: wrap;
+  min-width: 0;
 }
 
 .date-field {
@@ -369,7 +382,7 @@
 
 .date-field-lbl {
   font-size: 12px;
-  color: #9ca3af;
+  color: #94a3b8;
 }
 
 .date-input-wrap {
@@ -380,11 +393,11 @@
 
 .date-input-wrap input {
   padding: 6px 30px 6px 10px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid rgba(212, 175, 55, 0.2);
   border-radius: 8px;
   font-size: 12px;
-  color: #374151;
-  background: #f9fafb;
+  color: #e2e8f0;
+  background: #1a1a1a;
   width: 110px;
 }
 
@@ -392,7 +405,7 @@
   position: absolute;
   right: 8px;
   font-size: 14px;
-  color: #e5a800;
+  color: #f5d061;
   pointer-events: none;
 }
 
@@ -408,11 +421,12 @@
 .sales-graph-svg {
   width: 100%;
   height: 240px;
+  max-width: 100%;
 }
 
 .graph-tick-text {
   font-size: 11px;
-  fill: #9ca3af;
+  fill: #94a3b8;
 }
 
 .sales-graph-legend {
@@ -421,7 +435,7 @@
   justify-content: center;
   gap: 20px;
   font-size: 13px;
-  color: #4b5563;
+  color: #cbd5e1;
   margin-top: 10px;
 }
 
@@ -438,11 +452,11 @@
 }
 
 .legend-box--package {
-  background: #78350f;
+  background: #b8860b;
 }
 
 .legend-box--product {
-  background: #ffc52d;
+  background: #f5d061;
 }
 
 /* Bottom Grid (Tables) */
@@ -464,13 +478,13 @@
 }
 
 .biz-table th {
-  background: #f9fafb;
+  background: #141414;
   text-align: left;
   padding: 12px 16px;
   font-size: 12.5px;
   font-weight: 600;
-  color: #6b7280;
-  border-bottom: 1px solid #f3f4f6;
+  color: #94a3b8;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.12);
 }
 
 /* Empty State Box */
@@ -496,7 +510,7 @@
 .empty-state-text {
   font-size: 14px;
   font-weight: 700;
-  color: #374151;
+  color: #cbd5e1;
 }
 
 /* Legacy Dashboard Grid */
@@ -541,17 +555,17 @@
 
 /* Card Base */
 .card {
-  background: #fff;
+  background: #111111;
   border-radius: 12px;
   padding: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  border: 1px solid #f0f0f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(212, 175, 55, 0.15);
 }
 
 .card h3 {
   font-size: 15px;
   font-weight: 600;
-  color: #333;
+  color: #e2e8f0;
   margin-bottom: 16px;
 }
 
@@ -568,21 +582,21 @@
 
 .card-select {
   padding: 6px 12px;
-  border: 1px solid #eee;
+  border: 1px solid rgba(212, 175, 55, 0.2);
   border-radius: 6px;
   font-size: 13px;
-  color: #555;
-  background: #fff;
+  color: #cbd5e1;
+  background: #1a1a1a;
   cursor: pointer;
 }
 
 /* KPI Cards */
 .kpi-card {
-  background: #fff;
+  background: #111111;
   border-radius: 12px;
   padding: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  border: 1px solid #f0f0f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(212, 175, 55, 0.15);
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -593,11 +607,11 @@
   width: 44px;
   height: 44px;
   border-radius: 10px;
-  background: #fff8e6;
+  background: rgba(212, 175, 55, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ffc52d;
+  color: #f5d061;
   font-size: 20px;
 }
 
@@ -610,13 +624,13 @@
 .kpi-value {
   font-size: 22px;
   font-weight: 700;
-  color: #222;
+  color: #f8fafc;
   letter-spacing: -0.5px;
 }
 
 .kpi-label {
   font-size: 12.5px;
-  color: #888;
+  color: #94a3b8;
 }
 
 .network-chart {
@@ -627,7 +641,7 @@
 
 .chart-axis-label {
   font-size: 11px;
-  fill: #aaa;
+  fill: #64748b;
 }
 
 .users-summary {
@@ -644,20 +658,20 @@
 
 .users-icon {
   font-size: 28px;
-  color: #ffc52d;
+  color: #f5d061;
 }
 
 .users-count {
   display: block;
   font-size: 28px;
   font-weight: 700;
-  color: #222;
+  color: #f8fafc;
   line-height: 1.1;
 }
 
 .users-label {
   font-size: 13px;
-  color: #888;
+  color: #94a3b8;
 }
 
 .users-gauges {
@@ -692,12 +706,12 @@
   justify-content: center;
   font-size: 20px;
   font-weight: 700;
-  color: #333;
+  color: #f1f5f9;
 }
 
 .gauge-label {
   font-size: 11.5px;
-  color: #888;
+  color: #94a3b8;
   text-align: center;
   max-width: 90px;
 }
@@ -717,12 +731,12 @@
 .tickets-value {
   font-size: 28px;
   font-weight: 700;
-  color: #222;
+  color: #f8fafc;
 }
 
 .tickets-label {
   font-size: 12px;
-  color: #888;
+  color: #94a3b8;
 }
 
 .tickets-legend {
@@ -736,7 +750,7 @@
   align-items: center;
   gap: 8px;
   font-size: 12.5px;
-  color: #666;
+  color: #cbd5e1;
 }
 
 .legend-dot {
@@ -746,11 +760,11 @@
 }
 
 .legend-dot--open {
-  background: #ffc52d;
+  background: #f5d061;
 }
 
 .legend-dot--closed {
-  background: #333;
+  background: #94a3b8;
 }
 
 .members-map {
@@ -774,19 +788,19 @@
   text-align: left;
   padding: 10px 12px;
   font-weight: 600;
-  color: #555;
-  border-bottom: 1px solid #eee;
+  color: #94a3b8;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
   white-space: nowrap;
 }
 
 .registrations-table td {
   padding: 12px;
-  color: #444;
-  border-bottom: 1px solid #f5f5f5;
+  color: #cbd5e1;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .registrations-table tbody tr:hover {
-  background: #fafafa;
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .user-cell {
@@ -797,12 +811,12 @@
 
 .user-id {
   font-weight: 600;
-  color: #333;
+  color: #f1f5f9;
 }
 
 .user-email {
   font-size: 12px;
-  color: #999;
+  color: #94a3b8;
 }
 
 /* Responsive */
@@ -819,10 +833,97 @@
 }
 
 @media (max-width: 768px) {
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .grid-kpi,
+  .grid-chart,
+  .grid-users,
+  .grid-tickets,
+  .grid-map,
+  .grid-table {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .grid-kpi {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .card {
+    padding: 16px;
+  }
+
+  .card-header {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .card-select {
+    width: 100%;
+  }
+
+  .network-chart {
+    width: 100%;
+    height: auto;
+    min-height: 180px;
+    display: block;
+  }
+
+  .members-map {
+    width: 100%;
+    height: auto;
+    min-height: 180px;
+  }
+
+  .users-summary {
+    gap: 18px;
+  }
+
+  .users-gauges {
+    justify-content: space-between;
+    gap: 8px;
+  }
+
   .biz-stat-cards-grid {
     grid-template-columns: 1fr;
   }
   .sales-periods-grid {
     grid-template-columns: 1fr;
+  }
+
+  .graph-card-header {
+    align-items: flex-start;
+  }
+
+  .date-picker-group {
+    width: 100%;
+    gap: 8px;
+  }
+
+  .date-field {
+    flex: 1 1 140px;
+    min-width: 0;
+  }
+
+  .date-input-wrap {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .date-input-wrap input {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .sales-graph-svg {
+    height: auto;
+    min-height: 180px;
   }
 }

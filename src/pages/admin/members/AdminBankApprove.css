@@ -367,3 +367,41 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Black/gold theme */
+.admin-bank-approve-page .admin-page-title,
+.admin-bank-approve-page .admin-bank-table td,
+.admin-bank-approve-page .fw-bold {
+  color: #f1f5f9;
+}
+
+.admin-bank-approve-page .admin-breadcrumb { color: #94a3b8; }
+.admin-bank-approve-page .crumb-sep { color: #475569; }
+.admin-bank-approve-page .crumb-active { color: #f5d061; }
+
+.admin-bank-approve-page .bank-filters-card,
+.admin-bank-approve-page .bank-list-card {
+  background: #111111;
+  border-color: rgba(212, 175, 55, 0.15);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.admin-bank-approve-page .filter-date-field,
+.admin-bank-approve-page .filter-select-field {
+  color: #f1f5f9;
+  background: #1a1a1a;
+  border-color: rgba(212, 175, 55, 0.25);
+}
+
+.admin-bank-approve-page .field-date-icon,
+.admin-bank-approve-page .field-arrow { color: #f5d061; }
+
+.admin-bank-approve-page .admin-bank-table th {
+  color: #f1f5f9;
+  background: #141414;
+  border-bottom-color: rgba(212, 175, 55, 0.2);
+}
+
+.admin-bank-approve-page .admin-bank-table td {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}

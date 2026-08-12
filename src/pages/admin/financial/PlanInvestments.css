@@ -7,24 +7,37 @@
   padding-bottom: 40px;
 }
 
+.plan-list-card {
+  background: #111111;
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .create-plan-btn {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: #ffc52d;
-  color: #ffffff;
+  background: #f5d061;
+  color: #111827;
   border: none;
   font-weight: 700;
   font-size: 13.5px;
   padding: 10px 18px;
   border-radius: 8px;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(255, 197, 45, 0.3);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.25);
   transition: all 0.15s ease;
 }
 
 .create-plan-btn:hover {
-  background: #f5b316;
+  background: #e5b80b;
   transform: translateY(-1px);
 }
 
@@ -41,8 +54,8 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  background: #111111;
+  border: 1px solid rgba(212, 175, 55, 0.18);
   border-radius: 8px;
   padding: 8px 14px;
   width: 300px;
@@ -50,7 +63,7 @@
 }
 
 .search-icon {
-  color: #94a3b8;
+  color: #f5d061;
   font-size: 16px;
 }
 
@@ -59,25 +72,26 @@
   background: transparent;
   outline: none;
   font-size: 13.5px;
-  color: #1e293b;
+  color: #e2e8f0;
   width: 100%;
 }
 
 .filter-select-box select {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  background: #111111;
+  border: 1px solid rgba(212, 175, 55, 0.18);
   border-radius: 8px;
   padding: 8px 14px;
   font-size: 13.5px;
-  color: #334155;
+  color: #e2e8f0;
   outline: none;
   cursor: pointer;
 }
 
 .plans-table-wrapper {
   overflow-x: auto;
-  border: 1px solid #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 10px;
+  background: #111111;
 }
 
 .plans-table {
@@ -88,23 +102,23 @@
 }
 
 .plans-table th {
-  background: #f8fafc;
-  color: #475569;
+  background: #141414;
+  color: #94a3b8;
   font-weight: 700;
   padding: 13px 16px;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
   white-space: nowrap;
 }
 
 .plans-table td {
   padding: 14px 16px;
-  border-bottom: 1px solid #f1f5f9;
-  color: #334155;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: #e2e8f0;
   white-space: nowrap;
 }
 
 .plans-table tr:hover td {
-  background: #fafafa;
+  background: #1f2937;
 }
 
 .plan-name-cell {
@@ -112,20 +126,20 @@
   align-items: center;
   gap: 8px;
   font-weight: 700;
-  color: #1e293b;
+  color: #e2e8f0;
 }
 
 .cell-icon {
-  color: #d97706;
+  color: #f5d061;
 }
 
 .amount-cell {
   font-weight: 700;
-  color: #1e293b;
+  color: #e2e8f0;
 }
 
 .text-green {
-  color: #16a34a;
+  color: #f5d061;
 }
 
 .font-bold {
@@ -157,8 +171,8 @@
   border-radius: 6px;
   font-size: 11.5px;
   font-weight: 700;
-  border: 1px solid #e2e8f0;
-  background: #f8fafc;
+  border: 1px solid rgba(212, 175, 55, 0.18);
+  background: #111111;
   color: #94a3b8;
   cursor: pointer;
   transition: all 0.15s ease;
@@ -166,16 +180,16 @@
 
 .status-btn.btn-activate:hover,
 .status-btn.btn-activate.active-selected {
-  background: #f0fdf4;
-  color: #16a34a;
-  border-color: #bbf7d0;
+  background: rgba(245, 208, 97, 0.14);
+  color: #f5d061;
+  border-color: #f5d061;
 }
 
 .status-btn.btn-deactivate:hover,
 .status-btn.btn-deactivate.deactive-selected {
-  background: #fef2f2;
-  color: #dc2626;
-  border-color: #fecaca;
+  background: rgba(220, 38, 38, 0.12);
+  color: #fda4af;
+  border-color: #f87171;
 }
 
 .status-badge-btn {
@@ -189,19 +203,20 @@
   border: none;
   cursor: pointer;
   transition: all 0.15s ease;
+  background: #111111;
+  color: #94a3b8;
 }
 
-
 .status--active {
-  background: #f0fdf4;
-  color: #16a34a;
-  border: 1px solid #bbf7d0;
+  background: rgba(245, 208, 97, 0.14);
+  color: #f5d061;
+  border: 1px solid rgba(245, 208, 97, 0.24);
 }
 
 .status--inactive {
-  background: #fef2f2;
-  color: #dc2626;
-  border: 1px solid #fecaca;
+  background: #111111;
+  color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .status-badge-btn:hover {
@@ -216,8 +231,8 @@
 }
 
 .action-icon-btn {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  background: #111111;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 6px;
   width: 32px;
   height: 32px;
@@ -225,20 +240,20 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: #64748b;
+  color: #94a3b8;
   transition: all 0.15s ease;
 }
 
 .action-edit:hover {
-  background: #fff8e6;
-  color: #d97706;
-  border-color: #fde68a;
+  background: rgba(245, 208, 97, 0.18);
+  color: #111827;
+  border-color: rgba(245, 208, 97, 0.35);
 }
 
 .action-delete:hover {
-  background: #fef2f2;
-  color: #dc2626;
-  border-color: #fecaca;
+  background: rgba(220, 38, 38, 0.12);
+  color: #fecaca;
+  border-color: rgba(248, 113, 113, 0.35);
 }
 
 /* Modal Popup Styles */
@@ -256,11 +271,11 @@
 }
 
 .plan-modal-container {
-  background: #ffffff;
+  background: #111111;
   width: 100%;
   max-width: 520px;
   border-radius: 16px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -271,14 +286,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .plan-modal-header h3 {
   margin: 0;
   font-size: 17px;
   font-weight: 700;
-  color: #1e293b;
+  color: #e2e8f0;
 }
 
 .plan-modal-body {
@@ -303,22 +318,23 @@
 .field-label {
   font-size: 12.5px;
   font-weight: 700;
-  color: #334155;
+  color: #94a3b8;
 }
 
 .modal-field input[type="text"],
 .modal-field input[type="number"] {
-  border: 1.5px solid #cbd5e1;
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
   border-radius: 8px;
   padding: 10px 14px;
   font-size: 13.5px;
-  color: #1e293b;
+  color: #e2e8f0;
+  background: #111111;
   outline: none;
   transition: border-color 0.15s;
 }
 
 .modal-field input:focus {
-  border-color: #f59e0b;
+  border-color: #f5d061;
 }
 
 /* Status Switch Toggle */
@@ -342,7 +358,7 @@
 .toggle-slider {
   width: 44px;
   height: 24px;
-  background: #cbd5e1;
+  background: #111111;
   border-radius: 20px;
   position: relative;
   cursor: pointer;
@@ -354,7 +370,7 @@
   position: absolute;
   width: 18px;
   height: 18px;
-  background: #ffffff;
+  background: #111111;
   border-radius: 50%;
   top: 3px;
   left: 3px;
@@ -362,7 +378,7 @@
 }
 
 .toggle-wrapper input[type="checkbox"]:checked + .toggle-slider {
-  background: #16a34a;
+  background: #f5d061;
 }
 
 .toggle-wrapper input[type="checkbox"]:checked + .toggle-slider::after {
@@ -372,7 +388,7 @@
 .toggle-text {
   font-size: 13px;
   font-weight: 700;
-  color: #334155;
+  color: #94a3b8;
 }
 
 .modal-alert {
@@ -383,15 +399,15 @@
 }
 
 .modal-alert.error {
-  background: #fef2f2;
-  color: #dc2626;
-  border: 1px solid #fecaca;
+  background: rgba(220, 38, 38, 0.12);
+  color: #fecaca;
+  border: 1px solid rgba(248, 113, 113, 0.3);
 }
 
 .modal-alert.success {
-  background: #f0fdf4;
-  color: #16a34a;
-  border: 1px solid #bbf7d0;
+  background: rgba(245, 208, 97, 0.14);
+  color: #f5d061;
+  border: 1px solid rgba(245, 208, 97, 0.35);
 }
 
 .plan-modal-footer {
@@ -404,8 +420,8 @@
 
 .cancel-btn {
   background: transparent;
-  border: 1.5px solid #e2e8f0;
-  color: #64748b;
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  color: #94a3b8;
   font-weight: 600;
   font-size: 13.5px;
   padding: 10px 18px;
@@ -415,13 +431,13 @@
 }
 
 .cancel-btn:hover {
-  background: #f8fafc;
-  color: #1e293b;
+  background: rgba(255, 255, 255, 0.08);
+  color: #e2e8f0;
 }
 
 .submit-btn {
-  background: #ffc52d;
-  color: #ffffff;
+  background: #f5d061;
+  color: #111827;
   border: none;
   font-weight: 700;
   font-size: 13.5px;

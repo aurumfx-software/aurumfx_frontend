@@ -14,7 +14,7 @@
 .page-title {
   font-size: 26px;
   font-weight: 800;
-  color: #1a1d1e;
+  color: #f8fafc;
   margin: 0;
 }
 
@@ -23,15 +23,15 @@
   align-items: center;
   gap: 8px;
   font-size: 13px;
-  color: #8c98a4;
+  color: #94a3b8;
 }
 
 .breadcrumb .separator {
-  color: #cbd5e1;
+  color: #475569;
 }
 
 .breadcrumb .current {
-  color: #a0aec0;
+  color: #f5d061;
 }
 
 /* Grid Layout */
@@ -44,7 +44,8 @@
 
 /* Tree Card */
 .tree-card {
-  background: #ffffff;
+  background: #111111;
+  border: 1px solid rgba(212, 175, 55, 0.16);
   border-radius: 16px;
   padding: 24px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
@@ -62,11 +63,12 @@
 
 .search-input {
   height: 44px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid rgba(212, 175, 55, 0.24);
   border-radius: 10px;
   padding: 0 16px;
   font-size: 14px;
-  color: #1a1d1e;
+  color: #f1f5f9;
+  background: #1a1a1a;
   outline: none;
   width: 240px;
   transition: border-color 0.2s;
@@ -98,9 +100,9 @@
 
 .search-reset-btn {
   height: 44px;
-  background: #ffffff;
+  background: #1a1a1a;
   border: 1px solid #ffe082;
-  color: #e5a800;
+  color: #f5d061;
   border-radius: 10px;
   padding: 0 18px;
   font-weight: 600;
@@ -112,19 +114,19 @@
 }
 
 .search-reset-btn:hover {
-  background: #fffdf5;
+  background: rgba(245, 208, 97, 0.1);
 }
 
 /* Binary Tree Canvas */
 .binary-tree-container {
-  border: 1px dashed #e2e8f0;
+  border: 1px dashed rgba(212, 175, 55, 0.28);
   border-radius: 16px;
   padding: 40px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 36px;
-  background: #fafbfc;
+  background: #1a1a1a;
   position: relative;
   overflow-x: auto;
 }
@@ -199,9 +201,9 @@
 
 .node-badge {
   margin-top: 6px;
-  background: #ffffff;
+  background: #f5d061;
   border: 2px solid #22c55e;
-  color: #1a1d1e;
+  color: #1a1608;
   font-size: 11px;
   font-weight: 700;
   padding: 2px 8px;
@@ -217,7 +219,8 @@
 }
 
 .detail-stat-card {
-  background: #ffffff;
+  background: #111111;
+  border: 1px solid rgba(212, 175, 55, 0.16);
   border-radius: 14px;
   padding: 14px 16px;
   display: flex;
@@ -238,11 +241,11 @@
   flex-shrink: 0;
 }
 
-.bg-mint { background: #e6fffa; color: #0d9488; }
-.bg-rose { background: #fff5f5; color: #e53e3e; }
-.bg-purple { background: #faf5ff; color: #805ad5; }
-.bg-cyan { background: #e0f2fe; color: #0284c7; }
-.bg-blue { background: #ebf8ff; color: #3182ce; }
+.bg-mint { background: rgba(20, 184, 166, 0.14); color: #5eead4; }
+.bg-rose { background: rgba(239, 68, 68, 0.14); color: #fda4af; }
+.bg-purple { background: rgba(168, 85, 247, 0.14); color: #d8b4fe; }
+.bg-cyan { background: rgba(14, 165, 233, 0.14); color: #7dd3fc; }
+.bg-blue { background: rgba(59, 130, 246, 0.14); color: #93c5fd; }
 
 .detail-info {
   display: flex;
@@ -251,19 +254,126 @@
 
 .detail-lbl {
   font-size: 11px;
-  color: #8c98a4;
+  color: #94a3b8;
   font-weight: 500;
 }
 
 .detail-val {
   font-size: 14px;
   font-weight: 700;
-  color: #1a1d1e;
+  color: #f1f5f9;
   margin: 2px 0 0 0;
 }
 
 @media (max-width: 991px) {
   .genealogy-content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tree-card {
+    padding: 18px 14px;
+  }
+
+  .tree-search-form {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .search-input,
+  .search-submit-btn,
+  .search-reset-btn {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .binary-tree-container {
+    padding: 20px 10px 24px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    min-width: 0;
+  }
+
+  .tree-level {
+    gap: 26px;
+    width: max-content;
+    min-width: 100%;
+  }
+
+  .level-root {
+    gap: 0;
+  }
+
+  .level-1 {
+    gap: 60px;
+  }
+
+  .level-2 {
+    gap: 24px;
+  }
+
+  .level-3 {
+    gap: 18px;
+  }
+
+  .node-avatar {
+    width: 38px;
+    height: 38px;
+    font-size: 16px;
+  }
+
+  .node-badge {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+
+  .member-details-column {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .detail-stat-card {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .detail-icon-box {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 22px;
+  }
+
+  .tree-card {
+    padding: 14px 10px;
+  }
+
+  .binary-tree-container {
+    padding: 16px 8px 20px;
+  }
+
+  .tree-level {
+    gap: 14px;
+  }
+
+  .level-1 {
+    gap: 28px;
+  }
+
+  .level-2 {
+    gap: 12px;
+  }
+
+  .level-3 {
+    gap: 10px;
+  }
+
+  .member-details-column {
     grid-template-columns: 1fr;
   }
 }

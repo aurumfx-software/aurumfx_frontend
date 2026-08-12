@@ -463,3 +463,119 @@
 .payout-table-input:focus {
   background: #f8fafc;
 }
+
+/* Black/gold theme */
+.admin-settings-page .admin-page-title,
+.admin-settings-page .settings-section-title,
+.admin-settings-page .settings-field-label,
+.admin-settings-page .toggle-info-title,
+.admin-settings-page .settings-input-control,
+.admin-settings-page .settings-select-control,
+.admin-settings-page .network-bordered-input,
+.admin-settings-page .payout-table-input {
+  color: #f1f5f9;
+}
+
+.admin-settings-page .admin-breadcrumb { color: #94a3b8; }
+.admin-settings-page .crumb-sep { color: #475569; }
+.admin-settings-page .crumb-active { color: #f5d061; }
+
+.admin-settings-page .settings-main-card {
+  background: #111111;
+  border-color: rgba(212, 175, 55, 0.15);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.admin-settings-page .logo-drop-box,
+.admin-settings-page .settings-field-box,
+.admin-settings-page .settings-toggle-row,
+.admin-settings-page .blue-bordered-card,
+.admin-settings-page .invest-field-box {
+  background: #1a1a1a;
+  border-color: rgba(212, 175, 55, 0.2);
+}
+
+.admin-settings-page .logo-drop-title,
+.admin-settings-page .toggle-info-title,
+.admin-settings-page .header-col-title,
+.admin-settings-page .payout-table-header span {
+  color: #f1f5f9;
+}
+
+.admin-settings-page .logo-circle-area {
+  background: #111111;
+  border-color: rgba(212, 175, 55, 0.35);
+}
+
+.admin-settings-page .logo-circle-area:hover {
+  background: rgba(245, 208, 97, 0.08);
+}
+
+.admin-settings-page .settings-field-label {
+  background: #1a1a1a;
+  color: #cbd5e1;
+}
+
+.admin-settings-page .toggle-info-desc,
+.admin-settings-page .logo-drop-hint,
+.admin-settings-page .invest-field-label {
+  color: #94a3b8;
+}
+
+.admin-settings-page .switch-btn {
+  background: #334155;
+}
+
+.admin-settings-page .switch-btn.active,
+.admin-settings-page .settings-save-btn,
+.admin-settings-page .yellow-update-btn {
+  background: #f5d061;
+  color: #1a1608;
+}
+
+.admin-settings-page .switch-thumb { background: #f8fafc; }
+
+.admin-settings-page .network-tabs-container {
+  border-bottom-color: rgba(212, 175, 55, 0.2);
+}
+
+.admin-settings-page .network-tab-btn { color: #94a3b8; }
+.admin-settings-page .network-tab-btn:hover,
+.admin-settings-page .network-tab-btn--active { color: #f5d061; }
+.admin-settings-page .network-tab-icon { color: #94a3b8; }
+.admin-settings-page .network-tab-btn--active .network-tab-icon { color: #f5d061; }
+
+.admin-settings-page .card-grey-header,
+.admin-settings-page .payout-table-header {
+  background: #141414;
+  border-bottom-color: rgba(212, 175, 55, 0.2);
+}
+
+.admin-settings-page .network-bordered-input {
+  background: #111111;
+  border-color: rgba(212, 175, 55, 0.25);
+}
+
+.admin-settings-page .payout-schedule-table {
+  border-color: rgba(212, 175, 55, 0.2);
+}
+
+.admin-settings-page .payout-table-row {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.admin-settings-page .payout-table-input {
+  border-right-color: rgba(255, 255, 255, 0.08);
+}
+
+.admin-settings-page .payout-table-input:focus {
+  background: rgba(245, 208, 97, 0.08);
+}
+
+.admin-settings-page h4[style] {
+  color: #f1f5f9 !important;
+}
+
+.admin-settings-page .card-input-row > div[style] {
+  color: #f1f5f9 !important;
+}

@@ -37,7 +37,7 @@ function AdminFundCredits() {
         </div>
 
         {/* Top Transaction Form Card */}
-        <div className="list-page-card form-card-padding">
+        <div className="fund-credits-card form-card-padding">
           <form className="fund-transaction-form" onSubmit={(e) => e.preventDefault()}>
             {/* Search User Select */}
             <div className="form-input-wrap select-field-wrap">
@@ -102,7 +102,7 @@ function AdminFundCredits() {
         </div>
 
         {/* Filters & History List Card */}
-        <div className="list-page-card">
+        <div className="fund-credits-card">
           <form onSubmit={handleGetReport} className="history-filter-row">
             {/* Pick Start Date */}
             <div className="filter-field-wrap">

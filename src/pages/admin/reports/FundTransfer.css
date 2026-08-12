@@ -137,3 +137,22 @@
   color: #94a3b8;
   margin: 0;
 }
+
+/* Black/gold theme */
+.admin-reports-page .ft-card {
+  background: #111111;
+  border-color: rgba(212, 175, 55, 0.15);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.admin-reports-page .ft-tabs,
+.admin-reports-page .ft-filter-section {
+  border-bottom-color: rgba(212, 175, 55, 0.18);
+}
+
+.admin-reports-page .ft-tab-btn { color: #94a3b8; }
+.admin-reports-page .ft-tab-btn:hover,
+.admin-reports-page .ft-tab-btn--active { color: #f5d061; }
+
+.admin-reports-page .ft-empty-text { color: #cbd5e1; }
+.admin-reports-page .ft-close-btn:hover { background: rgba(239, 68, 68, 0.12); }

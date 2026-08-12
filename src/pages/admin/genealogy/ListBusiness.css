@@ -4,38 +4,39 @@
   gap: 16px;
   flex-wrap: wrap;
   padding-bottom: 20px;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.18);
   margin-bottom: 20px;
 }
 
-.filter-input-group {
+.business-list-card .filter-input-group {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-.filter-input-group label {
+.business-list-card .filter-input-group label {
   font-size: 12.5px;
   font-weight: 600;
-  color: #475569;
+  color: #cbd5e1;
 }
 
-.date-input-wrapper {
+.business-list-card .date-input-wrapper {
   position: relative;
   display: flex;
   align-items: center;
 }
 
-.date-input-wrapper input {
+.business-list-card .date-input-wrapper input {
   padding: 8px 36px 8px 12px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid rgba(212, 175, 55, 0.22);
   border-radius: 8px;
   font-size: 13.5px;
-  color: #1e293b;
+  color: #f1f5f9;
+  background: #111111;
   outline: none;
 }
 
-.calendar-icon {
+.business-list-card .calendar-icon {
   position: absolute;
   right: 10px;
   color: #ffc52d;
@@ -43,76 +44,76 @@
   pointer-events: none;
 }
 
-.filter-select {
+.business-list-card .filter-select {
   padding: 8px 14px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid rgba(212, 175, 55, 0.22);
   border-radius: 8px;
   font-size: 13.5px;
-  color: #1e293b;
-  background: #ffffff;
+  color: #f1f5f9;
+  background: #111111;
   outline: none;
   min-width: 160px;
 }
 
-.get-report-btn {
+.business-list-card .get-report-btn {
   height: 38px;
   padding: 0 20px;
   background: #ffc52d;
   border: none;
   border-radius: 8px;
-  color: #1e293b;
+  color: #1a1608;
   font-weight: 700;
   font-size: 13.5px;
   cursor: pointer;
   box-shadow: 0 2px 6px rgba(255, 197, 45, 0.2);
 }
 
-.get-report-btn:hover {
+.business-list-card .get-report-btn:hover {
   background: #f5b700;
 }
 
-.list-table-container {
+.business-list-card .list-table-container {
   overflow-x: auto;
 }
 
-.business-list-table {
+.business-list-card .business-list-table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.business-list-table th {
+.business-list-card .business-list-table th {
   text-align: left;
   padding: 12px 14px;
   font-size: 13px;
   font-weight: 700;
-  color: #64748b;
-  border-bottom: 1px solid #e2e8f0;
-  background: #f8fafc;
+  color: #f1f5f9;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  background: #141414;
 }
 
-.business-list-table td {
+.business-list-card .business-list-table td {
   padding: 12px 14px;
   font-size: 13.5px;
-  color: #334155;
-  border-bottom: 1px solid #f1f5f9;
+  color: #f1f5f9;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.username-cell {
+.business-list-card .username-cell {
   font-weight: 700;
-  color: #0f172a;
+  color: #f1f5f9;
 }
 
-.level-cell {
+.business-list-card .level-cell {
   font-weight: 700;
   color: #ffc52d;
 }
 
-.list-page-card {
-  background: #ffffff;
-  border: 1px solid #f1f5f9;
+.business-list-card {
+  background: #111111;
+  border: 1px solid rgba(212, 175, 55, 0.15);
   border-radius: 16px;
   padding: 24px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-direction: column;
   gap: 20px;

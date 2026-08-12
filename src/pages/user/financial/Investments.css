@@ -7,8 +7,8 @@
 
 /* Invest Form Card */
 .invest-form-card {
-  background: #ffffff;
-  border: 1px solid #f1f5f9;
+  background: #111111;
+  border: 1px solid rgba(212, 175, 55, 0.16);
   border-radius: 14px;
   padding: 32px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
@@ -19,7 +19,7 @@
 .card-title {
   font-size: 19px;
   font-weight: 700;
-  color: #1e293b;
+  color: #f8fafc;
   margin-bottom: 6px;
 }
 
@@ -46,12 +46,12 @@
 .form-select {
   width: 100%;
   height: 48px;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
+  background: #1a1a1a;
+  border: 1px solid rgba(212, 175, 55, 0.24);
   border-radius: 10px;
   padding: 0 16px;
   font-size: 14px;
-  color: #334155;
+  color: #f1f5f9;
   outline: none;
   font-family: inherit;
   transition: all 0.2s ease;
@@ -86,7 +86,7 @@
   display: block;
   font-size: 13px;
   font-weight: 700;
-  color: #1e293b;
+  color: #cbd5e1;
   margin-bottom: 6px;
 }
 
@@ -95,29 +95,29 @@
 .file-input-wrapper {
   display: flex;
   align-items: center;
-  border: 1px solid #e2e8f0;
+  border: 1px solid rgba(212, 175, 55, 0.24);
   border-radius: 10px;
   padding: 6px 10px;
-  background: #ffffff;
+  background: #1a1a1a;
   height: 48px;
   box-sizing: border-box;
 }
 
 .file-button {
-  background: #f1f5f9;
-  border: 1px solid #cbd5e1;
+  background: #242424;
+  border: 1px solid rgba(212, 175, 55, 0.24);
   border-radius: 6px;
   padding: 6px 14px;
   font-size: 13px;
   font-weight: 600;
-  color: #334155;
+  color: #e2e8f0;
   cursor: pointer;
   white-space: nowrap;
   transition: all 0.2s ease;
 }
 
 .file-button:hover {
-  background: #e2e8f0;
+  background: rgba(245, 208, 97, 0.12);
 }
 
 .file-name {
@@ -146,7 +146,7 @@
   width: 100%;
   height: 48px;
   background: linear-gradient(90deg, #ffc52d, #f4a000);
-  color: #ffffff;
+  color: #1a1608;
   font-size: 16px;
   font-weight: 700;
   border: none;
@@ -181,8 +181,8 @@
 
 /* History Filters Card */
 .history-filter-card {
-  background: #ffffff;
-  border: 1px solid #f1f5f9;
+  background: #111111;
+  border: 1px solid rgba(212, 175, 55, 0.16);
   border-radius: 14px;
   padding: 24px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
@@ -191,7 +191,7 @@
 .section-title {
   font-size: 18px;
   font-weight: 700;
-  color: #1e293b;
+  color: #f8fafc;
   margin-bottom: 20px;
 }
 
@@ -217,12 +217,12 @@
 .filter-select {
   width: 100%;
   height: 48px;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
+  background: #1a1a1a;
+  border: 1px solid rgba(212, 175, 55, 0.24);
   border-radius: 10px;
   padding: 0 16px;
   font-size: 14px;
-  color: #334155;
+  color: #f1f5f9;
   outline: none;
   font-family: inherit;
   transition: all 0.2s ease;
@@ -249,7 +249,7 @@
   height: 48px;
   padding: 0 36px;
   background: linear-gradient(90deg, #ffc52d, #f4a000);
-  color: #ffffff;
+  color: #1a1608;
   font-size: 15px;
   font-weight: 700;
   border: none;
@@ -266,8 +266,8 @@
 
 /* History Table Card */
 .investments-table-card {
-  background: #ffffff;
-  border: 1px solid #f1f5f9;
+  background: #111111;
+  border: 1px solid rgba(212, 175, 55, 0.16);
   border-radius: 14px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
   overflow: hidden;
@@ -286,30 +286,30 @@
 }
 
 .investments-table th {
-  background: #f8fafc;
+  background: #141414;
   padding: 16px 18px;
   font-size: 12px;
   font-weight: 700;
-  color: #94a3b8;
-  border-bottom: 1px solid #f1f5f9;
+  color: #f1f5f9;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.18);
 }
 
 .investments-table td {
   padding: 16px 18px;
   font-size: 13.5px;
-  color: #334155;
-  border-bottom: 1px solid #f8fafc;
+  color: #e2e8f0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .amount-cell {
   font-weight: 700;
-  color: #0f172a;
+  color: #f5d061;
 }
 
 .download-btn {
   background: transparent;
   border: none;
-  color: #64748b;
+  color: #f5d061;
   font-size: 16px;
   cursor: pointer;
   padding: 4px;
@@ -318,8 +318,8 @@
 }
 
 .download-btn:hover {
-  color: #0f172a;
-  background: #f1f5f9;
+  color: #ffe082;
+  background: rgba(245, 208, 97, 0.12);
 }
 
 .status-badge {
@@ -328,7 +328,7 @@
 
 .status--active,
 .status--approved {
-  color: #16a34a;
+  color: #f5d061;
 }
 
 /* Pagination Bar */
@@ -338,17 +338,17 @@
   align-items: center;
   gap: 8px;
   padding: 16px 20px;
-  background: #ffffff;
-  border-top: 1px solid #f1f5f9;
+  background: #111111;
+  border-top: 1px solid rgba(212, 175, 55, 0.18);
 }
 
 .page-nav-btn {
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  border: 1px solid #e2e8f0;
-  background: #ffffff;
-  color: #64748b;
+  border: 1px solid rgba(212, 175, 55, 0.24);
+  background: #1a1a1a;
+  color: #cbd5e1;
   font-weight: 600;
   cursor: pointer;
   display: flex;
@@ -365,9 +365,9 @@
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  border: 1px solid #ffc52d;
-  background: #fffdf0;
-  color: #d97706;
+  border: 1px solid #f5d061;
+  background: #f5d061;
+  color: #1a1608;
   font-weight: 700;
   display: flex;
   align-items: center;
