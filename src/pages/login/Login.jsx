@@ -93,9 +93,6 @@ function Login() {
               <input type="checkbox" defaultChecked />
               Remember me
             </label>
-            <Link to="/admin/login" className="admin-portal-link">
-              Admin Portal
-            </Link>
           </div>
 
           <button type="submit" className="login-btn" disabled={loading}>

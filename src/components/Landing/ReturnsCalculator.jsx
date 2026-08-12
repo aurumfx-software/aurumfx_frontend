@@ -152,11 +152,6 @@ function ReturnsCalculator() {
                 <span className="roi-badge">+{plan.roi}% ROI</span>
               </div>
 
-              <div className="payout-box">
-                <span>Total Final Payout (Principal + Profit)</span>
-                <strong>₹{finalPayout.toLocaleString()}</strong>
-              </div>
-
               <a href="/register" className="calc-cta-btn">
                 Start Investing Now <FiArrowRight />
               </a>

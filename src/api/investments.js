@@ -1,16 +1,7 @@
 import api from "./axios";
 
 /**
- * Submit Investment API Call
- * Sends POST /investments with exact schema:
- * {
- *   "investment_plan_id": 0,
- *   "return_type_id": 0,
- *   "amount": 5000,
- *   "bank_transaction_id": "string",
- *   "enroller_id": "string",
- *   "investment_date": "YYYY-MM-DD"
- * }
+ * Create Investment via POST /investments/
  */
 export const createInvestmentApi = async (data) => {
   const payload = {
@@ -32,12 +23,50 @@ export const createInvestmentApi = async (data) => {
     const response = await api.post("/investments", payload);
     return { success: true, data: response.data };
   } catch (error) {
-    console.warn("Investment API call note:", error.message);
-    // Return success to allow smooth user flow while attempting real POST call
-    return {
-      success: true,
-      isMock: !error.response,
-      data: payload,
-    };
+    let errorMessage =
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      "Unable to submit investment";
+    return { success: false, error: errorMessage };
+  }
+};
+
+/**
+ * My Investments via GET /investments/
+ * Optional filter: start_date, end_date, status
+ */
+export const getMyInvestmentsApi = async (filters = {}) => {
+  try {
+    const params = {};
+    if (filters.start_date) params.start_date = filters.start_date;
+    if (filters.end_date) params.end_date = filters.end_date;
+    if (filters.status && filters.status !== "All") params.status = filters.status;
+
+    const response = await api.get("/investments", { params });
+    const payload = response.data;
+    const data = payload?.data || payload || [];
+    return { success: true, data: Array.isArray(data) ? data : [] };
+  } catch (error) {
+    let errorMessage =
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      "Unable to load investments";
+    return { success: false, error: errorMessage };
+  }
+};
+
+/**
+ * Investment Details via GET /investments/:id
+ */
+export const getInvestmentDetailsApi = async (investmentId) => {
+  try {
+    const response = await api.get(`/investments/${investmentId}`);
+    return { success: true, data: response.data };
+  } catch (error) {
+    let errorMessage =
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      "Unable to load investment details";
+    return { success: false, error: errorMessage };
   }
 };

@@ -195,6 +195,116 @@ export const checkEnrollerApi = async (enrollerId) => {
   }
 };
 
+/**
+ * Get user profile data from /auth/profile
+ */
+export const getProfileApi = async () => {
+  try {
+    const response = await api.get("/auth/profile");
+    return { success: true, data: response.data };
+  } catch (error) {
+    let errorMessage =
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      "Unable to load profile";
+
+    return { success: false, error: errorMessage };
+  }
+};
+
+/**
+ * Update user profile data via PUT /auth/profile
+ */
+export const updateProfileApi = async (payload) => {
+  try {
+    const response = await api.put("/auth/profile", payload);
+    return { success: true, data: response.data };
+  } catch (error) {
+    let errorMessage =
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      "Unable to update profile";
+
+    return { success: false, error: errorMessage };
+  }
+};
+
+/**
+ * Get profile activity history from /auth/profile/activity-history
+ */
+export const getProfileActivityHistoryApi = async () => {
+  try {
+    const response = await api.get("/auth/profile/activity-history");
+    return { success: true, data: response.data };
+  } catch (error) {
+    let errorMessage =
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      "Unable to load activity history";
+
+    return { success: false, error: errorMessage };
+  }
+};
+
+/**
+ * Update user bank details via PUT /auth/profile/bank-details
+ */
+export const updateProfileBankDetailsApi = async (payload) => {
+  try {
+    const response = await api.put("/auth/profile/bank-details", payload);
+    return { success: true, data: response.data };
+  } catch (error) {
+    let errorMessage =
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      "Unable to update bank details";
+
+    return { success: false, error: errorMessage };
+  }
+};
+
+/**
+ * Change user password via PUT /auth/change-password
+ */
+export const changePasswordApi = async (payload) => {
+  try {
+    const response = await api.put("/auth/change-password", payload);
+    return { success: true, data: response.data };
+  } catch (error) {
+    let errorMessage =
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      "Unable to change password";
+
+    return { success: false, error: errorMessage };
+  }
+};
+
+/**
+ * Upload profile image via POST /auth/profile/image
+ */
+export const uploadProfileImageApi = async (file) => {
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await api.post("/auth/profile/image", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return { success: true, data: response.data };
+  } catch (error) {
+    let errorMessage =
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      "Unable to upload profile image";
+
+    return { success: false, error: errorMessage };
+  }
+};
+
 import { clearDashboardCache } from "./dashboard";
 
 /**

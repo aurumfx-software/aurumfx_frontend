@@ -36,7 +36,7 @@ const userNavItems = [
     icon: FiDollarSign,
     hasSubmenu: true,
     children: [
-      { id: "ewallet", label: "My Ewallet", path: "/user/financial/ewallet" },
+      { id: "ewallet", label: "My Wallet", path: "/user/financial/ewallet" },
       { id: "transfer", label: "Fund Transfer", path: "/user/financial/transfer" },
       { id: "withdrawals", label: "Withdrawals", path: "/user/financial/withdrawals" },
       { id: "investments", label: "Investments", path: "/user/financial/investments" },

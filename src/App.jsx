@@ -441,6 +441,22 @@ function App() {
           }
         />
         <Route
+          path="/admin/financial/investments/active"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminInvestments />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/financial/investments/today"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminInvestments />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/admin/financial/investment-plan"
           element={
             <ProtectedRoute requiredRole="admin">

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   FiInfo,
   FiUser,
@@ -10,7 +10,16 @@ import {
   FiCalendar,
   FiPhone,
   FiMapPin,
+  FiUpload,
 } from "react-icons/fi";
+import {
+  getProfileApi,
+  updateProfileApi,
+  getProfileActivityHistoryApi,
+  updateProfileBankDetailsApi,
+  changePasswordApi,
+  uploadProfileImageApi,
+} from "../../api/auth";
 import UserLayout from "../../components/User/UserLayout";
 import "./Profile.css";
 
@@ -19,30 +28,241 @@ function Profile() {
 
   // Profile Form States
   const [profileData, setProfileData] = useState({
-    userId: localStorage.getItem("userId") || "FX256",
-    userName: localStorage.getItem("userName") || "SUCHITHRA",
-    fullName: "SUCHITHRA EG",
-    email: "suchithrasatheesh007@gmail.com",
-    mobile: "9747064065",
-    gender: "female",
-    dateJoined: "29 Jul 2026",
-    zipCode: "680586",
-    city: "THRISSUR",
-    country: "India",
-    bankName: "State Bank of India",
-    bankAccount: "38920194829",
-    ifsc: "SBIN0001234",
-    aadhar: "987654321012",
-    pan: "ABCDE1234F",
-    kycStatus: "Approved",
+    userId: localStorage.getItem("userId") || "",
+    userName: localStorage.getItem("userName") || "",
+    fullName: "",
+    email: "",
+    mobile: "",
+    gender: "",
+    dateJoined: "",
+    zipCode: "",
+    city: "",
+    country: "",
+    dateOfBirth: "",
+    bankName: "",
+    bankAccount: "",
+    ifsc: "",
+    aadhar: "",
+    pan: "",
+    kycStatus: "",
+    avatar: "",
   });
 
   const [savingMsg, setSavingMsg] = useState("");
+  const [loadingProfile, setLoadingProfile] = useState(true);
+  const [profileError, setProfileError] = useState("");
+  const [bankSavingMsg, setBankSavingMsg] = useState("");
+  const [bankError, setBankError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [passwordSuccess, setPasswordSuccess] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [profileImage, setProfileImage] = useState(null);
+  const [imageError, setImageError] = useState("");
+  const [imageSuccess, setImageSuccess] = useState("");
+  const [activityHistory, setActivityHistory] = useState([]);
+  const [activityLoading, setActivityLoading] = useState(true);
+  const [activityError, setActivityError] = useState("");
 
-  const handleEditSubmit = (e) => {
+  const handleEditSubmit = async (e) => {
     e.preventDefault();
-    setSavingMsg("Profile updated successfully!");
-    setTimeout(() => setSavingMsg(""), 3000);
+    setSavingMsg("");
+    setProfileError("");
+
+    const [firstName, ...rest] = profileData.fullName.trim().split(" ");
+    const lastName = rest.join(" ") || "";
+
+    const payload = {
+      email: profileData.email,
+      first_name: firstName,
+      last_name: lastName,
+      date_of_birth: profileData.dateOfBirth,
+      country: profileData.country,
+      city: profileData.city,
+      zip_code: profileData.zipCode,
+      mobile: profileData.mobile,
+      aadhar_no: profileData.aadhar,
+      pan: profileData.pan,
+      gender: profileData.gender,
+    };
+
+    const res = await updateProfileApi(payload);
+    if (res.success) {
+      setSavingMsg("Profile updated successfully!");
+      setTimeout(() => setSavingMsg(""), 3000);
+    } else {
+      setProfileError(res.error || "Failed to update profile");
+    }
+  };
+
+  const handleBankSubmit = async (e) => {
+    e.preventDefault();
+    setBankSavingMsg("");
+    setBankError("");
+
+    const payload = {
+      bank_name: profileData.bankName,
+      bank_account: profileData.bankAccount,
+      ifsc: profileData.ifsc,
+    };
+
+    const res = await updateProfileBankDetailsApi(payload);
+    if (res.success) {
+      setBankSavingMsg("Bank details updated successfully!");
+      setTimeout(() => setBankSavingMsg(""), 3000);
+    } else {
+      setBankError(res.error || "Failed to update bank details");
+    }
+  };
+
+  const handleChangePasswordSubmit = async (e) => {
+    e.preventDefault();
+    setPasswordSuccess("");
+    setPasswordError("");
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      setPasswordError("Please fill all password fields.");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setPasswordError("New password and confirm password do not match.");
+      return;
+    }
+
+    const payload = {
+      current_password: currentPassword,
+      new_password: newPassword,
+      confirm_password: confirmPassword,
+    };
+
+    const res = await changePasswordApi(payload);
+    if (res.success) {
+      setPasswordSuccess("Password changed successfully!");
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      setTimeout(() => setPasswordSuccess(""), 3000);
+    } else {
+      setPasswordError(res.error || "Failed to change password");
+    }
+  };
+
+  const handleUploadImage = async (file) => {
+    setImageError("");
+    setImageSuccess("");
+
+    const uploadFile = file || profileImage;
+    if (!uploadFile) {
+      setImageError("Please select an image to upload.");
+      return;
+    }
+
+    const res = await uploadProfileImageApi(uploadFile);
+    if (res.success) {
+      setImageSuccess("Profile image uploaded successfully!");
+      if (res.data?.data?.avatar || res.data?.avatar) {
+        setProfileData((prev) => ({
+          ...prev,
+          avatar: res.data?.data?.avatar || res.data?.avatar,
+        }));
+      }
+      setProfileImage(null);
+    } else {
+      setImageError(res.error || "Failed to upload profile image");
+    }
+  };
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      setLoadingProfile(true);
+      setProfileError("");
+
+      const res = await getProfileApi();
+      if (res.success) {
+        const data = res.data?.data || res.data || {};
+        const firstName = data.first_name || data.firstName || "";
+        const lastName = data.last_name || data.lastName || "";
+
+        setProfileData((prev) => ({
+          ...prev,
+          userId: data.user_id || data.userId || prev.userId,
+          userName: data.name || data.userName || prev.userName,
+          fullName: `${firstName} ${lastName}`.trim() || data.full_name || data.fullName || "",
+          email: data.email || prev.email || "",
+          mobile: data.mobile || prev.mobile || "",
+          gender: data.gender || prev.gender || "",
+          dateJoined: data.joined_date || data.date_joined || prev.dateJoined || "",
+          dateOfBirth: data.date_of_birth || data.dateOfBirth || prev.dateOfBirth || "",
+          zipCode: data.zip_code || prev.zipCode || "",
+          city: data.city || prev.city || "",
+          country: data.country || prev.country || "",
+          avatar: data.avatar || data.profile_image || prev.avatar || "",
+          bankName: data.bank_name || prev.bankName || "",
+          bankAccount: data.bank_account || prev.bankAccount || "",
+          ifsc: data.ifsc || prev.ifsc || "",
+          aadhar: data.aadhar_no || data.aadhar || prev.aadhar || "",
+          pan: data.pan || prev.pan || "",
+          kycStatus: data.kyc_status || data.kycStatus || prev.kycStatus || "",
+        }));
+      } else {
+        setProfileError(res.error || "Unable to load profile");
+      }
+
+      setLoadingProfile(false);
+    };
+
+    loadProfile();
+    loadActivityHistory();
+  }, []);
+
+  const loadActivityHistory = async () => {
+    setActivityLoading(true);
+    setActivityError("");
+
+    const res = await getProfileActivityHistoryApi();
+    if (res.success) {
+      const payload = res.data?.data || res.data || [];
+      setActivityHistory(Array.isArray(payload) ? payload : [payload]);
+    } else {
+      setActivityError(res.error || "Unable to load activity history");
+      setActivityHistory([]);
+    }
+
+    setActivityLoading(false);
+  };
+
+  const formatActivity = (item) => {
+    if (!item) return { title: "Unknown activity", subtitle: "" };
+
+    if (typeof item === "string") {
+      try {
+        const parsed = JSON.parse(item);
+        item = parsed;
+      } catch {
+        return { title: item, subtitle: "" };
+      }
+    }
+
+    const titleParts = [];
+    if (item.activity_type) titleParts.push(item.activity_type.replace(/_/g, " "));    
+    if (item.message) titleParts.push(item.message);
+    if (item.description) titleParts.push(item.description);
+    if (item.type) titleParts.push(item.type);
+
+    const title = titleParts.length > 0 ? titleParts.join(" — ") : JSON.stringify(item);
+    const subtitleParts = [];
+    if (item.ip_address) subtitleParts.push(`IP: ${item.ip_address}`);
+    if (item.created_at) subtitleParts.push(item.created_at);
+    if (item.createdAt) subtitleParts.push(item.createdAt);
+    if (item.timestamp) subtitleParts.push(item.timestamp);
+    if (item.date) subtitleParts.push(item.date);
+
+    return {
+      title,
+      subtitle: subtitleParts.join(" • "),
+    };
   };
 
   return (
@@ -70,11 +290,21 @@ function Profile() {
           </div>
         </div>
 
+        {loadingProfile ? (
+          <div className="loading-state">Loading profile...</div>
+        ) : profileError ? (
+          <div className="error-state">{profileError}</div>
+        ) : null}
+
         {/* Profile Header Card */}
         <div className="profile-hero-card">
           <div className="profile-hero-info">
             <div className="avatar-overlap">
-              <span>{profileData.userName.charAt(0)}</span>
+              {profileData.avatar ? (
+                <img src={profileData.avatar} alt={profileData.userName} />
+              ) : (
+                <span>{profileData.userName.charAt(0)}</span>
+              )}
             </div>
             <div className="hero-text">
               <h2 className="hero-name">{profileData.userName}</h2>
@@ -84,6 +314,27 @@ function Profile() {
 
           {/* Sub-tabs Navigation */}
           <div className="profile-tabs-bar">
+            <label className="upload-image-btn" htmlFor="profile-image-upload">
+              <FiUpload />
+              <span>Upload Image</span>
+            </label>
+            <input
+              id="profile-image-upload"
+              type="file"
+              accept="image/*"
+              style={{ display: "none" }}
+              onChange={async (e) => {
+                const file = e.target.files?.[0] || null;
+                if (!file) return;
+                setProfileImage(file);
+                setImageSuccess("");
+                setImageError("");
+                await handleUploadImage(file);
+              }}
+            />
+            {profileImage && (
+              <span className="upload-avatar-filename">{profileImage.name}</span>
+            )}
             <button
               type="button"
               className={`tab-btn ${activeTab === "profile" ? "tab-btn--active" : ""}`}
@@ -137,7 +388,7 @@ function Profile() {
               </div>
               <div className="info-row">
                 <FiCalendar className="info-row-icon" />
-                <span className="info-row-val">{profileData.dateJoined}</span>
+                <span className="info-row-val">{profileData.dateOfBirth || profileData.dateJoined}</span>
               </div>
               <div className="info-row">
                 <FiUser className="info-row-icon" />
@@ -175,9 +426,27 @@ function Profile() {
 
               <h3 className="activity-section-title">Your Activity History</h3>
 
-              <div className="activity-list-empty">
-                <div className="empty-state-space" />
-              </div>
+              {activityLoading ? (
+                <div className="activity-loading">Loading activity...</div>
+              ) : activityError ? (
+                <div className="activity-error">{activityError}</div>
+              ) : activityHistory.length > 0 ? (
+                <ul className="activity-list">
+                  {activityHistory.map((item, index) => {
+                    const formatted = formatActivity(item);
+                    return (
+                      <li key={index} className="activity-list-item">
+                        <span className="activity-item-label">{formatted.title}</span>
+                        {formatted.subtitle && (
+                          <span className="activity-item-time">{formatted.subtitle}</span>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              ) : (
+                <div className="activity-empty">No activity recorded yet.</div>
+              )}
 
               {/* Pagination Bar */}
               <div className="pagination-bar">
@@ -192,6 +461,9 @@ function Profile() {
             </div>
           </div>
         )}
+
+        {imageError && <div className="form-error-msg">{imageError}</div>}
+        {imageSuccess && <div className="form-success-msg">{imageSuccess}</div>}
 
         {/* TAB 2: Edit Info Form */}
         {activeTab === "edit" && (
@@ -223,6 +495,34 @@ function Profile() {
                 </div>
               </div>
 
+              <div className="form-grid-2">
+                <div className="form-group">
+                  <label className="form-label">Date of Birth</label>
+                  <input
+                    type="date"
+                    value={profileData.dateOfBirth}
+                    onChange={(e) =>
+                      setProfileData({ ...profileData, dateOfBirth: e.target.value })
+                    }
+                    className="form-input"
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Gender</label>
+                  <select
+                    value={profileData.gender}
+                    onChange={(e) =>
+                      setProfileData({ ...profileData, gender: e.target.value })
+                    }
+                    className="form-input"
+                  >
+                    <option value="">Select gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+              </div>
               <div className="form-grid-2">
                 <div className="form-group">
                   <label className="form-label">Mobile Number</label>
@@ -273,6 +573,31 @@ function Profile() {
                 </div>
               </div>
 
+              <div className="form-grid-2">
+                <div className="form-group">
+                  <label className="form-label">Aadhaar Number</label>
+                  <input
+                    type="text"
+                    value={profileData.aadhar}
+                    onChange={(e) =>
+                      setProfileData({ ...profileData, aadhar: e.target.value })
+                    }
+                    className="form-input"
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">PAN Number</label>
+                  <input
+                    type="text"
+                    value={profileData.pan}
+                    onChange={(e) =>
+                      setProfileData({ ...profileData, pan: e.target.value })
+                    }
+                    className="form-input"
+                  />
+                </div>
+              </div>
+
               {savingMsg && <p className="form-success-msg">{savingMsg}</p>}
 
               <button type="submit" className="save-submit-btn">
@@ -286,12 +611,14 @@ function Profile() {
         {activeTab === "settings" && (
           <div className="tab-form-card">
             <h3 className="form-card-title">Security & Password</h3>
-            <form onSubmit={handleEditSubmit} className="tab-form">
+            <form onSubmit={handleChangePasswordSubmit} className="tab-form">
               <div className="form-group">
                 <label className="form-label">Current Password</label>
                 <input
                   type="password"
                   placeholder="Enter current password"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
                   className="form-input"
                 />
               </div>
@@ -301,6 +628,8 @@ function Profile() {
                   <input
                     type="password"
                     placeholder="Enter new password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
                     className="form-input"
                   />
                 </div>
@@ -309,10 +638,15 @@ function Profile() {
                   <input
                     type="password"
                     placeholder="Confirm new password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
                     className="form-input"
                   />
                 </div>
               </div>
+
+              {passwordSuccess && <p className="form-success-msg">{passwordSuccess}</p>}
+              {passwordError && <p className="form-error-msg">{passwordError}</p>}
 
               <button type="submit" className="save-submit-btn">
                 Update Password
@@ -325,7 +659,7 @@ function Profile() {
         {activeTab === "bank" && (
           <div className="tab-form-card">
             <h3 className="form-card-title">Bank Details</h3>
-            <form onSubmit={handleEditSubmit} className="tab-form">
+            <form onSubmit={handleBankSubmit} className="tab-form">
               <div className="form-group">
                 <label className="form-label">Bank Name</label>
                 <input
@@ -362,7 +696,8 @@ function Profile() {
                 </div>
               </div>
 
-              {savingMsg && <p className="form-success-msg">{savingMsg}</p>}
+              {bankSavingMsg && <p className="form-success-msg">{bankSavingMsg}</p>}
+              {bankError && <p className="form-error-msg">{bankError}</p>}
 
               <button type="submit" className="save-submit-btn">
                 Update Bank Details
