@@ -320,3 +320,24 @@
     font-size: 15px;
   }
 }
+
+/* Ensure date inputs match dark theme and their native date text is visible */
+.register-form input[type="date"] {
+  background: #141414;
+  color: #e5e7eb;
+}
+
+/* Webkit-specific date display fields (placeholder like dd-mm-yyyy) */
+.register-form input[type="date"]::-webkit-datetime-edit {
+  color: #e5e7eb;
+}
+.register-form input[type="date"]::-webkit-datetime-edit-year-field,
+.register-form input[type="date"]::-webkit-datetime-edit-month-field,
+.register-form input[type="date"]::-webkit-datetime-edit-day-field {
+  color: #e5e7eb;
+}
+
+/* Make the calendar picker icon more visible on dark background */
+.register-form input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(0.9);
+}

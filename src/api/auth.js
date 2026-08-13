@@ -162,12 +162,25 @@ export const checkEnrollerApi = async (enrollerId) => {
       data?.exists !== undefined
         ? data.exists
         : data?.success !== false && data?.status !== "error";
-    const name =
-      data?.name ||
-      data?.enroller_name ||
-      data?.user?.name ||
-      data?.data?.name ||
-      "";
+    let name = "";
+    if (data?.name) name = data.name;
+    else if (data?.enroller_name) name = data.enroller_name;
+    else if (data?.full_name) name = data.full_name;
+    else if (data?.first_name || data?.last_name) {
+      name = `${data?.first_name || ""}${data?.first_name && data?.last_name ? " " : ""}${data?.last_name || ""}`.trim();
+    } else if (data?.user) {
+      if (data.user.name) name = data.user.name;
+      else if (data.user.full_name) name = data.user.full_name;
+      else if (data.user.first_name || data.user.last_name) {
+        name = `${data.user.first_name || ""}${data.user.first_name && data.user.last_name ? " " : ""}${data.user.last_name || ""}`.trim();
+      }
+    } else if (data?.data) {
+      if (data.data.name) name = data.data.name;
+      else if (data.data.full_name) name = data.data.full_name;
+      else if (data.data.first_name || data.data.last_name) {
+        name = `${data.data.first_name || ""}${data.data.first_name && data.data.last_name ? " " : ""}${data.data.last_name || ""}`.trim();
+      }
+    }
 
     return {
       success: true,

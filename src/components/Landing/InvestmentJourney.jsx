@@ -80,7 +80,7 @@ const InvestmentJourney = () => {
             <span>Min. Deposit</span>
           </div>
           <div className="summary-box" style={{ animationDelay: "0.7s" }}>
-            <h3>14%</h3>
+            <h3>8% / 14%</h3>
             <span>Monthly Returns</span>
           </div>
           <div className="summary-box" style={{ animationDelay: "0.85s" }}>

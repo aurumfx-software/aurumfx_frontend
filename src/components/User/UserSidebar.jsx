@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   FiGrid,
-  FiShare2,
   FiDollarSign,
   FiAward,
   FiUser,
@@ -19,37 +18,13 @@ import "./UserSidebar.css";
 const userNavItems = [
   { id: "dashboard", label: "Dashboard", icon: FiGrid, path: "/user/dashboard" },
   {
-    id: "business",
-    label: "Business",
-    icon: FiShare2,
-    hasSubmenu: true,
-    children: [
-      { id: "club", label: "Club", path: "/user/genealogy/binary" },
-      { id: "enroller", label: "Enroller", path: "/user/genealogy/sponsor" },
-      { id: "structure", label: "Structure", path: "/user/genealogy/tree" },
-      { id: "list", label: "List", path: "/user/genealogy/list" },
-    ],
-  },
-  {
     id: "financial",
     label: "Financial",
     icon: FiDollarSign,
     hasSubmenu: true,
     children: [
       { id: "ewallet", label: "My Wallet", path: "/user/financial/ewallet" },
-      { id: "transfer", label: "Fund Transfer", path: "/user/financial/transfer" },
-      { id: "withdrawals", label: "Withdrawals", path: "/user/financial/withdrawals" },
       { id: "investments", label: "Investments", path: "/user/financial/investments" },
-    ],
-  },
-  {
-    id: "achievers",
-    label: "Achievers List",
-    icon: FiAward,
-    hasSubmenu: true,
-    children: [
-      { id: "rank-achievers", label: "Rank Achievers", path: "/user/achievers/rank" },
-      { id: "criteria-achievers", label: "Criteria Achievers", path: "/user/achievers/criteria" },
     ],
   },
   { id: "profile", label: "My Profile", icon: FiUser, path: "/user/profile" },

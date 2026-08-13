@@ -129,17 +129,10 @@ export const getAdminDashboardData = async (timeframe = "week") => {
       adminCache.set(timeframe, { data: resData, timestamp: Date.now() });
       return resData;
     } catch (error) {
-      console.warn(
-        "Admin Dashboard API offline or not reachable, using fallback mock data:",
-        error.message
-      );
-      const mockRes = {
-        success: true,
-        isMock: true,
-        data: MOCK_ADMIN_DASHBOARD,
-      };
-      adminCache.set(timeframe, { data: mockRes, timestamp: Date.now() });
-      return mockRes;
+        console.error("Admin Dashboard API error:", error.message);
+        const errRes = { success: false, error: error.response?.data?.message || error.message };
+        adminCache.set(timeframe, { data: errRes, timestamp: Date.now() });
+        return errRes;
     } finally {
       adminInFlight.delete(timeframe);
     }
@@ -177,18 +170,11 @@ export const getUserDashboardData = async () => {
       userCache.timestamp = Date.now();
       return resData;
     } catch (error) {
-      console.warn(
-        "User Dashboard API offline or not reachable, using fallback mock data:",
-        error.message
-      );
-      const mockRes = {
-        success: true,
-        isMock: true,
-        data: MOCK_USER_DASHBOARD,
-      };
-      userCache.data = mockRes;
+      console.error("User Dashboard API error:", error.message);
+      const errRes = { success: false, error: error.response?.data?.message || error.message };
+      userCache.data = errRes;
       userCache.timestamp = Date.now();
-      return mockRes;
+      return errRes;
     } finally {
       userInFlight = null;
     }

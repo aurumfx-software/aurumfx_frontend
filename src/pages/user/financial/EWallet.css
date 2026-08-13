@@ -59,74 +59,143 @@
   font-weight: 600;
 }
 
-/* Summary Cards Grid */
+/* Hero balance card */
+.balance-hero {
+  background: linear-gradient(135deg, #1a1a1a 0%, #141414 100%);
+  border: 1px solid rgba(245, 208, 97, 0.28);
+  border-radius: 18px;
+  padding: 28px 26px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.3);
+}
+
+.balance-hero::after {
+  content: "";
+  position: absolute;
+  top: -40%;
+  right: -10%;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(245, 208, 97, 0.14) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.balance-hero-left {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+.balance-hero-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #f5d061;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.balance-hero-value {
+  font-size: 40px;
+  font-weight: 800;
+  color: #f8fafc;
+  letter-spacing: -0.5px;
+  font-family: "Courier New", monospace;
+}
+
+.balance-hero-sub {
+  font-size: 13.5px;
+  color: #94a3b8;
+}
+
+.balance-hero-sub strong {
+  color: #e2e8f0;
+}
+
+/* Metric cards grid */
 .ewallet-stats-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 16px;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 720px) {
   .ewallet-stats-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
-.ewallet-stat-card {
+.metric-card {
   background: #111111;
   border: 1px solid rgba(212, 175, 55, 0.16);
   border-radius: 14px;
-  padding: 20px 18px;
+  padding: 18px 18px;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-  gap: 16px;
 }
 
-.stat-card-left {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  min-width: 0;
-}
-
-.stat-card-label {
-  font-size: 14px;
-  font-weight: 700;
-  color: #94a3b8;
-}
-
-.stat-card-value {
-  font-size: 14px;
-  font-weight: 600;
-  color: #f8fafc;
-  word-break: break-all;
-  font-family: "Courier New", monospace;
-  line-height: 1.5;
-}
-
-.stat-card-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
+.metric-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
+  font-size: 19px;
   flex-shrink: 0;
 }
 
-.icon--balance {
+.icon--pending {
   background: rgba(245, 208, 97, 0.12);
   border: 1.5px solid rgba(245, 208, 97, 0.3);
   color: #f5d061;
 }
 
-.icon--today {
+.icon--paid {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1.5px solid rgba(16, 185, 129, 0.3);
+  color: #10b981;
+}
+
+.icon--gross {
   background: rgba(59, 130, 246, 0.12);
   border: 1.5px solid rgba(96, 165, 250, 0.3);
   color: #93c5fd;
+}
+
+.metric-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.metric-label {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.metric-value {
+  font-size: 20px;
+  font-weight: 800;
+  color: #f8fafc;
+  font-family: "Courier New", monospace;
+}
+
+.metric-footnote {
+  font-size: 11.5px;
+  color: #64748b;
 }
 
 /* Commission History Table Card */
@@ -150,41 +219,127 @@
   overflow-x: auto;
 }
 
+/* Fixed layout + explicit column widths keeps header/data columns locked
+   together so they can never drift out of alignment with each other. */
 .ewallet-table {
   width: 100%;
+  min-width: 640px;
   border-collapse: collapse;
   text-align: left;
+  table-layout: fixed;
 }
+
+.ewallet-table col:nth-child(1) { width: 26%; }
+.ewallet-table col:nth-child(2) { width: 16%; }
+.ewallet-table col:nth-child(3) { width: 16%; }
+.ewallet-table col:nth-child(4) { width: 14%; }
+.ewallet-table col:nth-child(5) { width: 15%; }
+.ewallet-table col:nth-child(6) { width: 13%; }
 
 .ewallet-table th {
   background: #141414;
-  padding: 14px 18px;
-  font-size: 12.5px;
+  padding: 12px 16px;
+  font-size: 12px;
   font-weight: 700;
-  color: #f1f5f9;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
   border-bottom: 1px solid rgba(212, 175, 55, 0.18);
   white-space: nowrap;
 }
 
 .ewallet-table td {
-  padding: 14px 18px;
-  font-size: 13px;
+  padding: 14px 16px;
+  font-size: 13.5px;
   color: #e2e8f0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  font-family: "Inter", "Segoe UI", sans-serif;
+  vertical-align: middle;
+}
+
+/* Header alignment is driven from the same nth-child index as the data
+   cells below, so a header can never sit on the opposite side of its
+   own column's values again. */
+.ewallet-table th:nth-child(1),
+.ewallet-table td:nth-child(1) {
+  text-align: left;
+}
+
+.ewallet-table th:nth-child(2),
+.ewallet-table th:nth-child(3),
+.ewallet-table th:nth-child(4) {
+  text-align: right;
+}
+
+.ewallet-table th:nth-child(5) {
+  text-align: center;
+}
+
+.ewallet-table th:nth-child(6) {
+  text-align: right;
+}
+
+.empty-cell {
+  text-align: center;
+  color: #64748b;
+  padding: 24px 16px !important;
+}
+
+/* Numeric cell alignment (Investment / Commission / Paid columns) */
+.cell-amount,
+.cell-gross,
+.cell-paid {
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   font-family: "Courier New", monospace;
-  word-break: break-all;
-  max-width: 500px;
+  font-weight: 600;
+}
+
+/* Status column centered to match its header */
+.ewallet-table td:nth-child(5) {
+  text-align: center;
+}
+
+/* Date column right-aligned to match its header */
+.date-cell {
+  text-align: right;
+  white-space: nowrap;
+  color: #94a3b8;
+}
+
+.investor-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.investor-name {
+  font-weight: 700;
+  color: #f8fafc;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.investor-id {
+  font-size: 11.5px;
+  color: #64748b;
 }
 
 .ewallet-table tr:last-child td {
   border-bottom: none;
 }
 
-.ewallet-table tbody tr {
+.row--clickable {
+  cursor: pointer;
   transition: background 0.15s ease;
 }
 
-.ewallet-table tbody tr:hover {
+.row--clickable:hover {
   background: rgba(245, 208, 97, 0.04);
 }
 
@@ -206,7 +361,7 @@
   border: 1px solid rgba(212, 175, 55, 0.2);
   border-radius: 16px;
   width: 100%;
-  max-width: 520px;
+  max-width: 480px;
   max-height: 85vh;
   overflow-y: auto;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
@@ -246,7 +401,62 @@
   padding: 24px;
   color: #e2e8f0;
   font-size: 13px;
+  font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+.detail-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.detail-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.detail-label {
+  font-size: 12.5px;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.detail-value {
+  font-size: 13.5px;
+  color: #f8fafc;
+  font-weight: 700;
   font-family: "Courier New", monospace;
+  text-align: right;
+}
+
+/* Status pill */
+.status-pill {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.status--pending {
+  background: rgba(245, 208, 97, 0.14);
+  color: #f5d061;
+}
+
+.status--paid,
+.status--completed {
+  background: rgba(16, 185, 129, 0.14);
+  color: #10b981;
 }
 
 /* Responsive */
@@ -255,14 +465,12 @@
     font-size: 20px;
   }
 
-  .ewallet-stat-card {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
+  .balance-hero {
+    padding: 22px 20px;
   }
 
-  .stat-card-value {
-    font-size: 12.5px;
+  .balance-hero-value {
+    font-size: 32px;
   }
 
   .ewallet-table-card {
@@ -297,14 +505,12 @@
     padding: 12px 14px;
   }
 
-  .stat-card-icon {
-    width: 40px;
-    height: 40px;
-    font-size: 18px;
+  .balance-hero-value {
+    font-size: 28px;
   }
 
   .ewallet-table {
-    min-width: 400px;
+    min-width: 480px;
   }
 
   .modal-container {

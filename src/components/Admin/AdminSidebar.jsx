@@ -29,40 +29,14 @@ const navItems = [
     ],
   },
   {
-    id: "business",
-    label: "Business",
-    icon: FiBriefcase,
-    children: [
-      { id: "club", label: "Club", path: "/admin/business/club" },
-      { id: "enroller", label: "Enroller", path: "/admin/business/enroller" },
-      {
-        id: "structure",
-        label: "Structure",
-        path: "/admin/business/structure",
-      },
-      { id: "list", label: "List", path: "/admin/business/list" },
-    ],
-  },
-  {
     id: "financial",
     label: "Financial",
     icon: FiDollarSign,
     children: [
-      { id: "ewallet", label: "E-Wallet", path: "/admin/financial/e-wallet" },
       {
-        id: "deposit-wallet",
-        label: "Deposit Wallet",
-        path: "/admin/financial/deposit-wallet",
-      },
-      {
-        id: "fund-credit",
-        label: "Fund Credit",
-        path: "/admin/financial/fund-credits",
-      },
-      {
-        id: "payout",
-        label: "Payout",
-        path: "/admin/financial/payout/request",
+        id: "wallet",
+        label: "Wallet",
+        path: "/admin/wallet",
       },
       {
         id: "investments",
@@ -79,41 +53,14 @@ const navItems = [
         label: "Investment Type",
         path: "/admin/financial/investment-type",
       },
+          {
+            id: "lot-settings",
+            label: "Lot Settings",
+            path: "/admin/financial/lot-settings",
+          },
     ],
   },
 
-  {
-    id: "communication",
-    label: "Communication",
-    icon: FiMessageSquare,
-    children: [
-      { id: "faq", label: "FAQ's", path: "/admin/communication/faqs" },
-      {
-        id: "emails",
-        label: "Emails",
-        path: "/admin/communication/mails/inbox",
-      },
-      {
-        id: "help-center",
-        label: "Help Center",
-        path: "/admin/communication/help-center/tickets/inprogress",
-      },
-      {
-        id: "article",
-        label: "Article",
-        path: "/admin/communication/articles",
-      },
-    ],
-  },
-  {
-    id: "tools",
-    label: "Tools",
-    icon: FiTool,
-    children: [
-      { id: "documents", label: "Documents", path: "/admin/tools/documents" },
-      { id: "videos", label: "Videos", path: "/admin/tools/videos" },
-    ],
-  },
   {
     id: "members",
     label: "Members Management",
@@ -142,29 +89,15 @@ const navItems = [
     ],
   },
   {
-    id: "achievers",
-    label: "Achievers List",
-    icon: FiAward,
-    children: [
-      {
-        id: "rank-achievers",
-        label: "Rank Achievers",
-        path: "/admin/achievers/rank",
-      },
-      {
-        id: "criteria-achievers",
-        label: "Criteria Achievers",
-        path: "/admin/achievers/criteria",
-      },
-    ],
-  },
-  {
     id: "settings",
     label: "Settings",
     icon: FiSettings,
     children: [
       { id: "brand", label: "Brand", path: "/admin/settings/brand" },
       { id: "network", label: "Network", path: "/admin/settings/network" },
+          { id: "ranks", label: "Ranks", path: "/admin/settings/ranks" },
+      { id: "level-settings", label: "Level Commission", path: "/admin/settings/level-settings" },
+      { id: "level-report", label: "Level Commission Report", path: "/admin/settings/level-report" },
       {
         id: "withdrawal",
         label: "Withdrawal",
@@ -218,6 +151,17 @@ function AdminSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse }) {
   const itemRefs = useRef({});
   const lastExpandedId = useRef(null);
 
+  const isDashboardNetworkPath =
+    location.pathname === "/admin/dashboard" ||
+    location.pathname === "/admin/dashboard/network";
+
+  const isDashboardBusinessPath = location.pathname === "/admin/dashboard/business";
+
+  const matchesChildPath = (childPath, currentPath) => {
+    if (!childPath) return false;
+    return currentPath === childPath || currentPath.startsWith(`${childPath}/`);
+  };
+
   const [expanded, setExpanded] = useState({
     dashboard: true,
     business: false,
@@ -245,15 +189,18 @@ function AdminSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse }) {
 
     navItems.forEach((item) => {
       if (item.children) {
-        const hasActiveChild = item.children.some(
-          (child) =>
-            location.pathname === child.path ||
-            (child.id === "network" &&
-              (location.pathname === "/admin/dashboard" ||
-                location.pathname === "/admin/dashboard/network")) ||
-            (child.id === "business" &&
-              location.pathname === "/admin/dashboard/business")
-        );
+        const hasActiveChild = item.children.some((child) => {
+          if (child.id === "network" && item.id === "dashboard") {
+            return isDashboardNetworkPath;
+          }
+
+          if (child.id === "business" && item.id === "dashboard") {
+            return isDashboardBusinessPath;
+          }
+
+          return matchesChildPath(child.path, location.pathname);
+        });
+
         if (hasActiveChild) {
           newExpanded[item.id] = true;
         }
@@ -352,15 +299,17 @@ function AdminSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse }) {
           const isItemActive =
             location.pathname === item.path ||
             (item.children &&
-              item.children.some(
-                (child) =>
-                  location.pathname === child.path ||
-                  (child.id === "network" &&
-                    (location.pathname === "/admin/dashboard" ||
-                      location.pathname === "/admin/dashboard/network")) ||
-                  (child.id === "business" &&
-                    location.pathname === "/admin/dashboard/business")
-              ));
+              item.children.some((child) => {
+                if (child.id === "network" && item.id === "dashboard") {
+                  return isDashboardNetworkPath;
+                }
+
+                if (child.id === "business" && item.id === "dashboard") {
+                  return isDashboardBusinessPath;
+                }
+
+                return matchesChildPath(child.path, location.pathname);
+              }));
 
           const isExpanded = expanded[item.id];
 
@@ -388,12 +337,11 @@ function AdminSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse }) {
                 <div className="nav-submenu">
                   {item.children.map((child) => {
                     const isChildActive =
-                      location.pathname === child.path ||
-                      (child.id === "network" &&
-                        (location.pathname === "/admin/dashboard" ||
-                          location.pathname === "/admin/dashboard/network")) ||
-                      (child.id === "business" &&
-                        location.pathname === "/admin/dashboard/business");
+                      item.id === "dashboard" && child.id === "network"
+                        ? isDashboardNetworkPath
+                        : item.id === "dashboard" && child.id === "business"
+                          ? isDashboardBusinessPath
+                          : matchesChildPath(child.path, location.pathname);
 
                     return (
                       <Link

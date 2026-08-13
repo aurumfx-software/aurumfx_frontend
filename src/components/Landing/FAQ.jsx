@@ -4,14 +4,19 @@ import "./FAQ.css";
 
 const faqs = [
   {
+    question: "What investment plans are available with AurumFX?",
+    answer:
+      "AurumFX offers two flexible plans: the 30-month plan with 8% monthly returns, and the 10-month plan with 14% monthly returns. Both are designed to support long-term wealth growth with transparent payout tracking.",
+  },
+  {
     question: "Is my investment safe with AurumFX?",
     answer:
       "Your investment is backed by actual gold trading activities. We maintain complete transparency in all our operations and provide regular updates on your investment performance.",
   },
   {
-    question: "Can I withdraw my investment before 10 months?",
+    question: "Can I withdraw my investment before 30 months?",
     answer:
-      "While we recommend completing the full 10-month cycle for maximum returns, early withdrawal options are available. Please contact our support team to discuss your specific situation.",
+      "The 30-month plan is the long-term option with 8% monthly returns. The 10-month plan is shorter and offers 14% monthly returns. Early withdrawal terms depend on your selected plan, so please review your agreement and speak with our support team for the exact terms.",
   },
   {
     question: "What are the risks involved?",
@@ -21,7 +26,7 @@ const faqs = [
   {
     question: "How do I receive my monthly returns?",
     answer:
-      "Monthly bonuses (14%) are credited directly to your registered account every month. You can choose to withdraw them directly or reinvest as per your preference.",
+      "Monthly returns are credited directly to your registered account based on your chosen plan: 14% for the 10-month plan and 8% for the 30-month plan. You can choose to withdraw them directly or reinvest as per your preference.",
   },
   {
     question: "Is there a maximum investment limit?",

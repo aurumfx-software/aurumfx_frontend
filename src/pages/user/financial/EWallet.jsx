@@ -1,10 +1,16 @@
 import { useState, useEffect } from "react";
-import { FiInfo, FiDollarSign, FiCalendar, FiX } from "react-icons/fi";
+import {
+  FiInfo,
+  FiDollarSign,
+  FiClock,
+  FiCheckCircle,
+  FiTrendingUp,
+  FiX,
+} from "react-icons/fi";
 import UserLayout from "../../../components/User/UserLayout";
 import {
   getWalletSummaryApi,
   getCommissionHistoryApi,
-  getTodayCommissionApi,
   getCommissionDetailsApi,
 } from "../../../api/wallet";
 import "./EWallet.css";
@@ -12,9 +18,6 @@ import "./EWallet.css";
 function EWallet() {
   const [summary, setSummary] = useState(null);
   const [summaryLoading, setSummaryLoading] = useState(true);
-
-  const [today, setToday] = useState(null);
-  const [todayLoading, setTodayLoading] = useState(true);
 
   const [transactions, setTransactions] = useState([]);
   const [txLoading, setTxLoading] = useState(true);
@@ -31,15 +34,10 @@ function EWallet() {
       if (res.success) setSummary(res.data);
       setSummaryLoading(false);
 
-      setTodayLoading(true);
-      const todayRes = await getTodayCommissionApi();
-      if (todayRes.success) setToday(todayRes.data);
-      setTodayLoading(false);
-
       setTxLoading(true);
       const txRes = await getCommissionHistoryApi();
       if (txRes.success) {
-        setTransactions(txRes.data);
+        setTransactions(txRes.data || []);
       } else {
         setTxError(txRes.error || "Unable to load history");
       }
@@ -61,6 +59,23 @@ function EWallet() {
   const userId = localStorage.getItem("userId") || "FX256";
   const userName = localStorage.getItem("userName") || "SUCHITHRA";
 
+  const money = (v) => `₹${Number(v || 0).toLocaleString("en-IN")}`;
+
+  const formatDate = (s) => {
+    try {
+      if (!s) return "-";
+      const d = new Date(s);
+      if (isNaN(d.getTime())) return s;
+      return d.toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      });
+    } catch {
+      return s || "-";
+    }
+  };
+
   return (
     <UserLayout user={{ name: userName, userId }}>
       <div className="ewallet-page">
@@ -68,7 +83,10 @@ function EWallet() {
           <FiInfo className="alert-banner-icon" />
           <span>
             Heads up! You are now logged in as <strong>{userId}</strong>{" "}
-            <a href="/admin/login" className="alert-link">Click Here</a>, to go back admin account.
+            <a href="/admin/login" className="alert-link">
+              Click Here
+            </a>
+            , to go back admin account.
           </span>
         </div>
 
@@ -81,70 +99,154 @@ function EWallet() {
           </div>
         </div>
 
-        {/* 2 cards: Wallet Summary + Today Commission */}
-        <div className="ewallet-stats-grid">
-          <div className="ewallet-stat-card">
-            <div className="stat-card-left">
-              <span className="stat-card-label">Wallet Summary</span>
-              <h3 className="stat-card-value">
-                {summaryLoading
-                  ? "Loading..."
-                  : summary
-                  ? JSON.stringify(summary)
-                  : "No data"}
-              </h3>
+        {/* Hero balance card */}
+        <div className="balance-hero">
+          <div className="balance-hero-left">
+            <span className="balance-hero-label">
+              <FiDollarSign /> Available Balance
+            </span>
+            <div className="balance-hero-value">
+              {summaryLoading ? "—" : money(summary?.available_balance)}
             </div>
-            <div className="stat-card-icon icon--balance">
-              <FiDollarSign />
+            <span className="balance-hero-sub">
+              Today's earning:{" "}
+              <strong>
+                {summaryLoading
+                  ? "—"
+                  : money(summary?.today_generated_commission)}
+              </strong>
+            </span>
+          </div>
+        </div>
+
+        {/* Key metric cards */}
+        <div className="ewallet-stats-grid">
+          <div className="metric-card">
+            <div className="metric-icon icon--pending">
+              <FiClock />
+            </div>
+            <div className="metric-body">
+              <span className="metric-label">Pending Commission</span>
+              <span className="metric-value">
+                {summaryLoading ? "—" : money(summary?.pending_commission)}
+              </span>
             </div>
           </div>
 
-          <div className="ewallet-stat-card">
-            <div className="stat-card-left">
-              <span className="stat-card-label">Today's Commission</span>
-              <h3 className="stat-card-value">
-                {todayLoading
-                  ? "Loading..."
-                  : today
-                  ? JSON.stringify(today)
-                  : "No data"}
-              </h3>
+          <div className="metric-card">
+            <div className="metric-icon icon--paid">
+              <FiCheckCircle />
             </div>
-            <div className="stat-card-icon icon--today">
-              <FiCalendar />
+            <div className="metric-body">
+              <span className="metric-label">Paid Commission</span>
+              <span className="metric-value">
+                {summaryLoading ? "—" : money(summary?.paid_commission)}
+              </span>
+            </div>
+          </div>
+
+          <div className="metric-card">
+            <div className="metric-icon icon--gross">
+              <FiTrendingUp />
+            </div>
+            <div className="metric-body">
+              <span className="metric-label">Gross Commission</span>
+              <span className="metric-value">
+                {summaryLoading ? "—" : money(summary?.gross_commission)}
+              </span>
+              <span className="metric-footnote">
+                Admin fee: {summaryLoading ? "—" : money(summary?.admin_fee)}
+              </span>
             </div>
           </div>
         </div>
 
-        {/* Commission history — click any row to see detail */}
+        {/* Commission history */}
         <div className="ewallet-table-card">
           <h2 className="section-title">Commission History</h2>
           <div className="table-responsive">
-            <table className="ewallet-table">
+            <table className="ewallet-table ewallet-table--clean">
+              <colgroup>
+                <col />
+                <col />
+                <col />
+                <col />
+                <col />
+                <col />
+              </colgroup>
               <thead>
                 <tr>
-                  <th>No</th>
-                  <th>Raw Data</th>
+                  <th>Investor</th>
+                  <th>Investment</th>
+                  <th>Commission</th>
+                  <th>Paid</th>
+                  <th>Status</th>
+                  <th>Date</th>
                 </tr>
               </thead>
               <tbody>
                 {txLoading ? (
-                  <tr><td colSpan="2">Loading...</td></tr>
+                  <tr>
+                    <td colSpan="6" className="empty-cell">
+                      Loading...
+                    </td>
+                  </tr>
                 ) : txError ? (
-                  <tr><td colSpan="2">{txError}</td></tr>
+                  <tr>
+                    <td colSpan="6" className="empty-cell">
+                      {txError}
+                    </td>
+                  </tr>
                 ) : transactions.length === 0 ? (
-                  <tr><td colSpan="2">No commission records found.</td></tr>
+                  <tr>
+                    <td colSpan="6" className="empty-cell">
+                      No commission records found.
+                    </td>
+                  </tr>
                 ) : (
-                  transactions.map((tx, idx) => (
-                    <tr
-                      key={idx}
-                      onClick={() => handleRowClick(tx.id)}
-                      style={{ cursor: tx.id !== undefined ? "pointer" : "default" }}
-                    >
-                      <td>{idx + 1}</td>
-                      <td>{JSON.stringify(tx)}</td>
-                    </tr>
-                  ))
+                  transactions.map((tx, idx) => {
+                    const status = (tx.status || "").toString();
+                    const statusClass =
+                      status.toUpperCase() === "PENDING"
+                        ? "status--pending"
+                        : status.toUpperCase() === "PAID" ||
+                          status.toUpperCase() === "COMPLETED"
+                        ? "status--paid"
+                        : "";
+                    return (
+                      <tr
+                        key={tx.id ?? idx}
+                        onClick={() => handleRowClick(tx.id)}
+                        className={tx.id !== undefined ? "row--clickable" : ""}
+                      >
+                        <td className="investor-cell">
+                          <span className="investor-name">
+                            {tx.investor_name ?? "-"}
+                          </span>
+                          <span className="investor-id">
+                            {tx.investor_id ?? ""}
+                          </span>
+                        </td>
+                        <td className="cell-amount">
+                          {money(tx.investment_amount)}
+                        </td>
+                        <td className="cell-gross">
+                          {money(tx.gross_commission)}
+                        </td>
+                        <td className="cell-paid">
+                          {money(tx.paid_amount)}
+                        </td>
+                        <td>
+                          <span className={`status-pill ${statusClass}`}>
+                            {status || "-"}
+                          </span>
+                        </td>
+                        <td className="date-cell">
+                          {formatDate(tx.created_at)}
+                        </td>
+                      </tr>
+                    );
+                  })
                 )}
               </tbody>
             </table>
@@ -157,7 +259,10 @@ function EWallet() {
             <div className="modal-container" onClick={(e) => e.stopPropagation()}>
               <div className="modal-header">
                 <h3>Commission Detail</h3>
-                <button className="modal-close-btn" onClick={() => setDetailOpen(false)}>
+                <button
+                  className="modal-close-btn"
+                  onClick={() => setDetailOpen(false)}
+                >
                   <FiX size={18} />
                 </button>
               </div>
@@ -165,9 +270,36 @@ function EWallet() {
                 {detailLoading ? (
                   <p>Loading...</p>
                 ) : detailData ? (
-                  <pre style={{ whiteSpace: "pre-wrap", wordBreak: "break-all", margin: 0 }}>
-                    {JSON.stringify(detailData, null, 2)}
-                  </pre>
+                  <div className="detail-grid">
+                    <DetailRow label="Investor" value={detailData.investor_name} />
+                    <DetailRow
+                      label="Investment Amount"
+                      value={money(detailData.investment_amount)}
+                    />
+                    <DetailRow
+                      label="Commission %"
+                      value={`${detailData.commission_percentage ?? "-"}%`}
+                    />
+                    <DetailRow
+                      label="Gross Commission"
+                      value={money(detailData.gross_commission)}
+                    />
+                    <DetailRow
+                      label="Admin Fee"
+                      value={`${money(detailData.admin_fee_amount)} (${
+                        detailData.admin_fee_percentage ?? "-"
+                      }%)`}
+                    />
+                    <DetailRow
+                      label="Paid Amount"
+                      value={money(detailData.paid_amount)}
+                    />
+                    <DetailRow label="Status" value={detailData.status} />
+                    <DetailRow
+                      label="Date"
+                      value={formatDate(detailData.created_at)}
+                    />
+                  </div>
                 ) : (
                   <p>Unable to load detail.</p>
                 )}
@@ -177,6 +309,15 @@ function EWallet() {
         )}
       </div>
     </UserLayout>
+  );
+}
+
+function DetailRow({ label, value }) {
+  return (
+    <div className="detail-row">
+      <span className="detail-label">{label}</span>
+      <span className="detail-value">{value ?? "-"}</span>
+    </div>
   );
 }
 

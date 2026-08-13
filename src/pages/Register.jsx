@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { registerApi, checkEnrollerApi } from "../api/auth";
 import "./Register.css";
@@ -34,6 +34,7 @@ const Register = () => {
     ifsc: "",
     nominee_name: "",
     nominee_relation: "",
+    nominee_relation_other: "",
     nominee_gender: "",
     nominee_dob: "",
     nominee_address: "",
@@ -43,14 +44,79 @@ const Register = () => {
 
   const [errors, setErrors] = useState({});
 
+  // timer ref for debounced enroller lookup
+  const enrollerTimer = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (enrollerTimer.current) clearTimeout(enrollerTimer.current);
+    };
+  }, []);
+
+  // Shared age calculator used by validate() and immediate field checks
+  const calcAge = (dateStr) => {
+    try {
+      if (!dateStr) return null;
+      const d = new Date(dateStr);
+      if (isNaN(d.getTime())) return null;
+      const today = new Date();
+      let age = today.getFullYear() - d.getFullYear();
+      const m = today.getMonth() - d.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < d.getDate())) {
+        age--;
+      }
+      return age;
+    } catch {
+      return null;
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
+    // clear general api/form error when user starts editing
+    if (apiError) setApiError("");
     setFormData((prev) => ({ ...prev, [name]: value }));
     if (name === "enroller_id") {
       setEnrollerName("");
+      if (enrollerTimer.current) clearTimeout(enrollerTimer.current);
+      const v = value;
+      enrollerTimer.current = setTimeout(() => {
+        if (v && String(v).trim()) {
+          verifyEnroller(v.trim());
+        } else {
+          setEnrollerName("");
+        }
+      }, 600);
     }
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
+
+    // Immediate DOB validation while user types or selects
+    if (name === "date_of_birth") {
+      const userAge = calcAge(value);
+      if (userAge === null) {
+        setErrors((prev) => ({ ...prev, date_of_birth: "Please enter a valid Date of Birth" }));
+      } else if (userAge < 18) {
+        setErrors((prev) => ({ ...prev, date_of_birth: "You must be at least 18 years old to register" }));
+      } else {
+        setErrors((prev) => ({ ...prev, date_of_birth: "" }));
+      }
+    }
+
+    if (name === "nominee_dob") {
+      if (!value) {
+        setErrors((prev) => ({ ...prev, nominee_dob: "" }));
+      } else {
+        const nomAge = calcAge(value);
+        if (nomAge === null) {
+          setErrors((prev) => ({ ...prev, nominee_dob: "Please enter a valid Nominee Date of Birth" }));
+        } else if (nomAge < 18) {
+          setErrors((prev) => ({ ...prev, nominee_dob: "Nominee must be at least 18 years old" }));
+        } else {
+          setErrors((prev) => ({ ...prev, nominee_dob: "" }));
+        }
+      }
     }
   };
 
@@ -132,6 +198,35 @@ const Register = () => {
       e.confirm_password = "Passwords do not match";
     }
 
+    // (uses shared calcAge above)
+
+    const userAge = calcAge(formData.date_of_birth);
+    if (userAge === null) {
+      e.date_of_birth = "Please enter a valid Date of Birth";
+    } else if (userAge < 18) {
+      e.date_of_birth = "You must be at least 18 years old to register";
+    }
+
+    // Nominee DOB validation (must be 18+ as requested)
+    if (formData.nominee_dob) {
+      const nomAge = calcAge(formData.nominee_dob);
+      if (nomAge === null) {
+        e.nominee_dob = "Please enter a valid Nominee Date of Birth";
+      } else if (nomAge < 18) {
+        e.nominee_dob = "Nominee must be at least 18 years old";
+      }
+    }
+
+    // Nominee relationship validation: require selection, if 'Other' then require text
+    if (!formData.nominee_relation || !String(formData.nominee_relation).trim()) {
+      e.nominee_relation = "Nominee Relationship is required";
+    } else if (
+      formData.nominee_relation === "Other" &&
+      (!formData.nominee_relation_other || !String(formData.nominee_relation_other).trim())
+    ) {
+      e.nominee_relation_other = "Please specify nominee relationship";
+    }
+
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -141,14 +236,24 @@ const Register = () => {
     setApiError("");
     setSuccessMessage("");
 
-    if (!validate()) return;
+    if (!validate()) {
+      setApiError("Please correct the highlighted fields and try again.");
+      return;
+    }
 
     const isEnrollerValid = await verifyEnroller(formData.enroller_id.trim());
     if (!isEnrollerValid) return;
 
     setLoading(true);
     try {
-      const result = await registerApi(formData);
+      const payload = { ...formData };
+      if (payload.nominee_relation === "Other") {
+        payload.nominee_relation = payload.nominee_relation_other || "";
+      }
+      // Remove helper field before sending
+      delete payload.nominee_relation_other;
+
+      const result = await registerApi(payload);
       if (result.success) {
         setSuccessMessage(result.message || "Registration Successful! Redirecting to login...");
         setTimeout(() => {
@@ -204,7 +309,7 @@ const Register = () => {
         onChange={handleChange}
         className={errors[name] ? "input-error" : ""}
       >
-        <option value="">Select {label}</option>
+        <option value="" disabled hidden>Select {label}</option>
         {options.map((opt) => (
           <option key={opt} value={opt}>
             {opt}
@@ -327,7 +432,13 @@ const Register = () => {
 
           <h3 className="form-section-title">Nominee Details</h3>
           {renderInput("nominee_name", "Nominee Name", "text", true)}
-          {renderInput("nominee_relation", "Nominee Relationship", "text", false)}
+          {renderSelect(
+            "nominee_relation",
+            "Nominee Relationship",
+            ["Mother", "Father", "Daughter", "Son", "Husband", "Wife", "Brother", "Sister", "Friend", "Other"],
+            false
+          )}
+          {formData.nominee_relation === "Other" && renderInput("nominee_relation_other", "Please specify relationship", "text", true)}
           {renderSelect(
             "nominee_gender",
             "Nominee Gender",
@@ -339,8 +450,16 @@ const Register = () => {
           {renderInput("nominee_aadhar", "Nominee Aadhaar", "text", true)}
           {renderInput("nominee_mobile", "Nominee Mobile", "tel", true)}
 
-          {apiError && <p className="register-error" style={{ color: "#e74c3c", marginTop: "15px", textAlign: "center" }}>{apiError}</p>}
-          {successMessage && <p className="register-success" style={{ color: "#27ae60", marginTop: "15px", textAlign: "center" }}>{successMessage}</p>}
+          {apiError && (
+            <div className="form-error-banner" style={{ color: "#e74c3c", marginTop: "15px", textAlign: "center" }}>
+              {apiError}
+            </div>
+          )}
+          {successMessage && (
+            <div className="form-success-banner" style={{ color: "#27ae60", marginTop: "15px", textAlign: "center" }}>
+              {successMessage}
+            </div>
+          )}
 
           <button className="register-btn" type="submit" disabled={loading}>
             {loading ? "Registering..." : "Register"}

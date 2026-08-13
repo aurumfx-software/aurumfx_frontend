@@ -1,0 +1,217 @@
+.ranks-page {
+  padding: 18px;
+}
+.ranks-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.ranks-page {
+  padding: 18px;
+}
+/* Page header */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.page-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #f8fafc;
+}
+
+/* Reuse admin table/card styles for consistent dark theme */
+.ranks-card {
+  background: #111111;
+  border: 1px solid rgba(212, 175, 55, 0.16);
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+.table-responsive { width: 100%; overflow-x: auto; }
+
+.level-table {
+  width: 100%;
+  min-width: 480px;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.level-table th {
+  background: #141414;
+  padding: 12px 16px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  text-align: left;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.18);
+}
+
+.level-table td {
+  padding: 14px 16px;
+  font-size: 13.5px;
+  color: #e2e8f0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  font-family: "Inter", "Segoe UI", sans-serif;
+  vertical-align: middle;
+}
+
+.level-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+
+.ranks-table button {
+  margin-right: 6px;
+}
+
+.cell-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.success-banner { margin-bottom: 12px; }
+
+.empty-cell {
+  text-align: center;
+  color: #64748b;
+  padding: 20px 16px;
+}
+
+/* Confirm modal styles (page-local) */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 400;
+}
+.modal-card {
+  background: #0b0b0b;
+  border: 1px solid rgba(212,175,55,0.06);
+  padding: 18px;
+  width: 520px;
+  max-width: 95%;
+  border-radius: 8px;
+  box-shadow: 0 6px 30px rgba(0,0,0,0.6);
+  color: #e2e8f0;
+}
+.modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px }
+.modal-body { max-height:60vh; overflow:auto }
+.modal-actions { display:flex; gap:8px; justify-content:flex-end; margin-top:12px }
+
+/* Buttons used in confirm modal (page-local) */
+.btn-primary { background: #f5d061; color:#141414; border:none; border-radius:8px; padding:8px 14px; font-weight:700 }
+.btn-primary:hover { background:#f7da7d }
+.btn-secondary { background:transparent; color:#e2e8f0; border:1px solid rgba(255,255,255,0.12); border-radius:8px; padding:8px 12px }
+.btn-secondary:hover { border-color: rgba(255,255,255,0.24) }
+
+/* BEGIN RankModal.css merged */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 400;
+}
+.modal-card {
+  background: #0b0b0b;
+  border: 1px solid rgba(212,175,55,0.06);
+  padding: 18px;
+  width: 760px;
+  max-width: 95%;
+  border-radius: 8px;
+  box-shadow: 0 6px 30px rgba(0,0,0,0.6);
+  color: #e2e8f0;
+}
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.modal-body {
+  max-height: 60vh;
+  overflow: auto;
+}
+.modal-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+.form-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.form-row .field {
+  flex: 1;
+}
+.field label {
+  display: block;
+  font-size: 13px;
+  color: #94a3b8;
+  margin-bottom: 6px;
+}
+.field input[type="text"], .field input[type="number"], .field select {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: #070707;
+  border: 1px solid rgba(255,255,255,0.04);
+  color: #e2e8f0;
+}
+.conditions-list {
+  margin-top: 8px;
+  border-top: 1px dashed rgba(255,255,255,0.03);
+  padding-top: 10px;
+}
+.condition-item { display:flex; gap:8px; align-items:center; margin-bottom:8px; }
+.small-btn { padding:6px 8px; border-radius:6px; }
+.success-banner { background:#08351a; color:#9ff6b1; padding:8px 12px; border-radius:6px; margin-bottom:12px; border:1px solid rgba(0,255,150,0.06); }
+
+/* Minimal admin button styles (local to this component) */
+.btn-primary {
+  background: #f5d061;
+  color: #141414;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.btn-primary:hover { background: #f7da7d; }
+.btn-secondary {
+  background: transparent;
+  color: #e2e8f0;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+.btn-secondary:hover { border-color: rgba(255,255,255,0.24); }
+
+.icon-btn {
+  width: 36px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.06);
+  background: transparent;
+  color: #94a3b8;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.icon-btn--danger { color: #f87171; border-color: rgba(248,113,113,0.06); }
+.icon-btn:hover { color: #f5d061; border-color: rgba(245,208,97,0.18); }
+/* END RankModal.css merged */
+
+

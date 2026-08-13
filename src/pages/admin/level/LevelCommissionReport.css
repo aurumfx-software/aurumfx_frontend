@@ -1,0 +1,36 @@
+.level-commission-report-page {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding-bottom: 30px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.summary-card {
+  background: #0f1724;
+  border: 1px solid rgba(212, 175, 55, 0.12);
+  border-radius: 10px;
+  padding: 14px;
+}
+.card-label { color: #94a3b8; font-size: 12px; }
+.card-value { color: #f8fafc; font-size: 18px; font-weight: 800; margin-top: 6px; }
+
+.top-earners { background: transparent; }
+.top-earners ul { list-style: none; padding: 0; margin: 0; display: flex; gap: 8px; flex-wrap: wrap; }
+.top-earners li { background: #111827; padding: 8px 12px; border-radius: 8px; color: #e2e8f0; display:flex; gap:8px; align-items:center }
+.top-earners .earned { color: #f5d061; margin-left: 8px; font-weight:700 }
+
+.history-table-card { background: #0b0b0b; border-radius: 12px; padding: 12px; }
+.history-table { width:100%; border-collapse: collapse; }
+.history-table th { text-align: left; padding: 10px; color: #94a3b8; font-size: 12px; }
+.history-table td { padding: 10px; color: #e2e8f0; border-top: 1px solid rgba(255,255,255,0.04); }
+.empty-cell { text-align: center; color: #64748b; padding: 16px; }
+
+@media (max-width: 800px) {
+  .summary-grid { grid-template-columns: repeat(2,1fr); }
+}

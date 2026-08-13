@@ -13,7 +13,7 @@ const highlights = [
   {
     icon: <FiTrendingUp />,
     title: "Consistent Returns",
-    text: "Structured monthly returns of 14% & 8%, credited directly to your wallet.",
+    text: "Structured monthly returns of 8% / 14%, credited directly to your wallet.",
   },
   {
     icon: <FiUsers />,

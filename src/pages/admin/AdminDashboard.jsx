@@ -246,15 +246,21 @@ function AdminDashboard() {
   const [timeframe, setTimeframe] = useState("week");
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
     let isMounted = true;
 
     getAdminDashboardData(timeframe).then((res) => {
-      if (isMounted && res.success) {
+      if (!isMounted) return;
+      if (res.success) {
         setDashboardData(res.data);
-        setLoading(false);
+        setErrorMsg("");
+      } else {
+        setDashboardData(null);
+        setErrorMsg(res.error || "Failed to load dashboard data");
       }
+      setLoading(false);
     });
 
     return () => {
@@ -262,11 +268,23 @@ function AdminDashboard() {
     };
   }, [timeframe]);
 
-  const kpis = dashboardData?.kpis || { totalNetworkBonus: 3629460, totalPayout: 3436610 };
-  const chartData = dashboardData?.chartData || defaultChartData;
-  const usersSummary = dashboardData?.usersSummary || { totalMembers: 2, holdingTank: 0, networkMembers: 2 };
-  const ticketsSummary = dashboardData?.ticketsSummary || { totalTickets: 0, open: 0, closed: 0 };
-  const registrations = dashboardData?.latestRegistrations || [];
+  // Normalize API response shape (some responses return different keys or mock data)
+  const apiData = dashboardData?.data || dashboardData || {};
+
+  const kpis = apiData.kpis || { totalNetworkBonus: apiData.income?.level_income ?? 0, totalPayout: apiData.income?.referral_income ?? 0 };
+  const chartData = apiData.chartData || defaultChartData;
+  const usersSummary = apiData.usersSummary || {
+    totalMembers: apiData.users?.total_users ?? 0,
+    holdingTank: apiData.users?.today_users ?? 0,
+    networkMembers: apiData.users?.active_users ?? 0,
+  };
+  const ticketsSummary = apiData.ticketsSummary || { totalTickets: 0, open: 0, closed: 0 };
+  const registrations = apiData.latestRegistrations || [];
+
+  // Additional direct mappings from admin /admin/dashboard response
+  const investmentsSummary = apiData.investments || {};
+  const incomeSummary = apiData.income || {};
+  const walletSummary = apiData.wallet || {};
 
   return (
     <AdminLayout>
@@ -293,7 +311,13 @@ function AdminDashboard() {
 
         {/* Render Business View vs Network View */}
         {isBusinessView ? (
-          <div className="admin-biz-dashboard">
+          <>
+            {errorMsg && (
+              <div className="dashboard-error" style={{ background: "#3b0b0b", color: "#ffd2d2", padding: "10px 14px", borderRadius: 8, marginBottom: 12 }}>
+                {errorMsg}
+              </div>
+            )}
+            <div className="admin-biz-dashboard">
             {/* Main Top Grid (Left: Stat cards + Sales Overview; Right: Sales Graph) */}
             <div className="biz-layout-main">
               {/* Left Column */}
@@ -311,7 +335,7 @@ function AdminDashboard() {
                     </div>
                     <div className="banner-card-body">
                       <div className="banner-values">
-                        <h2 className="banner-main-val">₹0</h2>
+                        <h2 className="banner-main-val">₹{(investmentsSummary.total_amount ?? 0).toLocaleString()}</h2>
                         <div className="banner-badges">
                           <span className="badge-income">▲ + ₹0 Income</span>
                           <span className="badge-expense">▼ - ₹0 Expense</span>
@@ -325,7 +349,7 @@ function AdminDashboard() {
                   <div className="biz-stat-card">
                     <div className="stat-card-text">
                       <span className="stat-card-title">Invest</span>
-                      <h3 className="stat-card-val">₹48765000</h3>
+                      <h3 className="stat-card-val">₹{(investmentsSummary.total_amount ?? 0).toLocaleString()}</h3>
                       <span className="stat-card-lbl">Total Invest</span>
                     </div>
                     <div className="stat-card-icon">
@@ -337,7 +361,7 @@ function AdminDashboard() {
                   <div className="biz-stat-card">
                     <div className="stat-card-text">
                       <span className="stat-card-title">Expense</span>
-                      <h3 className="stat-card-val">₹4067460</h3>
+                      <h3 className="stat-card-val">₹{(incomeSummary.level_income ?? 0).toLocaleString()}</h3>
                       <span className="stat-card-lbl">Total Expense</span>
                     </div>
                     <div className="stat-card-icon">
@@ -349,7 +373,7 @@ function AdminDashboard() {
                   <div className="biz-stat-card">
                     <div className="stat-card-text">
                       <span className="stat-card-title">Profit</span>
-                      <h3 className="stat-card-val">₹44697540</h3>
+                      <h3 className="stat-card-val">₹{((incomeSummary.level_income ?? 0) + (incomeSummary.referral_income ?? 0)).toLocaleString()}</h3>
                       <span className="stat-card-lbl">Total Profit</span>
                     </div>
                     <div className="stat-card-icon">
@@ -361,7 +385,7 @@ function AdminDashboard() {
                   <div className="biz-stat-card">
                     <div className="stat-card-text">
                       <span className="stat-card-title">Payout</span>
-                      <h3 className="stat-card-val">₹4067460</h3>
+                      <h3 className="stat-card-val">₹{(incomeSummary.referral_income ?? 0).toLocaleString()}</h3>
                       <span className="stat-card-lbl">Total Payout</span>
                     </div>
                     <div className="stat-card-icon">
@@ -373,7 +397,7 @@ function AdminDashboard() {
                   <div className="biz-stat-card">
                     <div className="stat-card-text">
                       <span className="stat-card-title">Balance</span>
-                      <h3 className="stat-card-val">₹0</h3>
+                      <h3 className="stat-card-val">₹{(walletSummary.total_balance ?? 0).toLocaleString()}</h3>
                       <span className="stat-card-lbl">Total Balance</span>
                     </div>
                     <div className="stat-card-icon">
@@ -539,6 +563,7 @@ function AdminDashboard() {
               </div>
             </div>
           </div>
+          </>
         ) : (
           /* Network Sub-section View */
           <div className="dashboard-grid">

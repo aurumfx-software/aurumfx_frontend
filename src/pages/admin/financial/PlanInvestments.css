@@ -5,6 +5,63 @@
   flex-direction: column;
   gap: 20px;
   padding-bottom: 40px;
+  width: 100%;
+}
+
+.admin-page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+}
+
+.header-title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.admin-page-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.plan-investments-page .admin-page-title,
+.admin-investments-page .admin-page-title {
+  color: #ffffff;
+  text-shadow: none;
+}
+
+.admin-breadcrumb {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.plan-investments-page .admin-breadcrumb,
+.admin-investments-page .admin-breadcrumb {
+  color: #d3d8e0;
+}
+
+.plan-investments-page .crumb-active,
+.admin-investments-page .crumb-active {
+  color: #f5d061;
+}
+
+.crumb-sep {
+  color: #64748b;
+}
+
+.crumb-active {
+  color: #f5d061;
+  font-weight: 600;
 }
 
 .plan-list-card {

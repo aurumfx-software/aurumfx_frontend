@@ -3,7 +3,6 @@ import {
   FiInfo,
   FiCalendar,
   FiDownload,
-  FiSearch,
   FiPlusCircle,
 } from "react-icons/fi";
 import UserLayout from "../../../components/User/UserLayout";
@@ -11,8 +10,9 @@ import DoInvestmentModal from "../../../components/User/DoInvestmentModal";
 import {
   createInvestmentApi,
   getMyInvestmentsApi,
-  getInvestmentDetailsApi,
 } from "../../../api/investments";
+import { getInvestmentPlansApi } from "../../../api/plans";
+import { getInvestmentTypesApi } from "../../../api/investmentTypes";
 import "./Investments.css";
 
 function Investments() {
@@ -20,11 +20,15 @@ function Investments() {
   const [amount, setAmount] = useState("");
   const [bankTxId, setBankTxId] = useState("");
 
+  // NEW — plan & return type selection
+  const [plans, setPlans] = useState([]);
+  const [returnTypes, setReturnTypes] = useState([]);
+  const [selectedPlanId, setSelectedPlanId] = useState("");
+  const [selectedReturnTypeId, setSelectedReturnTypeId] = useState("");
+
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [searchUser, setSearchUser] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
-  const [typeFilter, setTypeFilter] = useState("All");
 
   const [loading, setLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
@@ -33,11 +37,6 @@ function Investments() {
   const [investments, setInvestments] = useState([]);
   const [listLoading, setListLoading] = useState(true);
   const [listError, setListError] = useState("");
-
-  // NEW — row detail popup state
-  const [detailOpen, setDetailOpen] = useState(false);
-  const [detailData, setDetailData] = useState(null);
-  const [detailLoading, setDetailLoading] = useState(false);
 
   const loadInvestments = async (filters = {}) => {
     setListLoading(true);
@@ -51,8 +50,26 @@ function Investments() {
     setListLoading(false);
   };
 
+  // NEW — load real plans + return types for the dropdowns
+  const loadOptions = async () => {
+    const plansRes = await getInvestmentPlansApi();
+    if (plansRes.success) {
+      const realPlans = plansRes.data.filter((p) => p.status !== false);
+      setPlans(realPlans);
+      if (realPlans.length > 0) setSelectedPlanId(String(realPlans[0].id));
+    }
+
+    const typesRes = await getInvestmentTypesApi();
+    if (typesRes.success) {
+      const realTypes = typesRes.data.filter((t) => t.status !== false);
+      setReturnTypes(realTypes);
+      if (realTypes.length > 0) setSelectedReturnTypeId(String(realTypes[0].id));
+    }
+  };
+
   useEffect(() => {
     loadInvestments();
+    loadOptions();
   }, []);
 
   const handleSubmit = async (e) => {
@@ -69,12 +86,16 @@ function Investments() {
       setErrorMsg("Please enter a Bank Transaction ID");
       return;
     }
+    if (!selectedPlanId) {
+      setErrorMsg("Please select an Investment Plan");
+      return;
+    }
 
     setLoading(true);
 
     const apiRes = await createInvestmentApi({
-      investment_plan_id: 0,
-      return_type_id: 0,
+      investment_plan_id: Number(selectedPlanId),
+      return_type_id: Number(selectedReturnTypeId) || 0,
       amount: numAmount,
       bank_transaction_id: bankTxId.trim(),
       enroller_id: localStorage.getItem("userId") || "FX034",
@@ -102,18 +123,6 @@ function Investments() {
       end_date: endDate,
       status: statusFilter,
     });
-  };
-
-  // NEW — row click handler, calls GET /investments/{id}
-  const handleRowClick = async (id) => {
-    setDetailOpen(true);
-    setDetailLoading(true);
-    setDetailData(null);
-    const res = await getInvestmentDetailsApi(id);
-    if (res.success) {
-      setDetailData(res.data);
-    }
-    setDetailLoading(false);
   };
 
   const userId = localStorage.getItem("userId") || "FX256";
@@ -164,10 +173,50 @@ function Investments() {
         <div className="invest-form-card">
           <h2 className="card-title">Invest Amount</h2>
           <p className="card-subtitle">
-            Invest 5000.00 or more (in multiples of 5000.00) and earn 14.00% of the invested amount every month for 10 months.
+            Invest 5000.00 or more (in multiples of 5000.00) and earn returns based on the selected plan.
           </p>
 
           <form onSubmit={handleSubmit} className="invest-form">
+            {/* NEW — Plan selector */}
+            <div className="form-group">
+              <label className="separated-label">Investment Plan</label>
+              <select
+                value={selectedPlanId}
+                onChange={(e) => setSelectedPlanId(e.target.value)}
+                className="form-input"
+              >
+                {plans.length === 0 ? (
+                  <option value="">No plans available</option>
+                ) : (
+                  plans.map((plan) => (
+                    <option key={plan.id} value={plan.id}>
+                      {plan.plan_name} — {plan.return_percentage}% / {plan.duration_months}mo
+                    </option>
+                  ))
+                )}
+              </select>
+            </div>
+
+            {/* NEW — Return Type selector */}
+            <div className="form-group">
+              <label className="separated-label">Return Type</label>
+              <select
+                value={selectedReturnTypeId}
+                onChange={(e) => setSelectedReturnTypeId(e.target.value)}
+                className="form-input"
+              >
+                {returnTypes.length === 0 ? (
+                  <option value="">No return types available</option>
+                ) : (
+                  returnTypes.map((rt) => (
+                    <option key={rt.id} value={rt.id}>
+                      {rt.return_type}
+                    </option>
+                  ))
+                )}
+              </select>
+            </div>
+
             <div className="form-group">
               <label className="separated-label">Amount</label>
               <input
@@ -203,7 +252,6 @@ function Investments() {
 
         <div className="history-filter-card">
           <h2 className="section-title">History</h2>
-
           <form onSubmit={handleFilterSubmit} className="history-filter-form">
             <div className="filter-input-group">
               <div className="input-with-icon">
@@ -211,36 +259,13 @@ function Investments() {
                 <FiCalendar className="field-icon" />
               </div>
             </div>
-
             <div className="filter-input-group">
               <div className="input-with-icon">
                 <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="filter-input" />
                 <FiCalendar className="field-icon" />
               </div>
             </div>
-
-            <div className="filter-input-group">
-              <div className="input-with-icon">
-                <input
-                  type="text"
-                  placeholder="Search User"
-                  value={searchUser}
-                  onChange={(e) => setSearchUser(e.target.value)}
-                  className="filter-input"
-                />
-                <FiSearch className="field-icon" />
-              </div>
-            </div>
-
-            <div className="filter-input-group select-group">
-              <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)} className="filter-select">
-                <option value="All">Type of Investment</option>
-                <option value="Standard Package">Standard Package</option>
-                <option value="Network Investment">Network Investment</option>
-                <option value="Holding Tank">Holding Tank</option>
-              </select>
-            </div>
-
+            
             <div className="filter-input-group select-group">
               <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="filter-select">
                 <option value="All">Status</option>
@@ -249,7 +274,6 @@ function Investments() {
                 <option value="Rejected">Rejected</option>
               </select>
             </div>
-
             <button type="submit" className="get-filter-btn">Get</button>
           </form>
         </div>
@@ -283,16 +307,10 @@ function Investments() {
                   <tr><td colSpan="13">No investments yet.</td></tr>
                 ) : (
                   investments.map((inv, idx) => (
-                    <tr
-                      key={inv.id}
-                      onClick={() => handleRowClick(inv.id)}
-                      style={{ cursor: "pointer" }}
-                    >
+                    <tr key={inv.id}>
                       <td>{idx + 1}</td>
                       <td>{inv.investment_id}</td>
-                      <td>
-                        <span className="modal-type-badge">{inv.plan_name}</span>
-                      </td>
+                      <td><span className="modal-type-badge">{inv.plan_name}</span></td>
                       <td className="amount-cell">₹{Number(inv.amount).toLocaleString()}</td>
                       <td>{inv.lots}</td>
                       <td>{inv.monthly_return_percentage}%</td>
@@ -300,12 +318,8 @@ function Investments() {
                       <td>{inv.return_which}</td>
                       <td>₹{Number(inv.return_balance).toLocaleString()}</td>
                       <td className="date-cell">{inv.return_date}</td>
-                      <td>
-                        <span className="status-badge status--active">{inv.investment_status}</span>
-                      </td>
-                      <td>
-                        <span className="status-badge status--approved">{inv.approval_status}</span>
-                      </td>
+                      <td><span className="status-badge status--active">{inv.investment_status}</span></td>
+                      <td><span className="status-badge status--approved">{inv.approval_status}</span></td>
                       <td className="date-cell">{inv.investment_date}</td>
                     </tr>
                   ))
@@ -313,58 +327,12 @@ function Investments() {
               </tbody>
             </table>
           </div>
-
           <div className="pagination-bar">
             <button type="button" className="page-nav-btn" disabled>&lt;</button>
             <span className="page-number active">1</span>
             <button type="button" className="page-nav-btn" disabled>&gt;</button>
           </div>
         </div>
-
-        {/* NEW — detail popup, opens on row click */}
-        {detailOpen && (
-          <div
-            className="modal-backdrop"
-            onClick={() => setDetailOpen(false)}
-          >
-            <div
-              className="modal-container"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="modal-header">
-                <h3>Investment Detail</h3>
-                <button
-                  className="modal-close-btn"
-                  onClick={() => setDetailOpen(false)}
-                >
-                  ✕
-                </button>
-              </div>
-              <div className="modal-body">
-                {detailLoading ? (
-                  <p>Loading...</p>
-                ) : detailData ? (
-                  <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                    <p>Investment ID: {detailData.investment_id}</p>
-                    <p>Plan: {detailData.plan_name}</p>
-                    <p>Amount: ₹{Number(detailData.amount).toLocaleString()}</p>
-                    <p>Lots: {detailData.lots}</p>
-                    <p>Monthly Return %: {detailData.monthly_return_percentage}%</p>
-                    <p>Monthly Return Amount: ₹{Number(detailData.monthly_return_amount).toLocaleString()}</p>
-                    <p>Return Which: {detailData.return_which}</p>
-                    <p>Return Balance: ₹{Number(detailData.return_balance).toLocaleString()}</p>
-                    <p>Return Date: {detailData.return_date}</p>
-                    <p>Investment Status: {detailData.investment_status}</p>
-                    <p>Approval Status: {detailData.approval_status}</p>
-                    <p>Investment Date: {detailData.investment_date}</p>
-                  </div>
-                ) : (
-                  <p>Unable to load detail.</p>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </UserLayout>
   );

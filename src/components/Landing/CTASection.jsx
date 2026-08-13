@@ -5,7 +5,7 @@ import "./CTASection.css";
 
 const stats = [
   { value: "₹5,000", label: "Minimum Deposit" },
-  { value: "14% & 8%", label: "Monthly Return" },
+  { value: "8% / 14%", label: "Monthly Return" },
   { value: "24/7", label: "Live Markets" },
 ];
 

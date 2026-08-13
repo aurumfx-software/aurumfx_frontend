@@ -31,8 +31,8 @@ function Hero() {
             </h1>
 
             <p className="anim-item delay-3">
-              Start investing in gold with just <strong>₹5,000</strong>. Earn{" "}
-              <strong>14% & 8% monthly returns</strong> with AurumFX — your
+              Start investing with just <strong>₹5,000</strong>. Earn{" "}
+              <strong>8% / 14% monthly returns</strong> with AurumFX — your
               trusted gold trading partner with transparent payouts.
             </p>
 

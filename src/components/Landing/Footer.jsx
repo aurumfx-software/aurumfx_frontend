@@ -52,7 +52,7 @@ const Footer = () => {
           <h3>Trading</h3>
           <ul>
             <li><span>Min. Deposit: ₹5,000</span></li>
-            <li><span>Monthly Return: 14%</span></li>
+            <li><span>Monthly Return: 8% / 14%</span></li>
             <li><span>Gold &amp; FX Pairs</span></li>
             <li><span>24/7 Market Access</span></li>
           </ul>

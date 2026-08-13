@@ -5,12 +5,11 @@ import logo from "../../assets/logo.png";
 import "./Navbar.css";
 
 const navLinks = [
-  { href: "#about", label: "About" },
+  { href: "#hero", label: "Home" },
+  { href: "#about", label: "About Us" },
   { href: "#mt5-chart", label: "MT5 Chart" },
-  { href: "#calculator", label: "Calculator" },
-  { href: "#plans", label: "Plans" },
-  { href: "#why-choose", label: "Why AurumFX" },
-  { href: "#faq", label: "FAQ" },
+  { href: "#plans", label: "Investment Plans" },
+  { href: "#contact", label: "Contact" },
 ];
 
 const Navbar = () => {

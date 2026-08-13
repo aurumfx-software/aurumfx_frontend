@@ -28,7 +28,7 @@ const features = [
     icon: <FiTrendingUp />,
     title: "Consistent Returns",
     description:
-      "Our proven investment model delivers reliable 14% monthly returns, making wealth building predictable and accessible.",
+      "Our proven investment model delivers reliable 8% / 14% monthly returns, making wealth building predictable and accessible.",
     image:
       "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&w=800&q=80",
   },

@@ -4,7 +4,7 @@ import "./ReturnsCalculator.css";
 
 function ReturnsCalculator() {
   const [amount, setAmount] = useState(5000);
-  const [tenure, setTenure] = useState(10);
+  const [tenure, setTenure] = useState(30);
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef(null);
 
