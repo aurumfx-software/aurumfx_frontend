@@ -1,0 +1,19 @@
+.user-genealogy-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.user-genealogy-page .genealogy-panel {
+  margin-top: 0;
+}
+
+.user-genealogy-page .genealogy-card {
+  width: min(340px, 100%);
+}
+
+@media (max-width: 768px) {
+  .user-genealogy-page .genealogy-card {
+    width: min(300px, 100%);
+  }
+}

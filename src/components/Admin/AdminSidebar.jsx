@@ -86,6 +86,11 @@ const navItems = [
         label: "KYC Details",
         path: "/admin/members/kyc-details",
       },
+      {
+        id: "genealogy",
+        label: "Genealogy",
+        path: "/admin/genealogy",
+      },
     ],
   },
   {

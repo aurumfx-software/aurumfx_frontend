@@ -41,9 +41,9 @@ function Hero() {
                 Start Investing Now
                 <FiArrowRight />
               </Link>
-              <a href="#calculator" className="hero-btn-secondary">
+              <a href="#plans" className="hero-btn-secondary">
                 <FiActivity />
-                Calculate Returns
+                View Plans
               </a>
             </div>
           </div>

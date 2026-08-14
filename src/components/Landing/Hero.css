@@ -192,6 +192,8 @@
 
 .hero-actions {
   display: flex;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 14px;
 }
 
@@ -216,18 +218,29 @@
   color: #1a1608;
   box-shadow: 0 8px 24px rgba(212, 175, 55, 0.28);
   border: none;
+  min-width: 220px;
 }
 
-.hero-btn-primary svg {
-  font-size: 17px;
-  flex-shrink: 0;
-  transition: transform 0.2s;
-}
-
+.hero-btn-primary svg,
 .hero-btn-secondary svg {
   font-size: 17px;
   flex-shrink: 0;
   transition: transform 0.2s;
+}
+
+.hero-btn-secondary {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(6px);
+  color: #f5d061;
+  border: 1.5px solid #d4af37;
+  min-width: 180px;
+}
+
+.hero-btn-secondary:hover {
+  background: rgba(212, 175, 55, 0.18);
+  border-color: #f5d061;
+  color: #ffe082;
+  transform: translateY(-2px);
 }
 
 /* NEW — shimmer sweep on hover, echoes the headline's shine so the
@@ -257,20 +270,6 @@
 .hero-btn-primary:hover {
   transform: translateY(-2px);
   box-shadow: 0 10px 28px rgba(212, 175, 55, 0.45);
-}
-
-.hero-btn-secondary {
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(6px);
-  color: #f5d061;
-  border: 1.5px solid #d4af37;
-}
-
-.hero-btn-secondary:hover {
-  background: rgba(212, 175, 55, 0.18);
-  border-color: #f5d061;
-  color: #ffe082;
-  transform: translateY(-2px);
 }
 
 .anim-item {
@@ -344,7 +343,6 @@
 
   .hero-actions {
     justify-content: flex-start;
-    flex-direction: column;
     width: 100%;
     gap: 14px;
   }
@@ -352,6 +350,7 @@
   .hero-btn-primary,
   .hero-btn-secondary {
     width: 100%;
+    max-width: 360px;
     text-align: center;
     box-sizing: border-box;
     padding: 18px 18px;

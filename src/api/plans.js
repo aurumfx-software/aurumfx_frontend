@@ -57,12 +57,7 @@ export const MOCK_INVESTMENT_PLANS = [
  */
 export const getInvestmentPlansApi = async () => {
   try {
-    let response;
-    try {
-      response = await api.get("/investment-plans");
-    } catch (err) {
-      response = await api.get("/admin/investment-plans");
-    }
+    const response = await api.get("/admin/investment-plans");
     const payload = response.data;
     const plans = payload?.data || payload?.investment_plans || payload || MOCK_INVESTMENT_PLANS;
     return { success: true, data: Array.isArray(plans) ? plans : MOCK_INVESTMENT_PLANS };
@@ -99,12 +94,7 @@ export const createInvestmentPlanApi = async (planData) => {
   };
 
   try {
-    let response;
-    try {
-      response = await api.post("/investment-plans", payload);
-    } catch (err) {
-      response = await api.post("/admin/investment-plans", payload);
-    }
+    const response = await api.post("/admin/investment-plans", payload);
     return { success: true, data: response.data };
   } catch (error) {
     console.warn("Create Investment Plan API offline:", error.message);
@@ -133,12 +123,7 @@ export const updateInvestmentPlanApi = async (planId, planData) => {
   };
 
   try {
-    let response;
-    try {
-      response = await api.put(`/investment-plans/${planId}`, payload);
-    } catch (err) {
-      response = await api.put(`/admin/investment-plans/${planId}`, payload);
-    }
+    const response = await api.put(`/admin/investment-plans/${planId}`, payload);
     return { success: true, data: response.data };
   } catch (error) {
     console.warn("Update Investment Plan API offline:", error.message);
@@ -155,12 +140,7 @@ export const updateInvestmentPlanApi = async (planId, planData) => {
  */
 export const deleteInvestmentPlanApi = async (planId) => {
   try {
-    let response;
-    try {
-      response = await api.delete(`/investment-plans/${planId}`);
-    } catch (err) {
-      response = await api.delete(`/admin/investment-plans/${planId}`);
-    }
+    const response = await api.delete(`/admin/investment-plans/${planId}`);
     return { success: true, data: response.data };
   } catch (error) {
     console.warn("Delete Investment Plan API offline:", error.message);

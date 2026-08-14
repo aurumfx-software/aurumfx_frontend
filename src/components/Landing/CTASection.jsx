@@ -3,12 +3,6 @@ import { Link } from "react-router-dom";
 import { FiArrowRight, FiLogIn } from "react-icons/fi";
 import "./CTASection.css";
 
-const stats = [
-  { value: "₹5,000", label: "Minimum Deposit" },
-  { value: "8% / 14%", label: "Monthly Return" },
-  { value: "24/7", label: "Live Markets" },
-];
-
 const CTASection = () => {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef(null);
@@ -58,16 +52,29 @@ const CTASection = () => {
         </div>
 
         <div className="cta-stats">
-          {stats.map((stat, index) => (
-            <div
-              className="stat-box"
-              key={stat.label}
-              style={{ animationDelay: `${0.3 + index * 0.15}s` }}
-            >
-              <h3>{stat.value}</h3>
-              <span>{stat.label}</span>
+          <div className="stat-box" style={{ animationDelay: "0.3s" }}>
+            <h3>₹5,000</h3>
+            <span>Minimum Deposit</span>
+          </div>
+
+          <div className="stat-box stat-box--dual" style={{ animationDelay: "0.45s" }}>
+            <div className="dual-pills">
+              <div className="rate-pill">
+                <strong>8%</strong>
+                <span>30-Month Plan</span>
+              </div>
+              <div className="rate-pill">
+                <strong>14%</strong>
+                <span>10-Month Plan</span>
+              </div>
             </div>
-          ))}
+            <span>Monthly Return</span>
+          </div>
+
+          <div className="stat-box" style={{ animationDelay: "0.6s" }}>
+            <h3>24/7</h3>
+            <span>Live Markets</span>
+          </div>
         </div>
       </div>
     </section>

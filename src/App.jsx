@@ -15,6 +15,7 @@ import AdminNetworkMembers from "./pages/admin/members/AdminNetworkMembers";
 import AdminHoldingTank from "./pages/admin/members/AdminHoldingTank";
 import AdminBankApprove from "./pages/admin/members/AdminBankApprove";
 import AdminKYCDetails from "./pages/admin/members/AdminKYCDetails";
+import GenealogyPage from "./pages/admin/members/GenealogyPage";
 import AdminModulePage from "./pages/admin/AdminModulePage";
 import BrandSettings from "./pages/admin/settings/BrandSettings";
 import NetworkSettings from "./pages/admin/settings/NetworkSettings";
@@ -37,6 +38,7 @@ import UserDashboard from "./pages/user/UserDashboard";
 import EWallet from "./pages/user/financial/EWallet";
 import Investments from "./pages/user/financial/Investments";
 import Profile from "./pages/user/Profile";
+import UserGenealogyPage from "./pages/user/GenealogyPage";
 import HelpCenterPage from "./pages/user/help/HelpCenterPage";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./routes/ProtectedRoute";
@@ -94,6 +96,14 @@ function App() {
           element={
             <ProtectedRoute requiredRole="user">
               <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/genealogy"
+          element={
+            <ProtectedRoute requiredRole="user">
+              <UserGenealogyPage />
             </ProtectedRoute>
           }
         />
@@ -323,6 +333,14 @@ function App() {
           element={
             <ProtectedRoute requiredRole="admin">
               <AdminKYCDetails />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/genealogy"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <GenealogyPage />
             </ProtectedRoute>
           }
         />

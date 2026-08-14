@@ -102,6 +102,15 @@ function PlanInvestments() {
     setFormSuccess("");
   };
 
+  const normalizeNumberValue = (value) => {
+    if (value === null || value === undefined || value === "") {
+      return 0;
+    }
+
+    const parsed = Number(value);
+    return Number.isNaN(parsed) ? 0 : parsed;
+  };
+
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     setFormError("");
@@ -114,11 +123,21 @@ function PlanInvestments() {
 
     setLoading(true);
 
+    const sanitizedFormData = {
+      ...formData,
+      duration_months: normalizeNumberValue(formData.duration_months),
+      return_percentage: normalizeNumberValue(formData.return_percentage),
+      minimum_amount: normalizeNumberValue(formData.minimum_amount),
+      commission_percentage: normalizeNumberValue(formData.commission_percentage),
+      daily_commission_limit: normalizeNumberValue(formData.daily_commission_limit),
+      admin_fee_percentage: normalizeNumberValue(formData.admin_fee_percentage),
+    };
+
     if (editingPlan) {
-      const res = await updateInvestmentPlanApi(editingPlan.id, formData);
+      const res = await updateInvestmentPlanApi(editingPlan.id, sanitizedFormData);
       if (res.success) {
         setPlans((prev) =>
-          prev.map((p) => (p.id === editingPlan.id ? { ...p, ...formData } : p))
+          prev.map((p) => (p.id === editingPlan.id ? { ...p, ...sanitizedFormData } : p))
         );
         setFormSuccess("Investment plan updated successfully!");
         setTimeout(() => handleCloseModal(), 1000);
@@ -126,18 +145,12 @@ function PlanInvestments() {
         setFormError(res.error || "Failed to update plan.");
       }
     } else {
-      const res = await createInvestmentPlanApi(formData);
+      const res = await createInvestmentPlanApi(sanitizedFormData);
       if (res.success) {
         const newPlan = {
           id: res.data?.id || Date.now(),
-          ...formData,
-          duration_months: Number(formData.duration_months),
-          return_percentage: Number(formData.return_percentage),
-          minimum_amount: Number(formData.minimum_amount),
-          commission_percentage: Number(formData.commission_percentage),
-          daily_commission_limit: Number(formData.daily_commission_limit),
-          admin_fee_percentage: Number(formData.admin_fee_percentage),
-          return_type: formData.return_type || "Monthly",
+          ...sanitizedFormData,
+          return_type: sanitizedFormData.return_type || "Monthly",
         };
         setPlans([newPlan, ...plans]);
         setFormSuccess("Investment plan created successfully!");

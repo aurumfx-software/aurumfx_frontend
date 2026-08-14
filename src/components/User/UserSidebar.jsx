@@ -28,6 +28,7 @@ const userNavItems = [
     ],
   },
   { id: "profile", label: "My Profile", icon: FiUser, path: "/user/profile" },
+  { id: "genealogy", label: "Genealogy", icon: FiAward, path: "/user/genealogy" },
   {
     id: "help",
     label: "Help Center",

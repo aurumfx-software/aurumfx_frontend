@@ -79,10 +79,21 @@ const InvestmentJourney = () => {
             <h3>₹5,000</h3>
             <span>Min. Deposit</span>
           </div>
-          <div className="summary-box" style={{ animationDelay: "0.7s" }}>
-            <h3>8% / 14%</h3>
+
+          <div className="summary-box summary-box--dual" style={{ animationDelay: "0.7s" }}>
+            <div className="dual-pills">
+              <div className="rate-pill">
+                <strong>8%</strong>
+                <span>30-Month Plan</span>
+              </div>
+              <div className="rate-pill">
+                <strong>14%</strong>
+                <span>10-Month Plan</span>
+              </div>
+            </div>
             <span>Monthly Returns</span>
           </div>
+
           <div className="summary-box" style={{ animationDelay: "0.85s" }}>
             <h3>24/7</h3>
             <span>Market Access</span>
