@@ -40,21 +40,22 @@
   background: var(--udb-bg);
 }
 
+/* Black & Gold dark theme — pure neutral blacks/browns, no blue tint */
 [data-theme="dark"] .profile-page {
-  --udb-bg: #0b0e14;
-  --udb-panel-bg: #171308;
-  --udb-panel-border: rgba(227, 180, 90, 0.16);
-  --udb-surface: #12161f;
-  --udb-border: #232938;
-  --udb-border-soft: #1c212d;
-  --udb-text: #f2f4f7;
-  --udb-text-soft: #9aa3b5;
-  --udb-text-faint: #6b7284;
+  --udb-bg: #08070a;
+  --udb-panel-bg: #120f08;
+  --udb-panel-border: rgba(226, 180, 90, 0.18);
+  --udb-surface: #0f0d0c;
+  --udb-border: #2b2620;
+  --udb-border-soft: #1e1b16;
+  --udb-text: #f3efe6;
+  --udb-text-soft: #a8a096;
+  --udb-text-faint: #726a5e;
 
   --udb-accent: #e3b45a;
   --udb-accent-strong: #f0c876;
   --udb-accent-soft: rgba(227, 180, 90, 0.12);
-  --udb-accent-line: rgba(227, 180, 90, 0.3);
+  --udb-accent-line: rgba(227, 180, 90, 0.32);
 
   --udb-success: #34d399;
   --udb-success-soft: rgba(52, 211, 153, 0.12);
@@ -83,15 +84,7 @@
 /* ---------------------------------------------------------------------- */
 .identity-panel {
   position: relative;
-  background:
-    repeating-linear-gradient(
-      118deg,
-      color-mix(in srgb, var(--udb-accent) 5%, transparent) 0px,
-      color-mix(in srgb, var(--udb-accent) 5%, transparent) 1px,
-      transparent 1px,
-      transparent 30px
-    ),
-    var(--udb-panel-bg);
+  background: var(--udb-panel-bg);
   color: var(--udb-text);
   border-right: 1px solid var(--udb-panel-border);
   padding: 32px 24px 24px;
@@ -374,13 +367,6 @@
   border: 1px solid var(--udb-border);
   border-radius: 12px;
   background-color: var(--udb-surface);
-  background-image: repeating-linear-gradient(
-    115deg,
-    color-mix(in srgb, var(--udb-accent) 6%, transparent) 0px,
-    color-mix(in srgb, var(--udb-accent) 6%, transparent) 1px,
-    transparent 1px,
-    transparent 22px
-  );
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--udb-accent) 10%, transparent);
 }
 

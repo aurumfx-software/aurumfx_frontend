@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { loginApi } from "../../api/auth";
@@ -12,6 +12,23 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isAutoFilled, setIsAutoFilled] = useState(false);
+  const passwordInputRef = useRef(null);
+
+  // Load user ID from localStorage on component mount
+  useEffect(() => {
+    const registeredUserId = localStorage.getItem("registeredUserId");
+    if (registeredUserId) {
+      setUserId(registeredUserId);
+      setIsAutoFilled(true);
+      // Focus on password field after a brief delay
+      setTimeout(() => {
+        if (passwordInputRef.current) {
+          passwordInputRef.current.focus();
+        }
+      }, 100);
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,6 +39,8 @@ function Login() {
       const result = await loginApi(userId, password, "user");
 
       if (result.success) {
+        // Clear the registered user ID after successful login
+        localStorage.removeItem("registeredUserId");
         navigate(result.redirect);
       } else {
         const msg = result.error || "User Not Found";
@@ -30,7 +49,6 @@ function Login() {
     } catch {
       setError("User Not Found");
     } finally {
-
       setLoading(false);
     }
   };
@@ -57,9 +75,11 @@ function Login() {
               type="text"
               placeholder="Enter User ID"
               value={userId}
-              onChange={(e) => setUserId(e.target.value)}
+              onChange={(e) => !isAutoFilled && setUserId(e.target.value)}
               autoComplete="username"
+              readOnly={isAutoFilled}
               required
+              className={isAutoFilled ? "readonly-input" : ""}
             />
           </div>
 
@@ -67,6 +87,7 @@ function Login() {
             <label htmlFor="password">Password</label>
             <div className="password-box">
               <input
+                ref={passwordInputRef}
                 id="password"
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter Password"
@@ -93,6 +114,20 @@ function Login() {
               <input type="checkbox" defaultChecked />
               Remember me
             </label>
+            {isAutoFilled && (
+              <button
+                type="button"
+                className="clear-user-btn"
+                onClick={() => {
+                  localStorage.removeItem("registeredUserId");
+                  setUserId("");
+                  setIsAutoFilled(false);
+                  setPassword("");
+                }}
+              >
+                Use Different Account
+              </button>
+            )}
           </div>
 
           <button type="submit" className="login-btn" disabled={loading}>

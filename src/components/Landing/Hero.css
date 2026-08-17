@@ -20,6 +20,8 @@
   background-position: center;
   background-repeat: no-repeat;
   z-index: 0;
+  border-radius: 20px;
+  overflow: hidden;
 }
 
 /* scrim so copy is always legible regardless of image content */
@@ -54,6 +56,18 @@
   transform: translateY(-50%);
   z-index: 0;
   pointer-events: none;
+}
+
+/* rose-tinted glow accent - reduced size and opacity */
+[data-theme="light"] .landing-hero::before {
+  width: 450px;
+  height: 450px;
+  background: radial-gradient(
+    ellipse at 80% 40%,
+    rgba(252, 228, 236, 0.15) 0%,
+    rgba(244, 204, 204, 0.08) 35%,
+    transparent 70%
+  );
 }
 
 .hero-inner {
@@ -95,6 +109,8 @@
 [data-theme="dark"] .hero-badge {
   color: var(--gold);
 }
+
+
 
 @keyframes badgePulse {
   0%, 100% { box-shadow: 0 0 0 rgba(212, 175, 55, 0); }

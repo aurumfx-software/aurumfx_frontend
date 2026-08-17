@@ -268,9 +268,13 @@ const Register = () => {
 
       const result = await registerApi(payload);
       if (result.success) {
-        setSuccessMessage(result.message || "Registration Successful! Redirecting to dashboard...");
+        // Save user ID to localStorage
+        const userId = result.data?.user_id || result.user_id || formData.email;
+        localStorage.setItem("registeredUserId", userId);
+        
+        setSuccessMessage(result.message || "Registration Successful! Redirecting to login...");
         setTimeout(() => {
-          navigate("/user/dashboard");
+          navigate("/user/login");
         }, 1500);
       } else {
         setApiError(result.error);

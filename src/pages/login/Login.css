@@ -149,6 +149,18 @@
   color: var(--text-faint, var(--text-muted));
 }
 
+.input-group input.readonly-input {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  cursor: not-allowed;
+  opacity: 0.85;
+}
+
+.input-group input.readonly-input:focus {
+  border-color: var(--border-neutral);
+  box-shadow: none;
+}
+
 .input-group input:focus {
   border-color: var(--gold-border-strong);
   background: var(--bg-surface);
@@ -206,6 +218,26 @@
   height: 16px;
   accent-color: var(--gold-dark, var(--gold));
   cursor: pointer;
+}
+
+.clear-user-btn {
+  background: none;
+  border: none;
+  color: var(--gold-dark, var(--gold));
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+[data-theme="dark"] .clear-user-btn {
+  color: var(--gold);
+}
+
+.clear-user-btn:hover {
+  opacity: 0.8;
 }
 
 .options a,

@@ -1,155 +1,224 @@
+/* ==========================================================================
+   E-Wallet — "Lineage Ledger" theme applied
+   Same self-contained token system as GenealogyPage.css: flat gold-accented
+   cards, no gradients, no blue-tinted dark mode. Works standalone.
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap');
+
 .ewallet-page {
+  --ew-bg: #f4f5f7;
+  --ew-surface: #ffffff;
+  --ew-border: #e6e8ec;
+  --ew-border-soft: #eef0f3;
+  --ew-text: #14171f;
+  --ew-text-soft: #5b6472;
+  --ew-text-faint: #8b93a1;
+
+  --ew-accent: #b8863a;
+  --ew-accent-strong: #8f6423;
+  --ew-accent-soft: #fbf2df;
+  --ew-accent-line: #e9d3a3;
+
+  --ew-success: #0f9d63;
+  --ew-success-soft: #e6f6ef;
+  --ew-success-line: #b9e6cf;
+
+  --ew-pending: #b8863a;
+  --ew-pending-soft: #fbf2df;
+  --ew-pending-line: #e9d3a3;
+
+  --ew-info: #2f6fb8;
+  --ew-info-soft: #eaf2fb;
+  --ew-info-line: #bcd7f2;
+
+  --ew-danger: #dc2626;
+  --ew-danger-soft: #fdecec;
+
+  --ew-font-display: "Fraunces", "Georgia", serif;
+  --ew-font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+
+  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  color: var(--ew-text);
+
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 22px;
   padding-bottom: 40px;
 }
 
-/* Alert Banner */
+/* Black & Gold dark theme — pure neutral blacks/browns, no blue tint */
+[data-theme="dark"] .ewallet-page {
+  --ew-bg: #08070a;
+  --ew-surface: #0f0d0c;
+  --ew-border: #2b2620;
+  --ew-border-soft: #1e1b16;
+  --ew-text: #f3efe6;
+  --ew-text-soft: #a8a096;
+  --ew-text-faint: #726a5e;
+
+  --ew-accent: #e3b45a;
+  --ew-accent-strong: #f0c876;
+  --ew-accent-soft: rgba(227, 180, 90, 0.12);
+  --ew-accent-line: rgba(227, 180, 90, 0.32);
+
+  --ew-success: #3ddc97;
+  --ew-success-soft: rgba(61, 220, 151, 0.12);
+  --ew-success-line: rgba(61, 220, 151, 0.28);
+
+  --ew-pending: #e3b45a;
+  --ew-pending-soft: rgba(227, 180, 90, 0.12);
+  --ew-pending-line: rgba(227, 180, 90, 0.28);
+
+  --ew-info: #6fa8e0;
+  --ew-info-soft: rgba(111, 168, 224, 0.12);
+  --ew-info-line: rgba(111, 168, 224, 0.28);
+
+  --ew-danger: #f87171;
+  --ew-danger-soft: rgba(248, 113, 113, 0.12);
+}
+
+.ewallet-page * {
+  box-sizing: border-box;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Alert banner                                                            */
+/* ---------------------------------------------------------------------- */
 .user-alert-banner {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: var(--gold-glow);
-  border: 1px solid var(--gold-border-strong);
-  border-radius: 12px;
-  padding: 14px 20px;
-  color: var(--gold);
-  font-size: 14px;
+  background: var(--ew-accent-soft);
+  border: 1px solid var(--ew-accent-line);
+  border-left: 3px solid var(--ew-accent);
+  border-radius: 10px;
+  padding: 13px 18px;
+  color: var(--ew-accent-strong);
+  font-size: 13.5px;
 }
 
 .alert-banner-icon {
   flex-shrink: 0;
-  font-size: 18px;
+  font-size: 17px;
+  color: var(--ew-accent);
 }
 
 .alert-link {
-  color: var(--gold);
+  color: var(--ew-accent-strong);
   font-weight: 700;
   text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
-/* Page Header */
+/* ---------------------------------------------------------------------- */
+/* Page header                                                             */
+/* ---------------------------------------------------------------------- */
 .page-header {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  align-items: flex-start;
+  gap: 6px;
 }
 
 .page-title {
-  font-size: 24px;
-  font-weight: 800;
-  color: var(--text-primary);
+  font-family: var(--ew-font-display);
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--ew-text);
+  margin: 0;
 }
 
 .breadcrumb {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
-  color: var(--text-muted);
+  font-family: var(--ew-font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ew-text-soft);
+  margin: 0;
 }
 
-.separator {
-  color: var(--text-subtle);
+.breadcrumb .separator {
+  color: var(--ew-accent-line);
 }
 
-.current {
-  color: var(--gold);
-  font-weight: 600;
+.breadcrumb .current {
+  color: var(--ew-accent-strong);
+  font-weight: 700;
 }
 
-/* Hero balance card */
-[data-theme="dark"] .balance-hero {
-  background: linear-gradient(135deg, #1a1a1a 0%, #141414 100%);
-  border: 1px solid rgba(245, 208, 97, 0.28);
-  border-radius: 18px;
-  padding: 28px 26px;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.3);
-}
-
-[data-theme="light"] .balance-hero,
+/* ---------------------------------------------------------------------- */
+/* Balance hero — flat card, gold top rule, no gradient                    */
+/* ---------------------------------------------------------------------- */
 .balance-hero {
-  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-  border: 1px solid rgba(197, 155, 39, 0.25);
-  border-radius: 18px;
-  padding: 28px 26px;
   position: relative;
+  background: var(--ew-surface);
+  border: 1px solid var(--ew-border);
+  border-top: 3px solid var(--ew-accent);
+  border-radius: 16px;
+  padding: 26px 28px;
+  box-shadow: 0 4px 18px color-mix(in srgb, var(--ew-text) 6%, transparent);
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
 }
 
 .balance-hero::after {
   content: "";
   position: absolute;
-  top: -40%;
-  right: -10%;
+  top: -50%;
+  right: -8%;
   width: 220px;
   height: 220px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(245, 208, 97, 0.14) 0%, transparent 70%);
+  background: radial-gradient(circle, var(--ew-accent-soft) 0%, transparent 72%);
   pointer-events: none;
 }
 
 .balance-hero-left {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
   position: relative;
   z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .balance-hero-label {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--gold);
+  font-family: var(--ew-font-mono);
+  font-size: 11px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.08em;
+  color: var(--ew-accent-strong);
 }
 
-[data-theme="dark"] .balance-hero-value {
-  font-size: 40px;
-  font-weight: 800;
-  color: #f8fafc;
-  letter-spacing: -0.5px;
-  font-family: "Courier New", monospace;
-}
-
-[data-theme="light"] .balance-hero-value,
 .balance-hero-value {
-  font-size: 40px;
-  font-weight: 800;
-  color: var(--text-primary);
-  letter-spacing: -0.5px;
-  font-family: "Courier New", monospace;
+  font-family: var(--ew-font-mono);
+  font-size: 38px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ew-text);
 }
 
-[data-theme="dark"] .balance-hero-sub {
-  font-size: 13.5px;
-  color: #94a3b8;
-}
-
-[data-theme="dark"] .balance-hero-sub strong {
-  color: #e2e8f0;
-}
-
-[data-theme="light"] .balance-hero-sub,
 .balance-hero-sub {
-  font-size: 13.5px;
-  color: var(--text-muted);
+  font-size: 13px;
+  color: var(--ew-text-soft);
 }
 
-[data-theme="light"] .balance-hero-sub strong,
 .balance-hero-sub strong {
-  color: var(--text-secondary);
+  font-family: var(--ew-font-mono);
+  color: var(--ew-accent-strong);
+  font-weight: 600;
 }
 
-/* Metric cards grid */
+/* ---------------------------------------------------------------------- */
+/* Metric cards                                                            */
+/* ---------------------------------------------------------------------- */
 .ewallet-stats-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -163,43 +232,50 @@
 }
 
 .metric-card {
-  background: var(--bg-card);
-  border: 1px solid var(--gold-border);
+  background: var(--ew-surface);
+  border: 1px solid var(--ew-border);
   border-radius: 14px;
-  padding: 18px 18px;
+  padding: 18px;
   display: flex;
   align-items: flex-start;
   gap: 14px;
-  box-shadow: var(--shadow-card);
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--ew-text) 4%, transparent);
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.metric-card:hover {
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--ew-text) 8%, transparent);
+  transform: translateY(-1px);
 }
 
 .metric-icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 19px;
+  font-size: 18px;
   flex-shrink: 0;
+  border: 1.5px solid transparent;
 }
 
 .icon--pending {
-  background: rgba(245, 208, 97, 0.12);
-  border: 1.5px solid rgba(245, 208, 97, 0.3);
-  color: #f5d061;
+  background: var(--ew-pending-soft);
+  border-color: var(--ew-pending-line);
+  color: var(--ew-pending);
 }
 
 .icon--paid {
-  background: rgba(16, 185, 129, 0.12);
-  border: 1.5px solid rgba(16, 185, 129, 0.3);
-  color: #10b981;
+  background: var(--ew-success-soft);
+  border-color: var(--ew-success-line);
+  color: var(--ew-success);
 }
 
 .icon--gross {
-  background: rgba(59, 130, 246, 0.12);
-  border: 1.5px solid rgba(96, 165, 250, 0.3);
-  color: #93c5fd;
+  background: var(--ew-info-soft);
+  border-color: var(--ew-info-line);
+  color: var(--ew-info);
 }
 
 .metric-body {
@@ -210,54 +286,60 @@
 }
 
 .metric-label {
-  font-size: 12.5px;
-  font-weight: 700;
-  color: var(--text-muted);
+  font-family: var(--ew-font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--ew-text-faint);
   text-transform: uppercase;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.06em;
 }
 
 .metric-value {
-  font-size: 20px;
-  font-weight: 800;
-  color: var(--text-primary);
-  font-family: "Courier New", monospace;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--ew-text);
+  font-family: var(--ew-font-mono);
 }
 
 .metric-footnote {
   font-size: 11.5px;
-  color: var(--text-subtle);
+  color: var(--ew-text-faint);
 }
 
-/* Commission History Table Card */
+/* ---------------------------------------------------------------------- */
+/* Commission history table card                                           */
+/* ---------------------------------------------------------------------- */
 .ewallet-table-card {
-  background: var(--bg-card);
-  border: 1px solid var(--gold-border);
-  border-radius: 14px;
-  padding: 24px;
-  box-shadow: var(--shadow-card);
+  background: var(--ew-surface);
+  border: 1px solid var(--ew-border);
+  border-top: 3px solid var(--ew-accent);
+  border-radius: 16px;
+  padding: 26px 28px 28px;
+  box-shadow: 0 4px 18px color-mix(in srgb, var(--ew-text) 6%, transparent);
 }
 
 .section-title {
+  font-family: var(--ew-font-display);
   font-size: 18px;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 20px;
+  font-weight: 600;
+  color: var(--ew-text);
+  margin: 0 0 18px;
 }
 
 .table-responsive {
   width: 100%;
   overflow-x: auto;
+  border: 1px solid var(--ew-border-soft);
+  border-radius: 12px;
 }
 
-/* Fixed layout + explicit column widths keeps header/data columns locked
-   together so they can never drift out of alignment with each other. */
 .ewallet-table {
   width: 100%;
   min-width: 640px;
   border-collapse: collapse;
   text-align: left;
   table-layout: fixed;
+  font-size: 13.5px;
 }
 
 .ewallet-table col:nth-child(1) { width: 26%; }
@@ -268,29 +350,30 @@
 .ewallet-table col:nth-child(6) { width: 13%; }
 
 .ewallet-table th {
-  background: var(--bg-elevated);
+  background: var(--ew-accent-soft);
   padding: 12px 16px;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--text-muted);
+  font-family: var(--ew-font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--ew-text-faint);
   text-transform: uppercase;
-  letter-spacing: 0.4px;
-  border-bottom: 1px solid var(--gold-border);
+  letter-spacing: 0.06em;
+  border-bottom: 1.5px solid var(--ew-accent-line);
   white-space: nowrap;
 }
 
 .ewallet-table td {
-  padding: 14px 16px;
-  font-size: 13.5px;
-  color: var(--text-secondary);
-  border-bottom: 1px solid var(--border-subtle);
-  font-family: "Inter", "Segoe UI", sans-serif;
+  padding: 13px 16px;
+  color: var(--ew-text);
+  font-weight: 500;
+  border-bottom: 1px solid var(--ew-border-soft);
   vertical-align: middle;
 }
 
-/* Header alignment is driven from the same nth-child index as the data
-   cells below, so a header can never sit on the opposite side of its
-   own column's values again. */
+.ewallet-table tr:last-child td {
+  border-bottom: none;
+}
+
 .ewallet-table th:nth-child(1),
 .ewallet-table td:nth-child(1) {
   text-align: left;
@@ -302,7 +385,8 @@
   text-align: right;
 }
 
-.ewallet-table th:nth-child(5) {
+.ewallet-table th:nth-child(5),
+.ewallet-table td:nth-child(5) {
   text-align: center;
 }
 
@@ -312,11 +396,10 @@
 
 .empty-cell {
   text-align: center;
-  color: var(--text-subtle);
-  padding: 24px 16px !important;
+  color: var(--ew-text-faint);
+  padding: 26px 16px !important;
 }
 
-/* Numeric cell alignment (Investment / Commission / Paid columns) */
 .cell-amount,
 .cell-gross,
 .cell-paid {
@@ -324,20 +407,17 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-family: "Courier New", monospace;
+  font-family: var(--ew-font-mono);
   font-weight: 600;
+  color: var(--ew-text);
 }
 
-/* Status column centered to match its header */
-.ewallet-table td:nth-child(5) {
-  text-align: center;
-}
-
-/* Date column right-aligned to match its header */
 .date-cell {
   text-align: right;
   white-space: nowrap;
-  color: var(--text-muted);
+  font-family: var(--ew-font-mono);
+  font-size: 12.5px;
+  color: var(--ew-text-soft);
 }
 
 .investor-cell {
@@ -350,35 +430,60 @@
 
 .investor-name {
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--ew-text);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .investor-id {
-  font-size: 11.5px;
-  color: var(--text-subtle);
-}
-
-.ewallet-table tr:last-child td {
-  border-bottom: none;
+  font-family: var(--ew-font-mono);
+  font-size: 11px;
+  color: var(--ew-accent-strong);
 }
 
 .row--clickable {
   cursor: pointer;
-  transition: background 0.15s ease;
+  transition: background 0.12s ease;
 }
 
 .row--clickable:hover {
-  background: var(--gold-glow);
+  background: color-mix(in srgb, var(--ew-accent) 6%, transparent);
 }
 
-/* Modal (Commission Detail Popup) */
+/* Status pill */
+.status-pill {
+  display: inline-block;
+  padding: 5px 11px;
+  border-radius: 999px;
+  font-family: var(--ew-font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid transparent;
+}
+
+.status--pending {
+  background: var(--ew-pending-soft);
+  border-color: var(--ew-pending-line);
+  color: var(--ew-pending);
+}
+
+.status--paid,
+.status--completed {
+  background: var(--ew-success-soft);
+  border-color: var(--ew-success-line);
+  color: var(--ew-success);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Detail modal                                                            */
+/* ---------------------------------------------------------------------- */
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: var(--bg-overlay);
+  background: color-mix(in srgb, var(--ew-text) 45%, transparent);
   backdrop-filter: blur(3px);
   display: flex;
   align-items: center;
@@ -388,14 +493,15 @@
 }
 
 .modal-container {
-  background: var(--bg-card);
-  border: 1px solid var(--gold-border);
+  background: var(--ew-surface);
+  border: 1px solid var(--ew-border);
+  border-top: 3px solid var(--ew-accent);
   border-radius: 16px;
   width: 100%;
   max-width: 480px;
   max-height: 85vh;
   overflow-y: auto;
-  box-shadow: var(--shadow-card);
+  box-shadow: 0 12px 32px color-mix(in srgb, var(--ew-text) 16%, transparent);
 }
 
 .modal-header {
@@ -403,20 +509,21 @@
   align-items: center;
   justify-content: space-between;
   padding: 20px 24px;
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--ew-border-soft);
 }
 
 .modal-header h3 {
+  font-family: var(--ew-font-display);
   font-size: 17px;
-  font-weight: 800;
-  color: var(--text-primary);
+  font-weight: 600;
+  color: var(--ew-text);
   margin: 0;
 }
 
 .modal-close-btn {
   background: transparent;
   border: none;
-  color: var(--text-muted);
+  color: var(--ew-text-faint);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -425,14 +532,13 @@
 }
 
 .modal-close-btn:hover {
-  color: var(--gold);
+  color: var(--ew-accent-strong);
 }
 
 .modal-body {
   padding: 24px;
-  color: var(--text-secondary);
+  color: var(--ew-text-soft);
   font-size: 13px;
-  font-family: "Inter", "Segoe UI", sans-serif;
 }
 
 .detail-grid {
@@ -446,7 +552,7 @@
   align-items: center;
   justify-content: space-between;
   padding-bottom: 10px;
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--ew-border-soft);
 }
 
 .detail-row:last-child {
@@ -455,45 +561,28 @@
 }
 
 .detail-label {
-  font-size: 12.5px;
-  color: var(--text-muted);
+  font-family: var(--ew-font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ew-text-faint);
   font-weight: 600;
 }
 
 .detail-value {
+  font-family: var(--ew-font-mono);
   font-size: 13.5px;
-  color: var(--text-primary);
+  color: var(--ew-text);
   font-weight: 700;
-  font-family: "Courier New", monospace;
   text-align: right;
 }
 
-/* Status pill */
-.status-pill {
-  display: inline-block;
-  padding: 6px 12px;
-  border-radius: 999px;
-  font-size: 11px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
-}
-
-.status--pending {
-  background: rgba(245, 208, 97, 0.14);
-  color: #f5d061;
-}
-
-.status--paid,
-.status--completed {
-  background: rgba(16, 185, 129, 0.14);
-  color: #10b981;
-}
-
-/* Responsive */
+/* ---------------------------------------------------------------------- */
+/* Responsive                                                              */
+/* ---------------------------------------------------------------------- */
 @media (max-width: 768px) {
   .page-title {
-    font-size: 20px;
+    font-size: 22px;
   }
 
   .balance-hero {
@@ -501,11 +590,11 @@
   }
 
   .balance-hero-value {
-    font-size: 32px;
+    font-size: 30px;
   }
 
   .ewallet-table-card {
-    padding: 16px;
+    padding: 18px;
   }
 
   .section-title {
@@ -517,17 +606,6 @@
     padding: 10px 12px;
     font-size: 12px;
   }
-
-  .table-responsive {
-    margin: 0 -16px;
-    padding: 0 16px;
-    width: calc(100% + 32px);
-  }
-
-  .modal-header,
-  .modal-body {
-    padding: 16px;
-  }
 }
 
 @media (max-width: 480px) {
@@ -537,7 +615,7 @@
   }
 
   .balance-hero-value {
-    font-size: 28px;
+    font-size: 26px;
   }
 
   .ewallet-table {

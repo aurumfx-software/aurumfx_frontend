@@ -79,17 +79,6 @@ function EWallet() {
   return (
     <UserLayout user={{ name: userName, userId }}>
       <div className="ewallet-page">
-        <div className="user-alert-banner">
-          <FiInfo className="alert-banner-icon" />
-          <span>
-            Heads up! You are now logged in as <strong>{userId}</strong>{" "}
-            <a href="/admin/login" className="alert-link">
-              Click Here
-            </a>
-            , to go back admin account.
-          </span>
-        </div>
-
         <div className="page-header">
           <h1 className="page-title">My Wallet</h1>
           <div className="breadcrumb">

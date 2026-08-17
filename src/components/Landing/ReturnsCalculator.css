@@ -74,11 +74,11 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0;
-  background: var(--bg-terminal);
-  border: 1px solid var(--gold-border);
+  background: var(--bg-card);
+  border: 1px solid rgba(212, 175, 55, 0.25);
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: var(--shadow-card);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
 }
 
 .calculator-left {
@@ -86,7 +86,8 @@
   flex-direction: column;
   justify-content: center;
   padding: 40px;
-  border-right: 1px solid var(--gold-border);
+  border-right: 1px solid rgba(212, 175, 55, 0.15);
+  background: var(--bg-surface);
 }
 
 .form-group label {
@@ -108,6 +109,10 @@
   border-radius: 10px;
   overflow: hidden;
   transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+[data-theme="light"] .input-wrap {
+  background: #ffffff !important;
 }
 
 .input-wrap:focus-within {
@@ -138,11 +143,13 @@
   font-weight: 700;
   color: var(--text-primary);
   outline: none;
-  color-scheme: var(--native-scheme, dark);
+  color-scheme: dark;
 }
 
 [data-theme="light"] .input-wrap input {
-  --native-scheme: light;
+  color-scheme: light;
+  background-color: #ffffff !important;
+  color: #0f172a !important;
 }
 
 .input-wrap input::placeholder {
@@ -246,6 +253,12 @@
   justify-content: center;
   padding: 40px;
   background: var(--bg-terminal-alt);
+}
+
+[data-theme="dark"] .calculator-card,
+[data-theme="dark"] .calculator-left,
+[data-theme="dark"] .calculator-right {
+  background-color: var(--bg-card);
 }
 
 .result-card {
@@ -471,11 +484,18 @@
   cursor: pointer;
   outline: none;
   transition: 0.2s;
-  color-scheme: var(--native-scheme, dark);
+  color-scheme: dark;
 }
 
 [data-theme="light"] .tenure-dropdown {
-  --native-scheme: light;
+  color-scheme: light;
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .tenure-dropdown option {
+  background-color: #ffffff;
+  color: #0f172a;
 }
 
 .tenure-dropdown:focus {
