@@ -5,6 +5,7 @@ import {
   FaUsers,
   FaHeadset,
 } from "react-icons/fa";
+import { FiShield } from "react-icons/fi";
 
 const reasons = [
   {
@@ -37,12 +38,17 @@ const WhyChoose = () => {
   return (
     <section className="why-choose">
       <div className="why-container">
-        <h2>Why Choose AurumFX?</h2>
+        <div className="section-head">
+          <div className="section-badge">
+            <FiShield /> Premium Features
+          </div>
+          <h2>Why Choose AurumFX?</h2>
 
-        <p className="why-subtitle">
-          We combine experience, transparency, and innovation to provide a
-          secure and profitable investment platform.
-        </p>
+          <p className="why-subtitle">
+            We combine experience, transparency, and innovation to provide a
+            secure and profitable investment platform.
+          </p>
+        </div>
 
         <div className="why-grid">
           {reasons.map((item, index) => (

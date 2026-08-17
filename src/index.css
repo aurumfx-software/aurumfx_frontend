@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+@import "./styles/theme.css";
 
 *,
 *::before,
@@ -17,9 +18,10 @@ body {
   font-family: "Poppins", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #0f172a;
-  background: #ffffff;
+  color: var(--text-primary);
+  background: var(--bg-page);
   overflow-x: hidden;
+  transition: background 0.25s ease, color 0.25s ease;
 }
 
 button {
@@ -33,4 +35,19 @@ img {
 
 a {
   -webkit-tap-highlight-color: transparent;
+}
+
+/* Scrollbar theming */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 6px;
 }

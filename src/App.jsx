@@ -35,6 +35,8 @@ import TopEarners from "./pages/admin/reports/TopEarners";
 
 
 import UserDashboard from "./pages/user/UserDashboard";
+import RankAchieversPage from "./pages/user/RankAchieversPage";
+import CriteriaAchieversPage from "./pages/user/CriteriaAchieversPage";
 import EWallet from "./pages/user/financial/EWallet";
 import Investments from "./pages/user/financial/Investments";
 import Profile from "./pages/user/Profile";
@@ -81,7 +83,23 @@ function App() {
         />
         <Route
           path="/user/financial/e-wallet"
-          element={<Navigate to="/user/financial/ewallet" replace />}
+          element={<Navigate to="/user/financial/my-wallet" replace />}
+        />
+        <Route
+          path="/user/financial/my-wallet"
+          element={
+            <ProtectedRoute requiredRole="user">
+              <EWallet />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/financial/withdrawal"
+          element={
+            <ProtectedRoute requiredRole="user">
+              <EWallet />
+            </ProtectedRoute>
+          }
         />
         <Route
           path="/user/financial/investments"
@@ -92,15 +110,63 @@ function App() {
           }
         />
         <Route
-          path="/user/profile"
+          path="/user/financial/investment"
           element={
             <ProtectedRoute requiredRole="user">
-              <Profile />
+              <Investments />
             </ProtectedRoute>
           }
         />
         <Route
-          path="/user/genealogy"
+          path="/user/profile"
+          element={<Navigate to="/user/account/profile" replace />}
+        />
+        <Route
+          path="/user/account"
+          element={<Navigate to="/user/account/profile" replace />}
+        />
+        <Route
+          path="/user/account/profile"
+          element={
+            <ProtectedRoute requiredRole="user">
+              <Profile defaultTab="profile" />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/account/bank-details"
+          element={
+            <ProtectedRoute requiredRole="user">
+              <Profile defaultTab="bank" />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/account/kyc"
+          element={
+            <ProtectedRoute requiredRole="user">
+              <Profile defaultTab="kyc" />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/account/edit-info"
+          element={
+            <ProtectedRoute requiredRole="user">
+              <Profile defaultTab="edit" />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/account/settings"
+          element={
+            <ProtectedRoute requiredRole="user">
+              <Profile defaultTab="settings" />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/business/family"
           element={
             <ProtectedRoute requiredRole="user">
               <UserGenealogyPage />
@@ -108,16 +174,48 @@ function App() {
           }
         />
         <Route
-          path="/user/profile/activity"
-          element={<Navigate to="/user/profile" replace />}
-        />
-        <Route
-          path="/user/help/faqs"
+          path="/user/business/list"
           element={
             <ProtectedRoute requiredRole="user">
-              <HelpCenterPage />
+              <UserGenealogyPage />
             </ProtectedRoute>
           }
+        />
+        <Route
+          path="/user/business/enroller"
+          element={
+            <ProtectedRoute requiredRole="user">
+              <UserGenealogyPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/achievers/rank"
+          element={
+            <ProtectedRoute requiredRole="user">
+              <RankAchieversPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/rank"
+          element={<Navigate to="/user/achievers/rank" replace />}
+        />
+        <Route
+          path="/user/achievers/criteria"
+          element={
+            <ProtectedRoute requiredRole="user">
+              <CriteriaAchieversPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/genealogy"
+          element={<Navigate to="/user/business/family" replace />}
+        />
+        <Route
+          path="/user/profile/activity"
+          element={<Navigate to="/user/profile" replace />}
         />
         <Route
           path="/user/help/knowledge-base"
@@ -161,7 +259,7 @@ function App() {
         />
         <Route
           path="/user/help"
-          element={<Navigate to="/user/help/faqs" replace />}
+          element={<Navigate to="/user/help/tickets" replace />}
         />
         <Route
           path="/user/help-center/mails/inbox"

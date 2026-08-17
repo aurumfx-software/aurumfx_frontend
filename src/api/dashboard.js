@@ -45,50 +45,6 @@ const MOCK_ADMIN_DASHBOARD = {
   ],
 };
 
-// Default fallback data for User Dashboard matching app screenshot design
-const MOCK_USER_DASHBOARD = {
-  user: {
-    name: "PRAVEEN",
-    fullName: "PRAVEEN DINESH",
-    userId: "FX001",
-    rank: "FX Hero",
-    nextRank: "FX Legend",
-    totalLots: 1,
-    referralLink: "https://app.aurumfx.net/auth/register?ref=FX001",
-  },
-  financials: {
-    income: 241550,
-    withdrawals: 233900,
-    balance: 7650,
-  },
-  networkStats: {
-    downlineClubUserCount: 258,
-    totalEnrolments: 9,
-  },
-  networkChartData: [
-    { month: "Jan 2026", val: 0.1 },
-    { month: "Feb 2026", val: 0.8 },
-    { month: "Mar 2026", val: 2.0 },
-    { month: "Apr 2026", val: 0.2 },
-    { month: "May 2026", val: 0.1 },
-    { month: "Jul 2026", val: 0.1 },
-  ],
-  enrolments: [
-    { id: 1, user: "SUSHI", userId: "FX150", date: "17 Mar 2026", avatarBg: "#3498db" },
-    { id: 2, user: "MANUJA", userId: "FX144", date: "09 Mar 2026", avatarBg: "#2c3e50" },
-    { id: 3, user: "BINDU", userId: "FX125", date: "11 Feb 2026", avatarBg: "#7f8c8d" },
-    { id: 4, user: "SURESHKUMAR", userId: "FX056", date: "29 Dec 2025", avatarBg: "#e67e22" },
-    { id: 5, user: "VIMAL", userId: "FX055", date: "29 Dec 2025", avatarBg: "#8e44ad" },
-  ],
-  teamPerformance: [
-    { id: 1, user: "AJAYAKUMAR", userId: "FX021", enrolments: 20, earnings: 72500 },
-    { id: 2, user: "SAVITHAMOL", userId: "FX011", enrolments: 8, earnings: 127000 },
-    { id: 3, user: "BINDU", userId: "FX125", enrolments: 2, earnings: 15000 },
-    { id: 4, user: "SOBHANA", userId: "FX018", enrolments: 0, earnings: 0 },
-    { id: 5, user: "AKSHAYA", userId: "FX023", enrolments: 0, earnings: 0 },
-  ],
-};
-
 const CACHE_TTL = 5000; // 5 seconds cache to prevent duplicate rapid requests
 
 const adminCache = new Map();
@@ -164,14 +120,38 @@ export const getUserDashboardData = async () => {
         throw new Error(payload.message || "Failed to fetch dashboard data");
       }
 
-      const data = payload?.data || payload;
-      const resData = { success: true, data };
+      const data = payload?.data || payload || {};
+      const normalized = {
+        user_id: data.user_id || localStorage.getItem("userId") || "",
+        name: data.name || localStorage.getItem("userName") || "User",
+        wallet_balance: Number(data.wallet_balance ?? 0),
+        total_investment: Number(data.total_investment ?? 0),
+        active_investments: Number(data.active_investments ?? 0),
+        level_income: Number(data.level_income ?? 0),
+        referral_income: Number(data.referral_income ?? 0),
+        team_members: Number(data.team_members ?? 0),
+      };
+
+      const resData = { success: true, data: normalized };
       userCache.data = resData;
       userCache.timestamp = Date.now();
       return resData;
     } catch (error) {
       console.error("User Dashboard API error:", error.message);
-      const errRes = { success: false, error: error.response?.data?.message || error.message };
+      const errRes = {
+        success: false,
+        error: error.response?.data?.message || error.message,
+        data: {
+          user_id: localStorage.getItem("userId") || "",
+          name: localStorage.getItem("userName") || "User",
+          wallet_balance: 0,
+          total_investment: 0,
+          active_investments: 0,
+          level_income: 0,
+          referral_income: 0,
+          team_members: 0,
+        },
+      };
       userCache.data = errRes;
       userCache.timestamp = Date.now();
       return errRes;

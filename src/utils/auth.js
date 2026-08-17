@@ -20,9 +20,14 @@ export function login(userId, password, requiredRole = null) {
 
 }
 
-export function logout() {
-  localStorage.clear();
-  logoutApi();
+export async function logout() {
+  try {
+    await logoutApi();
+  } catch (error) {
+    console.warn("Logout request failed:", error?.message || error);
+  } finally {
+    localStorage.clear();
+  }
 }
 
 

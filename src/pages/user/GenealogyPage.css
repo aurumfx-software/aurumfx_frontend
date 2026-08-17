@@ -1,19 +1,367 @@
+/* ==========================================================================
+   Genealogy — "Lineage Ledger" layout
+   Same AurumFX certificate language as the Profile page (fine gold rule,
+   engraved watermark, serif headings), applied to a referral tree: cards
+   read like small membership certificates, connected by a dashed spine —
+   the connectors carry real information here, since this *is* a hierarchy.
+   Self-contained tokens so this works standalone, in any theme.
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap');
+
+.genealogy-page {
+  --gen-bg: #f4f5f7;
+  --gen-surface: #ffffff;
+  --gen-border: #e6e8ec;
+  --gen-border-soft: #eef0f3;
+  --gen-text: #14171f;
+  --gen-text-soft: #5b6472;
+  --gen-text-faint: #8b93a1;
+
+  --gen-accent: #b8863a;
+  --gen-accent-strong: #8f6423;
+  --gen-accent-soft: #fbf2df;
+  --gen-accent-line: #e9d3a3;
+
+  --gen-danger: #dc2626;
+  --gen-danger-soft: #fdecec;
+
+  --gen-font-display: "Fraunces", "Georgia", serif;
+  --gen-font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+
+  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  color: var(--gen-text);
+}
+
+[data-theme="dark"] .genealogy-page {
+  --gen-bg: #0b0e14;
+  --gen-surface: #12161f;
+  --gen-border: #232938;
+  --gen-border-soft: #1c212d;
+  --gen-text: #f2f4f7;
+  --gen-text-soft: #9aa3b5;
+  --gen-text-faint: #6b7284;
+
+  --gen-accent: #e3b45a;
+  --gen-accent-strong: #f0c876;
+  --gen-accent-soft: rgba(227, 180, 90, 0.12);
+  --gen-accent-line: rgba(227, 180, 90, 0.3);
+
+  --gen-danger: #f87171;
+  --gen-danger-soft: rgba(248, 113, 113, 0.12);
+}
+
+.genealogy-page * {
+  box-sizing: border-box;
+}
+
 .user-genealogy-page {
   display: flex;
   flex-direction: column;
   gap: 24px;
 }
 
-.user-genealogy-page .genealogy-panel {
-  margin-top: 0;
+/* ---------------------------------------------------------------------- */
+/* Page header                                                             */
+/* ---------------------------------------------------------------------- */
+.page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
-.user-genealogy-page .genealogy-card {
+.page-title {
+  font-family: var(--gen-font-display);
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--gen-text);
+  margin: 0;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--gen-font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gen-text-soft);
+}
+
+.breadcrumb .separator {
+  color: var(--gen-accent-line);
+}
+
+.breadcrumb .current {
+  color: var(--gen-accent-strong);
+  font-weight: 700;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Panel — same engraved certificate frame as the Profile instrument cards */
+/* ---------------------------------------------------------------------- */
+.genealogy-panel {
+  position: relative;
+  margin-top: 0;
+  padding: 28px 30px 32px;
+  border: 1px solid var(--gen-border);
+  border-radius: 14px;
+  background-color: var(--gen-surface);
+  background-image: repeating-linear-gradient(
+    115deg,
+    color-mix(in srgb, var(--gen-accent) 6%, transparent) 0px,
+    color-mix(in srgb, var(--gen-accent) 6%, transparent) 1px,
+    transparent 1px,
+    transparent 22px
+  );
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--gen-accent) 10%, transparent);
+}
+
+.genealogy-panel::before,
+.genealogy-panel::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+  border-color: var(--gen-accent-line);
+  border-style: solid;
+  border-width: 0;
+}
+
+.genealogy-panel::before {
+  top: 9px;
+  left: 9px;
+  border-top-width: 1.5px;
+  border-left-width: 1.5px;
+}
+
+.genealogy-panel::after {
+  bottom: 9px;
+  right: 9px;
+  border-bottom-width: 1.5px;
+  border-right-width: 1.5px;
+}
+
+.genealogy-header-row {
+  display: flex;
+  align-items: center;
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+  border-bottom: 1px dashed var(--gen-border-soft);
+}
+
+.genealogy-header-row h2 {
+  font-family: var(--gen-font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gen-text-soft);
+  margin: 0;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Empty / error states                                                    */
+/* ---------------------------------------------------------------------- */
+.genealogy-empty,
+.genealogy-error {
+  padding: 34px 20px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--gen-text-soft);
+  border: 1px dashed var(--gen-border);
+  border-radius: 10px;
+  background: var(--gen-accent-soft);
+}
+
+.genealogy-error {
+  color: var(--gen-danger);
+  border-color: var(--gen-danger);
+  background: var(--gen-danger-soft);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Lineage tree                                                            */
+/* ---------------------------------------------------------------------- */
+.genealogy-tree {
+  overflow-x: auto;
+  padding: 6px 4px 12px;
+}
+
+.genealogy-node {
+  position: relative;
+}
+
+.genealogy-children {
+  position: relative;
+  margin-top: 16px;
+  padding-left: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-left: 1.5px dashed var(--gen-accent-line);
+}
+
+.genealogy-children > .genealogy-node::before {
+  content: "";
+  position: absolute;
+  left: -22px;
+  top: 26px;
+  width: 22px;
+  height: 0;
+  border-top: 1.5px dashed var(--gen-accent-line);
+}
+
+.genealogy-children > .genealogy-node:last-child {
+  padding-bottom: 0;
+}
+
+.genealogy-card {
+  position: relative;
   width: min(340px, 100%);
+  background: var(--gen-surface);
+  border: 1px solid var(--gen-border);
+  border-top: 3px solid var(--gen-accent);
+  border-radius: 10px;
+  padding: 16px 18px 18px;
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--gen-text) 4%, transparent);
+}
+
+.genealogy-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.genealogy-user-badge {
+  font-family: var(--gen-font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--gen-accent-strong);
+  background: var(--gen-accent-soft);
+  border: 1px solid var(--gen-accent-line);
+  border-radius: 4px;
+  padding: 3px 8px;
+}
+
+.genealogy-role {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--gen-text-faint);
+}
+
+.genealogy-card h3 {
+  font-family: var(--gen-font-display);
+  font-size: 16.5px;
+  font-weight: 600;
+  color: var(--gen-text);
+  margin: 0 0 14px;
+  letter-spacing: -0.005em;
+}
+
+.genealogy-metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 18px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--gen-border-soft);
+}
+
+.genealogy-metrics > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: var(--gen-font-mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--gen-text-faint);
+}
+
+.genealogy-metrics strong {
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--gen-text);
+}
+
+.genealogy-metrics > div:first-child strong {
+  font-family: var(--gen-font-mono);
+  color: var(--gen-accent-strong);
+  font-size: 14.5px;
 }
 
 @media (max-width: 768px) {
-  .user-genealogy-page .genealogy-card {
+  .genealogy-card {
     width: min(300px, 100%);
   }
+}
+
+/* ---------------------------------------------------------------------- */
+/* List / enroller tables — ledger style                                   */
+/* ---------------------------------------------------------------------- */
+.list-table-wrapper {
+  overflow-x: auto;
+  border: 1px solid var(--gen-border-soft);
+  border-radius: 10px;
+}
+
+.genealogy-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  min-width: 480px;
+}
+
+.genealogy-table thead th {
+  text-align: left;
+  font-family: var(--gen-font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--gen-text-faint);
+  padding: 12px 16px;
+  border-bottom: 1.5px solid var(--gen-accent-line);
+  background: var(--gen-accent-soft);
+  white-space: nowrap;
+}
+
+.genealogy-table tbody td {
+  padding: 12px 16px;
+  border-bottom: 1px dashed var(--gen-border-soft);
+  color: var(--gen-text);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.genealogy-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.genealogy-table tbody tr {
+  transition: background 0.12s ease;
+}
+
+.genealogy-table tbody tr:hover {
+  background: color-mix(in srgb, var(--gen-accent) 6%, transparent);
+}
+
+.genealogy-table tbody td:first-child {
+  font-family: var(--gen-font-mono);
+  font-size: 12.5px;
+  color: var(--gen-accent-strong);
 }

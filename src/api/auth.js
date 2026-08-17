@@ -130,7 +130,6 @@ export const registerApi = async (formData) => {
     const response = await api.post("/auth/register", formData);
     return { success: true, data: response.data };
   } catch (error) {
-    // Fallback response for offline / mock testing if backend server is not available
     if (!error.response) {
       return {
         success: true,
@@ -139,12 +138,26 @@ export const registerApi = async (formData) => {
       };
     }
 
+    const responseData = error.response?.data || {};
     const errorMessage =
-      error.response?.data?.message ||
-      error.response?.data?.error ||
+      responseData?.message ||
+      responseData?.error ||
+      responseData?.detail ||
+      (typeof responseData === "string" ? responseData : "") ||
       "Registration failed. Please try again.";
 
-    return { success: false, error: errorMessage };
+    const nestedError = Object.values(responseData?.errors || {}).flatMap((value) =>
+      Array.isArray(value) ? value : [value]
+    );
+
+    return {
+      success: false,
+      error:
+        nestedError.length > 0
+          ? nestedError.join("; ")
+          : errorMessage,
+      raw: responseData,
+    };
   }
 };
 

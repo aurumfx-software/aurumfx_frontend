@@ -171,13 +171,9 @@ const Register = () => {
       { key: "enroller_id", label: "Enroller ID" },
       { key: "date_of_birth", label: "Date of Birth" },
       { key: "country", label: "Country" },
-      { key: "zip_code", label: "ZIP Code" },
       { key: "mobile", label: "Mobile" },
       { key: "aadhar_no", label: "Aadhaar Number" },
-      { key: "pan", label: "PAN" },
-      { key: "nominee_name", label: "Nominee Name" },
-      { key: "nominee_aadhar", label: "Nominee Aadhaar" },
-      { key: "nominee_mobile", label: "Nominee Mobile" },
+      { key: "gender", label: "Gender" },
     ];
 
     mandatoryFields.forEach(({ key, label }) => {
@@ -198,8 +194,6 @@ const Register = () => {
       e.confirm_password = "Passwords do not match";
     }
 
-    // (uses shared calcAge above)
-
     const userAge = calcAge(formData.date_of_birth);
     if (userAge === null) {
       e.date_of_birth = "Please enter a valid Date of Birth";
@@ -207,7 +201,6 @@ const Register = () => {
       e.date_of_birth = "You must be at least 18 years old to register";
     }
 
-    // Nominee DOB validation (must be 18+ as requested)
     if (formData.nominee_dob) {
       const nomAge = calcAge(formData.nominee_dob);
       if (nomAge === null) {
@@ -217,10 +210,7 @@ const Register = () => {
       }
     }
 
-    // Nominee relationship validation: require selection, if 'Other' then require text
-    if (!formData.nominee_relation || !String(formData.nominee_relation).trim()) {
-      e.nominee_relation = "Nominee Relationship is required";
-    } else if (
+    if (
       formData.nominee_relation === "Other" &&
       (!formData.nominee_relation_other || !String(formData.nominee_relation_other).trim())
     ) {
@@ -253,11 +243,34 @@ const Register = () => {
       // Remove helper field before sending
       delete payload.nominee_relation_other;
 
+      // Remove empty optional fields to prevent backend validation errors
+      const optionalFields = [
+        "city",
+        "zip_code",
+        "pan",
+        "bank_account",
+        "bank_name",
+        "ifsc",
+        "nominee_name",
+        "nominee_relation",
+        "nominee_gender",
+        "nominee_dob",
+        "nominee_address",
+        "nominee_aadhar",
+        "nominee_mobile",
+      ];
+
+      optionalFields.forEach((field) => {
+        if (!payload[field] || String(payload[field]).trim() === "") {
+          delete payload[field];
+        }
+      });
+
       const result = await registerApi(payload);
       if (result.success) {
-        setSuccessMessage(result.message || "Registration Successful! Redirecting to login...");
+        setSuccessMessage(result.message || "Registration Successful! Redirecting to dashboard...");
         setTimeout(() => {
-          navigate("/user/login");
+          navigate("/user/dashboard");
         }, 1500);
       } else {
         setApiError(result.error);
@@ -419,11 +432,11 @@ const Register = () => {
             true
           )}
           {renderInput("city", "City", "text", false)}
-          {renderInput("zip_code", "ZIP Code", "text", true)}
+          {renderInput("zip_code", "ZIP Code", "text", false)}
           {renderInput("mobile", "Mobile", "tel", true)}
           {renderInput("aadhar_no", "Aadhaar Number", "text", true)}
-          {renderInput("pan", "PAN Number", "text", true)}
-          {renderSelect("gender", "Gender", ["Male", "Female", "Other"], false)}
+          {renderInput("pan", "PAN Number", "text", false)}
+          {renderSelect("gender", "Gender", ["Male", "Female", "Other"], true)}
 
           <h3 className="form-section-title">Bank Details</h3>
           {renderInput("bank_name", "Bank Name", "text", false)}
@@ -431,14 +444,14 @@ const Register = () => {
           {renderInput("ifsc", "IFSC Code", "text", false)}
 
           <h3 className="form-section-title">Nominee Details</h3>
-          {renderInput("nominee_name", "Nominee Name", "text", true)}
+          {renderInput("nominee_name", "Nominee Name", "text", false)}
           {renderSelect(
             "nominee_relation",
             "Nominee Relationship",
             ["Mother", "Father", "Daughter", "Son", "Husband", "Wife", "Brother", "Sister", "Friend", "Other"],
             false
           )}
-          {formData.nominee_relation === "Other" && renderInput("nominee_relation_other", "Please specify relationship", "text", true)}
+          {formData.nominee_relation === "Other" && renderInput("nominee_relation_other", "Please specify relationship", "text", false)}
           {renderSelect(
             "nominee_gender",
             "Nominee Gender",
@@ -447,8 +460,8 @@ const Register = () => {
           )}
           {renderInput("nominee_dob", "Nominee DOB", "date", false)}
           {renderTextArea("nominee_address", "Nominee Address", false)}
-          {renderInput("nominee_aadhar", "Nominee Aadhaar", "text", true)}
-          {renderInput("nominee_mobile", "Nominee Mobile", "tel", true)}
+          {renderInput("nominee_aadhar", "Nominee Aadhaar", "text", false)}
+          {renderInput("nominee_mobile", "Nominee Mobile", "tel", false)}
 
           {apiError && (
             <div className="form-error-banner" style={{ color: "#e74c3c", marginTop: "15px", textAlign: "center" }}>

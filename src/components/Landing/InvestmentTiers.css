@@ -1,6 +1,6 @@
 .tiers-section {
   padding: 100px 24px;
-  background: #000000;
+  background: var(--section-bg);
   position: relative;
   overflow: hidden;
 }
@@ -12,7 +12,7 @@
   right: -8%;
   width: 550px;
   height: 550px;
-  background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+  background: radial-gradient(circle, var(--gold-glow) 0%, transparent 70%);
   filter: blur(70px);
   pointer-events: none;
   z-index: 0;
@@ -25,7 +25,7 @@
   left: -10%;
   width: 450px;
   height: 450px;
-  background: radial-gradient(circle, rgba(212, 175, 55, 0.06) 0%, transparent 70%);
+  background: radial-gradient(circle, var(--gold-glow) 0%, transparent 70%);
   filter: blur(80px);
   pointer-events: none;
   z-index: 0;
@@ -60,10 +60,10 @@
   align-items: center;
   gap: 8px;
   padding: 6px 14px;
-  background: rgba(212, 175, 55, 0.1);
-  border: 1px solid rgba(212, 175, 55, 0.4);
+  background: var(--gold-glow);
+  border: 1px solid var(--gold-border-strong);
   border-radius: 999px;
-  color: #f5d061;
+  color: var(--gold);
   font-size: 13px;
   font-weight: 700;
   margin-bottom: 18px;
@@ -72,14 +72,14 @@
 .tiers-section .section-head h2 {
   font-size: clamp(28px, 4vw, 44px);
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-primary);
   line-height: 1.2;
   margin-bottom: 14px;
   letter-spacing: -0.5px;
 }
 
 .tiers-section .section-head h2 span {
-  background: linear-gradient(135deg, #f5d061 0%, #e5b80b 45%, #d4af37 100%);
+  background: var(--gradient-gold);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -93,7 +93,7 @@
 }
 
 .tiers-section .section-head p {
-  color: #94a3b8;
+  color: var(--text-muted);
   font-size: 16px;
   line-height: 1.6;
 }
@@ -118,16 +118,16 @@
 
 .tier-card {
   position: relative;
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+  background: linear-gradient(160deg, var(--card-glass-1) 0%, var(--card-glass-2) 100%);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(212, 175, 55, 0.14);
+  border: 1px solid var(--gold-border);
   border-radius: 24px;
   padding: 40px 32px;
   display: flex;
   flex-direction: column;
   transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, border-color 0.35s ease;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--shadow-card);
   opacity: 0;
   transform: translateY(40px) scale(0.96);
 }
@@ -143,43 +143,43 @@
 
 .tier-card:hover {
   transform: translateY(-6px);
-  border-color: rgba(212, 175, 55, 0.4);
-  box-shadow: 0 20px 48px rgba(212, 175, 55, 0.14);
+  border-color: var(--gold-border-strong);
+  box-shadow: 0 20px 48px var(--gold-glow);
 }
 
 .tier-card:first-child {
-  border: 1px solid rgba(22, 24, 28, 0.96);
-  box-shadow: inset 0 0 0 1px rgba(212, 175, 55, 0.18), 0 18px 36px rgba(0, 0, 0, 0.45);
-  background: linear-gradient(160deg, rgba(212, 175, 55, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border: 1px solid var(--card-first-border);
+  box-shadow: inset 0 0 0 1px var(--gold-border-strong), var(--shadow-card);
+  background: linear-gradient(160deg, var(--card-first-tint) 0%, var(--card-glass-2) 100%);
 }
 
 .tier-card:first-child .tier-return {
-  background: linear-gradient(135deg, #f9e39c 0%, #e1b93d 45%, #be8e17 100%);
+  background: var(--gradient-gold);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .tier-card:first-child .tier-btn.secondary {
-  background: rgba(12, 12, 12, 0.8);
-  border: 1px solid rgba(44, 44, 44, 0.95);
-  color: #f5d061;
+  background: var(--btn-ghost-bg);
+  border: 1px solid var(--btn-ghost-border);
+  color: var(--gold);
 }
 
 /* Popular card: promoted — larger padding, brighter border,
    subtle permanent glow, and it visually "pops" above its
    sibling using a negative margin instead of a plain scale. */
 .tier-card.popular {
-  border: 1.5px solid rgba(212, 175, 55, 0.55);
-  background: linear-gradient(160deg, rgba(245, 208, 97, 0.07) 0%, rgba(255, 255, 255, 0.015) 60%);
-  box-shadow: 0 20px 50px rgba(212, 175, 55, 0.22);
+  border: 1.5px solid var(--gold-border-strong);
+  background: linear-gradient(160deg, var(--gold-glow) 0%, var(--card-glass-2) 60%);
+  box-shadow: 0 20px 50px var(--gold-glow);
   padding: 48px 36px;
   margin: -16px 0;
 }
 
 .tier-card.popular:hover {
   transform: translateY(-10px);
-  box-shadow: 0 28px 64px rgba(212, 175, 55, 0.32);
+  box-shadow: 0 28px 64px var(--gold-glow);
 }
 
 .popular-badge {
@@ -191,19 +191,19 @@
   align-items: center;
   gap: 6px;
   padding: 6px 16px;
-  background: linear-gradient(135deg, #f5d061, #e5b80b);
-  color: #1e1b10;
+  background: var(--gradient-gold);
+  color: var(--text-on-gold);
   font-size: 12px;
   font-weight: 700;
   border-radius: 999px;
-  box-shadow: 0 4px 14px rgba(212, 175, 55, 0.45);
+  box-shadow: var(--shadow-gold);
   white-space: nowrap;
 }
 
 .tier-title {
   font-size: 22px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-primary);
   margin-bottom: 20px;
   letter-spacing: -0.2px;
 }
@@ -211,13 +211,13 @@
 .tier-price-box {
   margin-bottom: 28px;
   padding-bottom: 24px;
-  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+  border-bottom: 1px solid var(--gold-border);
 }
 
 .tier-range {
   display: block;
   font-size: 13px;
-  color: #94a3b8;
+  color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.6px;
   margin-bottom: 8px;
@@ -227,7 +227,7 @@
   font-size: 32px;
   font-weight: 800;
   letter-spacing: -0.5px;
-  background: linear-gradient(135deg, #f5d061 0%, #e5b80b 60%, #d4af37 100%);
+  background: var(--gradient-gold);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -247,15 +247,15 @@
   align-items: center;
   gap: 12px;
   font-size: 14px;
-  color: #cbd5e1;
+  color: var(--text-subtle);
   line-height: 1.4;
 }
 
 .check-icon {
-  color: #f5d061;
+  color: var(--gold);
   font-size: 15px;
   flex-shrink: 0;
-  background: rgba(212, 175, 55, 0.12);
+  background: var(--gold-glow);
   border-radius: 50%;
   padding: 4px;
   width: 22px;
@@ -275,26 +275,26 @@
 }
 
 .tier-btn.primary {
-  background: linear-gradient(135deg, #f5d061 0%, #e5b80b 50%, #c59b27 100%);
-  color: #1a1608;
-  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.4);
+  background: var(--gradient-gold);
+  color: var(--text-on-gold);
+  box-shadow: var(--shadow-gold);
 }
 
 .tier-btn.primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 30px rgba(212, 175, 55, 0.55);
+  box-shadow: var(--shadow-gold);
 }
 
 .tier-btn.secondary {
-  background: rgba(212, 175, 55, 0.05);
-  border: 1.5px solid rgba(212, 175, 55, 0.45);
-  color: #f5d061;
+  background: var(--gold-glow);
+  border: 1.5px solid var(--gold-border-strong);
+  color: var(--gold);
 }
 
 .tier-btn.secondary:hover {
-  background: rgba(212, 175, 55, 0.14);
-  border-color: #f5d061;
-  color: #ffe082;
+  background: var(--gold-glow);
+  border-color: var(--gold);
+  color: var(--gold-light);
   transform: translateY(-2px);
 }
 

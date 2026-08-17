@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FiMenu, FiX, FiArrowRight, FiLogIn } from "react-icons/fi";
 import logo from "../../assets/logo.png";
+import ThemeToggle from "../ThemeToggle/ThemeToggle"; // adjust path if your ThemeToggle lives elsewhere
 import "./Navbar.css";
 
 const navLinks = [
@@ -39,6 +40,7 @@ const Navbar = () => {
           ))}
 
           <div className="landing-mobile-actions">
+            <ThemeToggle variant="compact" />
             <Link to="/user/login" className="nav-login" onClick={closeMenu}>
               <FiLogIn className="nav-login-icon" />
               Log In
@@ -51,6 +53,7 @@ const Navbar = () => {
         </nav>
 
         <div className="landing-nav-actions">
+          <ThemeToggle variant="nav" className="landing-theme-toggle" />
           <Link to="/user/login" className="nav-login">
             <FiLogIn className="nav-login-icon" />
             Log In

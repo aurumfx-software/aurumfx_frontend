@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { FaUserPlus, FaChartBar, FaWallet } from "react-icons/fa";
+import { FiZap } from "react-icons/fi";
 import "./InvestmentJourney.css";
 
 const steps = [
@@ -53,6 +54,9 @@ const InvestmentJourney = () => {
 
       <div className="journey-container">
         <div className="section-head">
+          <div className="section-badge">
+            <FiZap /> Quick Start
+          </div>
           <h2>
             Start Trading in <span>3 Steps</span>
           </h2>

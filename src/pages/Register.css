@@ -6,7 +6,7 @@
 
 .register-page {
   min-height: 100vh;
-  background: #000000;
+  background: var(--section-bg);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -22,7 +22,7 @@
   left: -10%;
   width: 550px;
   height: 550px;
-  background: radial-gradient(circle, rgba(212, 175, 55, 0.14) 0%, transparent 70%);
+  background: radial-gradient(circle, var(--gold-glow-strong, var(--gold-glow)) 0%, transparent 70%);
   filter: blur(90px);
   pointer-events: none;
   z-index: 0;
@@ -35,7 +35,7 @@
   right: -10%;
   width: 550px;
   height: 550px;
-  background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+  background: radial-gradient(circle, var(--gold-glow) 0%, transparent 70%);
   filter: blur(90px);
   pointer-events: none;
   z-index: 0;
@@ -46,11 +46,11 @@
   z-index: 1;
   width: 100%;
   max-width: 880px;
-  background: linear-gradient(145deg, #0d0d0d 0%, #0a0a0a 100%);
-  border: 1px solid rgba(212, 175, 55, 0.2);
+  background: linear-gradient(145deg, var(--bg-card) 0%, var(--bg-surface) 100%);
+  border: 1px solid var(--gold-border);
   border-radius: 20px;
   padding: 48px;
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(212, 175, 55, 0.05);
+  box-shadow: 0 30px 80px var(--shadow-card-strong, var(--shadow-card)), 0 0 0 1px var(--gold-border);
 }
 
 .logo {
@@ -63,7 +63,7 @@
 
 .register-card h1 {
   text-align: center;
-  color: #ffffff;
+  color: var(--text-primary);
   font-size: 30px;
   font-weight: 700;
   margin-bottom: 8px;
@@ -71,7 +71,7 @@
 
 .register-card > p {
   text-align: center;
-  color: #94a3b8;
+  color: var(--text-muted);
   font-size: 15px;
   margin-bottom: 40px;
 }
@@ -84,7 +84,7 @@
 
 .form-section-title {
   grid-column: 1 / -1;
-  color: #f5d061;
+  color: var(--gold-dark, var(--gold));
   font-size: 16px;
   font-weight: 700;
   text-transform: uppercase;
@@ -92,17 +92,18 @@
   margin-top: 20px;
   margin-bottom: 4px;
   padding-bottom: 12px;
-  border-bottom: 1px solid rgba(212, 175, 55, 0.18);
+  border-bottom: 1px solid var(--gold-border);
   display: flex;
   align-items: center;
   gap: 10px;
 }
+[data-theme="dark"] .form-section-title { color: var(--gold); }
 
 .form-section-title::before {
   content: "";
   width: 3px;
   height: 14px;
-  background: linear-gradient(180deg, #f5d061, #d4af37);
+  background: var(--gradient-gold);
   border-radius: 2px;
 }
 
@@ -115,7 +116,7 @@
 .field-group label {
   font-size: 13px;
   font-weight: 600;
-  color: #cbd5e1;
+  color: var(--text-subtle);
   letter-spacing: 0.01em;
 }
 
@@ -127,12 +128,12 @@
 .register-form select,
 .register-form textarea {
   width: 100%;
-  background: #141414;
-  border: 1px solid #2b2b2b;
+  background: var(--bg-card);
+  border: 1px solid var(--border-neutral);
   border-radius: 10px;
   padding: 0 16px;
   font-size: 14.5px;
-  color: #e5e7eb;
+  color: var(--text-subtle);
   outline: none;
   font-family: inherit;
   transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
@@ -140,7 +141,7 @@
 
 .register-form input::placeholder,
 .register-form textarea::placeholder {
-  color: #55606e;
+  color: var(--text-faint, var(--text-muted));
 }
 
 .register-form input,
@@ -150,16 +151,19 @@
 
 .register-form select {
   appearance: none;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23f5d061'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 11.19l3.71-3.96a.75.75 0 111.08 1.04l-4.25 4.53a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z' clip-rule='evenodd'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23c59b27'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 11.19l3.71-3.96a.75.75 0 111.08 1.04l-4.25 4.53a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z' clip-rule='evenodd'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 14px center;
   background-size: 18px;
   padding-right: 40px;
 }
+[data-theme="dark"] .register-form select {
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23f5d061'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 11.19l3.71-3.96a.75.75 0 111.08 1.04l-4.25 4.53a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z' clip-rule='evenodd'/%3E%3C/svg%3E");
+}
 
 .register-form select option {
-  background: #141414;
-  color: #e5e7eb;
+  background: var(--bg-card);
+  color: var(--text-subtle);
 }
 
 .register-form textarea {
@@ -171,9 +175,9 @@
 .register-form input:focus,
 .register-form select:focus,
 .register-form textarea:focus {
-  border-color: rgba(212, 175, 55, 0.6);
-  background: #171717;
-  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+  border-color: var(--gold-border-strong);
+  background: var(--bg-surface);
+  box-shadow: 0 0 0 3px var(--gold-glow);
 }
 
 .register-form input.input-error,
@@ -219,9 +223,10 @@
 }
 
 .required {
-  color: #f5d061;
+  color: var(--gold-dark, var(--gold));
   margin-left: 2px;
 }
+[data-theme="dark"] .required { color: var(--gold); }
 
 .error {
   color: #f87171;
@@ -260,19 +265,19 @@
   height: 54px;
   border: none;
   border-radius: 10px;
-  background: linear-gradient(135deg, #f5d061 0%, #e5b80b 50%, #c59b27 100%);
-  color: #1a1608;
+  background: var(--gradient-gold);
+  color: var(--text-on-gold);
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.3);
+  box-shadow: var(--shadow-gold);
   transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, opacity 0.2s ease;
 }
 
 .register-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #ffe082 0%, #f5d061 50%, #d4af37 100%);
+  background: var(--gradient-gold-hover, var(--gradient-gold));
   transform: translateY(-2px);
-  box-shadow: 0 12px 30px rgba(212, 175, 55, 0.42);
+  box-shadow: var(--shadow-gold-strong, var(--shadow-gold));
 }
 
 .register-btn:disabled {
@@ -321,23 +326,23 @@
   }
 }
 
-/* Ensure date inputs match dark theme and their native date text is visible */
+/* Ensure date inputs match theme and their native date text is visible */
 .register-form input[type="date"] {
-  background: #141414;
-  color: #e5e7eb;
+  background: var(--bg-card);
+  color: var(--text-subtle);
 }
 
 /* Webkit-specific date display fields (placeholder like dd-mm-yyyy) */
 .register-form input[type="date"]::-webkit-datetime-edit {
-  color: #e5e7eb;
+  color: var(--text-subtle);
 }
 .register-form input[type="date"]::-webkit-datetime-edit-year-field,
 .register-form input[type="date"]::-webkit-datetime-edit-month-field,
 .register-form input[type="date"]::-webkit-datetime-edit-day-field {
-  color: #e5e7eb;
+  color: var(--text-subtle);
 }
 
-/* Make the calendar picker icon more visible on dark background */
-.register-form input[type="date"]::-webkit-calendar-picker-indicator {
+/* Calendar picker icon: native icon is dark, only invert it in dark theme */
+[data-theme="dark"] .register-form input[type="date"]::-webkit-calendar-picker-indicator {
   filter: invert(1) brightness(0.9);
 }

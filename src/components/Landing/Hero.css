@@ -2,10 +2,11 @@
   position: relative;
   min-height: 100vh;
   padding: 140px 24px 80px;
-  background: #000000;
+  background: var(--section-bg);
   overflow: hidden;
   display: flex;
   align-items: center;
+  isolation: isolate;
 }
 
 /* ===== FULL BACKGROUND IMAGE ===== */
@@ -21,24 +22,16 @@
   z-index: 0;
 }
 
-/* NEW — scrim so copy is always legible regardless of image content,
-   plus it's what gives the "image dissolving into black" premium look */
+/* scrim so copy is always legible regardless of image content */
 .hero-bg-image::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    90deg,
-    #000000 0%,
-    rgba(0, 0, 0, 0.85) 22%,
-    rgba(0, 0, 0, 0.35) 48%,
-    transparent 68%
-  );
+  background: var(--hero-scrim);
   z-index: 1;
 }
 
-/* NEW — fine grain texture, the cheapest way to make a flat black
-   background feel like material rather than a solid color fill */
+/* fine grain texture */
 .landing-hero::after {
   content: "";
   position: absolute;
@@ -49,12 +42,7 @@
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* NEW — soft ambient glow behind the image side, mimics studio
-   product lighting instead of a flat cutout */
-.landing-hero {
-  isolation: isolate;
-}
-
+/* soft ambient glow behind the image side */
 .landing-hero::before {
   content: "";
   position: absolute;
@@ -62,7 +50,7 @@
   right: -10%;
   width: 700px;
   height: 700px;
-  background: radial-gradient(circle, rgba(245, 208, 97, 0.14) 0%, transparent 70%);
+  background: radial-gradient(circle, var(--gold-glow) 0%, transparent 70%);
   transform: translateY(-50%);
   z-index: 0;
   pointer-events: none;
@@ -90,22 +78,27 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 16px;
-  background: rgba(212, 175, 55, 0.12);
+  padding: 9px 18px;
+  background: var(--gold-glow);
   backdrop-filter: blur(6px);
-  border: 1px solid rgba(212, 175, 55, 0.45);
+  border: 1px solid var(--gold-border-strong);
   border-radius: 999px;
-  color: #f5d061;
+  color: var(--gold-dark, var(--gold));
   font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
   margin-bottom: 28px;
+  box-shadow: var(--shadow-card);
   animation: badgePulse 2.6s ease-in-out infinite;
 }
 
+[data-theme="dark"] .hero-badge {
+  color: var(--gold);
+}
+
 @keyframes badgePulse {
-  0%, 100% { box-shadow: 0 0 0 rgba(245, 208, 97, 0); }
-  50% { box-shadow: 0 0 16px rgba(245, 208, 97, 0.35); }
+  0%, 100% { box-shadow: 0 0 0 rgba(212, 175, 55, 0); }
+  50% { box-shadow: 0 0 16px var(--gold-glow); }
 }
 
 .hero-copy h1 {
@@ -115,21 +108,25 @@
   line-height: 1.12;
   letter-spacing: -0.5px;
   margin-bottom: 24px;
-  color: #ffffff;
-  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+  color: var(--text-primary);
+  text-shadow: var(--hero-heading-shadow, none);
+}
+
+[data-theme="dark"] .hero-copy h1 {
+  --hero-heading-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
 }
 
 .hero-copy h1 span {
   display: block;
-  color: #f5d061;
+  color: var(--gold);
   position: relative;
   background-image: linear-gradient(
     100deg,
-    #f5d061 0%,
-    #f5d061 40%,
-    #fff8e1 50%,
-    #f5d061 60%,
-    #f5d061 100%
+    var(--gold) 0%,
+    var(--gold) 40%,
+    var(--gold-light) 50%,
+    var(--gold) 60%,
+    var(--gold) 100%
   );
   background-size: 250% 100%;
   background-position: 100% 0;
@@ -155,19 +152,21 @@
   font-family: "Inter", sans-serif;
   font-size: 18px;
   line-height: 1.7;
-  color: #e2e8f0;
+  color: var(--text-secondary);
   margin-bottom: 36px;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+  text-shadow: var(--hero-para-shadow, none);
+}
+
+[data-theme="dark"] .hero-copy > p {
+  --hero-para-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
 }
 
 .hero-copy > p strong {
-  color: #f5d061;
+  color: var(--gold);
   font-weight: 700;
 }
 
-/* NEW — trust strip: small, quiet, sits right under the paragraph.
-   This is often the single highest-leverage element on a fintech
-   hero — it's what separates "template" from "we looked legit". */
+/* trust strip */
 .hero-trust {
   display: flex;
   align-items: center;
@@ -181,12 +180,12 @@
   align-items: center;
   gap: 6px;
   font-size: 12.5px;
-  color: #b8c0cc;
+  color: var(--text-muted);
   letter-spacing: 0.2px;
 }
 
 .hero-trust-item svg {
-  color: #f5d061;
+  color: var(--gold);
   font-size: 14px;
 }
 
@@ -204,8 +203,8 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding: 14px 28px;
-  border-radius: 10px;
+  padding: 15px 30px;
+  border-radius: 12px;
   font-size: 16px;
   font-weight: 700;
   text-decoration: none;
@@ -214,11 +213,15 @@
 }
 
 .hero-btn-primary {
-  background: linear-gradient(135deg, #f7d772 0%, #f3c249 45%, #d8a926 100%);
-  color: #1a1608;
-  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.28);
+  background: var(--gradient-gold);
+  color: var(--text-on-gold);
+  box-shadow: var(--shadow-gold);
   border: none;
   min-width: 220px;
+}
+
+[data-theme="light"] .hero-btn-primary {
+  box-shadow: 0 8px 24px rgba(197, 155, 39, 0.32), 0 2px 6px rgba(15, 23, 42, 0.08);
 }
 
 .hero-btn-primary svg,
@@ -229,23 +232,25 @@
 }
 
 .hero-btn-secondary {
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--btn-secondary-bg);
   backdrop-filter: blur(6px);
-  color: #f5d061;
-  border: 1.5px solid #d4af37;
+  color: var(--gold-dark, var(--gold));
+  border: 1.5px solid var(--gold-dark, var(--gold));
   min-width: 180px;
 }
 
+[data-theme="dark"] .hero-btn-secondary {
+  color: var(--gold);
+}
+
 .hero-btn-secondary:hover {
-  background: rgba(212, 175, 55, 0.18);
-  border-color: #f5d061;
-  color: #ffe082;
+  background: var(--gold-glow);
+  border-color: var(--gold);
+  color: var(--gold-light);
   transform: translateY(-2px);
 }
 
-/* NEW — shimmer sweep on hover, echoes the headline's shine so the
-   whole hero feels like one coherent light-motif instead of separate
-   effects bolted on in different places */
+/* shimmer sweep on hover */
 .hero-btn-primary::after {
   content: "";
   position: absolute;
@@ -269,7 +274,7 @@
 
 .hero-btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 28px rgba(212, 175, 55, 0.45);
+  box-shadow: var(--shadow-gold);
 }
 
 .anim-item {
@@ -324,9 +329,6 @@
     margin-bottom: 20px;
     text-align: left;
   }
-
-  /* no override needed here — base rule already sets display: block,
-     which is exactly what keeps "Gold Trading" on its own line */
 
   .hero-copy > p {
     text-align: left;

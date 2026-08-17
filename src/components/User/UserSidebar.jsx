@@ -6,62 +6,76 @@ import {
   FiAward,
   FiUser,
   FiHelpCircle,
-  FiSend,
   FiChevronRight,
   FiChevronDown,
   FiChevronsLeft,
   FiChevronsRight,
+  FiLogOut,
 } from "react-icons/fi";
+import { logout } from "../../utils/auth";
 import logo from "../../assets/logo.png";
 import "./UserSidebar.css";
 
 const userNavItems = [
   { id: "dashboard", label: "Dashboard", icon: FiGrid, path: "/user/dashboard" },
   {
+    id: "account",
+    label: "Account",
+    icon: FiUser,
+    hasSubmenu: true,
+    children: [
+      { id: "profile", label: "Profile", path: "/user/account/profile" },
+      { id: "bank-details", label: "Bank Details", path: "/user/account/bank-details" },
+      { id: "kyc", label: "KYC", path: "/user/account/kyc" },
+      { id: "edit-info", label: "Edit info", path: "/user/account/edit-info" },
+      { id: "settings", label: "Settings", path: "/user/account/settings" },
+    ],
+  },
+  {
+    id: "business",
+    label: "Business",
+    icon: FiAward,
+    hasSubmenu: true,
+    children: [
+      { id: "family", label: "Family", path: "/user/business/family" },
+      { id: "list", label: "List", path: "/user/business/list" },
+      { id: "enroller", label: "Enroller", path: "/user/business/enroller" },
+    ],
+  },
+  {
     id: "financial",
     label: "Financial",
     icon: FiDollarSign,
     hasSubmenu: true,
     children: [
-      { id: "ewallet", label: "My Wallet", path: "/user/financial/ewallet" },
-      { id: "investments", label: "Investments", path: "/user/financial/investments" },
+      { id: "ewallet", label: "My Wallet", path: "/user/financial/my-wallet" },
+      { id: "withdrawal", label: "Withdrawal", path: "/user/financial/withdrawal" },
+      { id: "investments", label: "Investment", path: "/user/financial/investment" },
     ],
   },
-  { id: "profile", label: "My Profile", icon: FiUser, path: "/user/profile" },
-  { id: "genealogy", label: "Genealogy", icon: FiAward, path: "/user/genealogy" },
   {
-    id: "help",
-    label: "Help Center",
-    icon: FiHelpCircle,
+    id: "achievers",
+    label: "Achiever's List",
+    icon: FiAward,
     hasSubmenu: true,
     children: [
-      { id: "faq", label: "FAQ's", path: "/user/help/faqs" },
-      { id: "knowledge", label: "Knowledge Base", path: "/user/help/knowledge-base" },
-      { id: "emails", label: "Emails", path: "/user/help/emails" },
-      { id: "tickets", label: "Support Tickets", path: "/user/help/tickets" },
-      { id: "documents", label: "Documents", path: "/user/help/documents" },
-      { id: "videos", label: "Videos", path: "/user/help/videos" },
+      { id: "rank-achievers", label: "Rank Achievers", path: "/user/achievers/rank" },
+      { id: "criteria-achievers", label: "Criteria Achievers", path: "/user/achievers/criteria" },
     ],
   },
-  { id: "telegram", label: "Join Telegram", icon: FiSend, external: "https://t.me" },
+  { id: "support", label: "Support", icon: FiHelpCircle, path: "/user/help/tickets" },
+  { id: "logout", label: "Log out", icon: FiLogOut, path: "/user/login" },
 ];
 
 function UserSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse, user }) {
   const location = useLocation();
   const itemRefs = useRef({});
-  const lastExpandedId = useRef(null);
 
-  // Determine initial expanded state based on current location
   const getInitialExpanded = () => {
-    const state = { business: true };
+    const state = {};
     userNavItems.forEach((item) => {
       if (item.children) {
-        const hasActiveChild = item.children.some(
-          (child) => location.pathname === child.path
-        );
-        if (hasActiveChild) {
-          state[item.id] = true;
-        }
+        state[item.id] = item.children.some((child) => location.pathname === child.path);
       }
     });
     return state;
@@ -71,47 +85,57 @@ function UserSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse, user }) {
 
   useEffect(() => {
     const nextExpanded = {};
+
     userNavItems.forEach((item) => {
       if (item.children) {
-        const hasActiveChild = item.children.some(
+        nextExpanded[item.id] = item.children.some(
           (child) => location.pathname === child.path
         );
-        if (hasActiveChild) {
-          nextExpanded[item.id] = true;
-        }
       }
     });
+
     setExpanded((prev) => {
-      const nextState = userNavItems.reduce((state, item) => {
-        state[item.id] = Boolean(nextExpanded[item.id]);
-        return state;
-      }, {});
-      return JSON.stringify(prev) === JSON.stringify(nextState) ? prev : nextState;
+      const hasChanged = userNavItems.some((item) => {
+        if (!item.children) return false;
+        return Boolean(prev[item.id]) !== Boolean(nextExpanded[item.id]);
+      });
+
+      if (!hasChanged) return prev;
+      return nextExpanded;
     });
   }, [location.pathname]);
 
   useEffect(() => {
-    if (!lastExpandedId.current) return;
-    const id = lastExpandedId.current;
-    if (expanded[id] && itemRefs.current[id]) {
-      itemRefs.current[id].scrollIntoView({
+    const activeGroup = userNavItems.find((item) =>
+      item.children && item.children.some((child) => location.pathname === child.path)
+    );
+
+    if (activeGroup && itemRefs.current[activeGroup.id]) {
+      itemRefs.current[activeGroup.id].scrollIntoView({
         behavior: "smooth",
         block: "nearest",
       });
     }
-  }, [expanded]);
+  }, [location.pathname]);
 
   const toggleExpand = (id) => {
-    lastExpandedId.current = id;
     setExpanded((prev) => {
-      const isOpen = prev[id];
-      const nextState = userNavItems.reduce((state, item) => {
-        state[item.id] = false;
-        return state;
-      }, {});
-      nextState[id] = !isOpen;
+      const isOpen = Boolean(prev[id]);
+      const nextState = {};
+
+      userNavItems.forEach((item) => {
+        if (item.children) {
+          nextState[item.id] = item.id === id ? !isOpen : false;
+        }
+      });
+
       return nextState;
     });
+  };
+
+  const handleLogout = () => {
+    logout();
+    window.location.href = "/user/login";
   };
 
   const userName = user?.name || "PRAVEEN";
@@ -202,6 +226,21 @@ function UserSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse, user }) {
                       ) : (
                         <FiChevronRight className="nav-chevron" />
                       ))}
+                  </button>
+                ) : item.id === "logout" ? (
+                  <button
+                    type="button"
+                    className="user-nav-item user-nav-item--logout"
+                    title={item.label}
+                    onClick={() => {
+                      handleLogout();
+                      onClose && onClose();
+                    }}
+                  >
+                    <span className="nav-left">
+                      <Icon className="nav-icon" />
+                      {!isCollapsed && <span>{item.label}</span>}
+                    </span>
                   </button>
                 ) : item.external ? (
                   <a

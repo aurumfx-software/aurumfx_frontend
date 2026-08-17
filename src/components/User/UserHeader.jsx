@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FiBell, FiSettings, FiMenu } from "react-icons/fi";
+import { FiBell, FiMenu } from "react-icons/fi";
 import { logout } from "../../utils/auth";
+import ThemeToggle from "../ThemeToggle/ThemeToggle";
 import "./UserHeader.css";
 
 function UserHeader({ onMenuToggle, user }) {
@@ -34,8 +35,8 @@ function UserHeader({ onMenuToggle, user }) {
     };
   }, []);
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     navigate("/user/login");
   };
 
@@ -53,10 +54,6 @@ function UserHeader({ onMenuToggle, user }) {
       </div>
 
       <div className="user-header-right">
-        <button type="button" className="currency-selector-btn">
-          <span>INR ₹</span>
-        </button>
-
         {/* Notifications Icon Button with Dropdown */}
         <div className="header-notif-dropdown-container" ref={notifRef}>
           <button
@@ -88,9 +85,8 @@ function UserHeader({ onMenuToggle, user }) {
           )}
         </div>
 
-        <button type="button" className="header-icon-btn" aria-label="Settings">
-          <FiSettings />
-        </button>
+        {/* Theme Toggle */}
+        <ThemeToggle className="user-header-theme-toggle" variant="user-header" />
 
         {/* User Profile Avatar with Dropdown */}
         <div className="header-user-dropdown-container" ref={dropdownRef}>

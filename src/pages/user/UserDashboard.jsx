@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import {
-  FiInfo,
+  FiShield,
   FiMoreVertical,
   FiUsers,
   FiTrendingUp,
@@ -17,6 +17,14 @@ import UserRankCard from "../../components/User/UserRankCard";
 import DoInvestmentModal from "../../components/User/DoInvestmentModal";
 import { getUserDashboardData } from "../../api/dashboard";
 import "./UserDashboard.css";
+
+// Deterministic initials avatar so the same user always renders the same way.
+function getInitials(name) {
+  const clean = String(name || "U").trim();
+  const parts = clean.split(/\s+/).filter(Boolean);
+  if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+  return clean.slice(0, 2).toUpperCase();
+}
 
 function UserDashboard() {
   const [dashboardData, setDashboardData] = useState(null);
@@ -48,250 +56,171 @@ function UserDashboard() {
   }, []);
 
   const user = {
-    name: dashboardData?.name || "PRAVEEN",
-    fullName: dashboardData?.name || "PRAVEEN DINESH",
-    userId:
-      dashboardData?.user?.userId ||
-      dashboardData?.user?.user_id ||
-      localStorage.getItem("userId") ||
-      "FX001",
-    rank: dashboardData?.user?.rank || "FX Hero",
-    nextRank:
-      dashboardData?.user?.nextRank ||
-      dashboardData?.user?.next_rank ||
-      "FX Legend",
-    totalLots:
-      dashboardData?.user?.totalLots ?? dashboardData?.user?.total_lots ?? 1,
-    avatar: dashboardData?.user?.avatar || null,
+    name: dashboardData?.name || localStorage.getItem("userName") || "User",
+    fullName: dashboardData?.name || localStorage.getItem("userName") || "User",
+    userId: dashboardData?.user_id || localStorage.getItem("userId") || "FX000",
+    rank: dashboardData?.rank || "FX Hero",
+    nextRank: dashboardData?.next_rank || "FX Legend",
+    totalLots: dashboardData?.total_lots ?? 0,
+    avatar: null,
   };
 
   const financials = {
-    income: Number(dashboardData?.financials?.income ?? 241550),
-    withdrawals: Number(dashboardData?.financials?.withdrawals ?? 233900),
-    balance: Number(dashboardData?.financials?.balance ?? 7650),
-  };
-
-  const networkStats = {
-    downlineClubUserCount: Number(
-      dashboardData?.networkStats?.downlineClubUserCount ??
-        dashboardData?.network_stats?.downline_club_user_count ??
-        258
-    ),
-    totalEnrolments: Number(
-      dashboardData?.networkStats?.totalEnrolments ??
-        dashboardData?.network_stats?.total_enrolments ??
-        9
-    ),
+    totalInvestment: Number(dashboardData?.total_investment ?? 0),
+    walletBalance: Number(dashboardData?.wallet_balance ?? 0),
+    activeInvestments: Number(dashboardData?.active_investments ?? 0),
+    levelIncome: Number(dashboardData?.level_income ?? 0),
+    referralIncome: Number(dashboardData?.referral_income ?? 0),
+    teamMembers: Number(dashboardData?.team_members ?? 0),
   };
 
   const enrolments = Array.isArray(dashboardData?.enrolments)
     ? dashboardData.enrolments
-    : [
-        {
-          id: 1,
-          user: "SUSHI",
-          userId: "FX150",
-          date: "17 Mar 2026",
-          avatarBg: "#3498db",
-        },
-        {
-          id: 2,
-          user: "MANUJA",
-          userId: "FX144",
-          date: "09 Mar 2026",
-          avatarBg: "#2c3e50",
-        },
-        {
-          id: 3,
-          user: "BINDU",
-          userId: "FX125",
-          date: "11 Feb 2026",
-          avatarBg: "#7f8c8d",
-        },
-        {
-          id: 4,
-          user: "SURESHKUMAR",
-          userId: "FX056",
-          date: "29 Dec 2025",
-          avatarBg: "#e67e22",
-        },
-        {
-          id: 5,
-          user: "VIMAL",
-          userId: "FX055",
-          date: "29 Dec 2025",
-          avatarBg: "#8e44ad",
-        },
-      ];
+    : [];
 
-  const teamPerformance = Array.isArray(dashboardData?.teamPerformance)
-    ? dashboardData.teamPerformance
-    : [
-        {
-          id: 1,
-          user: "AJAYAKUMAR",
-          userId: "FX021",
-          enrolments: 20,
-          earnings: 72500,
-        },
-        {
-          id: 2,
-          user: "SAVITHAMOL",
-          userId: "FX011",
-          enrolments: 8,
-          earnings: 127000,
-        },
-        {
-          id: 3,
-          user: "BINDU",
-          userId: "FX125",
-          enrolments: 2,
-          earnings: 15000,
-        },
-        { id: 4, user: "SOBHANA", userId: "FX018", enrolments: 0, earnings: 0 },
-        { id: 5, user: "AKSHAYA", userId: "FX023", enrolments: 0, earnings: 0 },
-      ];
+  const teamPerformance = Array.isArray(dashboardData?.team_performance)
+    ? dashboardData.team_performance
+    : [];
+
+  const fmt = (n) => `₹${Number(n || 0).toLocaleString()}`;
 
   return (
     <UserLayout user={user}>
       <div className="user-dashboard-container">
-        {/* Top Heads-up Alert Banner */}
-        <div className="user-alert-banner">
-          <FiInfo className="alert-banner-icon" />
-          <span>
-            Heads up! You are now logged in as <strong>{user.userId}</strong>{" "}
-            <a href="/admin/login" className="alert-link">
-              Click Here
-            </a>{" "}
-            , to go back admin account.
-          </span>
+        {/* Header */}
+        <div className="udb-header">
+          <div>
+            <div className="udb-header-title">Welcome back, {user.name}</div>
+            <div className="udb-header-sub">
+              Here's how your portfolio is performing today.
+            </div>
+          </div>
+
+          <div className="udb-admin-pill">
+            <FiShield className="udb-admin-icon" />
+            <span>
+              Signed in as <strong>{user.userId}</strong>
+            </span>
+            <a href="/admin/login">Back to admin</a>
+          </div>
         </div>
 
         {/* Main Grid Layout */}
         <div className="user-dashboard-grid">
-          {/* Main Left Content Column */}
           <div className="grid-main-column">
-            {/* Top Row: Metric Cards & Income Payout Donut */}
-            <div className="top-metrics-row">
-              {/* Income / Investments Card */}
-              <div className="metric-card" style={{ position: "relative" }}>
-                <div className="metric-card-icon icon--income">
-                  <FiTrendingUp style={{ color: "#d97706" }} />
+            {/* Hero row: Total Investment (primary) + secondary metrics */}
+            <div className="hero-row">
+              <div className="hero-card">
+                <div className="hero-top">
+                  <span className="hero-eyebrow">
+                    <span className="dot" />
+                    Portfolio
+                  </span>
                 </div>
-                <div className="metric-card-info">
-                  <span className="metric-label">Total Investment</span>
-
-                  <h3 className="metric-value">
-                    {loading ? "..." : `₹${financials.income.toLocaleString()}`}
-                  </h3>
+                <div>
+                  <div className="hero-value">
+                    {loading ? "…" : fmt(financials.totalInvestment)}
+                  </div>
+                  <div className="hero-label">Total Investment</div>
                 </div>
                 <button
                   type="button"
+                  className="hero-invest-btn"
                   onClick={() => setIsInvestModalOpen(true)}
-                  title="Do Investment"
-                  style={{
-                    marginLeft: "auto",
-                    background: "#fff8e6",
-                    color: "#d97706",
-                    border: "1px solid #fde68a",
-                    borderRadius: "6px",
-                    padding: "5px 10px",
-                    fontSize: "12px",
-                    fontWeight: 700,
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "4px",
-                    transition: "all 0.15s ease",
-                  }}
+                  title="Add a new investment"
                 >
-                  <FiPlusCircle size={13} />
-                  <span>Split</span>
+                  <FiPlusCircle size={15} />
+                  <span>Add Investment</span>
                 </button>
-
               </div>
 
-
-              {/* Withdrawals Card */}
               <div className="metric-card">
                 <div className="metric-card-icon icon--withdraw">
-                  <FiArrowUpRight style={{ color: "#ef4444" }} />
+                  <FiArrowUpRight />
                 </div>
                 <div className="metric-card-info">
-                  <span className="metric-label">Withdrawals</span>
+                  <span className="metric-label">Wallet Balance</span>
                   <h3 className="metric-value">
-                    {loading
-                      ? "..."
-                      : `₹${financials.withdrawals.toLocaleString()}`}
+                    {loading ? "…" : fmt(financials.walletBalance)}
                   </h3>
                 </div>
               </div>
 
-              {/* Balance Card */}
               <div className="metric-card">
                 <div className="metric-card-icon icon--balance">
-                  <FiBriefcase style={{ color: "#3b82f6" }} />
+                  <FiBriefcase />
                 </div>
                 <div className="metric-card-info">
-                  <span className="metric-label">Balance</span>
+                  <span className="metric-label">Active Investments</span>
                   <h3 className="metric-value">
-                    {loading
-                      ? "..."
-                      : `₹${financials.balance.toLocaleString()}`}
+                    {loading ? "…" : fmt(financials.activeInvestments)}
                   </h3>
                 </div>
               </div>
 
-              {/* Income Payout Donut Chart */}
-              <div className="donut-card">
-                <h4 className="card-title">Income Payout Overview</h4>
-                <IncomePayoutDonutChart
-                  income={financials.income}
-                  payout={financials.withdrawals}
-                />
+              <div className="metric-card team-card">
+                <div className="metric-card-icon icon--team">
+                  <FiUsers />
+                </div>
+                <div className="metric-card-info">
+                  <span className="metric-label">Team Members</span>
+                  <h3 className="metric-value">
+                    {loading ? "…" : financials.teamMembers.toLocaleString()}
+                  </h3>
+                </div>
               </div>
             </div>
 
-            {/* Middle Row: Network Join Area Chart & Count Widgets */}
-            <div className="middle-network-row">
-              {/* Network Chart Card */}
-              <div className="network-chart-card">
-                <h4 className="card-title">Network</h4>
-                <p className="card-subtitle">Overview of user join</p>
+            {/* Insights row: network growth + income breakdown */}
+            <div className="insights-row">
+              <div className="panel-card">
+                <div className="panel-head">
+                  <div>
+                    <h4 className="card-title">Network Growth</h4>
+                    <p className="card-subtitle">New members joining over time</p>
+                  </div>
+                </div>
                 <NetworkAreaChart data={dashboardData?.networkChartData} />
               </div>
 
-              {/* Downline Count Summary Card */}
-              <div className="counts-summary-card">
-                <div className="count-stat-item">
-                  <div className="count-stat-icon">
-                    <FiUsers />
-                  </div>
-                  <div className="count-stat-text">
-                    <span className="count-lbl">Downline Club User Count</span>
-                    <span className="count-num">
-                      {networkStats.downlineClubUserCount}
-                    </span>
-                  </div>
+              <div className="panel-card income-panel">
+                <div>
+                  <h4 className="card-title">Income Breakdown</h4>
+                  <p className="card-subtitle">Earned vs. paid out</p>
                 </div>
 
-                <div className="count-stat-item">
-                  <div className="count-stat-icon">
-                    <FiTrendingUp />
+                <div className="income-chart-wrap">
+                  <IncomePayoutDonutChart
+                    income={financials.levelIncome + financials.referralIncome}
+                    payout={financials.walletBalance}
+                  />
+                </div>
+
+                <div className="income-stats">
+                  <div className="income-stat-row">
+                    <span className="income-stat-dot gold" />
+                    <div className="income-stat-text">
+                      <span className="income-stat-lbl">Level Income</span>
+                    </div>
+                    <span className="income-stat-val">
+                      {fmt(financials.levelIncome)}
+                    </span>
                   </div>
-                  <div className="count-stat-text">
-                    <span className="count-lbl">Total Enrolments</span>
-                    <span className="count-num">
-                      {networkStats.totalEnrolments}
+                  <div className="income-stat-row">
+                    <span className="income-stat-dot info" />
+                    <div className="income-stat-text">
+                      <span className="income-stat-lbl">Referral Income</span>
+                    </div>
+                    <span className="income-stat-val">
+                      {fmt(financials.referralIncome)}
                     </span>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Bottom Row: Enrolments & Team Performance Tables */}
+            {/* Tables row: Enrolments & Team Performance */}
             <div className="tables-row">
-              {/* Enrolments Table */}
               <div className="table-card">
                 <h4 className="card-title">Enrolments</h4>
                 <div className="table-container">
@@ -304,42 +233,49 @@ function UserDashboard() {
                       </tr>
                     </thead>
                     <tbody>
-                      {enrolments.map((item) => (
-                        <tr key={item.id}>
-                          <td>
-                            <div className="user-table-cell">
-                              <div
-                                className="user-table-avatar"
-                                style={{
-                                  background: item.avatarBg || "#3498db",
-                                }}
-                              >
-                                {String(item.user || "U").charAt(0)}
-                              </div>
-                              <div className="user-table-meta">
-                                <span className="meta-name">{item.user}</span>
-                                <span className="meta-id">{item.userId}</span>
-                              </div>
-                            </div>
-                          </td>
-                          <td className="date-cell">{item.date}</td>
-                          <td className="text-right">
-                            <button
-                              type="button"
-                              className="table-action-btn"
-                              aria-label="More options"
-                            >
-                              <FiMoreVertical />
-                            </button>
+                      {enrolments.length > 0 ? (
+                        enrolments.map((item) => {
+                          const name = item.user || item.name || "User";
+                          return (
+                            <tr key={item.id || item.user_id || name + Math.random()}>
+                              <td>
+                                <div className="user-table-cell">
+                                  <div className="user-table-avatar">
+                                    {getInitials(name)}
+                                  </div>
+                                  <div className="user-table-meta">
+                                    <span className="meta-name">{name}</span>
+                                    <span className="meta-id">
+                                      {item.userId || item.user_id || "-"}
+                                    </span>
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="date-cell">{item.date || "-"}</td>
+                              <td className="text-right">
+                                <button
+                                  type="button"
+                                  className="table-action-btn"
+                                  aria-label="More options"
+                                >
+                                  <FiMoreVertical />
+                                </button>
+                              </td>
+                            </tr>
+                          );
+                        })
+                      ) : (
+                        <tr>
+                          <td colSpan="3" className="text-center muted-row">
+                            No enrolments yet.
                           </td>
                         </tr>
-                      ))}
+                      )}
                     </tbody>
                   </table>
                 </div>
               </div>
 
-              {/* Team Performance Table */}
               <div className="table-card">
                 <h4 className="card-title">Team Performance</h4>
                 <div className="table-container">
@@ -352,25 +288,38 @@ function UserDashboard() {
                       </tr>
                     </thead>
                     <tbody>
-                      {teamPerformance.map((item) => (
-                        <tr key={item.id}>
-                          <td>
-                            <div className="user-table-cell">
-                              <div className="user-table-avatar dark-avatar">
-                                {String(item.user || "U").charAt(0)}
-                              </div>
-                              <div className="user-table-meta">
-                                <span className="meta-name">{item.user}</span>
-                                <span className="meta-id">{item.userId}</span>
-                              </div>
-                            </div>
-                          </td>
-                          <td>{item.enrolments}</td>
-                          <td className="text-right earnings-val">
-                            ₹{Number(item.earnings || 0).toLocaleString()}
+                      {teamPerformance.length > 0 ? (
+                        teamPerformance.map((item) => {
+                          const name = item.user || item.name || "User";
+                          return (
+                            <tr key={item.id || item.user_id || name + Math.random()}>
+                              <td>
+                                <div className="user-table-cell">
+                                  <div className="user-table-avatar">
+                                    {getInitials(name)}
+                                  </div>
+                                  <div className="user-table-meta">
+                                    <span className="meta-name">{name}</span>
+                                    <span className="meta-id">
+                                      {item.userId || item.user_id || "-"}
+                                    </span>
+                                  </div>
+                                </div>
+                              </td>
+                              <td>{item.enrolments ?? 0}</td>
+                              <td className="text-right earnings-val">
+                                {fmt(item.earnings)}
+                              </td>
+                            </tr>
+                          );
+                        })
+                      ) : (
+                        <tr>
+                          <td colSpan="3" className="text-center muted-row">
+                            No team performance data yet.
                           </td>
                         </tr>
-                      ))}
+                      )}
                     </tbody>
                   </table>
                 </div>
@@ -378,14 +327,14 @@ function UserDashboard() {
             </div>
           </div>
 
-          {/* Right Column: User VIP Rank & Trophy Card */}
+          {/* Right Column: Rank Card */}
           <div className="grid-side-column">
             <UserRankCard user={user} />
           </div>
         </div>
       </div>
 
-      {/* Investment Popup Modal */}
+      {/* Investment Modal */}
       <DoInvestmentModal
         isOpen={isInvestModalOpen}
         onClose={() => setIsInvestModalOpen(false)}
@@ -395,4 +344,3 @@ function UserDashboard() {
 }
 
 export default UserDashboard;
-

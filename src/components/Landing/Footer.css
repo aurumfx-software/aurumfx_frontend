@@ -1,9 +1,9 @@
 .footer {
   position: relative;
-  background: #000000;
-  color: #ffffff;
+  background: var(--section-bg);
+  color: var(--text-primary);
   padding-top: 64px;
-  border-top: 1px solid rgba(212, 175, 55, 0.2);
+  border-top: 1px solid var(--gold-border);
   overflow: hidden;
 }
 
@@ -14,7 +14,7 @@
   left: -8%;
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 70%);
+  background: radial-gradient(circle, var(--gold-glow) 0%, transparent 70%);
   filter: blur(80px);
   pointer-events: none;
   z-index: 0;
@@ -32,11 +32,12 @@
 }
 
 .footer-column h3 {
-  color: #f5d061;
+  color: var(--gold-dark, var(--gold));
   margin-bottom: 20px;
   font-size: 16px;
   font-weight: 700;
 }
+[data-theme="dark"] .footer-column h3 { color: var(--gold); }
 
 .footer-logo {
   height: 40px;
@@ -48,7 +49,7 @@
 
 .footer-column p,
 .footer-column ul li span {
-  color: #94a3b8;
+  color: var(--text-muted);
   line-height: 1.8;
   margin-bottom: 12px;
   font-size: 14px;
@@ -68,16 +69,17 @@
 }
 
 .footer-column ul li a {
-  color: #cbd5e1;
+  color: var(--text-subtle);
   text-decoration: none;
   font-size: 14px;
   transition: color 0.2s;
 }
 
 .footer-column ul li a:hover {
-  color: #f5d061;
+  color: var(--gold-dark, var(--gold));
   font-weight: 600;
 }
+[data-theme="dark"] .footer-column ul li a:hover { color: var(--gold); }
 
 .social-icons {
   display: flex;
@@ -89,33 +91,33 @@
   width: 38px;
   height: 38px;
   border-radius: 8px;
-  background: linear-gradient(135deg, #f5d061 0%, #e5b80b 100%);
-  color: #1a1608;
+  background: var(--gradient-gold);
+  color: var(--text-on-gold);
   display: flex;
   justify-content: center;
   align-items: center;
   text-decoration: none;
   transition: transform 0.2s, box-shadow 0.2s;
-  box-shadow: 0 4px 10px rgba(212, 175, 55, 0.25);
+  box-shadow: var(--shadow-gold);
 }
 
 .social-icons a:hover {
-  background: linear-gradient(135deg, #ffe082, #f5d061);
+  background: var(--gradient-gold-hover, var(--gradient-gold));
   transform: translateY(-2px);
-  box-shadow: 0 6px 14px rgba(212, 175, 55, 0.35);
+  box-shadow: var(--shadow-gold-strong, var(--shadow-gold));
 }
 
 .footer-bottom {
   position: relative;
   z-index: 1;
-  border-top: 1px solid rgba(212, 175, 55, 0.18);
+  border-top: 1px solid var(--gold-border);
   margin-top: 48px;
   text-align: center;
   padding: 24px;
 }
 
 .footer-bottom p {
-  color: #64748b;
+  color: var(--text-faint, var(--text-muted));
   font-size: 13px;
 }
 
