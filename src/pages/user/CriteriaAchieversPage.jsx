@@ -19,13 +19,13 @@ function CriteriaAchieversPage() {
 
         <div className="ewallet-table-card" style={{ minHeight: "280px", display: "flex", alignItems: "center", justifyContent: "center" }}>
           <div style={{ textAlign: "center" }}>
-            <div style={{ fontSize: "14px", letterSpacing: "0.5px", textTransform: "uppercase", color: "#f5d061", marginBottom: "10px" }}>
+            <div style={{ fontSize: "14px", letterSpacing: "0.5px", textTransform: "uppercase", color: "var(--gold)", marginBottom: "10px" }}>
               Status
             </div>
-            <div style={{ fontSize: "38px", fontWeight: 800, color: "#f8fafc", marginBottom: "8px" }}>
+            <div style={{ fontSize: "38px", fontWeight: 800, color: "var(--text-primary)", marginBottom: "8px" }}>
               Coming Soon
             </div>
-            <div style={{ color: "#94a3b8", fontSize: "15px" }}>
+            <div style={{ color: "var(--text-muted)", fontSize: "15px" }}>
               Criteria achievers page is being prepared.
             </div>
           </div>

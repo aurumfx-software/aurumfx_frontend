@@ -1,12 +1,6 @@
 import { useState, useEffect } from "react";
-import {
-  FiInfo,
-  FiCalendar,
-  FiDownload,
-  FiPlusCircle,
-} from "react-icons/fi";
+import { FiCalendar, FiDownload } from "react-icons/fi";
 import UserLayout from "../../../components/User/UserLayout";
-import DoInvestmentModal from "../../../components/User/DoInvestmentModal";
 import {
   createInvestmentApi,
   getMyInvestmentsApi,
@@ -16,7 +10,6 @@ import { getInvestmentTypesApi } from "../../../api/investmentTypes";
 import "./Investments.css";
 
 function Investments() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [amount, setAmount] = useState("");
   const [bankTxId, setBankTxId] = useState("");
 
@@ -131,44 +124,17 @@ function Investments() {
   return (
     <UserLayout user={{ name: userName, userId }}>
       <div className="investments-page">
-        <div className="user-alert-banner">
-          <FiInfo className="alert-banner-icon" />
-          <span>
-            Heads up! You are now logged in as <strong>{userId}</strong>{" "}
-            <a href="/admin/login" className="alert-link">Click Here</a>, to go back admin account.
-          </span>
-        </div>
-
-        <div className="page-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div>
-            <h1 className="page-title">Investments</h1>
-            <div className="breadcrumb">
-              <span>Dashboard</span>
-              <span className="separator">•</span>
-              <span className="current">Investments</span>
-            </div>
+        <div className="page-header">
+          <h1 className="page-title">
+            <span className="page-title-icon" aria-hidden="true">📈</span>
+            Investments
+          </h1>
+          <div className="breadcrumb">
+            <span>Dashboard</span>
+            <span className="separator">•</span>
+            <span className="current">Investments</span>
           </div>
-          <button
-            type="button"
-            className="do-invest-popup-btn"
-            onClick={() => setIsModalOpen(true)}
-            style={{
-              background: "#ffc52d", color: "#fff", fontWeight: 700, fontSize: "14px",
-              border: "none", borderRadius: "8px", padding: "10px 20px", cursor: "pointer",
-              display: "flex", alignItems: "center", gap: "8px",
-              boxShadow: "0 4px 12px rgba(255, 197, 45, 0.35)", transition: "all 0.15s ease",
-            }}
-          >
-            <FiPlusCircle size={16} />
-            <span>View Lots</span>
-          </button>
         </div>
-
-        <DoInvestmentModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          investmentsList={investments}
-        />
 
         <div className="invest-form-card">
           <h2 className="card-title">Invest Amount</h2>
@@ -177,68 +143,72 @@ function Investments() {
           </p>
 
           <form onSubmit={handleSubmit} className="invest-form">
-            {/* NEW — Plan selector */}
-            <div className="form-group">
-              <label className="separated-label">Investment Plan</label>
-              <select
-                value={selectedPlanId}
-                onChange={(e) => setSelectedPlanId(e.target.value)}
-                className="form-input"
-              >
-                {plans.length === 0 ? (
-                  <option value="">No plans available</option>
-                ) : (
-                  plans.map((plan) => (
-                    <option key={plan.id} value={plan.id}>
-                      {plan.plan_name} — {plan.return_percentage}% / {plan.duration_months}mo
-                    </option>
-                  ))
-                )}
-              </select>
+            <div className="form-row">
+              {/* NEW — Plan selector */}
+              <div className="form-group">
+                <label className="separated-label">Investment Plan</label>
+                <select
+                  value={selectedPlanId}
+                  onChange={(e) => setSelectedPlanId(e.target.value)}
+                  className="form-input form-select"
+                >
+                  {plans.length === 0 ? (
+                    <option value="">No plans available</option>
+                  ) : (
+                    plans.map((plan) => (
+                      <option key={plan.id} value={plan.id}>
+                        {plan.plan_name} — {plan.return_percentage}% / {plan.duration_months}mo
+                      </option>
+                    ))
+                  )}
+                </select>
+              </div>
+
+              {/* NEW — Return Type selector */}
+              <div className="form-group">
+                <label className="separated-label">Return Type</label>
+                <select
+                  value={selectedReturnTypeId}
+                  onChange={(e) => setSelectedReturnTypeId(e.target.value)}
+                  className="form-input form-select"
+                >
+                  {returnTypes.length === 0 ? (
+                    <option value="">No return types available</option>
+                  ) : (
+                    returnTypes.map((rt) => (
+                      <option key={rt.id} value={rt.id}>
+                        {rt.return_type}
+                      </option>
+                    ))
+                  )}
+                </select>
+              </div>
             </div>
 
-            {/* NEW — Return Type selector */}
-            <div className="form-group">
-              <label className="separated-label">Return Type</label>
-              <select
-                value={selectedReturnTypeId}
-                onChange={(e) => setSelectedReturnTypeId(e.target.value)}
-                className="form-input"
-              >
-                {returnTypes.length === 0 ? (
-                  <option value="">No return types available</option>
-                ) : (
-                  returnTypes.map((rt) => (
-                    <option key={rt.id} value={rt.id}>
-                      {rt.return_type}
-                    </option>
-                  ))
-                )}
-              </select>
-            </div>
+            <div className="form-row">
+              <div className="form-group">
+                <label className="separated-label">Amount</label>
+                <input
+                  type="number"
+                  placeholder="Amount"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  className="form-input"
+                  step="5000"
+                  min="5000"
+                />
+              </div>
 
-            <div className="form-group">
-              <label className="separated-label">Amount</label>
-              <input
-                type="number"
-                placeholder="Amount"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                className="form-input"
-                step="5000"
-                min="5000"
-              />
-            </div>
-
-            <div className="form-group">
-              <label className="separated-label">Bank Transaction ID</label>
-              <input
-                type="text"
-                placeholder="Bank Transaction ID"
-                value={bankTxId}
-                onChange={(e) => setBankTxId(e.target.value)}
-                className="form-input"
-              />
+              <div className="form-group">
+                <label className="separated-label">Bank Transaction ID</label>
+                <input
+                  type="text"
+                  placeholder="Bank Transaction ID"
+                  value={bankTxId}
+                  onChange={(e) => setBankTxId(e.target.value)}
+                  className="form-input"
+                />
+              </div>
             </div>
 
             {errorMsg && <p className="form-error-msg">{errorMsg}</p>}
@@ -265,7 +235,7 @@ function Investments() {
                 <FiCalendar className="field-icon" />
               </div>
             </div>
-            
+
             <div className="filter-input-group select-group">
               <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="filter-select">
                 <option value="All">Status</option>
@@ -300,11 +270,11 @@ function Investments() {
               </thead>
               <tbody>
                 {listLoading ? (
-                  <tr><td colSpan="13">Loading...</td></tr>
+                  <tr><td colSpan="13" className="empty-cell">Loading...</td></tr>
                 ) : listError ? (
-                  <tr><td colSpan="13">{listError}</td></tr>
+                  <tr><td colSpan="13" className="empty-cell">{listError}</td></tr>
                 ) : investments.length === 0 ? (
-                  <tr><td colSpan="13">No investments yet.</td></tr>
+                  <tr><td colSpan="13" className="empty-cell">No investments yet.</td></tr>
                 ) : (
                   investments.map((inv, idx) => (
                     <tr key={inv.id}>

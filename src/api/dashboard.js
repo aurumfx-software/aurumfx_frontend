@@ -1,51 +1,6 @@
 import api from "./axios";
 
-// Default fallback data for Admin Dashboard if backend server is offline/not ready
-const MOCK_ADMIN_DASHBOARD = {
-  kpis: {
-    totalNetworkBonus: 3629460,
-    totalPayout: 3436610,
-  },
-  chartData: [
-    { day: 19, value: 5000 },
-    { day: 20, value: 12000 },
-    { day: 21, value: 28000 },
-    { day: 22, value: 40000 },
-    { day: 23, value: 8000 },
-    { day: 24, value: 3000 },
-    { day: 25, value: 2000 },
-  ],
-  usersSummary: {
-    totalMembers: 2,
-    holdingTank: 0,
-    networkMembers: 2,
-  },
-  ticketsSummary: {
-    totalTickets: 0,
-    open: 0,
-    closed: 0,
-  },
-  latestRegistrations: [
-    {
-      id: 1,
-      userId: "FX251",
-      email: "fx251@example.com",
-      enroller: "FX039",
-      dateJoined: "22 Jul 2026",
-      country: "IND",
-    },
-    {
-      id: 2,
-      userId: "FX252",
-      email: "fx252@example.com",
-      enroller: "FX039",
-      dateJoined: "22 Jul 2026",
-      country: "IND",
-    },
-  ],
-};
-
-const CACHE_TTL = 5000; // 5 seconds cache to prevent duplicate rapid requests
+const CACHE_TTL = 5000; // 5s cache, dedupe rapid calls
 
 const adminCache = new Map();
 const adminInFlight = new Map();
@@ -62,7 +17,7 @@ export const clearDashboardCache = () => {
 };
 
 /**
- * Fetch Admin Dashboard data from API with request deduplication & short caching
+ * Admin Dashboard fetch, deduped + cached
  * @param {string} timeframe - 'week' | 'month' | 'year'
  */
 export const getAdminDashboardData = async (timeframe = "week") => {
@@ -85,10 +40,13 @@ export const getAdminDashboardData = async (timeframe = "week") => {
       adminCache.set(timeframe, { data: resData, timestamp: Date.now() });
       return resData;
     } catch (error) {
-        console.error("Admin Dashboard API error:", error.message);
-        const errRes = { success: false, error: error.response?.data?.message || error.message };
-        adminCache.set(timeframe, { data: errRes, timestamp: Date.now() });
-        return errRes;
+      console.error("Admin Dashboard API error:", error.message);
+      const errRes = {
+        success: false,
+        error: error.response?.data?.message || error.message,
+      };
+      adminCache.set(timeframe, { data: errRes, timestamp: Date.now() });
+      return errRes;
     } finally {
       adminInFlight.delete(timeframe);
     }
@@ -99,7 +57,8 @@ export const getAdminDashboardData = async (timeframe = "week") => {
 };
 
 /**
- * Fetch User Dashboard data from API with request deduplication & short caching
+ * User Dashboard fetch, deduped + cached
+ * Maps GET /user/dashboard response into a flat, component-friendly shape.
  */
 export const getUserDashboardData = async () => {
   const now = Date.now();
@@ -113,23 +72,67 @@ export const getUserDashboardData = async () => {
 
   userInFlight = (async () => {
     try {
-      const response = await api.get(`/dashboard`);
-      const payload = response.data;
+      const response = await api.get(`/user/dashboard`);
+      const data = response.data || {};
 
-      if (payload && (payload.success === false || payload.status === "error" || payload.status === false)) {
-        throw new Error(payload.message || "Failed to fetch dashboard data");
-      }
+      const u = data.user || {};
+      const s = data.summary || {};
+      const r = data.rank || {};
 
-      const data = payload?.data || payload || {};
       const normalized = {
-        user_id: data.user_id || localStorage.getItem("userId") || "",
-        name: data.name || localStorage.getItem("userName") || "User",
-        wallet_balance: Number(data.wallet_balance ?? 0),
-        total_investment: Number(data.total_investment ?? 0),
-        active_investments: Number(data.active_investments ?? 0),
-        level_income: Number(data.level_income ?? 0),
-        referral_income: Number(data.referral_income ?? 0),
-        team_members: Number(data.team_members ?? 0),
+        user: {
+          userId: u.user_id || localStorage.getItem("userId") || "",
+          userName: u.user_name || localStorage.getItem("userName") || "User",
+          profileImage: u.profile_image || null,
+        },
+        summary: {
+          totalActiveInvestment: Number(s.total_active_investment ?? 0),
+          totalActiveLots: Number(s.total_active_lots ?? 0),
+          walletBalance: Number(s.wallet_balance ?? 0),
+          payoutAmount: Number(s.payout_amount ?? 0),
+          totalReferrals: Number(s.total_referrals ?? 0),
+          totalLevelUsers: Number(s.total_level_users ?? 0),
+        },
+        rank: {
+          currentRank: r.current_rank || null,
+          nextRank: r.next_rank || null,
+        },
+        incomeChart: Array.isArray(data.income_chart)
+          ? data.income_chart.map((m) => ({
+              label: m.label,
+              monthName: m.month_name,
+              referralIncome: Number(m.referral_income ?? 0),
+              levelIncome: Number(m.level_income ?? 0),
+              rankIncome: Number(m.rank_income ?? 0),
+              totalIncome: Number(m.total_income ?? 0),
+              adminFee: Number(m.admin_fee ?? 0),
+              netPayable: Number(m.net_payable ?? 0),
+            }))
+          : [],
+        topReferrals: Array.isArray(data.top_referrals)
+          ? data.top_referrals.map((p) => ({
+              userId: p.user_id,
+              userName: p.user_name,
+              profileImage: p.profile_image,
+              maxInvestment: Number(p.max_investment ?? 0),
+              totalInvestment: Number(p.total_investment ?? 0),
+              totalLots: Number(p.total_lots ?? 0),
+              level: p.level,
+              dateOfJoin: p.date_of_join,
+            }))
+          : [],
+        topLevelUsers: Array.isArray(data.top_level_users)
+          ? data.top_level_users.map((p) => ({
+              userId: p.user_id,
+              userName: p.user_name,
+              profileImage: p.profile_image,
+              maxInvestment: Number(p.max_investment ?? 0),
+              totalInvestment: Number(p.total_investment ?? 0),
+              totalLots: Number(p.total_lots ?? 0),
+              level: p.level,
+              dateOfJoin: p.date_of_join,
+            }))
+          : [],
       };
 
       const resData = { success: true, data: normalized };
@@ -142,14 +145,23 @@ export const getUserDashboardData = async () => {
         success: false,
         error: error.response?.data?.message || error.message,
         data: {
-          user_id: localStorage.getItem("userId") || "",
-          name: localStorage.getItem("userName") || "User",
-          wallet_balance: 0,
-          total_investment: 0,
-          active_investments: 0,
-          level_income: 0,
-          referral_income: 0,
-          team_members: 0,
+          user: {
+            userId: localStorage.getItem("userId") || "",
+            userName: localStorage.getItem("userName") || "User",
+            profileImage: null,
+          },
+          summary: {
+            totalActiveInvestment: 0,
+            totalActiveLots: 0,
+            walletBalance: 0,
+            payoutAmount: 0,
+            totalReferrals: 0,
+            totalLevelUsers: 0,
+          },
+          rank: { currentRank: null, nextRank: null },
+          incomeChart: [],
+          topReferrals: [],
+          topLevelUsers: [],
         },
       };
       userCache.data = errRes;

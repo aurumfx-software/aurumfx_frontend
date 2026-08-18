@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { FiUsers, FiUser, FiBriefcase, FiCalendar, FiAward, FiDollarSign } from "react-icons/fi";
 import UserLayout from "../../components/User/UserLayout";
 import {
   getUserGenealogyApi,
@@ -98,11 +99,23 @@ function GenealogyPage() {
   const title =
     view === "family" ? "Family" : view === "list" ? "List" : "Enroller";
 
+  const columnIcons = {
+    user: <FiUser size={12} />,
+    name: <FiUsers size={12} />,
+    investment: <FiDollarSign size={12} />,
+    joined: <FiCalendar size={12} />,
+    rank: <FiAward size={12} />,
+    lots: <FiBriefcase size={12} />,
+  };
+
   return (
     <UserLayout user={{ name: localStorage.getItem("userName") || "User", userId }}>
       <div className="genealogy-page user-genealogy-page">
         <div className="page-header">
-          <h1 className="page-title">{title}</h1>
+          <h1 className="page-title">
+            <span className="page-title-icon" aria-hidden="true">👨‍👩‍👧‍👦</span>
+            {title}
+          </h1>
           <div className="breadcrumb">
             <span>Dashboard</span>
             <span className="separator">•</span>
@@ -133,9 +146,9 @@ function GenealogyPage() {
                 <table className="genealogy-table">
                   <thead>
                     <tr>
-                      <th>User ID</th>
-                      <th>Name</th>
-                      <th>Investment</th>
+                      <th><span className="genealogy-head-label"><span className="genealogy-head-icon">{columnIcons.user}</span>User ID</span></th>
+                      <th><span className="genealogy-head-label"><span className="genealogy-head-icon">{columnIcons.name}</span>Name</span></th>
+                      <th><span className="genealogy-head-label"><span className="genealogy-head-icon">{columnIcons.investment}</span>Investment</span></th>
                     </tr>
                   </thead>
                   <tbody>

@@ -1,17 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  FiUser,
-  FiEdit,
-  FiSettings,
-  FiCreditCard,
-  FiFileText,
-  FiPhone,
-  FiCamera,
-  FiArrowUpRight,
-  FiCheckCircle,
-  FiClock,
-  FiXCircle,
-} from "react-icons/fi";
+import { FiArrowUpRight, FiPhone, FiCamera } from "react-icons/fi";
 import {
   getProfileApi,
   updateProfileApi,
@@ -20,21 +8,13 @@ import {
   uploadProfileImageApi,
 } from "../../api/auth";
 import UserLayout from "../../components/User/UserLayout";
+import { NAV_ITEMS, normalizeStatus } from "./profileTabs/shared";
+import OverviewTab from "./profileTabs/OverviewTab";
+import EditInfoTab from "./profileTabs/EditInfoTab";
+import SettingsTab from "./profileTabs/SettingsTab";
+import BankDetailsTab from "./profileTabs/BankDetailsTab";
+import KycTab from "./profileTabs/KycTab";
 import "./Profile.css";
-
-const NAV_ITEMS = [
-  { id: "profile", label: "Overview", icon: FiUser },
-  { id: "edit", label: "Edit Info", icon: FiEdit },
-  { id: "settings", label: "Settings", icon: FiSettings },
-  { id: "bank", label: "Bank Details", icon: FiCreditCard },
-  { id: "kyc", label: "KYC", icon: FiFileText },
-];
-
-const KYC_STAMP = {
-  approved: { label: "Verified", Icon: FiCheckCircle },
-  pending: { label: "Pending", Icon: FiClock },
-  rejected: { label: "Rejected", Icon: FiXCircle },
-};
 
 function Profile({ defaultTab = "profile" }) {
   const [activeTab, setActiveTab] = useState(defaultTab);
@@ -55,20 +35,14 @@ function Profile({ defaultTab = "profile" }) {
     city: "",
     country: "",
     dateOfBirth: "",
-    bankName: "",
-    bankAccount: "",
-    ifsc: "",
-    aadhar: "",
-    pan: "",
-    kycStatus: "",
     avatar: "",
+    aadharNo: "",
+    pan: "",
   });
 
   const [savingMsg, setSavingMsg] = useState("");
   const [loadingProfile, setLoadingProfile] = useState(true);
   const [profileError, setProfileError] = useState("");
-  const [bankSavingMsg, setBankSavingMsg] = useState("");
-  const [bankError, setBankError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [passwordSuccess, setPasswordSuccess] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
@@ -78,6 +52,27 @@ function Profile({ defaultTab = "profile" }) {
   const [imageError, setImageError] = useState("");
   const [imageSuccess, setImageSuccess] = useState("");
 
+  // ---- Bank details + nominee state -------------------------------------
+  const [bankDetails, setBankDetails] = useState({
+    bank_name: "",
+    bank_account: "",
+    ifsc: "",
+    nominee_name: "",
+    nominee_relation: "",
+    nominee_gender: "",
+    nominee_dob: "",
+    nominee_address: "",
+    nominee_aadhar: "",
+    nominee_mobile: "",
+  });
+  const [bankStatus, setBankStatus] = useState("not_submitted");
+  const [bankRejectionReason, setBankRejectionReason] = useState("");
+  const [proofDocument, setProofDocument] = useState(null);
+  const [proofDocumentName, setProofDocumentName] = useState("");
+  const [bankSaving, setBankSaving] = useState(false);
+  const [bankSavingMsg, setBankSavingMsg] = useState("");
+  const [bankError, setBankError] = useState("");
+
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     setSavingMsg("");
@@ -86,6 +81,10 @@ function Profile({ defaultTab = "profile" }) {
     const [firstName, ...rest] = profileData.fullName.trim().split(" ");
     const lastName = rest.join(" ") || "";
 
+    // Matches the PUT /auth/profile schema exactly. Bank account number and
+    // password are never part of this payload — those live on their own
+    // dedicated tabs/endpoints. Aadhaar/PAN numbers are saved from the KYC
+    // tab, alongside their document uploads.
     const payload = {
       email: profileData.email,
       first_name: firstName,
@@ -95,9 +94,9 @@ function Profile({ defaultTab = "profile" }) {
       city: profileData.city,
       zip_code: profileData.zipCode,
       mobile: profileData.mobile,
-      aadhar_no: profileData.aadhar,
-      pan: profileData.pan,
       gender: profileData.gender,
+      aadhar_no: profileData.aadharNo || "",
+      pan: profileData.pan || "",
     };
 
     const res = await updateProfileApi(payload);
@@ -114,15 +113,32 @@ function Profile({ defaultTab = "profile" }) {
     setBankSavingMsg("");
     setBankError("");
 
-    const payload = {
-      bank_name: profileData.bankName,
-      bank_account: profileData.bankAccount,
-      ifsc: profileData.ifsc,
-    };
+    // Mandatory fields per backend schema.
+    const missing = [];
+    if (!bankDetails.bank_name) missing.push("Bank Name");
+    if (!bankDetails.bank_account) missing.push("Account Number");
+    if (!bankDetails.ifsc) missing.push("IFSC Code");
+    if (!bankDetails.nominee_name) missing.push("Nominee Name");
+    if (!bankDetails.nominee_aadhar) missing.push("Nominee Aadhaar");
+    if (!bankDetails.nominee_mobile) missing.push("Nominee Mobile");
+    if (!proofDocument && bankStatus === "not_submitted") missing.push("Passbook Photo");
 
-    const res = await updateProfileBankDetailsApi(payload);
+    if (missing.length > 0) {
+      setBankError(`Please fill required fields: ${missing.join(", ")}`);
+      return;
+    }
+
+    setBankSaving(true);
+    const res = await updateProfileBankDetailsApi({
+      ...bankDetails,
+      proof_document: proofDocument,
+    });
+    setBankSaving(false);
+
     if (res.success) {
-      setBankSavingMsg("Bank details updated successfully!");
+      setBankStatus("pending");
+      setBankRejectionReason("");
+      setBankSavingMsg("Bank details submitted for review!");
       setTimeout(() => setBankSavingMsg(""), 3000);
     } else {
       setBankError(res.error || "Failed to update bank details");
@@ -212,13 +228,31 @@ function Profile({ defaultTab = "profile" }) {
           city: data.city || prev.city || "",
           country: data.country || prev.country || "",
           avatar: data.avatar || data.profile_image || prev.avatar || "",
-          bankName: data.bank_name || prev.bankName || "",
-          bankAccount: data.bank_account || prev.bankAccount || "",
-          ifsc: data.ifsc || prev.ifsc || "",
-          aadhar: data.aadhar_no || data.aadhar || prev.aadhar || "",
+          aadharNo: data.aadhar_no || data.aadharNo || prev.aadharNo || "",
           pan: data.pan || prev.pan || "",
-          kycStatus: data.kyc_status || data.kycStatus || prev.kycStatus || "",
         }));
+
+        // Bank details, when the backend includes them on the profile
+        // payload (e.g. data.bank_details), pre-fill the form and lock it
+        // once approved.
+        const bd = data.bank_details || data.bankDetails || null;
+        if (bd) {
+          setBankDetails({
+            bank_name: bd.bank_name || "",
+            bank_account: bd.bank_account || bd.account_number || "",
+            ifsc: bd.ifsc || "",
+            nominee_name: bd.nominee_name || "",
+            nominee_relation: bd.nominee_relation || "",
+            nominee_gender: bd.nominee_gender || "",
+            nominee_dob: bd.nominee_dob || "",
+            nominee_address: bd.nominee_address || "",
+            nominee_aadhar: bd.nominee_aadhar || "",
+            nominee_mobile: bd.nominee_mobile || "",
+          });
+          setBankStatus(normalizeStatus(bd.status));
+          setBankRejectionReason(bd.rejection_reason || "");
+          setProofDocumentName(bd.proof_document_name || bd.proof_document || "");
+        }
       } else {
         setProfileError(res.error || "Unable to load profile");
       }
@@ -229,45 +263,26 @@ function Profile({ defaultTab = "profile" }) {
     loadProfile();
   }, []);
 
-  // Normalize whatever the API sends into one of three known KYC states.
-  const kycStatusKey = (() => {
-    const raw = (profileData.kycStatus || "").toLowerCase();
-    if (raw.includes("approv") || raw.includes("verified")) return "approved";
-    if (raw.includes("reject") || raw.includes("fail")) return "rejected";
-    return "pending";
-  })();
-
-  const stamp = KYC_STAMP[kycStatusKey];
-
-  const activeNav = NAV_ITEMS.find((n) => n.id === activeTab) || NAV_ITEMS[0];
-
-  const DocRow = ({ label, value }) => (
-    <div className="doc-row">
-      <span className="doc-row-label">{label}</span>
-      <span className={`doc-row-value ${!value ? "is-empty" : ""}`}>
-        {value || "Not provided"}
-      </span>
-    </div>
-  );
-
   return (
     <UserLayout user={{ name: profileData.userName, userId: profileData.userId }}>
       <div className="profile-page">
         <div className="profile-shell">
           {/* Identity panel */}
           <aside className="identity-panel">
-            <div className="identity-photo">
-              {profileData.avatar ? (
-                <img src={profileData.avatar} alt={profileData.userName} />
-              ) : (
-                <span>{profileData.userName.charAt(0)}</span>
-              )}
-            </div>
-
-            <div className="identity-photo-actions">
-              <label className="identity-photo-link" htmlFor="profile-image-upload">
+            <div className="identity-photo-wrap">
+              <div className="identity-photo">
+                {profileData.avatar ? (
+                  <img src={profileData.avatar} alt={profileData.userName} />
+                ) : (
+                  <span>{profileData.userName.charAt(0)}</span>
+                )}
+              </div>
+              <label
+                className="identity-photo-edit-btn"
+                htmlFor="profile-image-upload"
+                title="Change photo"
+              >
                 <FiCamera />
-                <span>Change photo</span>
                 <input
                   id="profile-image-upload"
                   type="file"
@@ -282,10 +297,10 @@ function Profile({ defaultTab = "profile" }) {
                   }}
                 />
               </label>
-              {profileImage && (
-                <span className="identity-upload-filename">{profileImage.name}</span>
-              )}
             </div>
+            {profileImage && (
+              <span className="identity-upload-filename">{profileImage.name}</span>
+            )}
 
             <div>
               <div className="identity-name">{profileData.userName}</div>
@@ -332,320 +347,56 @@ function Profile({ defaultTab = "profile" }) {
             {imageSuccess && <div className="form-success-msg">{imageSuccess}</div>}
 
             {activeTab === "profile" && (
-              <>
-                <span className="content-eyebrow">Account</span>
-                <h1 className="content-title">Overview</h1>
-                <p className="content-intro">
-                  Your personal details on file. Use Edit Info to make changes.
-                </p>
-
-                {loadingProfile ? (
-                  <div className="loading-state">Loading profile...</div>
-                ) : profileError ? (
-                  <div className="error-state">{profileError}</div>
-                ) : (
-                  <div className="doc-section">
-                    <DocRow label="Full Name" value={profileData.fullName} />
-                    <DocRow label="Email" value={profileData.email} />
-                    <DocRow label="Mobile" value={profileData.mobile} />
-                    <DocRow label="Gender" value={profileData.gender} />
-                    <DocRow label="Date of Birth" value={profileData.dateOfBirth} />
-                    <DocRow label="City" value={profileData.city} />
-                    <DocRow label="Country" value={profileData.country} />
-                    <DocRow label="ZIP Code" value={profileData.zipCode} />
-                  </div>
-                )}
-              </>
+              <OverviewTab
+                loadingProfile={loadingProfile}
+                profileError={profileError}
+                profileData={profileData}
+              />
             )}
 
             {activeTab === "edit" && (
-              <>
-                <span className="content-eyebrow">Account</span>
-                <h1 className="content-title">Edit Info</h1>
-                <p className="content-intro">Keep your personal information up to date.</p>
-
-                <form onSubmit={handleEditSubmit} className="doc-form">
-                  <div className="form-grid-2">
-                    <div className="field-group">
-                      <label className="field-label">Full Name</label>
-                      <input
-                        type="text"
-                        value={profileData.fullName}
-                        onChange={(e) =>
-                          setProfileData({ ...profileData, fullName: e.target.value })
-                        }
-                        className="field-input"
-                      />
-                    </div>
-                    <div className="field-group">
-                      <label className="field-label">Email</label>
-                      <input
-                        type="email"
-                        value={profileData.email}
-                        onChange={(e) =>
-                          setProfileData({ ...profileData, email: e.target.value })
-                        }
-                        className="field-input"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="form-grid-2">
-                    <div className="field-group">
-                      <label className="field-label">Date of Birth</label>
-                      <input
-                        type="date"
-                        value={profileData.dateOfBirth}
-                        onChange={(e) =>
-                          setProfileData({ ...profileData, dateOfBirth: e.target.value })
-                        }
-                        className="field-input"
-                      />
-                    </div>
-                    <div className="field-group">
-                      <label className="field-label">Gender</label>
-                      <select
-                        value={profileData.gender}
-                        onChange={(e) =>
-                          setProfileData({ ...profileData, gender: e.target.value })
-                        }
-                        className="field-input"
-                      >
-                        <option value="">Select gender</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="other">Other</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="form-grid-2">
-                    <div className="field-group">
-                      <label className="field-label">Mobile Number</label>
-                      <input
-                        type="tel"
-                        value={profileData.mobile}
-                        onChange={(e) =>
-                          setProfileData({ ...profileData, mobile: e.target.value })
-                        }
-                        className="field-input"
-                      />
-                    </div>
-                    <div className="field-group">
-                      <label className="field-label">City</label>
-                      <input
-                        type="text"
-                        value={profileData.city}
-                        onChange={(e) =>
-                          setProfileData({ ...profileData, city: e.target.value })
-                        }
-                        className="field-input"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="form-grid-2">
-                    <div className="field-group">
-                      <label className="field-label">ZIP Code</label>
-                      <input
-                        type="text"
-                        value={profileData.zipCode}
-                        onChange={(e) =>
-                          setProfileData({ ...profileData, zipCode: e.target.value })
-                        }
-                        className="field-input"
-                      />
-                    </div>
-                    <div className="field-group">
-                      <label className="field-label">Country</label>
-                      <input
-                        type="text"
-                        value={profileData.country}
-                        onChange={(e) =>
-                          setProfileData({ ...profileData, country: e.target.value })
-                        }
-                        className="field-input"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="form-grid-2">
-                    <div className="field-group">
-                      <label className="field-label">Aadhaar Number</label>
-                      <input
-                        type="text"
-                        value={profileData.aadhar}
-                        onChange={(e) =>
-                          setProfileData({ ...profileData, aadhar: e.target.value })
-                        }
-                        className="field-input"
-                      />
-                    </div>
-                    <div className="field-group">
-                      <label className="field-label">PAN Number</label>
-                      <input
-                        type="text"
-                        value={profileData.pan}
-                        onChange={(e) =>
-                          setProfileData({ ...profileData, pan: e.target.value })
-                        }
-                        className="field-input"
-                      />
-                    </div>
-                  </div>
-
-                  {savingMsg && <p className="form-success-msg">{savingMsg}</p>}
-
-                  <button type="submit" className="field-submit-btn">
-                    Save Changes
-                  </button>
-                </form>
-              </>
+              <EditInfoTab
+                profileData={profileData}
+                setProfileData={setProfileData}
+                handleEditSubmit={handleEditSubmit}
+                savingMsg={savingMsg}
+                profileError={profileError}
+              />
             )}
 
             {activeTab === "settings" && (
-              <>
-                <span className="content-eyebrow">Security</span>
-                <h1 className="content-title">Settings</h1>
-                <p className="content-intro">Update the password used to sign in.</p>
-
-                <form onSubmit={handleChangePasswordSubmit} className="doc-form">
-                  <div className="field-group">
-                    <label className="field-label">Current Password</label>
-                    <input
-                      type="password"
-                      placeholder="Enter current password"
-                      value={currentPassword}
-                      onChange={(e) => setCurrentPassword(e.target.value)}
-                      className="field-input"
-                    />
-                  </div>
-                  <div className="form-grid-2">
-                    <div className="field-group">
-                      <label className="field-label">New Password</label>
-                      <input
-                        type="password"
-                        placeholder="Enter new password"
-                        value={newPassword}
-                        onChange={(e) => setNewPassword(e.target.value)}
-                        className="field-input"
-                      />
-                    </div>
-                    <div className="field-group">
-                      <label className="field-label">Confirm New Password</label>
-                      <input
-                        type="password"
-                        placeholder="Confirm new password"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        className="field-input"
-                      />
-                    </div>
-                  </div>
-
-                  {passwordSuccess && <p className="form-success-msg">{passwordSuccess}</p>}
-                  {passwordError && <p className="form-error-msg">{passwordError}</p>}
-
-                  <button type="submit" className="field-submit-btn">
-                    Update Password
-                  </button>
-                </form>
-              </>
+              <SettingsTab
+                currentPassword={currentPassword}
+                setCurrentPassword={setCurrentPassword}
+                newPassword={newPassword}
+                setNewPassword={setNewPassword}
+                confirmPassword={confirmPassword}
+                setConfirmPassword={setConfirmPassword}
+                handleChangePasswordSubmit={handleChangePasswordSubmit}
+                passwordSuccess={passwordSuccess}
+                passwordError={passwordError}
+              />
             )}
 
             {activeTab === "bank" && (
-              <>
-                <span className="content-eyebrow">Payouts</span>
-                <h1 className="content-title">Bank Details</h1>
-                <p className="content-intro">
-                  Where your withdrawals and payouts are sent.
-                </p>
-
-                <form onSubmit={handleBankSubmit} className="doc-form">
-                  <div className="field-group">
-                    <label className="field-label">Bank Name</label>
-                    <input
-                      type="text"
-                      value={profileData.bankName}
-                      onChange={(e) =>
-                        setProfileData({ ...profileData, bankName: e.target.value })
-                      }
-                      className="field-input"
-                    />
-                  </div>
-                  <div className="form-grid-2">
-                    <div className="field-group">
-                      <label className="field-label">Account Number</label>
-                      <input
-                        type="text"
-                        value={profileData.bankAccount}
-                        onChange={(e) =>
-                          setProfileData({ ...profileData, bankAccount: e.target.value })
-                        }
-                        className="field-input"
-                      />
-                    </div>
-                    <div className="field-group">
-                      <label className="field-label">IFSC Code</label>
-                      <input
-                        type="text"
-                        value={profileData.ifsc}
-                        onChange={(e) =>
-                          setProfileData({ ...profileData, ifsc: e.target.value })
-                        }
-                        className="field-input"
-                      />
-                    </div>
-                  </div>
-
-                  {bankSavingMsg && <p className="form-success-msg">{bankSavingMsg}</p>}
-                  {bankError && <p className="form-error-msg">{bankError}</p>}
-
-                  <button type="submit" className="field-submit-btn">
-                    Update Bank Details
-                  </button>
-                </form>
-              </>
+              <BankDetailsTab
+                bankDetails={bankDetails}
+                setBankDetails={setBankDetails}
+                bankStatus={bankStatus}
+                bankRejectionReason={bankRejectionReason}
+                proofDocument={proofDocument}
+                setProofDocument={setProofDocument}
+                proofDocumentName={proofDocumentName}
+                setProofDocumentName={setProofDocumentName}
+                bankSaving={bankSaving}
+                bankSavingMsg={bankSavingMsg}
+                bankError={bankError}
+                handleBankSubmit={handleBankSubmit}
+              />
             )}
 
             {activeTab === "kyc" && (
-              <>
-                <span className="content-eyebrow">Verification</span>
-                <h1 className="content-title">KYC</h1>
-                <p className="content-intro">
-                  Identity documents on file for your account.
-                </p>
-
-                <div className="kyc-block">
-                  <div className="kyc-fields">
-                    <div className="field-group">
-                      <label className="field-label">Aadhaar Number</label>
-                      <input
-                        type="text"
-                        value={profileData.aadhar}
-                        readOnly
-                        className="field-input is-readonly"
-                      />
-                    </div>
-                    <div className="field-group">
-                      <label className="field-label">PAN Number</label>
-                      <input
-                        type="text"
-                        value={profileData.pan}
-                        readOnly
-                        className="field-input is-readonly"
-                      />
-                    </div>
-                  </div>
-
-                  <div className={`kyc-stamp status--${kycStatusKey}`}>
-                    <div className="kyc-stamp-inner">
-                      <stamp.Icon />
-                      <span className="kyc-stamp-label">{stamp.label}</span>
-                    </div>
-                  </div>
-                </div>
-              </>
+              <KycTab profileData={profileData} setProfileData={setProfileData} />
             )}
           </div>
         </div>

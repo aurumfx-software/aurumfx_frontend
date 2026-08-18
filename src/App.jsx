@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 
 import Login from "./pages/login/Login";
 import AdminLogin from "./pages/login/AdminLogin";
@@ -35,10 +35,12 @@ import TopEarners from "./pages/admin/reports/TopEarners";
 
 
 import UserDashboard from "./pages/user/UserDashboard";
+import RanksPage from "./pages/user/RanksPage";
 import RankAchieversPage from "./pages/user/RankAchieversPage";
 import CriteriaAchieversPage from "./pages/user/CriteriaAchieversPage";
 import EWallet from "./pages/user/financial/EWallet";
 import Investments from "./pages/user/financial/Investments";
+import WithdrawalPage from "./pages/user/financial/WithdrawalPage";
 import Profile from "./pages/user/Profile";
 import UserGenealogyPage from "./pages/user/GenealogyPage";
 import HelpCenterPage from "./pages/user/help/HelpCenterPage";
@@ -58,7 +60,7 @@ function ScrollToTop() {
 
 function App() {
   return (
-    <BrowserRouter>
+    <>
       <ScrollToTop />
       <GoldenCursor />
       <Routes>
@@ -97,7 +99,7 @@ function App() {
           path="/user/financial/withdrawal"
           element={
             <ProtectedRoute requiredRole="user">
-              <EWallet />
+              <WithdrawalPage />
             </ProtectedRoute>
           }
         />
@@ -190,16 +192,24 @@ function App() {
           }
         />
         <Route
+          path="/user/ranks"
+          element={
+            <ProtectedRoute requiredRole="user">
+              <RanksPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/rank"
+          element={<Navigate to="/user/ranks" replace />}
+        />
+        <Route
           path="/user/achievers/rank"
           element={
             <ProtectedRoute requiredRole="user">
               <RankAchieversPage />
             </ProtectedRoute>
           }
-        />
-        <Route
-          path="/user/rank"
-          element={<Navigate to="/user/achievers/rank" replace />}
         />
         <Route
           path="/user/achievers/criteria"
@@ -632,7 +642,7 @@ function App() {
         {/* 404 Unknown Route Fallback */}
         <Route path="*" element={<NotFound />} />
       </Routes>
-    </BrowserRouter>
+    </>
   );
 }
 

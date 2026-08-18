@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 const ThemeContext = createContext(null);
 const STORAGE_KEY = "aurumfx-theme";
@@ -11,33 +12,60 @@ export function getStoredTheme() {
     /* ignore */
   }
 
-  return "dark";
+  return null;
 }
 
 export function applyTheme(theme) {
   document.documentElement.setAttribute("data-theme", theme);
 }
 
+function getDefaultThemeForPath(pathname) {
+  const publicRoutes = ["/", "/user/login", "/user/register", "/admin/login"];
+  const isPublicRoute = publicRoutes.includes(pathname) || pathname.startsWith("/user/login") || pathname.startsWith("/user/register") || pathname.startsWith("/admin/login");
+
+  if (isPublicRoute) return "dark";
+  return "light";
+}
+
 export function ThemeProvider({ children }) {
-  const [theme, setThemeState] = useState(() => getStoredTheme());
+  const location = useLocation();
+  const [theme, setThemeState] = useState(() => {
+    const stored = getStoredTheme();
+    if (stored) return stored;
+    return getDefaultThemeForPath(window.location.pathname);
+  });
+
+  useEffect(() => {
+    const stored = getStoredTheme();
+    if (stored) {
+      setThemeState(stored);
+      return;
+    }
+
+    const nextTheme = getDefaultThemeForPath(location.pathname);
+    setThemeState(nextTheme);
+  }, [location.pathname]);
 
   useEffect(() => {
     applyTheme(theme);
-    try {
-      localStorage.setItem(STORAGE_KEY, theme);
-    } catch {
-      /* ignore */
-    }
   }, [theme]);
 
-  const setTheme = (next) => {
+  const setTheme = (next, persist = true) => {
     if (next === "light" || next === "dark") {
       setThemeState(next);
+      if (persist) {
+        try {
+          localStorage.setItem(STORAGE_KEY, next);
+        } catch {
+          /* ignore */
+        }
+      }
     }
   };
 
   const toggleTheme = () => {
-    setThemeState((current) => (current === "dark" ? "light" : "dark"));
+    const next = theme === "dark" ? "light" : "dark";
+    setTheme(next, true);
   };
 
   return (

@@ -5,6 +5,8 @@ import {
   FiDollarSign,
   FiAward,
   FiUser,
+  FiUserPlus,
+  FiBarChart2,
   FiHelpCircle,
   FiChevronRight,
   FiChevronDown,
@@ -18,6 +20,7 @@ import "./UserSidebar.css";
 
 const userNavItems = [
   { id: "dashboard", label: "Dashboard", icon: FiGrid, path: "/user/dashboard" },
+  { id: "new-registration", label: "New Registration", icon: FiUserPlus, path: "/user/register" },
   {
     id: "account",
     label: "Account",
@@ -38,8 +41,8 @@ const userNavItems = [
     hasSubmenu: true,
     children: [
       { id: "family", label: "Family", path: "/user/business/family" },
+      { id: "enrolment", label: "Enrolment", path: "/user/business/enroller" },
       { id: "list", label: "List", path: "/user/business/list" },
-      { id: "enroller", label: "Enroller", path: "/user/business/enroller" },
     ],
   },
   {
@@ -53,16 +56,7 @@ const userNavItems = [
       { id: "investments", label: "Investment", path: "/user/financial/investment" },
     ],
   },
-  {
-    id: "achievers",
-    label: "Achiever's List",
-    icon: FiAward,
-    hasSubmenu: true,
-    children: [
-      { id: "rank-achievers", label: "Rank Achievers", path: "/user/achievers/rank" },
-      { id: "criteria-achievers", label: "Criteria Achievers", path: "/user/achievers/criteria" },
-    ],
-  },
+  { id: "ranks", label: "Ranks", icon: FiAward, path: "/user/ranks" },
   { id: "support", label: "Support", icon: FiHelpCircle, path: "/user/help/tickets" },
   { id: "logout", label: "Log out", icon: FiLogOut, path: "/user/login" },
 ];
@@ -71,11 +65,24 @@ function UserSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse, user }) {
   const location = useLocation();
   const itemRefs = useRef({});
 
+  const isAchieversSubpage = location.pathname.startsWith("/user/achievers");
+  const isRankPage = location.pathname === "/user/achievers/rank" || location.pathname === "/user/rank";
+
+  const getItemExpandedState = (item) => {
+    if (!item.children) return false;
+
+    if (item.id === "achievers") {
+      return isAchieversSubpage;
+    }
+
+    return item.children.some((child) => location.pathname === child.path);
+  };
+
   const getInitialExpanded = () => {
     const state = {};
     userNavItems.forEach((item) => {
       if (item.children) {
-        state[item.id] = item.children.some((child) => location.pathname === child.path);
+        state[item.id] = getItemExpandedState(item);
       }
     });
     return state;
@@ -88,9 +95,7 @@ function UserSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse, user }) {
 
     userNavItems.forEach((item) => {
       if (item.children) {
-        nextExpanded[item.id] = item.children.some(
-          (child) => location.pathname === child.path
-        );
+        nextExpanded[item.id] = getItemExpandedState(item);
       }
     });
 
@@ -106,9 +111,11 @@ function UserSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse, user }) {
   }, [location.pathname]);
 
   useEffect(() => {
-    const activeGroup = userNavItems.find((item) =>
-      item.children && item.children.some((child) => location.pathname === child.path)
-    );
+    const activeGroup = userNavItems.find((item) => {
+      if (!item.children) return false;
+      if (item.id === "achievers" && isRankPage) return false;
+      return item.children.some((child) => location.pathname === child.path);
+    });
 
     if (activeGroup && itemRefs.current[activeGroup.id]) {
       itemRefs.current[activeGroup.id].scrollIntoView({
@@ -120,12 +127,11 @@ function UserSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse, user }) {
 
   const toggleExpand = (id) => {
     setExpanded((prev) => {
-      const isOpen = Boolean(prev[id]);
       const nextState = {};
 
       userNavItems.forEach((item) => {
         if (item.children) {
-          nextState[item.id] = item.id === id ? !isOpen : false;
+          nextState[item.id] = item.id === id ? !Boolean(prev[id]) : false;
         }
       });
 

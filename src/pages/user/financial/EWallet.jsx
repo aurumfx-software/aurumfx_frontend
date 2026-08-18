@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import {
-  FiInfo,
   FiDollarSign,
   FiClock,
   FiCheckCircle,
@@ -80,7 +79,10 @@ function EWallet() {
     <UserLayout user={{ name: userName, userId }}>
       <div className="ewallet-page">
         <div className="page-header">
-          <h1 className="page-title">My Wallet</h1>
+          <h1 className="page-title">
+            <span className="page-title-icon" aria-hidden="true">💰</span>
+            My Wallet
+          </h1>
           <div className="breadcrumb">
             <span>Dashboard</span>
             <span className="separator">•</span>
@@ -88,7 +90,7 @@ function EWallet() {
           </div>
         </div>
 
-        {/* Hero balance card */}
+        {/* Balance card — flat, bordered, matches the rest of the cards */}
         <div className="balance-hero">
           <div className="balance-hero-left">
             <span className="balance-hero-label">

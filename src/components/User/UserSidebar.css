@@ -228,10 +228,18 @@
   gap: 8px;
 }
 
+[data-theme="light"] .user-nav-subitem {
+  color: var(--text-primary);
+}
+
 .subitem-bullet {
   font-size: 14px;
   color: var(--text-faint, var(--text-muted));
   line-height: 1;
+}
+
+[data-theme="light"] .subitem-bullet {
+  color: var(--text-muted);
 }
 
 .user-nav-subitem:hover {
@@ -239,6 +247,7 @@
   background: var(--gold-glow);
 }
 [data-theme="dark"] .user-nav-subitem:hover { color: var(--gold); }
+[data-theme="light"] .user-nav-subitem:hover { color: var(--gold-dark); }
 
 .user-nav-subitem:hover .subitem-bullet {
   color: var(--gold-dark, var(--gold));

@@ -1,29 +1,90 @@
 import { useState, useEffect } from "react";
 import {
   FiShield,
-  FiMoreVertical,
   FiUsers,
-  FiTrendingUp,
   FiArrowUpRight,
-  FiBriefcase,
   FiPlusCircle,
+  FiLayers,
+  FiTrendingUp,
+  FiGift,
+  FiBarChart2,
+  FiImage,
+  FiBookmark,
+  FiRepeat,
+  FiBriefcase,
+  FiCalendar,
+  FiChevronDown,
 } from "react-icons/fi";
 import UserLayout from "../../components/User/UserLayout";
-import {
-  IncomePayoutDonutChart,
-  NetworkAreaChart,
-} from "../../components/User/UserCharts";
 import UserRankCard from "../../components/User/UserRankCard";
 import DoInvestmentModal from "../../components/User/DoInvestmentModal";
 import { getUserDashboardData } from "../../api/dashboard";
 import "./UserDashboard.css";
 
-// Deterministic initials avatar so the same user always renders the same way.
 function getInitials(name) {
   const clean = String(name || "U").trim();
   const parts = clean.split(/\s+/).filter(Boolean);
   if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
   return clean.slice(0, 2).toUpperCase();
+}
+
+function formatDate(iso) {
+  if (!iso) return "-";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "-";
+  return d.toLocaleDateString("en-IN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+// Builds an SVG line+area path from a series of numbers, mapped into a viewBox.
+function buildLinePath(values, width, height, padding = 10) {
+  if (!values.length) return { line: "", area: "", points: [] };
+  const max = Math.max(...values, 1);
+  const min = Math.min(...values, 0);
+  const range = max - min || 1;
+  const stepX = (width - padding * 2) / Math.max(1, values.length - 1);
+
+  const points = values.map((v, i) => {
+    const x = padding + i * stepX;
+    const y = height - padding - ((v - min) / range) * (height - padding * 2);
+    return [x, y];
+  });
+
+  const line = points
+    .map(([x, y], i) => `${i === 0 ? "M" : "L"}${x.toFixed(1)},${y.toFixed(1)}`)
+    .join(" ");
+
+  const area =
+    `M${points[0][0].toFixed(1)},${(height - padding).toFixed(1)} ` +
+    points.map(([x, y]) => `L${x.toFixed(1)},${y.toFixed(1)}`).join(" ") +
+    ` L${points[points.length - 1][0].toFixed(1)},${(height - padding).toFixed(1)} Z`;
+
+  return { line, area, points };
+}
+
+// Small decorative sparkline for the team cards. Purely illustrative shape —
+// not wired to any API — so it never lies about real trend data.
+function TeamSparkline() {
+  const { line, points } = buildLinePath([2, 3, 2.5, 4, 3, 4.5, 4], 90, 40, 4);
+  const last = points[points.length - 1];
+  return (
+    <div className="team-sparkline">
+      <svg width="90" height="40" viewBox="0 0 90 40">
+        <path
+          d={line}
+          fill="none"
+          stroke="var(--udb-accent)"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        {last && <circle cx={last[0]} cy={last[1]} r="3" fill="var(--udb-accent)" />}
+      </svg>
+    </div>
+  );
 }
 
 function UserDashboard() {
@@ -35,19 +96,13 @@ function UserDashboard() {
     let isMounted = true;
     getUserDashboardData()
       .then((res) => {
-        if (isMounted) {
-          if (res && res.success && res.data) {
-            const dashData = res.data.data || res.data;
-            setDashboardData(dashData);
-          }
-          setLoading(false);
-        }
+        if (!isMounted) return;
+        if (res && res.data) setDashboardData(res.data);
+        setLoading(false);
       })
       .catch((err) => {
         console.error("Error loading dashboard data:", err);
-        if (isMounted) {
-          setLoading(false);
-        }
+        if (isMounted) setLoading(false);
       });
 
     return () => {
@@ -55,34 +110,39 @@ function UserDashboard() {
     };
   }, []);
 
+  const u = dashboardData?.user || {};
+  const s = dashboardData?.summary || {};
+  const r = dashboardData?.rank || {};
+  const incomeChart = dashboardData?.incomeChart || [];
+  const topReferrals = dashboardData?.topReferrals || [];
+  const topLevelUsers = dashboardData?.topLevelUsers || [];
+
   const user = {
-    name: dashboardData?.name || localStorage.getItem("userName") || "User",
-    fullName: dashboardData?.name || localStorage.getItem("userName") || "User",
-    userId: dashboardData?.user_id || localStorage.getItem("userId") || "FX000",
-    rank: dashboardData?.rank || "FX Hero",
-    nextRank: dashboardData?.next_rank || "FX Legend",
-    totalLots: dashboardData?.total_lots ?? 0,
-    avatar: null,
+    name: u.userName || localStorage.getItem("userName") || "User",
+    fullName: u.userName || localStorage.getItem("userName") || "User",
+    userId: u.userId || localStorage.getItem("userId") || "FX000",
+    rank: r.currentRank || "Unranked",
+    nextRank: r.nextRank || "-",
+    totalLots: s.totalActiveLots ?? 0,
+    avatar: u.profileImage || null,
   };
 
-  const financials = {
-    totalInvestment: Number(dashboardData?.total_investment ?? 0),
-    walletBalance: Number(dashboardData?.wallet_balance ?? 0),
-    activeInvestments: Number(dashboardData?.active_investments ?? 0),
-    levelIncome: Number(dashboardData?.level_income ?? 0),
-    referralIncome: Number(dashboardData?.referral_income ?? 0),
-    teamMembers: Number(dashboardData?.team_members ?? 0),
-  };
+  const fmt = (n) => `₹${Number(n || 0).toLocaleString("en-IN")}`;
 
-  const enrolments = Array.isArray(dashboardData?.enrolments)
-    ? dashboardData.enrolments
-    : [];
+  const CHART_W = 640;
+  const CHART_H = 200;
+  const incomeValues = incomeChart.map((m) => m.totalIncome);
+  const hasIncomeData = incomeValues.some((v) => v > 0);
+  const { line, area, points } = buildLinePath(incomeValues, CHART_W, CHART_H);
 
-  const teamPerformance = Array.isArray(dashboardData?.team_performance)
-    ? dashboardData.team_performance
-    : [];
-
-  const fmt = (n) => `₹${Number(n || 0).toLocaleString()}`;
+  const firstIncome = incomeValues[0] ?? 0;
+  const lastIncome = incomeValues[incomeValues.length - 1] ?? 0;
+  const growthPct =
+    firstIncome > 0
+      ? Math.round(((lastIncome - firstIncome) / firstIncome) * 100)
+      : lastIncome > 0
+      ? 100
+      : 0;
 
   return (
     <UserLayout user={user}>
@@ -90,7 +150,14 @@ function UserDashboard() {
         {/* Header */}
         <div className="udb-header">
           <div>
-            <div className="udb-header-title">Welcome back, {user.name}</div>
+            <div className="udb-header-title">
+              <span>
+                Welcome back, <span className="udb-user-name">{user.name}</span>
+              </span>
+              <span className="udb-wave-icon" role="img" aria-label="waving hand">
+                👋
+              </span>
+            </div>
             <div className="udb-header-sub">
               Here's how your portfolio is performing today.
             </div>
@@ -101,16 +168,17 @@ function UserDashboard() {
             <span>
               Signed in as <strong>{user.userId}</strong>
             </span>
-            <a href="/admin/login">Back to admin</a>
           </div>
         </div>
 
-        {/* Main Grid Layout */}
         <div className="user-dashboard-grid">
           <div className="grid-main-column">
-            {/* Hero row: Total Investment (primary) + secondary metrics */}
+            {/* Hero row */}
             <div className="hero-row">
               <div className="hero-card">
+                <div className="hero-photo-badge">
+                  <FiImage />
+                </div>
                 <div className="hero-top">
                   <span className="hero-eyebrow">
                     <span className="dot" />
@@ -119,9 +187,9 @@ function UserDashboard() {
                 </div>
                 <div>
                   <div className="hero-value">
-                    {loading ? "…" : fmt(financials.totalInvestment)}
+                    {loading ? "…" : fmt(s.totalActiveInvestment)}
                   </div>
-                  <div className="hero-label">Total Investment</div>
+                  <div className="hero-label">Total Active Investment</div>
                 </div>
                 <button
                   type="button"
@@ -134,140 +202,211 @@ function UserDashboard() {
                 </button>
               </div>
 
-              <div className="metric-card">
-                <div className="metric-card-icon icon--withdraw">
+              <div className="metric-card metric--mint">
+                <div className="metric-card-icon">
                   <FiArrowUpRight />
                 </div>
                 <div className="metric-card-info">
                   <span className="metric-label">Wallet Balance</span>
                   <h3 className="metric-value">
-                    {loading ? "…" : fmt(financials.walletBalance)}
+                    {loading ? "…" : fmt(s.walletBalance)}
                   </h3>
                 </div>
+                <button type="button" className="metric-corner-btn" title="Wallet">
+                  <FiBookmark />
+                </button>
               </div>
 
-              <div className="metric-card">
-                <div className="metric-card-icon icon--balance">
-                  <FiBriefcase />
+              <div className="metric-card metric--violet">
+                <div className="metric-card-icon">
+                  <FiTrendingUp />
                 </div>
                 <div className="metric-card-info">
-                  <span className="metric-label">Active Investments</span>
+                  <span className="metric-label">Payout Amount</span>
                   <h3 className="metric-value">
-                    {loading ? "…" : fmt(financials.activeInvestments)}
+                    {loading ? "…" : fmt(s.payoutAmount)}
                   </h3>
                 </div>
+                <button type="button" className="metric-corner-btn" title="Payouts">
+                  <FiRepeat />
+                </button>
               </div>
 
-              <div className="metric-card team-card">
-                <div className="metric-card-icon icon--team">
+              <div className="metric-card metric--peach">
+                <div className="metric-card-icon">
+                  <FiLayers />
+                </div>
+                <div className="metric-card-info">
+                  <span className="metric-label">Active Lots</span>
+                  <h3 className="metric-value">
+                    {loading ? "…" : Number(s.totalActiveLots).toLocaleString()}
+                  </h3>
+                </div>
+                <button type="button" className="metric-corner-btn" title="Lots">
+                  <FiBriefcase />
+                </button>
+              </div>
+            </div>
+
+            {/* Team row */}
+            <div className="team-row">
+              <div className="team-card metric--green">
+                <div className="metric-card-icon">
                   <FiUsers />
                 </div>
                 <div className="metric-card-info">
-                  <span className="metric-label">Team Members</span>
+                  <span className="metric-label">Total Referrals</span>
                   <h3 className="metric-value">
-                    {loading ? "…" : financials.teamMembers.toLocaleString()}
+                    {loading ? "…" : Number(s.totalReferrals).toLocaleString()}
                   </h3>
                 </div>
+                <TeamSparkline />
+              </div>
+              <div className="team-card metric--pink">
+                <div className="metric-card-icon">
+                  <FiGift />
+                </div>
+                <div className="metric-card-info">
+                  <span className="metric-label">Total Level Users</span>
+                  <h3 className="metric-value">
+                    {loading ? "…" : Number(s.totalLevelUsers).toLocaleString()}
+                  </h3>
+                </div>
+                <TeamSparkline />
               </div>
             </div>
 
-            {/* Insights row: network growth + income breakdown */}
-            <div className="insights-row">
-              <div className="panel-card">
-                <div className="panel-head">
+            {/* Income trend */}
+            <div className="panel-card income-trend-panel">
+              <div className="panel-head">
+                <div className="income-trend-title">
+                  <div className="income-trend-icon">
+                    <FiTrendingUp />
+                  </div>
                   <div>
-                    <h4 className="card-title">Network Growth</h4>
-                    <p className="card-subtitle">New members joining over time</p>
+                    <h4 className="card-title">Income Trend</h4>
+                    <p className="card-subtitle">
+                      Monthly total income, last 6 months
+                    </p>
                   </div>
                 </div>
-                <NetworkAreaChart data={dashboardData?.networkChartData} />
-              </div>
-
-              <div className="panel-card income-panel">
-                <div>
-                  <h4 className="card-title">Income Breakdown</h4>
-                  <p className="card-subtitle">Earned vs. paid out</p>
-                </div>
-
-                <div className="income-chart-wrap">
-                  <IncomePayoutDonutChart
-                    income={financials.levelIncome + financials.referralIncome}
-                    payout={financials.walletBalance}
-                  />
-                </div>
-
-                <div className="income-stats">
-                  <div className="income-stat-row">
-                    <span className="income-stat-dot gold" />
-                    <div className="income-stat-text">
-                      <span className="income-stat-lbl">Level Income</span>
-                    </div>
-                    <span className="income-stat-val">
-                      {fmt(financials.levelIncome)}
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  {hasIncomeData && (
+                    <span
+                      className={`growth-badge ${growthPct >= 0 ? "up" : "down"}`}
+                    >
+                      {growthPct >= 0 ? "▲" : "▼"} {Math.abs(growthPct)}%
+                      <em>vs first month</em>
                     </span>
-                  </div>
-                  <div className="income-stat-row">
-                    <span className="income-stat-dot info" />
-                    <div className="income-stat-text">
-                      <span className="income-stat-lbl">Referral Income</span>
-                    </div>
-                    <span className="income-stat-val">
-                      {fmt(financials.referralIncome)}
-                    </span>
+                  )}
+                  <div className="panel-filter-pill">
+                    <FiCalendar />
+                    Last 6 Months
+                    <FiChevronDown />
                   </div>
                 </div>
               </div>
+
+              {hasIncomeData ? (
+                <div className="income-chart-svg-wrap">
+                  <svg
+                    viewBox={`0 0 ${CHART_W} ${CHART_H}`}
+                    className="income-chart-svg"
+                    preserveAspectRatio="none"
+                  >
+                    <defs>
+                      <linearGradient id="incomeFill" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="var(--udb-accent)" stopOpacity="0.35" />
+                        <stop offset="100%" stopColor="var(--udb-accent)" stopOpacity="0" />
+                      </linearGradient>
+                    </defs>
+                    <path d={area} fill="url(#incomeFill)" stroke="none" />
+                    <path
+                      d={line}
+                      fill="none"
+                      stroke="var(--udb-accent)"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    {points.map(([x, y], i) => (
+                      <circle
+                        key={i}
+                        cx={x}
+                        cy={y}
+                        r="4"
+                        fill="var(--udb-surface)"
+                        stroke="var(--udb-accent)"
+                        strokeWidth="2"
+                      >
+                        <title>
+                          {incomeChart[i].monthName}: {fmt(incomeChart[i].totalIncome)}
+                        </title>
+                      </circle>
+                    ))}
+                  </svg>
+                  <div className="income-chart-labels">
+                    {incomeChart.map((m) => (
+                      <span key={m.label}>{m.monthName}</span>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="empty-state">
+                  <div className="empty-state-icon">
+                    <FiBarChart2 />
+                  </div>
+                  <p className="empty-state-title">No income recorded yet</p>
+                  <p className="empty-state-sub">
+                    Your monthly earnings will appear here once your investments
+                    start generating income.
+                  </p>
+                </div>
+              )}
             </div>
 
-            {/* Tables row: Enrolments & Team Performance */}
+            {/* Tables row */}
             <div className="tables-row">
               <div className="table-card">
-                <h4 className="card-title">Enrolments</h4>
+                <h4 className="card-title">Top Referrals</h4>
                 <div className="table-container">
                   <table className="user-dash-table">
                     <thead>
                       <tr>
                         <th>User</th>
-                        <th>Date</th>
-                        <th className="text-right">Action</th>
+                        <th>Lvl</th>
+                        <th>Investment</th>
+                        <th className="text-right">Joined</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {enrolments.length > 0 ? (
-                        enrolments.map((item) => {
-                          const name = item.user || item.name || "User";
-                          return (
-                            <tr key={item.id || item.user_id || name + Math.random()}>
-                              <td>
-                                <div className="user-table-cell">
-                                  <div className="user-table-avatar">
-                                    {getInitials(name)}
-                                  </div>
-                                  <div className="user-table-meta">
-                                    <span className="meta-name">{name}</span>
-                                    <span className="meta-id">
-                                      {item.userId || item.user_id || "-"}
-                                    </span>
-                                  </div>
+                      {topReferrals.length > 0 ? (
+                        topReferrals.map((p) => (
+                          <tr key={p.userId}>
+                            <td>
+                              <div className="user-table-cell">
+                                <div className="user-table-avatar">
+                                  {getInitials(p.userName)}
                                 </div>
-                              </td>
-                              <td className="date-cell">{item.date || "-"}</td>
-                              <td className="text-right">
-                                <button
-                                  type="button"
-                                  className="table-action-btn"
-                                  aria-label="More options"
-                                >
-                                  <FiMoreVertical />
-                                </button>
-                              </td>
-                            </tr>
-                          );
-                        })
+                                <div className="user-table-meta">
+                                  <span className="meta-name">{p.userName}</span>
+                                  <span className="meta-id">{p.userId}</span>
+                                </div>
+                              </div>
+                            </td>
+                            <td>{p.level}</td>
+                            <td className="earnings-val">
+                              {fmt(p.totalInvestment)}
+                            </td>
+                            <td className="text-right date-cell">
+                              {formatDate(p.dateOfJoin)}
+                            </td>
+                          </tr>
+                        ))
                       ) : (
                         <tr>
-                          <td colSpan="3" className="text-center muted-row">
-                            No enrolments yet.
+                          <td colSpan="4" className="text-center muted-row">
+                            No referrals yet.
                           </td>
                         </tr>
                       )}
@@ -277,46 +416,45 @@ function UserDashboard() {
               </div>
 
               <div className="table-card">
-                <h4 className="card-title">Team Performance</h4>
+                <h4 className="card-title">Top Level Users</h4>
                 <div className="table-container">
                   <table className="user-dash-table">
                     <thead>
                       <tr>
                         <th>User</th>
-                        <th>Enrolments</th>
-                        <th className="text-right">Earnings</th>
+                        <th>Lvl</th>
+                        <th>Investment</th>
+                        <th className="text-right">Joined</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {teamPerformance.length > 0 ? (
-                        teamPerformance.map((item) => {
-                          const name = item.user || item.name || "User";
-                          return (
-                            <tr key={item.id || item.user_id || name + Math.random()}>
-                              <td>
-                                <div className="user-table-cell">
-                                  <div className="user-table-avatar">
-                                    {getInitials(name)}
-                                  </div>
-                                  <div className="user-table-meta">
-                                    <span className="meta-name">{name}</span>
-                                    <span className="meta-id">
-                                      {item.userId || item.user_id || "-"}
-                                    </span>
-                                  </div>
+                      {topLevelUsers.length > 0 ? (
+                        topLevelUsers.map((p) => (
+                          <tr key={p.userId}>
+                            <td>
+                              <div className="user-table-cell">
+                                <div className="user-table-avatar">
+                                  {getInitials(p.userName)}
                                 </div>
-                              </td>
-                              <td>{item.enrolments ?? 0}</td>
-                              <td className="text-right earnings-val">
-                                {fmt(item.earnings)}
-                              </td>
-                            </tr>
-                          );
-                        })
+                                <div className="user-table-meta">
+                                  <span className="meta-name">{p.userName}</span>
+                                  <span className="meta-id">{p.userId}</span>
+                                </div>
+                              </div>
+                            </td>
+                            <td>{p.level}</td>
+                            <td className="earnings-val">
+                              {fmt(p.totalInvestment)}
+                            </td>
+                            <td className="text-right date-cell">
+                              {formatDate(p.dateOfJoin)}
+                            </td>
+                          </tr>
+                        ))
                       ) : (
                         <tr>
-                          <td colSpan="3" className="text-center muted-row">
-                            No team performance data yet.
+                          <td colSpan="4" className="text-center muted-row">
+                            No level users yet.
                           </td>
                         </tr>
                       )}
@@ -327,14 +465,12 @@ function UserDashboard() {
             </div>
           </div>
 
-          {/* Right Column: Rank Card */}
           <div className="grid-side-column">
             <UserRankCard user={user} />
           </div>
         </div>
       </div>
 
-      {/* Investment Modal */}
       <DoInvestmentModal
         isOpen={isInvestModalOpen}
         onClose={() => setIsInvestModalOpen(false)}

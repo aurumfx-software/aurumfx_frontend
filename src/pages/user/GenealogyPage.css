@@ -1,53 +1,76 @@
 /* ==========================================================================
-   Genealogy — "Lineage Ledger" layout (modernized)
-   Clean gold-accented cards on a flat surface, no watermark texture, no
-   blue-tinted dark mode. Self-contained tokens so this works standalone,
-   in any theme.
+   Genealogy / Family / Enroller pages
+   Warm premium fintech styling aligned with the wallet layout.
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap');
 
 .genealogy-page {
-  --gen-bg: #f4f5f7;
-  --gen-surface: #ffffff;
-  --gen-border: #e6e8ec;
-  --gen-border-soft: #eef0f3;
-  --gen-text: #14171f;
-  --gen-text-soft: #5b6472;
-  --gen-text-faint: #8b93a1;
+  --gen-bg: linear-gradient(180deg, #fffaf4 0%, #fffdfb 100%);
+  --gen-surface: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,246,236,0.98));
+  --gen-card-bg: linear-gradient(180deg, rgba(255,255,255,0.97), rgba(255,247,239,0.96));
+  --gen-border: rgba(190, 125, 38, 0.22);
+  --gen-border-soft: rgba(190, 125, 38, 0.14);
+  --gen-text: #141414;
+  --gen-text-soft: #5a5a5a;
+  --gen-text-faint: #8f8f8f;
 
-  --gen-accent: #b8863a;
-  --gen-accent-strong: #8f6423;
-  --gen-accent-soft: #fbf2df;
-  --gen-accent-line: #e9d3a3;
+  --gen-accent: #d9730d;
+  --gen-accent-strong: #b35c09;
+  --gen-accent-soft: rgba(245, 208, 97, 0.18);
+  --gen-accent-line: rgba(217, 115, 13, 0.24);
 
   --gen-danger: #dc2626;
-  --gen-danger-soft: #fdecec;
+  --gen-danger-soft: #fbe9e7;
 
-  --gen-font-display: "Fraunces", "Georgia", serif;
+  --gen-font-display: "Manrope", "Inter", "Segoe UI", sans-serif;
   --gen-font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
 
   font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
   color: var(--gen-text);
+  background: var(--gen-bg);
+  padding: 32px 36px 44px;
 }
 
-/* Black & Gold dark theme — pure neutral blacks/browns, no blue tint */
 [data-theme="dark"] .genealogy-page {
-  --gen-bg: #08070a;
-  --gen-surface: #0f0d0c;
-  --gen-border: #2b2620;
-  --gen-border-soft: #1e1b16;
-  --gen-text: #f3efe6;
-  --gen-text-soft: #a8a096;
-  --gen-text-faint: #726a5e;
+  --gen-bg: #090909;
+  --gen-surface: #101010;
+  --gen-card-bg: #121212;
+  --gen-border: rgba(212, 175, 55, 0.18);
+  --gen-border-soft: rgba(255, 255, 255, 0.06);
+  --gen-text: #f3f4f6;
+  --gen-text-soft: #d1d5db;
+  --gen-text-faint: #9ca3af;
 
-  --gen-accent: #e3b45a;
-  --gen-accent-strong: #f0c876;
-  --gen-accent-soft: rgba(227, 180, 90, 0.12);
-  --gen-accent-line: rgba(227, 180, 90, 0.32);
+  --gen-accent: #f5d061;
+  --gen-accent-strong: #d4af37;
+  --gen-accent-soft: rgba(245, 208, 97, 0.08);
+  --gen-accent-line: rgba(212, 175, 55, 0.25);
 
   --gen-danger: #f87171;
-  --gen-danger-soft: rgba(248, 113, 113, 0.12);
+  --gen-danger-soft: rgba(248, 113, 113, 0.13);
+}
+
+[data-theme="dark"] .genealogy-page .genealogy-panel,
+[data-theme="dark"] .genealogy-page .list-table-wrapper,
+[data-theme="dark"] .genealogy-page .genealogy-empty,
+[data-theme="dark"] .genealogy-page .genealogy-error {
+  background: #111111 !important;
+  background-image: none !important;
+}
+
+[data-theme="dark"] .genealogy-page .genealogy-card {
+  background: #181818 !important;
+  box-shadow: none;
+}
+
+[data-theme="dark"] .genealogy-page .list-table-wrapper {
+  border-color: rgba(212, 175, 55, 0.18);
+  background: #111111;
+}
+
+[data-theme="dark"] .genealogy-page .genealogy-table thead th {
+  background: rgba(245, 208, 97, 0.06);
 }
 
 [data-theme="dark"] .genealogy-card {
@@ -76,15 +99,29 @@
 }
 
 .page-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
   font-family: var(--gen-font-display) !important;
   font-size: 28px;
-  font-weight: 600;
+  font-weight: 800;
   letter-spacing: -0.015em;
   color: var(--gen-text) !important;
   margin: 0;
   text-align: left;
   align-self: flex-start;
   order: 1;
+  line-height: 1.2;
+}
+
+.page-title-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  font-size: 22px;
+  filter: drop-shadow(0 3px 8px rgba(217, 115, 13, 0.18));
 }
 
 .breadcrumb {
@@ -119,11 +156,11 @@
   padding: 28px 30px 32px;
   border: 1px solid var(--gen-border) !important;
   border-top: 3px solid var(--gen-accent) !important;
-  border-radius: 16px;
-  background-color: var(--gen-surface) !important;
+  border-radius: 18px;
+  background: var(--gen-surface) !important;
   background-image: none !important;
   color: var(--gen-text) !important;
-  box-shadow: 0 4px 18px color-mix(in srgb, var(--gen-text) 6%, transparent);
+  box-shadow: 0 12px 28px rgba(122, 80, 26, 0.07), inset 0 1px 0 rgba(255,255,255,0.7);
 }
 
 .genealogy-header-row {
@@ -155,7 +192,7 @@
   color: var(--gen-text-soft);
   border: 1px solid var(--gen-border);
   border-radius: 12px;
-  background: var(--gen-accent-soft);
+  background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,247,239,0.98));
 }
 
 .genealogy-error {
@@ -203,12 +240,12 @@
 .genealogy-card {
   position: relative;
   width: min(340px, 100%);
-  background: #f8e6e6 !important;
+  background: var(--gen-card-bg) !important;
   border: 1px solid var(--gen-border) !important;
   border-top: 3px solid var(--gen-accent);
-  border-radius: 12px;
+  border-radius: 14px;
   padding: 16px 18px 18px;
-  box-shadow: 0 1px 2px color-mix(in srgb, var(--gen-text) 4%, transparent);
+  box-shadow: 0 8px 20px rgba(122, 80, 26, 0.06);
   transition: box-shadow 0.15s ease, transform 0.15s ease;
 }
 
@@ -300,8 +337,9 @@
 /* ---------------------------------------------------------------------- */
 .list-table-wrapper {
   overflow-x: auto;
-  border: 1px solid var(--gen-border-soft);
-  border-radius: 12px;
+  border: 1px solid var(--gen-border);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,246,236,0.98));
 }
 
 .genealogy-table {
@@ -315,14 +353,28 @@
   text-align: left;
   font-family: var(--gen-font-mono);
   font-size: 10.5px;
-  font-weight: 600;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--gen-text-faint);
+  color: var(--gen-text-soft);
   padding: 12px 16px;
-  border-bottom: 1.5px solid var(--gen-accent-line);
-  background: var(--gen-accent-soft);
+  border-bottom: 1px solid var(--gen-border);
+  background: rgba(198, 123, 29, 0.05);
   white-space: nowrap;
+}
+
+.genealogy-head-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-weight: 800;
+}
+
+.genealogy-head-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gen-accent-strong);
 }
 
 .genealogy-table tbody td {
@@ -342,7 +394,7 @@
 }
 
 .genealogy-table tbody tr:hover {
-  background: color-mix(in srgb, var(--gen-accent) 6%, transparent);
+  background: rgba(198, 123, 29, 0.04);
 }
 
 .genealogy-table tbody td:first-child {

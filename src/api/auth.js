@@ -240,6 +240,10 @@ export const getProfileApi = async () => {
 
 /**
  * Update user profile data via PUT /auth/profile
+ * Payload matches the backend schema exactly:
+ * { email, first_name, last_name, date_of_birth, country, city, zip_code, mobile, aadhar_no, pan, gender }
+ * Bank account number and password are intentionally never sent from this
+ * method — those are handled by their own dedicated endpoints/tabs.
  */
 export const updateProfileApi = async (payload) => {
   try {
@@ -249,6 +253,7 @@ export const updateProfileApi = async (payload) => {
     let errorMessage =
       error.response?.data?.message ||
       error.response?.data?.error ||
+      error.response?.data?.detail?.[0]?.msg ||
       "Unable to update profile";
 
     return { success: false, error: errorMessage };
@@ -274,15 +279,45 @@ export const getProfileActivityHistoryApi = async () => {
 
 /**
  * Update user bank details via PUT /auth/profile/bank-details
+ * multipart/form-data. Nominee name, aadhar and mobile are mandatory on the
+ * backend, as is the passbook/proof document upload.
+ *
+ * payload: {
+ *   bank_account, bank_name, ifsc,
+ *   nominee_name, nominee_relation, nominee_gender, nominee_dob,
+ *   nominee_address, nominee_aadhar, nominee_mobile,
+ *   proof_document // File
+ * }
  */
 export const updateProfileBankDetailsApi = async (payload) => {
   try {
-    const response = await api.put("/auth/profile/bank-details", payload);
+    const formData = new FormData();
+    formData.append("bank_account", payload.bank_account || "");
+    formData.append("bank_name", payload.bank_name || "");
+    formData.append("ifsc", payload.ifsc || "");
+    formData.append("nominee_name", payload.nominee_name || "");
+    formData.append("nominee_relation", payload.nominee_relation || "");
+    formData.append("nominee_gender", payload.nominee_gender || "");
+    formData.append("nominee_dob", payload.nominee_dob || "");
+    formData.append("nominee_address", payload.nominee_address || "");
+    formData.append("nominee_aadhar", payload.nominee_aadhar || "");
+    formData.append("nominee_mobile", payload.nominee_mobile || "");
+    if (payload.proof_document) {
+      formData.append("proof_document", payload.proof_document);
+    }
+
+    const response = await api.put("/auth/profile/bank-details", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
     return { success: true, data: response.data };
   } catch (error) {
     let errorMessage =
       error.response?.data?.message ||
       error.response?.data?.error ||
+      error.response?.data?.detail?.[0]?.msg ||
       "Unable to update bank details";
 
     return { success: false, error: errorMessage };
@@ -326,6 +361,108 @@ export const uploadProfileImageApi = async (file) => {
       error.response?.data?.message ||
       error.response?.data?.error ||
       "Unable to upload profile image";
+
+    return { success: false, error: errorMessage };
+  }
+};
+
+/* ------------------------------------------------------------------------ */
+/* User KYC                                                                  */
+/* ------------------------------------------------------------------------ */
+
+/**
+ * Upload a KYC document via POST /api/user/kyc/upload
+ * multipart/form-data: { document_type, file }
+ */
+export const uploadKycDocumentApi = async (documentType, file) => {
+  try {
+    const formData = new FormData();
+    formData.append("document_type", documentType);
+    formData.append("file", file);
+
+    const response = await api.post("/api/user/kyc/upload", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return { success: true, data: response.data };
+  } catch (error) {
+    let errorMessage =
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      error.response?.data?.detail?.[0]?.msg ||
+      "Unable to upload KYC document";
+
+    return { success: false, error: errorMessage };
+  }
+};
+
+/**
+ * Get the current user's KYC documents via GET /api/user/kyc
+ */
+export const getMyKycApi = async () => {
+  try {
+    const response = await api.get("/api/user/kyc");
+    return { success: true, data: response.data };
+  } catch (error) {
+    let errorMessage =
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      "Unable to load KYC documents";
+
+    return { success: false, error: errorMessage };
+  }
+};
+
+/**
+ * Get a single KYC document via GET /api/user/kyc/{kyc_id}
+ */
+export const getKycDocumentApi = async (kycId) => {
+  try {
+    const response = await api.get(`/api/user/kyc/${kycId}`);
+    return { success: true, data: response.data };
+  } catch (error) {
+    let errorMessage =
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      "Unable to load KYC document";
+
+    return { success: false, error: errorMessage };
+  }
+};
+
+/**
+ * Delete a KYC document via DELETE /api/user/kyc/{kyc_id}
+ * Only allowed while the document is pending/rejected — approved documents
+ * are locked on the backend.
+ */
+export const deleteKycDocumentApi = async (kycId) => {
+  try {
+    const response = await api.delete(`/api/user/kyc/${kycId}`);
+    return { success: true, data: response.data };
+  } catch (error) {
+    let errorMessage =
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      "Unable to delete KYC document";
+
+    return { success: false, error: errorMessage };
+  }
+};
+
+/**
+ * Get a viewable URL for a KYC document via GET /api/user/kyc/{kyc_id}/view
+ */
+export const viewKycDocumentApi = async (kycId) => {
+  try {
+    const response = await api.get(`/api/user/kyc/${kycId}/view`);
+    return { success: true, data: response.data };
+  } catch (error) {
+    let errorMessage =
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      "Unable to view KYC document";
 
     return { success: false, error: errorMessage };
   }
