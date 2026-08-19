@@ -1,6 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&display=swap');
+
 /* ==========================================================================
    Help Center — Support Tickets only
    Same warm gold token system as Investments.css / EWallet.css.
+   Tables styled to match GenealogyPage's enroller/list table.
    ========================================================================== */
 
 .help-center-page {
@@ -9,6 +12,7 @@
   --hc-surface-muted: #f6f3ec;
   --hc-border: #e6e8ec;
   --hc-border-strong: #d8dbe1;
+  --hc-border-soft: rgba(184, 134, 58, 0.14);
 
   --hc-text: #14171f;
   --hc-text-secondary: #5b6472;
@@ -36,6 +40,10 @@
   --hc-radius-md: 10px;
   --hc-shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 1px 3px rgba(16, 24, 40, 0.04);
 
+  --hc-font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+  --hc-table-gradient: linear-gradient(90deg, rgba(184, 134, 58, 0.10), rgba(184, 134, 58, 0.22));
+  --hc-table-gradient-soft: linear-gradient(90deg, rgba(184, 134, 58, 0.05), rgba(184, 134, 58, 0.12));
+
   font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
   color: var(--hc-text);
 
@@ -51,6 +59,7 @@
   --hc-surface-muted: #1a1714;
   --hc-border: #2b2620;
   --hc-border-strong: #3a332a;
+  --hc-border-soft: rgba(227, 180, 90, 0.12);
 
   --hc-text: #f3efe6;
   --hc-text-secondary: #a8a096;
@@ -75,6 +84,9 @@
   --hc-danger-line: rgba(248, 113, 113, 0.28);
 
   --hc-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+
+  --hc-table-gradient: linear-gradient(90deg, rgba(227, 180, 90, 0.08), rgba(227, 180, 90, 0.20));
+  --hc-table-gradient-soft: linear-gradient(90deg, rgba(227, 180, 90, 0.05), rgba(227, 180, 90, 0.13));
 }
 
 .help-center-page * {
@@ -458,37 +470,83 @@
 }
 
 /* ---------------------------------------------------------------------- */
-/* Tickets table                                                           */
+/* Tickets table — styled to match GenealogyPage's enroller/list table     */
 /* ---------------------------------------------------------------------- */
 .tickets-table-card {
-  border: 1px solid var(--hc-border);
-  border-radius: var(--hc-radius-md);
-  overflow: hidden;
+  overflow-x: auto;
+  border: 1px solid var(--hc-accent-line);
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 6px 18px rgba(184, 134, 58, 0.06);
+}
+
+[data-theme="dark"] .tickets-table-card {
+  background: var(--hc-surface) !important;
+  border-color: var(--hc-accent-line);
 }
 
 .tickets-table {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
-  font-size: 13.3px;
+  font-size: 13.5px;
+  min-width: 560px;
 }
 
-.tickets-table th {
-  background: var(--hc-accent-soft);
-  padding: 12px 18px;
+.tickets-table thead th {
+  font-family: var(--hc-font-mono);
   font-size: 10.5px;
-  font-weight: 600;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--hc-text-muted);
-  border-bottom: 1.5px solid var(--hc-accent-line);
+  letter-spacing: 0.06em;
+  color: var(--hc-accent-hover);
+  padding: 14px 18px;
+  border-bottom: 2px solid var(--hc-accent-line);
+  background: #ffffff;
+  white-space: nowrap;
 }
 
-.tickets-table td {
+[data-theme="dark"] .tickets-table thead th {
+  background: var(--hc-surface);
+}
+
+.hc-head-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-weight: 800;
+}
+
+.hc-head-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--hc-accent-hover);
+}
+
+.tickets-table tbody tr {
+  animation: hc-row-in 0.35s ease both;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.tickets-table tbody tr:nth-child(1) { animation-delay: 0.05s; }
+.tickets-table tbody tr:nth-child(2) { animation-delay: 0.1s; }
+.tickets-table tbody tr:nth-child(3) { animation-delay: 0.15s; }
+.tickets-table tbody tr:nth-child(4) { animation-delay: 0.2s; }
+.tickets-table tbody tr:nth-child(5) { animation-delay: 0.25s; }
+.tickets-table tbody tr:nth-child(n+6) { animation-delay: 0.3s; }
+
+@keyframes hc-row-in {
+  from { opacity: 0; transform: translateX(-6px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.tickets-table tbody td {
   padding: 13px 18px;
+  border-bottom: 1px solid var(--hc-border-soft);
   color: var(--hc-text-secondary);
   font-weight: 500;
-  border-bottom: 1px solid var(--hc-border);
+  white-space: nowrap;
 }
 
 .tickets-table tbody tr:last-child td {
@@ -496,7 +554,8 @@
 }
 
 .tickets-table tbody tr:hover {
-  background: var(--hc-surface-muted);
+  background: var(--hc-accent-soft);
+  transform: translateX(2px);
 }
 
 .ticket-row {
@@ -504,31 +563,23 @@
 }
 
 .ticket-id {
+  font-family: var(--hc-font-mono);
+  font-size: 12.5px;
   font-weight: 700;
-  color: var(--hc-text);
+  color: var(--hc-accent-hover) !important;
 }
 
 .empty-cell {
   text-align: center;
   color: var(--hc-text-muted);
   padding: 30px 16px !important;
+  white-space: normal;
 }
 
-.attachment-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--hc-accent);
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.attachment-link:hover {
-  text-decoration: underline;
-}
-
-.no-attachment {
-  color: var(--hc-text-muted);
+@media (prefers-reduced-motion: reduce) {
+  .tickets-table tbody tr {
+    animation: none !important;
+  }
 }
 
 /* Status badges */
@@ -560,7 +611,26 @@
   color: var(--hc-success);
 }
 
-/* Ticket details and replies */
+.attachment-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--hc-accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.attachment-link:hover {
+  text-decoration: underline;
+}
+
+.no-attachment {
+  color: var(--hc-text-muted);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Ticket details and replies                                              */
+/* ---------------------------------------------------------------------- */
 .ticket-detail-backdrop {
   position: fixed;
   inset: 0;
@@ -691,9 +761,23 @@
     padding: 18px;
   }
 
-  .tickets-table th,
-  .tickets-table td {
-    padding: 10px 12px;
+  .tickets-table-card {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    border-radius: 12px;
+  }
+
+  .tickets-table-card::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tickets-table {
+    min-width: 0;
     font-size: 12px;
+  }
+
+  .tickets-table thead th,
+  .tickets-table tbody td {
+    padding: 10px 8px;
   }
 }

@@ -125,14 +125,16 @@ function Investments() {
     <UserLayout user={{ name: userName, userId }}>
       <div className="investments-page">
         <div className="page-header">
-          <h1 className="page-title">
+          <span className="page-eyebrow">
+            <span className="page-eyebrow-dot" />
+            Portfolio Growth
+          </span>
+          <div className="page-header-top">
             <span className="page-title-icon" aria-hidden="true">📈</span>
-            Investments
-          </h1>
-          <div className="breadcrumb">
-            <span>Dashboard</span>
-            <span className="separator">•</span>
-            <span className="current">Investments</span>
+            <div className="page-header-text">
+              <h1 className="page-title">Investments</h1>
+              <p className="page-subtitle">Build your portfolio and track every investment in one place.</p>
+            </div>
           </div>
         </div>
 

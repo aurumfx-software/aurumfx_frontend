@@ -5,10 +5,10 @@ import { FiUser, FiEdit, FiSettings, FiCreditCard, FiFileText, FiCheckCircle, Fi
 // ---------------------------------------------------------------------------
 export const NAV_ITEMS = [
   { id: "profile", label: "Overview", icon: FiUser },
-  { id: "edit", label: "Edit Info", icon: FiEdit },
-  { id: "settings", label: "Settings", icon: FiSettings },
   { id: "bank", label: "Bank Details", icon: FiCreditCard },
   { id: "kyc", label: "KYC", icon: FiFileText },
+  { id: "edit", label: "Edit Info", icon: FiEdit },
+  { id: "settings", label: "Settings", icon: FiSettings },
 ];
 
 // ---------------------------------------------------------------------------

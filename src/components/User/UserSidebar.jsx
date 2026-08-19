@@ -144,8 +144,11 @@ function UserSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse, user }) {
     window.location.href = "/user/login";
   };
 
-  const userName = user?.name || "PRAVEEN";
   const userId = user?.userId || "FX001";
+  const suppliedName = user?.fullName || user?.name || "";
+  const userName = suppliedName && suppliedName.toUpperCase() !== userId.toUpperCase()
+    ? suppliedName
+    : "Your Profile";
 
   return (
     <>

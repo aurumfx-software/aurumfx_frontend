@@ -286,7 +286,7 @@ export const getProfileActivityHistoryApi = async () => {
  *   bank_account, bank_name, ifsc,
  *   nominee_name, nominee_relation, nominee_gender, nominee_dob,
  *   nominee_address, nominee_aadhar, nominee_mobile,
- *   proof_document // File
+ *   proof_document, nominee_aadhar_front, nominee_aadhar_back // File
  * }
  */
 export const updateProfileBankDetailsApi = async (payload) => {
@@ -304,6 +304,12 @@ export const updateProfileBankDetailsApi = async (payload) => {
     formData.append("nominee_mobile", payload.nominee_mobile || "");
     if (payload.proof_document) {
       formData.append("proof_document", payload.proof_document);
+    }
+    if (payload.nominee_aadhar_front) {
+      formData.append("nominee_aadhar_front", payload.nominee_aadhar_front);
+    }
+    if (payload.nominee_aadhar_back) {
+      formData.append("nominee_aadhar_back", payload.nominee_aadhar_back);
     }
 
     const response = await api.put("/auth/profile/bank-details", formData, {
@@ -325,6 +331,24 @@ export const updateProfileBankDetailsApi = async (payload) => {
 };
 
 /**
+ * Get the authenticated user's bank and nominee details.
+ */
+export const getProfileBankDetailsApi = async () => {
+  try {
+    const response = await api.get("/auth/profile/bank-details");
+    return { success: true, data: response.data };
+  } catch (error) {
+    return {
+      success: false,
+      error:
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        "Unable to load bank details",
+    };
+  }
+};
+
+/**
  * Change user password via PUT /auth/change-password
  */
 export const changePasswordApi = async (payload) => {
@@ -338,6 +362,28 @@ export const changePasswordApi = async (payload) => {
       "Unable to change password";
 
     return { success: false, error: errorMessage };
+  }
+};
+
+/**
+ * Get the authenticated user's profile image via GET /auth/image.
+ */
+export const getProfileImageApi = async () => {
+  try {
+    const response = await api.get("/auth/image");
+    return {
+      success: true,
+      data: response.data?.profile_image || "",
+      userId: response.data?.user_id || "",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error:
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        "Unable to load profile image",
+    };
   }
 };
 
@@ -371,14 +417,25 @@ export const uploadProfileImageApi = async (file) => {
 /* ------------------------------------------------------------------------ */
 
 /**
- * Upload a KYC document via POST /api/user/kyc/upload
- * multipart/form-data: { document_type, file }
+ * Upload KYC documents via POST /api/user/kyc/upload
+ * multipart/form-data: { document_type, aadhar_no, pan, front_file, back_file, file }
  */
-export const uploadKycDocumentApi = async (documentType, file) => {
+export const uploadKycDocumentApi = async ({
+  documentType,
+  aadharNumber,
+  panNumber,
+  frontFile,
+  backFile,
+  file,
+}) => {
   try {
     const formData = new FormData();
     formData.append("document_type", documentType);
-    formData.append("file", file);
+    if (aadharNumber) formData.append("aadhar_no", aadharNumber);
+    if (panNumber) formData.append("pan", panNumber);
+    if (frontFile) formData.append("front_file", frontFile);
+    if (backFile) formData.append("back_file", backFile);
+    if (file) formData.append("file", file);
 
     const response = await api.post("/api/user/kyc/upload", formData, {
       headers: {

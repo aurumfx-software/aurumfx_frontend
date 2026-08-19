@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import UserLayout from "../../components/User/UserLayout";
 import { getAllUserRankSettingsApi, getRankHoldersApi } from "../../api/user-rank";
+import "./financial/EWallet.css";
 
 const formatNumber = (value) => {
   const num = Number(value);
@@ -107,14 +108,16 @@ function RanksPage() {
     <UserLayout user={{ name: userName, userId }}>
       <div className="ewallet-page" style={{ gap: "18px" }}>
         <div className="page-header">
-          <h1 className="page-title">
+          <span className="page-eyebrow">
+            <span className="page-eyebrow-dot" />
+            Recognition &amp; Rewards
+          </span>
+          <div className="page-header-top">
             <span className="page-title-icon" aria-hidden="true">🏅</span>
-            Rank List
-          </h1>
-          <div className="breadcrumb">
-            <span>Dashboard</span>
-            <span className="separator">•</span>
-            <span className="current">Rank List</span>
+            <div className="page-header-text">
+              <h1 className="page-title">Rank List</h1>
+              <p className="page-subtitle">Explore achievement levels and the members who reached them.</p>
+            </div>
           </div>
         </div>
 

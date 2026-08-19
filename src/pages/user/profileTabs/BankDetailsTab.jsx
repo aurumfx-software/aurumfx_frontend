@@ -1,4 +1,6 @@
 import { FiUpload, FiLock } from "react-icons/fi";
+import { FiDownload } from "react-icons/fi";
+import { API_BASE_URL } from "../../../api/axios";
 import { StatusBadge, DocRow, maskAccount } from "./shared";
 
 function BankDetailsTab({
@@ -9,13 +11,44 @@ function BankDetailsTab({
   proofDocument,
   setProofDocument,
   proofDocumentName,
+  proofDocumentUrl,
   setProofDocumentName,
+  nomineeAadharFront,
+  setNomineeAadharFront,
+  nomineeAadharBack,
+  setNomineeAadharBack,
+  nomineeAadharFrontUrl,
+  nomineeAadharBackUrl,
   bankSaving,
   bankSavingMsg,
   bankError,
   handleBankSubmit,
 }) {
   const bankLocked = bankStatus === "approved";
+  const resolveDocumentUrl = (path) => {
+    if (!path || path instanceof File || String(path).startsWith("blob:")) return "";
+    if (/^https?:\/\//i.test(path)) return path;
+    return `${API_BASE_URL.replace(/\/api\/?$/, "")}/${String(path).replace(/^\//, "")}`;
+  };
+  const proofUrl = resolveDocumentUrl(proofDocumentUrl);
+  const frontUrl = resolveDocumentUrl(nomineeAadharFrontUrl);
+  const backUrl = resolveDocumentUrl(nomineeAadharBackUrl);
+  const getFileLabel = (path, fallback) => {
+    if (!path) return fallback;
+    try {
+      const fileName = decodeURIComponent(new URL(path).pathname.split("/").pop() || "");
+      return fileName || fallback;
+    } catch {
+      return String(path).split("/").pop() || fallback;
+    }
+  };
+
+  const documentPreview = (url, label) => url && (
+    <div className="bank-document-preview">
+      <img src={url} alt={label} />
+      <a href={url} download title={`Download ${label}`}><FiDownload /></a>
+    </div>
+  );
 
   return (
     <>
@@ -45,6 +78,9 @@ function BankDetailsTab({
           <DocRow label="Nominee Aadhaar" value={bankDetails.nominee_aadhar} />
           <DocRow label="Nominee Mobile" value={bankDetails.nominee_mobile} />
           <DocRow label="Passbook Proof" value={proofDocumentName || "Uploaded"} />
+          {documentPreview(proofUrl, "Passbook proof")}
+          {documentPreview(frontUrl, "Nominee Aadhaar front")}
+          {documentPreview(backUrl, "Nominee Aadhaar back")}
           <div className="locked-note">
             <FiLock />
             <span>Approved bank details are locked. Contact support to make changes.</span>
@@ -97,7 +133,7 @@ function BankDetailsTab({
               </label>
               <label className={`upload-dropzone ${proofDocument ? "is-filled" : ""}`} htmlFor="bank-proof-upload">
                 <FiUpload />
-                <span>{proofDocument ? proofDocument.name : "Choose passbook photo"}</span>
+                <span>{proofDocument ? proofDocument.name : proofDocumentName || "Choose passbook photo"}</span>
                 <input
                   id="bank-proof-upload"
                   type="file"
@@ -109,6 +145,7 @@ function BankDetailsTab({
                   }}
                 />
               </label>
+              {documentPreview(proofUrl, "Passbook proof")}
             </div>
           </div>
 
@@ -127,15 +164,48 @@ function BankDetailsTab({
               />
             </div>
             <div className="field-group">
-              <label className="field-label">Nominee Relation</label>
-              <input
-                type="text"
+              <label className="field-label">
+                Nominee Relation<span className="field-required-mark">*</span>
+              </label>
+              <select
                 value={bankDetails.nominee_relation}
                 onChange={(e) => setBankDetails({ ...bankDetails, nominee_relation: e.target.value })}
                 className="field-input"
-              />
+              >
+                <option value="">Select relationship</option>
+                <option value="Mother">Mother</option>
+                <option value="Father">Father</option>
+                <option value="Daughter">Daughter</option>
+                <option value="Son">Son</option>
+                <option value="Husband">Husband</option>
+                <option value="Wife">Wife</option>
+                <option value="Brother">Brother</option>
+                <option value="Sister">Sister</option>
+                <option value="Friend">Friend</option>
+                <option value="Other">Other</option>
+              </select>
             </div>
           </div>
+
+          {bankDetails.nominee_relation === "Other" && (
+            <div className="field-group">
+              <label className="field-label">
+                Specify Nominee Relationship<span className="field-required-mark">*</span>
+              </label>
+              <input
+                type="text"
+                value={bankDetails.nominee_relation_other}
+                onChange={(e) =>
+                  setBankDetails({
+                    ...bankDetails,
+                    nominee_relation_other: e.target.value,
+                  })
+                }
+                className="field-input"
+                placeholder="Enter relationship"
+              />
+            </div>
+          )}
 
           <div className="form-grid-2">
             <div className="field-group">
@@ -152,7 +222,9 @@ function BankDetailsTab({
               </select>
             </div>
             <div className="field-group">
-              <label className="field-label">Nominee Date of Birth</label>
+              <label className="field-label">
+                Nominee Date of Birth<span className="field-required-mark">*</span>
+              </label>
               <input
                 type="date"
                 value={bankDetails.nominee_dob}
@@ -184,6 +256,47 @@ function BankDetailsTab({
                 onChange={(e) => setBankDetails({ ...bankDetails, nominee_mobile: e.target.value })}
                 className="field-input"
               />
+            </div>
+          </div>
+
+          <div className="kyc-photo-row">
+            <div className="field-group">
+              <span className="kyc-photo-slot-label">
+                Aadhaar Card Front<span className="field-required-mark">*</span>
+              </span>
+              <label
+                className={`upload-dropzone ${nomineeAadharFront ? "is-filled" : ""}`}
+                htmlFor="nominee-aadhar-front-upload"
+              >
+                <FiUpload />
+                <span>{nomineeAadharFront ? nomineeAadharFront.name : getFileLabel(nomineeAadharFrontUrl, "Existing front photo")}</span>
+                <input
+                  id="nominee-aadhar-front-upload"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setNomineeAadharFront(e.target.files?.[0] || null)}
+                />
+              </label>
+              {documentPreview(frontUrl, "Nominee Aadhaar front")}
+            </div>
+            <div className="field-group">
+              <span className="kyc-photo-slot-label">
+                Aadhaar Card Back<span className="field-required-mark">*</span>
+              </span>
+              <label
+                className={`upload-dropzone ${nomineeAadharBack ? "is-filled" : ""}`}
+                htmlFor="nominee-aadhar-back-upload"
+              >
+                <FiUpload />
+                <span>{nomineeAadharBack ? nomineeAadharBack.name : getFileLabel(nomineeAadharBackUrl, "Existing back photo")}</span>
+                <input
+                  id="nominee-aadhar-back-upload"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setNomineeAadharBack(e.target.files?.[0] || null)}
+                />
+              </label>
+              {documentPreview(backUrl, "Nominee Aadhaar back")}
             </div>
           </div>
 

@@ -1,5 +1,7 @@
 .user-header {
   height: 72px;
+  width: 100%;
+  max-width: 100%;
   background: var(--bg-header);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -11,12 +13,15 @@
   position: sticky;
   top: 0;
   z-index: 90;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .user-header-left {
   display: flex;
   align-items: center;
   gap: 16px;
+  flex-shrink: 0;
 }
 
 .user-header-menu-btn {
@@ -74,6 +79,120 @@
 
 .header-search-input::placeholder {
   color: var(--text-muted);
+}
+
+/* ============ KYC Status Marquee ============ */
+.kyc-marquee-wrap {
+  flex: 1;
+  min-width: 0;
+  height: 36px;
+  margin: 0 20px;
+  border-radius: 10px;
+  border: 1px solid var(--gold-border);
+  background: var(--bg-surface);
+  box-shadow: inset 0 1px 2px var(--shadow-card);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+/* fade edges like an engraved plate */
+.kyc-marquee-wrap::before,
+.kyc-marquee-wrap::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 28px;
+  z-index: 2;
+  pointer-events: none;
+}
+.kyc-marquee-wrap::before {
+  left: 0;
+  background: linear-gradient(90deg, var(--bg-surface), transparent);
+}
+.kyc-marquee-wrap::after {
+  right: 0;
+  background: linear-gradient(270deg, var(--bg-surface), transparent);
+}
+
+.kyc-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: kyc-scroll 22s linear infinite;
+}
+
+.kyc-marquee-wrap:hover .kyc-marquee-track {
+  animation-play-state: paused;
+}
+
+@keyframes kyc-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.kyc-marquee-group {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.kyc-marquee-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 26px;
+  white-space: nowrap;
+  font-family: var(--font-mono, "JetBrains Mono", "Courier New", monospace);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+}
+
+.kyc-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Pending */
+.status-pending { color: #b8860b; }
+[data-theme="dark"] .status-pending { color: #e0b84c; }
+.status-pending .kyc-dot {
+  background: #d4a017;
+  box-shadow: 0 0 0 3px rgba(212, 160, 23, 0.25);
+  animation: kyc-pulse 1.6s ease-in-out infinite;
+}
+
+/* Approved */
+.status-approved { color: #2e7d32; }
+[data-theme="dark"] .status-approved { color: #52c46a; }
+.status-approved .kyc-dot {
+  background: #2e7d32;
+  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.2);
+}
+
+/* Not submitted / Rejected */
+.status-not-submitted,
+.status-rejected { color: #c0392b; }
+[data-theme="dark"] .status-not-submitted,
+[data-theme="dark"] .status-rejected { color: #e57368; }
+.status-not-submitted .kyc-dot,
+.status-rejected .kyc-dot {
+  background: #c0392b;
+  box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.2);
+}
+
+@keyframes kyc-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kyc-marquee-track { animation: none; }
 }
 
 /* Right Section Actions */
@@ -368,5 +487,27 @@
 
   .header-search-box {
     display: none;
+  }
+
+  .kyc-marquee-wrap {
+    margin: 0 10px;
+    height: 32px;
+  }
+  .kyc-marquee-item {
+    font-size: 10px;
+    padding: 0 18px;
+    letter-spacing: 1px;
+  }
+}
+
+@media (max-width: 560px) {
+  .kyc-marquee-wrap {
+    margin: 0 8px;
+    height: 30px;
+  }
+  .kyc-marquee-item {
+    font-size: 9px;
+    gap: 6px;
+    padding: 0 14px;
   }
 }

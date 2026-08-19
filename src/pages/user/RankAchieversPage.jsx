@@ -63,11 +63,6 @@ function RankAchieversPage() {
       <div className="ewallet-page" style={{ gap: "18px" }}>
         <div className="page-header">
           <h1 className="page-title">Rank Achievers</h1>
-          <div className="breadcrumb">
-            <span>Dashboard</span>
-            <span className="separator">•</span>
-            <span className="current">Rank Achievers</span>
-          </div>
         </div>
 
         <div className="ewallet-table-card">

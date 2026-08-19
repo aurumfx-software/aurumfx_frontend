@@ -1,9 +1,37 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FiBell, FiMenu } from "react-icons/fi";
+import { getMyKycApi, getProfileBankDetailsApi } from "../../api/auth";
 import { logout } from "../../utils/auth";
 import ThemeToggle from "../ThemeToggle/ThemeToggle";
 import "./UserHeader.css";
+
+const STATUS_CONFIG = {
+  pending: {
+    label: "PENDING REVIEW — YOUR DOCUMENTS ARE UNDER REVIEW",
+    className: "status-pending",
+  },
+  approved: {
+    label: "APPROVED — YOUR DETAILS HAVE BEEN VERIFIED",
+    className: "status-approved",
+  },
+  not_submitted: {
+    label: "PLEASE SUBMIT YOUR DETAILS TO COMPLETE VERIFICATION",
+    className: "status-not-submitted",
+  },
+  rejected: {
+    label: "UPDATE REQUIRED — PLEASE RESUBMIT YOUR DETAILS",
+    className: "status-rejected",
+  },
+};
+
+function normalizeStatus(value) {
+  const status = String(value || "").toLowerCase();
+  if (status.includes("approv") || status.includes("verified")) return "approved";
+  if (status.includes("reject") || status.includes("fail")) return "rejected";
+  if (status.includes("pending") || status.includes("review") || status.includes("submit")) return "pending";
+  return "not_submitted";
+}
 
 function UserHeader({ onMenuToggle, user }) {
   const navigate = useNavigate();
@@ -18,6 +46,49 @@ function UserHeader({ onMenuToggle, user }) {
 
   // Notifications state (defaults to 0 unread messages matching screenshot)
   const [notifications] = useState([]);
+
+  const [verificationStatuses, setVerificationStatuses] = useState({
+    kyc: "not_submitted",
+    bank: "not_submitted",
+  });
+
+  useEffect(() => {
+    let active = true;
+    Promise.all([getMyKycApi(), getProfileBankDetailsApi()]).then(([kycRes, bankRes]) => {
+      if (!active) return;
+
+      const kycPayload = kycRes.success ? (kycRes.data?.data || kycRes.data || {}) : {};
+      const documents = Array.isArray(kycPayload)
+        ? kycPayload
+        : kycPayload.documents || kycPayload.kyc_documents || [];
+      const requiredDocuments = documents.filter((doc) =>
+        ["pan", "aadhaar", "aadhar"].includes(String(doc.document_type || "").toLowerCase())
+      );
+      const documentStatuses = requiredDocuments.map((doc) => normalizeStatus(doc.status));
+      const kyc = requiredDocuments.length === 0
+        ? "not_submitted"
+        : documentStatuses.every((status) => status === "approved")
+          ? "approved"
+          : documentStatuses.some((status) => status === "rejected")
+            ? "rejected"
+            : "pending";
+
+      const bankPayload = bankRes.success ? (bankRes.data?.data || bankRes.data || {}) : {};
+      const bank = normalizeStatus(
+        bankPayload.bank_details?.bank_status || bankPayload.bank_details?.status
+      );
+      setVerificationStatuses({ kyc, bank });
+    });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const marqueeItems = [
+    { label: `KYC ${STATUS_CONFIG[verificationStatuses.kyc].label}`, className: STATUS_CONFIG[verificationStatuses.kyc].className },
+    { label: `BANK DETAILS ${STATUS_CONFIG[verificationStatuses.bank].label}`, className: STATUS_CONFIG[verificationStatuses.bank].className },
+  ];
 
   // Close dropdowns when clicking outside
   useEffect(() => {
@@ -51,6 +122,28 @@ function UserHeader({ onMenuToggle, user }) {
         >
           <FiMenu />
         </button>
+      </div>
+
+      {/* KYC Status Marquee */}
+      <div className="kyc-marquee-wrap">
+        <div className="kyc-marquee-track">
+          <div className="kyc-marquee-group">
+            {marqueeItems.map((item) => (
+              <span className={`kyc-marquee-item ${item.className}`} key={item.label}>
+                <span className="kyc-dot" />
+                {item.label}
+              </span>
+            ))}
+          </div>
+          <div className="kyc-marquee-group" aria-hidden="true">
+            {marqueeItems.map((item) => (
+              <span className={`kyc-marquee-item ${item.className}`} key={`copy-${item.label}`}>
+                <span className="kyc-dot" />
+                {item.label}
+              </span>
+            ))}
+          </div>
+        </div>
       </div>
 
       <div className="user-header-right">

@@ -79,15 +79,23 @@ function EWallet() {
     <UserLayout user={{ name: userName, userId }}>
       <div className="ewallet-page">
         <div className="page-header">
-          <h1 className="page-title">
-            <span className="page-title-icon" aria-hidden="true">💰</span>
-            My Wallet
-          </h1>
-          <div className="breadcrumb">
-            <span>Dashboard</span>
-            <span className="separator">•</span>
-            <span className="current">My Wallet</span>
+          <span className="page-eyebrow">
+            <span className="page-eyebrow-dot" />
+            Earnings &amp; Payouts
+          </span>
+
+          <div className="page-header-top">
+            <span className="page-title-icon" aria-hidden="true">
+              💰
+            </span>
+            <div className="page-header-text">
+              <h1 className="page-title">My Wallet</h1>
+              <p className="page-subtitle">
+                Track your balance, commissions, and payout history in one place
+              </p>
+            </div>
           </div>
+
         </div>
 
         {/* Balance card — flat, bordered, matches the rest of the cards */}

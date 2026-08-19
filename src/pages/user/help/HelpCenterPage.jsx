@@ -7,6 +7,9 @@ import {
   FiX,
   FiImage,
   FiSend,
+  FiHash,
+  FiCheckCircle,
+  FiCalendar,
 } from "react-icons/fi";
 import UserLayout from "../../../components/User/UserLayout";
 import {
@@ -16,6 +19,7 @@ import {
   replyToTicketApi,
 } from "../../../api/tickets";
 import "./HelpCenterPage.css";
+import "../financial/EWallet.css";
 
 const MAX_FILE_SIZE_MB = 5;
 
@@ -174,14 +178,16 @@ function HelpCenterPage() {
     <UserLayout user={{ name: userName, userId }}>
       <div className="ewallet-page help-center-page">
         <div className="page-header">
-          <h1 className="page-title">
+          <span className="page-eyebrow">
+            <span className="page-eyebrow-dot" />
+            Help &amp; Assistance
+          </span>
+          <div className="page-header-top">
             <span className="page-title-icon" aria-hidden="true">🎫</span>
-            Support Tickets
-          </h1>
-          <div className="breadcrumb">
-            <span>Dashboard</span>
-            <span className="separator">•</span>
-            <span className="current">Support Tickets</span>
+            <div className="page-header-text">
+              <h1 className="page-title">Help &amp; Support</h1>
+              <p className="page-subtitle">We are here to help with questions, requests, and account support.</p>
+            </div>
           </div>
         </div>
 
@@ -189,7 +195,7 @@ function HelpCenterPage() {
           <div className="card-header-bar">
             <div className="header-left">
               <FiMessageSquare className="card-header-icon" />
-              <h2 className="section-title">Your Tickets</h2>
+              <h2 className="section-title">Your Support Requests</h2>
             </div>
             <button
               type="button"
@@ -202,7 +208,7 @@ function HelpCenterPage() {
 
           {showNewTicket && (
             <form onSubmit={handleTicketSubmit} className="new-ticket-form">
-              <h4 className="form-title">Create Support Ticket</h4>
+              <h4 className="form-title">How Can We Help?</h4>
 
               <div className="form-group">
                 <label className="separated-label">Subject</label>
@@ -291,11 +297,36 @@ function HelpCenterPage() {
             <table className="tickets-table">
               <thead>
                 <tr>
-                  <th>Ticket ID</th>
-                  <th>Subject</th>
-                  <th>Status</th>
-                  <th>Attachment</th>
-                  <th>Date</th>
+                  <th>
+                    <span className="hc-head-label">
+                      <span className="hc-head-icon"><FiHash size={12} /></span>
+                      Ticket ID
+                    </span>
+                  </th>
+                  <th>
+                    <span className="hc-head-label">
+                      <span className="hc-head-icon"><FiMessageSquare size={12} /></span>
+                      Subject
+                    </span>
+                  </th>
+                  <th>
+                    <span className="hc-head-label">
+                      <span className="hc-head-icon"><FiCheckCircle size={12} /></span>
+                      Status
+                    </span>
+                  </th>
+                  <th>
+                    <span className="hc-head-label">
+                      <span className="hc-head-icon"><FiPaperclip size={12} /></span>
+                      Attachment
+                    </span>
+                  </th>
+                  <th>
+                    <span className="hc-head-label">
+                      <span className="hc-head-icon"><FiCalendar size={12} /></span>
+                      Date
+                    </span>
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -310,7 +341,7 @@ function HelpCenterPage() {
                 ) : tickets.length === 0 ? (
                   <tr>
                     <td colSpan="5" className="empty-cell">
-                      No tickets yet. Raise one above if you run into an issue.
+                            No support requests yet. Send us a message whenever you need help.
                     </td>
                   </tr>
                 ) : (

@@ -5,20 +5,20 @@
    ========================================================================== */
 
 .investments-page {
-  --inv-bg: linear-gradient(180deg, #fffaf4 0%, #fff4ee 100%);
-  --inv-surface: #fffdfb;
-  --inv-surface-muted: #fff2e6;
-  --inv-border: rgba(184, 134, 58, 0.22);
-  --inv-border-strong: rgba(184, 134, 58, 0.36);
+  --inv-bg: #ffffff;
+  --inv-surface: #ffffff;
+  --inv-surface-muted: #faf8f3;
+  --inv-border: rgba(197, 155, 39, 0.22);
+  --inv-border-strong: rgba(197, 155, 39, 0.36);
 
   --inv-text: #171717;
   --inv-text-secondary: #4a4a4a;
   --inv-text-muted: #7f7a72;
 
-  --inv-accent: #c67b1d;
-  --inv-accent-hover: #9c5b10;
-  --inv-accent-soft: rgba(198, 123, 29, 0.08);
-  --inv-accent-line: rgba(198, 123, 29, 0.26);
+  --inv-accent: #c59b27;
+  --inv-accent-hover: #a67c1f;
+  --inv-accent-soft: rgba(197, 155, 39, 0.14);
+  --inv-accent-line: rgba(197, 155, 39, 0.28);
   --inv-accent-contrast: #ffffff;
 
   --inv-success: #1f8d54;
@@ -97,6 +97,44 @@
   margin-bottom: 6px;
 }
 
+.investments-page .page-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--inv-accent-hover);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.investments-page .page-eyebrow-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--inv-accent);
+  box-shadow: 0 0 0 4px var(--inv-accent-soft);
+}
+
+.investments-page .page-header-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.investments-page .page-header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.investments-page .page-subtitle {
+  margin: 0;
+  color: var(--inv-text-muted);
+  font-size: 15px;
+  line-height: 1.4;
+}
+
 .investments-page .page-title {
   display: inline-flex;
   align-items: center;
@@ -145,7 +183,7 @@
 .invest-form-card,
 .history-filter-card,
 .investments-table-card {
-  background: linear-gradient(180deg, rgba(255,255,255,0.94) 0%, rgba(255,243,233,0.98) 100%);
+  background: var(--inv-surface);
   border: 1px solid var(--inv-border);
   border-top: 3px solid var(--inv-accent);
   border-radius: var(--inv-radius-lg);

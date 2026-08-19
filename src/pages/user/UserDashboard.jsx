@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   FiShield,
   FiUsers,
@@ -17,7 +18,6 @@ import {
 } from "react-icons/fi";
 import UserLayout from "../../components/User/UserLayout";
 import UserRankCard from "../../components/User/UserRankCard";
-import DoInvestmentModal from "../../components/User/DoInvestmentModal";
 import { getUserDashboardData } from "../../api/dashboard";
 import "./UserDashboard.css";
 
@@ -88,9 +88,9 @@ function TeamSparkline() {
 }
 
 function UserDashboard() {
+  const navigate = useNavigate();
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [isInvestModalOpen, setIsInvestModalOpen] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -119,7 +119,13 @@ function UserDashboard() {
 
   const user = {
     name: u.userName || localStorage.getItem("userName") || "User",
-    fullName: u.userName || localStorage.getItem("userName") || "User",
+    fullName:
+      u.fullName ||
+      u.full_name ||
+      [u.firstName || u.first_name, u.lastName || u.last_name].filter(Boolean).join(" ") ||
+      u.userName ||
+      localStorage.getItem("userName") ||
+      "User",
     userId: u.userId || localStorage.getItem("userId") || "FX000",
     rank: r.currentRank || "Unranked",
     nextRank: r.nextRank || "-",
@@ -194,7 +200,7 @@ function UserDashboard() {
                 <button
                   type="button"
                   className="hero-invest-btn"
-                  onClick={() => setIsInvestModalOpen(true)}
+                  onClick={() => navigate("/user/financial/investments")}
                   title="Add a new investment"
                 >
                   <FiPlusCircle size={15} />
@@ -471,10 +477,6 @@ function UserDashboard() {
         </div>
       </div>
 
-      <DoInvestmentModal
-        isOpen={isInvestModalOpen}
-        onClose={() => setIsInvestModalOpen(false)}
-      />
     </UserLayout>
   );
 }

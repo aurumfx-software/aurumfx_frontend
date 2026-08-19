@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import UserLayout from "../../../components/User/UserLayout";
 import { getMyPayoutHistoryApi } from "../../../api/payout";
+import "./EWallet.css";
 
 function WithdrawalPage() {
   const [history, setHistory] = useState([]);
@@ -48,15 +49,21 @@ function WithdrawalPage() {
     <UserLayout user={{ name: userName, userId }}>
       <div className="ewallet-page" style={{ gap: "18px" }}>
         <div className="page-header">
-          <h1 className="page-title">
+          <span className="page-eyebrow">
+            <span className="page-eyebrow-dot" />
+            Earnings &amp; Payouts
+          </span>
+
+          <div className="page-header-top">
             <span className="page-title-icon" aria-hidden="true">💸</span>
-            Withdrawal
-          </h1>
-          <div className="breadcrumb">
-            <span>Dashboard</span>
-            <span className="separator">•</span>
-            <span className="current">Withdrawal</span>
+            <div className="page-header-text">
+              <h1 className="page-title">Withdrawal</h1>
+              <p className="page-subtitle">
+                Request withdrawals and keep track of your payout history.
+              </p>
+            </div>
           </div>
+
         </div>
 
         <div className="ewallet-table-card">

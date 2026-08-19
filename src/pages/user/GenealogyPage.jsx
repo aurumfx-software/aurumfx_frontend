@@ -134,6 +134,13 @@ function GenealogyPage() {
   const title =
     view === "family" ? "Family" : view === "list" ? "List" : "Enroller";
 
+  const subtitle =
+    view === "family"
+      ? "Explore your downline across every generation, at a glance"
+      : view === "list"
+      ? "Every member in your network, with their investment at a glance"
+      : "Members you've personally enrolled into the network";
+
   const columnIcons = {
     user: <FiUser size={12} />,
     name: <FiUsers size={12} />,
@@ -147,15 +154,21 @@ function GenealogyPage() {
     <UserLayout user={{ name: localStorage.getItem("userName") || "User", userId }}>
       <div className="genealogy-page user-genealogy-page">
         <div className="page-header">
-          <h1 className="page-title">
-            <span className="page-title-icon" aria-hidden="true">👨‍👩‍👧‍👦</span>
-            {title}
-          </h1>
-          <div className="breadcrumb">
-            <span>Dashboard</span>
-            <span className="separator">•</span>
-            <span className="current">{title}</span>
+          <span className="page-eyebrow">
+            <span className="page-eyebrow-dot" />
+            Genealogy Network
+          </span>
+
+          <div className="page-header-top">
+            <span className="page-title-icon" aria-hidden="true">
+              👨‍👩‍👧‍👦
+            </span>
+            <div className="page-header-text">
+              <h1 className="page-title">{title}</h1>
+              <p className="page-subtitle">{subtitle}</p>
+            </div>
           </div>
+
         </div>
 
         <div className="genealogy-panel">
