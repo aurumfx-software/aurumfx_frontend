@@ -3,47 +3,57 @@
 }
 
 .user-dashboard-container {
-  /* ---- Light theme: pure white bg, gold accent, navy-charcoal text ---- */
+  /* ---- Light theme: aliased to global AurumFX tokens (theme.css) ---- */
   --udb-bg: #ffffff;
-  --udb-surface: #ffffff;
-  --udb-surface-alt: #faf8f3;
-  --udb-border: #e8e3d6;
-  --udb-border-soft: #f0ece2;
-  --udb-text: #17181c;
-  --udb-text-soft: #5c5f68;
-  --udb-text-faint: #8e919b;
+  --udb-surface: var(--bg-surface);
+  --udb-surface-alt: var(--bg-elevated);
+  --udb-border: var(--border-subtle);
+  --udb-border-soft: rgba(15, 23, 42, 0.05);
+  --udb-text: var(--text-primary);
+  --udb-text-soft: var(--text-subtle);
+  --udb-text-faint: var(--text-muted);
 
-  --udb-gold: #b8872e;
-  --udb-gold-strong: #8f6a1f;
-  --udb-gold-bright: #d8a94a;
+  --udb-gold: var(--gold);
+  --udb-gold-strong: var(--gold-dark);
+  --udb-gold-bright: var(--gold-mid);
   --udb-accent: var(--udb-gold);
   --udb-accent-strong: var(--udb-gold-strong);
-  --udb-accent-soft: rgba(184, 135, 46, 0.12);
-  --udb-accent-line: rgba(184, 135, 46, 0.32);
+  --udb-accent-soft: var(--gold-glow);
+  --udb-accent-line: var(--gold-border);
 
   --udb-success: #157a45;
   --udb-success-soft: rgba(21, 122, 69, 0.1);
   --udb-danger: #b7392f;
   --udb-danger-soft: rgba(183, 57, 47, 0.1);
 
-  --udb-icon-bg: rgba(224, 178, 86, 0.16);
-  --udb-icon-fg: #17181c;
+  --udb-icon-bg: var(--gold-glow);
+  --udb-icon-fg: var(--text-primary);
 
-  --udb-shadow-sm: 0 1px 3px rgba(20, 20, 22, 0.05);
+  --udb-shadow-sm: var(--shadow-card);
   --udb-shadow-md: 0 10px 28px rgba(20, 20, 22, 0.08), 0 2px 8px rgba(20, 20, 22, 0.04);
-  --udb-shadow-gold: 0 10px 28px rgba(184, 135, 46, 0.16), 0 2px 8px rgba(20, 20, 22, 0.04);
+  --udb-shadow-gold: var(--shadow-gold);
   --udb-radius-lg: 16px;
   --udb-radius-md: 13px;
   --udb-radius-sm: 10px;
+
+  /* ---- NEW: light-theme-only warm card washes ---- */
+  --udb-warm-cream: #f7edcb;
+  --udb-warm-blush: #f9dede;
+  --udb-warm-peach: #fbdcc0;
+  --udb-warm-sand: #f5e2b8;
+  --udb-warm-linen: #ecdccb;
 
   font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
   color: var(--udb-text);
   display: flex;
   flex-direction: column;
   gap: 20px;
-  background: var(--udb-bg);
+  background: linear-gradient(180deg, #ffffff 0%, #fdfbf7 100%);
 }
 
+[data-theme="dark"] .user-dashboard-container {
+  background: var(--udb-bg);
+}
 [data-theme="dark"] .user-dashboard-container {
   /* ---- Dark theme: black bg, bright gold accent, warm off-white text ---- */
   --udb-bg: #08080a;
@@ -82,6 +92,13 @@
   --udb-m-wine-fg: #d98499;
   --udb-m-wine-bg: rgba(217, 132, 153, 0.14);
 
+  /* ---- NEW: dark-theme card washes, same idea as light theme but deep/rich ---- */
+  --udb-warm-cream: #1c1810;
+  --udb-warm-blush: #1c1315;
+  --udb-warm-peach: #1d160f;
+  --udb-warm-sand: #1b1710;
+  --udb-warm-linen: #17140f;
+
   --udb-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.45);
   --udb-shadow-md: 0 10px 30px rgba(0, 0, 0, 0.55);
   --udb-shadow-gold: 0 10px 30px rgba(224, 178, 86, 0.14), 0 2px 10px rgba(0, 0, 0, 0.4);
@@ -101,9 +118,9 @@
 }
 
 .udb-header-title {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 800;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.02em;
   color: var(--udb-text);
   display: flex;
   align-items: center;
@@ -188,6 +205,30 @@
   gap: 16px;
 }
 
+/* ---- staggered fade/rise-in animation for cards ---- */
+@keyframes udb-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-row > *,
+.team-row > * {
+  animation: udb-card-in 0.5s ease both;
+}
+
+.hero-row > *:nth-child(1) { animation-delay: 0.02s; }
+.hero-row > *:nth-child(2) { animation-delay: 0.09s; }
+.hero-row > *:nth-child(3) { animation-delay: 0.16s; }
+.hero-row > *:nth-child(4) { animation-delay: 0.23s; }
+.team-row > *:nth-child(1) { animation-delay: 0.28s; }
+.team-row > *:nth-child(2) { animation-delay: 0.34s; }
+
 /* Hero card: the one deliberate bold moment — black + gold in both themes */
 .hero-card {
   position: relative;
@@ -224,7 +265,7 @@
   font-size: 15px;
 }
 
-.hero-card::after {
+[data-theme="dark"] .hero-card::after {
   content: "";
   position: absolute;
   right: -60px;
@@ -308,14 +349,15 @@
   transform: translateY(0);
 }
 
-/* Metric / team cards: clean white/black surface, colour lives in the icon chip */
+/* Metric / team cards */
 .metric-card,
 .team-card {
   position: relative;
-  border: 2px solid transparent;
+  overflow: hidden;
+  border: 1.5px solid transparent;
   background:
     linear-gradient(var(--udb-surface), var(--udb-surface)) padding-box,
-    var(--udb-border-grad, linear-gradient(135deg, var(--udb-accent), var(--udb-accent-line))) border-box;
+    linear-gradient(135deg, color-mix(in srgb, var(--udb-m-fg, var(--udb-accent)) 55%, transparent), color-mix(in srgb, var(--udb-m-fg, var(--udb-accent)) 12%, transparent) 60%, var(--udb-border-soft)) border-box;
   border-radius: var(--udb-radius-md);
   padding: 20px 18px 18px;
   display: flex;
@@ -331,31 +373,68 @@
 
 [data-theme="dark"] .metric-card,
 [data-theme="dark"] .team-card {
-  border: 1px solid var(--udb-border);
-  background: var(--udb-surface);
+  border: 1.5px solid transparent;
+  background:
+    linear-gradient(var(--udb-surface), var(--udb-surface)) padding-box,
+    linear-gradient(135deg, color-mix(in srgb, var(--udb-m-fg, var(--udb-accent)) 60%, transparent), color-mix(in srgb, var(--udb-m-fg, var(--udb-accent)) 10%, transparent) 60%, var(--udb-border)) border-box;
 }
 
 .metric-card:hover,
 .team-card:hover {
-  box-shadow: var(--udb-shadow-gold);
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--udb-m-fg, var(--udb-accent)) 20%, transparent), 0 2px 8px rgba(20,20,22,0.05);
   transform: translateY(-3px);
 }
 
 [data-theme="dark"] .metric-card:hover,
 [data-theme="dark"] .team-card:hover {
-  border-color: var(--udb-accent-line);
+  box-shadow: 0 10px 28px color-mix(in srgb, var(--udb-m-fg, var(--udb-accent)) 25%, transparent), 0 2px 8px rgba(0,0,0,0.4);
 }
 
-.metric--mint, .metric--violet, .metric--peach, .metric--green, .metric--pink {
-  --udb-m-fg: var(--udb-icon-fg);
-  --udb-m-bg: var(--udb-icon-bg);
+.metric-card.metric--mint {
+  --udb-m-fg: #b8872e;
+  --udb-m-bg: rgba(184, 135, 46, 0.14);
+}
+.metric-card.metric--violet {
+  --udb-m-fg: #6f7fd6;
+  --udb-m-bg: rgba(111, 127, 214, 0.14);
+}
+.metric-card.metric--peach {
+  --udb-m-fg: #d4691f;
+  --udb-m-bg: rgba(212, 105, 31, 0.14);
+}
+.team-card.metric--green {
+  --udb-m-fg: #2f9e6e;
+  --udb-m-bg: rgba(47, 158, 110, 0.14);
+  --udb-accent: #2f9e6e;
+}
+.team-card.metric--pink {
+  --udb-m-fg: #c14e73;
+  --udb-m-bg: rgba(193, 78, 115, 0.14);
+  --udb-accent: #c14e73;
 }
 
-.metric--mint   { --udb-border-grad: linear-gradient(135deg, #6bcaa0, #a8e8cb); }
-.metric--violet { --udb-border-grad: linear-gradient(135deg, #6f93c9, #a9c3ea); }
-.metric--peach  { --udb-border-grad: linear-gradient(135deg, #d8b26e, #f0d9a6); }
-.metric--green  { --udb-border-grad: linear-gradient(135deg, #6bcaa0, #a8e8cb); }
-.metric--pink   { --udb-border-grad: linear-gradient(135deg, #c98a9c, #eabfcb); }
+[data-theme="dark"] .metric-card.metric--mint {
+  --udb-m-fg: #e0b256;
+  --udb-m-bg: rgba(224, 178, 86, 0.16);
+}
+[data-theme="dark"] .metric-card.metric--violet {
+  --udb-m-fg: #8ea0f2;
+  --udb-m-bg: rgba(142, 160, 242, 0.16);
+}
+[data-theme="dark"] .metric-card.metric--peach {
+  --udb-m-fg: #e8935a;
+  --udb-m-bg: rgba(232, 147, 90, 0.16);
+}
+[data-theme="dark"] .team-card.metric--green {
+  --udb-m-fg: #4fce93;
+  --udb-m-bg: rgba(79, 206, 147, 0.16);
+  --udb-accent: #4fce93;
+}
+[data-theme="dark"] .team-card.metric--pink {
+  --udb-m-fg: #e08ba0;
+  --udb-m-bg: rgba(224, 139, 160, 0.16);
+  --udb-accent: #e08ba0;
+}
 
 .team-card {
   flex-direction: row;
@@ -404,9 +483,16 @@
   align-items: center;
   justify-content: center;
   font-size: 22px;
-  background: var(--udb-m-bg, var(--udb-accent-soft));
+  background: linear-gradient(150deg, var(--udb-m-bg, var(--udb-accent-soft)) 0%, color-mix(in srgb, var(--udb-m-bg, var(--udb-accent-soft)) 55%, transparent) 100%);
   color: var(--udb-m-fg, var(--udb-accent));
   flex-shrink: 0;
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--udb-m-fg, var(--udb-accent)) 22%, transparent);
+  transition: transform 0.2s ease;
+}
+
+.metric-card:hover .metric-card-icon,
+.team-card:hover .metric-card-icon {
+  transform: scale(1.06) rotate(-2deg);
 }
 
 .metric-card-info {
@@ -422,7 +508,7 @@
 }
 
 .metric-value {
-  font-size: 21px;
+  font-size: 22px;
   font-weight: 800;
   letter-spacing: -0.01em;
   font-variant-numeric: tabular-nums;
@@ -565,9 +651,9 @@
   text-align: center;
   gap: 10px;
   padding: 38px 20px 32px;
-  border: 1px solid var(--udb-border);
+  border: 1.5px dashed var(--udb-border);
   border-radius: 12px;
-  background: var(--udb-surface);
+  background: var(--udb-surface-alt);
 }
 
 .empty-state-icon {
@@ -751,4 +837,17 @@
   .panel-filter-pill {
     align-self: flex-start;
   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-row > *,
+  .team-row > * {
+    animation: none;
+  }
+}
+
+/* Kill global golden cursor dot/ring effect — not part of dashboard cards */
+.golden-cursor-dot,
+.golden-cursor-ring {
+  display: none !important;
 }

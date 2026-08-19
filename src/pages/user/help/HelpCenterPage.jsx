@@ -6,9 +6,15 @@ import {
   FiPaperclip,
   FiX,
   FiImage,
+  FiSend,
 } from "react-icons/fi";
 import UserLayout from "../../../components/User/UserLayout";
-import { getMyTicketsApi, createTicketApi } from "../../../api/tickets";
+import {
+  getMyTicketsApi,
+  createTicketApi,
+  getTicketDetailsApi,
+  replyToTicketApi,
+} from "../../../api/tickets";
 import "./HelpCenterPage.css";
 
 const MAX_FILE_SIZE_MB = 5;
@@ -29,6 +35,12 @@ function HelpCenterPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [ticketSubmitted, setTicketSubmitted] = useState(false);
+  const [selectedTicket, setSelectedTicket] = useState(null);
+  const [detailLoading, setDetailLoading] = useState(false);
+  const [detailError, setDetailError] = useState("");
+  const [replyMessage, setReplyMessage] = useState("");
+  const [replying, setReplying] = useState(false);
+  const [replyError, setReplyError] = useState("");
 
   const loadTickets = async () => {
     setListLoading(true);
@@ -120,6 +132,39 @@ function HelpCenterPage() {
       setTicketSubmitted(false);
       setShowNewTicket(false);
     }, 1800);
+  };
+
+  const openTicket = async (ticketId) => {
+    setDetailLoading(true);
+    setDetailError("");
+    setReplyError("");
+    setReplyMessage("");
+    setSelectedTicket(null);
+    const res = await getTicketDetailsApi(ticketId);
+    if (res.success) setSelectedTicket(res.data);
+    else setDetailError(res.error || "Unable to load ticket details");
+    setDetailLoading(false);
+  };
+
+  const handleReplySubmit = async (e) => {
+    e.preventDefault();
+    if (!replyMessage.trim() || !selectedTicket?.id) return;
+
+    setReplying(true);
+    setReplyError("");
+    const formData = new FormData();
+    formData.append("message", replyMessage.trim());
+    const res = await replyToTicketApi(selectedTicket.id, formData);
+    if (!res.success) {
+      setReplyError(res.error || "Unable to send reply");
+      setReplying(false);
+      return;
+    }
+
+    setReplyMessage("");
+    const refreshed = await getTicketDetailsApi(selectedTicket.id);
+    if (refreshed.success) setSelectedTicket(refreshed.data);
+    setReplying(false);
   };
 
   const userId = localStorage.getItem("userId") || "FX256";
@@ -270,7 +315,7 @@ function HelpCenterPage() {
                   </tr>
                 ) : (
                   tickets.map((t) => (
-                    <tr key={t.id}>
+                    <tr key={t.id} onClick={() => openTicket(t.id)} className="ticket-row">
                       <td className="ticket-id">{t.ticket_id || t.id}</td>
                       <td>{t.subject}</td>
                       <td>
@@ -279,12 +324,13 @@ function HelpCenterPage() {
                         </span>
                       </td>
                       <td>
-                        {t.attachment_url ? (
+                        {t.attachment_url || t.attachment ? (
                           <a
-                            href={t.attachment_url}
+                            href={t.attachment_url || t.attachment}
                             target="_blank"
                             rel="noreferrer"
                             className="attachment-link"
+                            onClick={(e) => e.stopPropagation()}
                           >
                             <FiPaperclip /> View
                           </a>
@@ -300,6 +346,63 @@ function HelpCenterPage() {
             </table>
           </div>
         </div>
+
+        {(detailLoading || detailError || selectedTicket) && (
+          <div className="ticket-detail-backdrop" onClick={() => setSelectedTicket(null)}>
+            <section
+              className="ticket-detail-modal"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="ticket-detail-title"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="ticket-detail-header">
+                <div>
+                  <span className="detail-kicker">Ticket details</span>
+                  <h2 id="ticket-detail-title">
+                    {selectedTicket?.ticket_number || selectedTicket?.id || "Loading..."}
+                  </h2>
+                </div>
+                <button type="button" className="modal-close-btn" onClick={() => setSelectedTicket(null)} aria-label="Close ticket details">
+                  <FiX />
+                </button>
+              </div>
+
+              {detailLoading && <p className="detail-state">Loading ticket details...</p>}
+              {detailError && <p className="form-error-msg">{detailError}</p>}
+              {selectedTicket && (
+                <>
+                  <div className="ticket-detail-content">
+                    <div className="detail-meta">
+                      <strong>{selectedTicket.subject}</strong>
+                      <span className={`status-badge status--${selectedTicket.status}`}>{selectedTicket.status}</span>
+                    </div>
+                    <p className="ticket-message">{selectedTicket.message}</p>
+                    {(selectedTicket.replies || []).map((reply) => (
+                      <div className="ticket-reply" key={reply.id}>
+                        <span>{reply.sender_type || "Reply"}</span>
+                        <p>{reply.message}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <form className="reply-form" onSubmit={handleReplySubmit}>
+                    <textarea
+                      className="form-textarea"
+                      rows={3}
+                      placeholder="Write a reply..."
+                      value={replyMessage}
+                      onChange={(e) => setReplyMessage(e.target.value)}
+                    />
+                    {replyError && <p className="form-error-msg">{replyError}</p>}
+                    <button type="submit" className="submit-ticket-btn" disabled={replying || !replyMessage.trim()}>
+                      <FiSend /> {replying ? "Sending..." : "Send Reply"}
+                    </button>
+                  </form>
+                </>
+              )}
+            </section>
+          </div>
+        )}
       </div>
     </UserLayout>
   );

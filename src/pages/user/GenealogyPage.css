@@ -1,7 +1,4 @@
-/* ==========================================================================
-   Genealogy / Family / Enroller pages
-   Warm premium fintech styling aligned with the wallet layout.
-   ========================================================================== */
+
 
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap');
 
@@ -75,6 +72,22 @@
 
 [data-theme="dark"] .genealogy-card {
   background: var(--gen-surface) !important;
+}
+
+[data-theme="dark"] .fam-avatar {
+  border-color: #1a1a1a;
+}
+
+[data-theme="dark"] .fam-badge {
+  background: #161616;
+}
+
+[data-theme="dark"] .fam-tooltip {
+  background: #141414;
+}
+
+[data-theme="dark"] .fam-tooltip::before {
+  background: #141414;
 }
 
 .genealogy-page * {
@@ -161,6 +174,7 @@
   background-image: none !important;
   color: var(--gen-text) !important;
   box-shadow: 0 12px 28px rgba(122, 80, 26, 0.07), inset 0 1px 0 rgba(255,255,255,0.7);
+  overflow: visible;
 }
 
 .genealogy-header-row {
@@ -202,7 +216,7 @@
 }
 
 /* ---------------------------------------------------------------------- */
-/* Lineage tree                                                            */
+/* Lineage tree (legacy card-style — no longer used by Family view)        */
 /* ---------------------------------------------------------------------- */
 .genealogy-tree {
   overflow-x: auto;
@@ -329,6 +343,241 @@
 @media (max-width: 768px) {
   .genealogy-card {
     width: min(300px, 100%);
+  }
+}
+
+/* ==========================================================================
+   Family view — org-chart avatar tree with hover tooltip
+   ========================================================================== */
+
+.fam-tree-scroll {
+  overflow: auto;
+  max-height: 70vh;
+  padding: 10px 30px 260px;   /* extra bottom padding so tooltips never get clipped */
+  -webkit-overflow-scrolling: touch;
+}
+
+.tree, .tree ul, .tree li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tree {
+  display: inline-flex;
+  justify-content: center;
+  min-width: 100%;
+  padding: 10px 20px 20px;
+}
+
+.tree ul {
+  display: flex;
+  padding-top: 34px;
+  position: relative;
+}
+
+.tree li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  padding: 34px 16px 0 16px;
+}
+
+/* sibling / drop connectors */
+.tree li::before,
+.tree li::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 50%;
+  border-top: 2px solid var(--gen-accent-line);
+  width: 50%;
+  height: 34px;
+}
+
+.tree li::after {
+  right: auto;
+  left: 50%;
+  border-left: 2px solid var(--gen-accent-line);
+}
+
+.tree li:only-child::after,
+.tree li:only-child::before {
+  display: none;
+}
+
+.tree li:only-child {
+  padding-top: 0;
+}
+
+.tree li:first-child::before {
+  border: none;
+}
+
+.tree li:last-child::after {
+  border: none;
+}
+
+.tree li:last-child::before {
+  border-right: 2px solid var(--gen-accent-line);
+  border-radius: 0 8px 0 0;
+}
+
+.tree li:first-child::after {
+  border-radius: 8px 0 0 0;
+}
+
+/* connector from a node down to its own children row */
+.tree li > ul::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  border-left: 2px solid var(--gen-accent-line);
+  width: 0;
+  height: 34px;
+}
+
+/* root has no incoming lines */
+.tree > li {
+  padding-top: 0;
+}
+.tree > li::before,
+.tree > li::after {
+  display: none;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Node: avatar + id badge + hover tooltip                                 */
+/* ---------------------------------------------------------------------- */
+.fam-node {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+.fam-avatar {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--gen-font-display);
+  font-weight: 800;
+  font-size: 18px;
+  color: #fff;
+  border: 2px solid #ffffff;
+  box-shadow: 0 4px 10px rgba(122, 80, 26, 0.18);
+}
+
+.fam-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.fam-badge {
+  margin-top: 8px;
+  font-family: var(--gen-font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 3px 10px 3px 12px;
+  border: 1px solid var(--gen-border);
+  border-left: 3px solid #22c55e;
+  border-radius: 4px 8px 8px 4px;
+  background: var(--gen-card-bg);
+  color: var(--gen-accent-strong);
+  white-space: nowrap;
+}
+
+.fam-badge.is-inactive {
+  border-left-color: var(--gen-danger);
+  color: var(--gen-danger);
+}
+
+/* Tooltip */
+.fam-tooltip {
+  display: none;
+  position: absolute;
+  top: calc(100% + 14px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 230px;
+  background: var(--gen-surface);
+  border: 1px solid var(--gen-border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.18);
+  z-index: 60;
+  text-align: left;
+  pointer-events: none;
+}
+
+.fam-tooltip::before {
+  content: "";
+  position: absolute;
+  top: -7px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 12px;
+  height: 12px;
+  background: var(--gen-surface);
+  border-left: 1px solid var(--gen-border);
+  border-top: 1px solid var(--gen-border);
+}
+
+.fam-node:hover .fam-tooltip {
+  display: block;
+}
+
+.fam-tooltip-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 12.5px;
+  padding: 4px 0;
+  color: var(--gen-text);
+}
+
+.fam-tooltip-row + .fam-tooltip-row {
+  border-top: 1px solid var(--gen-border-soft);
+}
+
+.fam-tooltip-row span:first-child {
+  font-weight: 700;
+  color: var(--gen-text-soft);
+}
+
+.fam-tooltip-row span:last-child {
+  font-weight: 600;
+  text-align: right;
+}
+
+@media (max-width: 768px) {
+  .fam-avatar {
+    width: 44px;
+    height: 44px;
+    font-size: 15px;
+  }
+
+  .fam-tooltip {
+    width: 190px;
+  }
+
+  /* Hide scrollbar in mobile view while keeping scroll functionality */
+  .fam-tree-scroll {
+    -ms-overflow-style: none;  /* Hide scrollbar for IE and Edge */
+    scrollbar-width: none;  /* Hide scrollbar for Firefox */
+  }
+
+  .fam-tree-scroll::-webkit-scrollbar {
+    display: none;  /* Hide scrollbar for Chrome, Safari, and Opera */
   }
 }
 

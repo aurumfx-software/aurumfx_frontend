@@ -9,48 +9,83 @@ import {
 } from "../../api/genealogy";
 import "./GenealogyPage.css";
 
-function GenealogyNode({ node, depth = 0 }) {
+/* ---------------------------------------------------------------------- */
+/* Family view — org-chart avatar tree with hover tooltip                  */
+/* ---------------------------------------------------------------------- */
+
+const AVATAR_COLORS = [
+  "#f97316", "#64748b", "#14b8a6", "#a855f7",
+  "#22c55e", "#ef4444", "#3b82f6", "#eab308",
+];
+
+function colorForId(id = "") {
+  let hash = 0;
+  for (let i = 0; i < id.length; i++) hash = id.charCodeAt(i) + ((hash << 5) - hash);
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
+}
+
+function FamNode({ node }) {
   if (!node) return null;
 
+  const id = node.user_id || node.userId || "-";
+  const name = node.name || node.full_name || "User";
+  const photo = node.photo || node.avatar || node.profile_image;
   const children = Array.isArray(node.children) ? node.children : [];
+  const isActive = node.status ? node.status === "active" : true;
 
   return (
-    <div className="genealogy-node" style={{ marginLeft: depth > 0 ? 12 : 0 }}>
-      <div className="genealogy-card">
-        <div className="genealogy-card-header">
-          <span className="genealogy-user-badge">{node.user_id || node.userId || "-"}</span>
-          <span className="genealogy-role">{node.role || "Member"}</span>
+    <li>
+      <div className="fam-node">
+        <div className="fam-avatar" style={{ background: colorForId(id) }}>
+          {photo ? <img src={photo} alt={name} /> : name.charAt(0).toUpperCase()}
         </div>
+        <span className={`fam-badge ${isActive ? "" : "is-inactive"}`}>{id}</span>
 
-        <h3>{node.name || node.full_name || "User"}</h3>
-
-        <div className="genealogy-metrics">
-          <div>
-            Investment
-            <strong>₹{Number(node.total_investment || 0).toLocaleString()}</strong>
+        <div className="fam-tooltip">
+          <div className="fam-tooltip-row">
+            <span>Full Name</span>
+            <span>{name}</span>
           </div>
-          <div>
-            Total Lots
-            <strong>{Number(node.total_lots || 0)}</strong>
+          <div className="fam-tooltip-row">
+            <span>Date of Join</span>
+            <span>{node.date_of_join ? new Date(node.date_of_join).toLocaleDateString() : "-"}</span>
           </div>
-          <div>
-            Joined
-            <strong>{node.date_of_join ? new Date(node.date_of_join).toLocaleDateString() : "-"}</strong>
+          <div className="fam-tooltip-row">
+            <span>Rank</span>
+            <span>{node.rank || "-"}</span>
           </div>
-          <div>
-            Rank
-            <strong>{node.rank || "-"}</strong>
+          <div className="fam-tooltip-row">
+            <span>Trade Amount</span>
+            <span>₹{Number(node.total_investment || 0).toLocaleString()}</span>
+          </div>
+          <div className="fam-tooltip-row">
+            <span>Total Lots</span>
+            <span>{Number(node.total_lots || 0)}</span>
           </div>
         </div>
       </div>
 
       {children.length > 0 && (
-        <div className="genealogy-children">
+        <ul>
           {children.map((child) => (
-            <GenealogyNode key={child.user_id || child.userId || `${node.user_id || "node"}-${Math.random()}`} node={child} depth={depth + 1} />
+            <FamNode
+              key={child.user_id || child.userId || `${id}-${Math.random()}`}
+              node={child}
+            />
           ))}
-        </div>
+        </ul>
       )}
+    </li>
+  );
+}
+
+function FamilyOrgTree({ data }) {
+  if (!data) return null;
+  return (
+    <div className="fam-tree-scroll">
+      <ul className="tree">
+        <FamNode node={data} />
+      </ul>
     </div>
   );
 }
@@ -134,9 +169,7 @@ function GenealogyPage() {
             <div className="genealogy-error">{error}</div>
           ) : view === "family" ? (
             data ? (
-              <div className="genealogy-tree">
-                <GenealogyNode node={data} />
-              </div>
+              <FamilyOrgTree data={data} />
             ) : (
               <div className="genealogy-empty">No family data available.</div>
             )
