@@ -29,6 +29,8 @@
   color: var(--gen-text);
   background: var(--gen-bg);
   padding: 32px 36px 44px;
+  margin: -10px -30px -40px;
+  min-height: calc(100vh - 70px);
   animation: gen-page-in 0.4s ease both;
 }
 
@@ -58,8 +60,10 @@
   --gen-danger-soft: rgba(248, 113, 113, 0.13);
 }
 
-[data-theme="dark"] .genealogy-page .genealogy-panel,
-[data-theme="dark"] .genealogy-page .list-table-wrapper,
+/* Only the empty/error states stay transparent in dark mode now — the
+   panel itself (and the table wrapper inside it) should keep their
+   card backgrounds so the "white container around the table" look
+   matches Admin Wallet in both themes. */
 [data-theme="dark"] .genealogy-page .genealogy-empty,
 [data-theme="dark"] .genealogy-page .genealogy-error {
   background: transparent !important;
@@ -241,19 +245,25 @@
 }
 
 /* ---------------------------------------------------------------------- */
-/* Panel                                                                   */
+/* Panel — now a white/dark card, same treatment as                        */
+/* .admin-wallet-history-card in Admin Wallet (header + search + table     */
+/* all live inside one bordered, shadowed container).                      */
 /* ---------------------------------------------------------------------- */
 .genealogy-page .genealogy-panel {
   position: relative;
   margin-top: 0;
-  padding: 12px 0 24px;
-  border: none;
-  border-radius: 0;
-  background: transparent;
+  padding: 24px;
+  border: 1px solid var(--gen-border);
+  border-radius: 16px;
+  background: var(--gen-card-bg);
   color: var(--gen-text) !important;
-  box-shadow: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   overflow: visible;
   animation: gen-fade-up 0.5s ease 0.1s both;
+}
+
+[data-theme="dark"] .genealogy-page .genealogy-panel {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
 }
 
 @keyframes gen-fade-up {
@@ -898,6 +908,51 @@
   color: var(--gen-accent-strong);
 }
 
+/* Light theme: use the same neutral grey and white surfaces as admin pages. */
+[data-theme="light"] .genealogy-page {
+  --gen-bg: #f7f8fa;
+  --gen-surface: #ffffff;
+  --gen-card-bg: #ffffff;
+  --gen-text: #171717;
+  --gen-text-soft: #64748b;
+  --gen-text-faint: #8b93a1;
+  --gen-border: #e6e8ec;
+  --gen-border-soft: #edf0f2;
+  --gen-nav-gradient-soft: #f8fafc;
+}
+
+[data-theme="light"] .genealogy-page .list-table-wrapper {
+  background: #ffffff;
+  border-color: #e6e8ec;
+  box-shadow: 0 6px 18px rgba(45, 55, 72, 0.06);
+}
+
+[data-theme="light"] .genealogy-page .genealogy-table tbody td {
+  color: #414141;
+  border-bottom-color: #edf0f2;
+}
+
+[data-theme="light"] .genealogy-page .genealogy-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+/* Match Admin Wallet table headings exactly. */
+[data-theme="light"] .genealogy-page .genealogy-table thead th {
+  background: linear-gradient(90deg, rgba(197, 155, 39, 0.06), rgba(197, 155, 39, 0.18));
+  color: #a67c1f;
+  font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 2px solid rgba(197, 155, 39, 0.28);
+}
+
+[data-theme="dark"] .genealogy-page .genealogy-table thead th {
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.05), rgba(212, 175, 55, 0.14));
+  color: #f5d061;
+  border-bottom-color: rgba(212, 175, 55, 0.25);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .genealogy-page,
   .page-header,
@@ -917,6 +972,7 @@
    ========================================================================== */
 @media (max-width: 768px) {
   .genealogy-page {
+    margin: -16px -16px -30px;
     padding: 18px 14px 32px;
   }
 
@@ -944,17 +1000,12 @@
     font-size: 12px;
   }
 
-  /* sticky gradient strip above content, mirrors sidebar active bar */
+  /* No longer sticky/pinned to the viewport — that was producing the
+     stray white bar over content (e.g. behind the "USER: FX004" badge)
+     once the panel became a card. It now just sits inside the card
+     like a normal section header. */
   .genealogy-header-row {
-    position: sticky;
-    top: 0;
-    z-index: 5;
-    background: linear-gradient(180deg, #ffffff 70%, rgba(255,255,255,0));
     padding-top: 4px;
-    margin-left: -14px;
-    margin-right: -14px;
-    padding-left: 14px;
-    padding-right: 14px;
   }
 
   .genealogy-header-row h2 {

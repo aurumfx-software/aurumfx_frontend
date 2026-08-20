@@ -17,9 +17,12 @@ import AdminBankApprove from "./pages/admin/members/AdminBankApprove";
 import AdminKYCDetails from "./pages/admin/members/AdminKYCDetails";
 import GenealogyPage from "./pages/admin/members/GenealogyPage";
 import AdminModulePage from "./pages/admin/AdminModulePage";
+import AdminHelpCenter from "./pages/admin/help/AdminHelpCenter";
 import BrandSettings from "./pages/admin/settings/BrandSettings";
 import NetworkSettings from "./pages/admin/settings/NetworkSettings";
 import WithdrawalSettings from "./pages/admin/settings/WithdrawalSettings";
+import AdminFeeSettings from "./pages/admin/settings/AdminFeeSettings";
+import ReferralCommissionSettings from "./pages/admin/settings/ReferralCommissionSettings";
 import AdvancedSettings from "./pages/admin/settings/AdvancedSettings";
 import LevelSettings from "./pages/admin/level/LevelSettings";
 import LevelCommissionReport from "./pages/admin/level/LevelCommissionReport";
@@ -515,6 +518,22 @@ function App() {
           }
         />
         <Route
+          path="/admin/settings/admin-fee"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminFeeSettings />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/settings/referral-commission"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <ReferralCommissionSettings />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/admin/settings/ranks"
           element={
             <ProtectedRoute requiredRole="admin">
@@ -541,6 +560,14 @@ function App() {
         <Route
           path="/admin/settings/general"
           element={<Navigate to="/admin/settings/brand" replace />}
+        />
+        <Route
+          path="/admin/help-center"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminHelpCenter />
+            </ProtectedRoute>
+          }
         />
         <Route
           path="/admin/settings/payment"

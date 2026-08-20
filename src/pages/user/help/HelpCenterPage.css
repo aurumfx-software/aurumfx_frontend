@@ -484,11 +484,21 @@
 /* Tickets table — styled to match GenealogyPage's enroller/list table     */
 /* ---------------------------------------------------------------------- */
 .tickets-table-card {
-  overflow-x: auto;
+  overflow: hidden;
   border: 1px solid var(--hc-accent-line);
-  border-radius: 14px;
+  border-radius: 18px;
   background: #ffffff;
+  padding: 24px 24px 10px;
   box-shadow: 0 6px 18px rgba(184, 134, 58, 0.06);
+}
+
+.tickets-table-card .section-title {
+  margin: 0 0 14px;
+  color: var(--hc-text);
+}
+
+.tickets-table-responsive {
+  overflow-x: auto;
 }
 
 [data-theme="dark"] .tickets-table-card {
@@ -513,12 +523,12 @@
   color: var(--hc-accent-hover);
   padding: 14px 18px;
   border-bottom: 2px solid var(--hc-accent-line);
-  background: #ffffff;
+  background: var(--hc-table-gradient-soft);
   white-space: nowrap;
 }
 
 [data-theme="dark"] .tickets-table thead th {
-  background: var(--hc-surface);
+  background: var(--hc-table-gradient-soft);
 }
 
 .hc-head-label {
@@ -553,7 +563,7 @@
 }
 
 .tickets-table tbody td {
-  padding: 13px 18px;
+  padding: 14px;
   border-bottom: 1px solid var(--hc-border-soft);
   color: var(--hc-text-secondary);
   font-weight: 500;
@@ -773,22 +783,22 @@
   }
 
   .tickets-table-card {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
     border-radius: 12px;
+    padding: 18px 16px 8px;
   }
 
-  .tickets-table-card::-webkit-scrollbar {
-    display: none;
+  .tickets-table-responsive {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
   }
 
   .tickets-table {
-    min-width: 0;
+    min-width: 720px;
     font-size: 12px;
   }
 
   .tickets-table thead th,
   .tickets-table tbody td {
-    padding: 10px 8px;
+    padding: 11px 12px;
   }
 }

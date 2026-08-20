@@ -313,7 +313,7 @@ function AdminDashboard() {
         {isBusinessView ? (
           <>
             {errorMsg && (
-              <div className="dashboard-error" style={{ background: "#3b0b0b", color: "#ffd2d2", padding: "10px 14px", borderRadius: 8, marginBottom: 12 }}>
+              <div className="dashboard-error">
                 {errorMsg}
               </div>
             )}

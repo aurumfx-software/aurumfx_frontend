@@ -1,5 +1,18 @@
 import api from "./axios";
 
+const getListData = (payload) => {
+  const data = payload?.data || payload?.investments || payload || [];
+  return Array.isArray(data) ? data : [];
+};
+
+const getErrorMessage = (error, fallback) => {
+  const detail = error.response?.data?.detail;
+  if (Array.isArray(detail)) {
+    return detail.map((item) => item.msg).filter(Boolean).join(", ") || fallback;
+  }
+  return detail || error.response?.data?.message || error.response?.data?.error || fallback;
+};
+
 /**
  * All Investment Requests via GET /admin/investments/
  * No params
@@ -7,14 +20,9 @@ import api from "./axios";
 export const getAllAdminInvestmentsApi = async () => {
   try {
     const response = await api.get("/admin/investments/");
-    const data = response.data;
-    return { success: true, data: Array.isArray(data) ? data : [] };
+    return { success: true, data: getListData(response.data) };
   } catch (error) {
-    let errorMessage =
-      error.response?.data?.message ||
-      error.response?.data?.error ||
-      "Unable to load investments";
-    return { success: false, error: errorMessage };
+    return { success: false, error: getErrorMessage(error, "Unable to load investments") };
   }
 };
 
@@ -30,14 +38,9 @@ export const getPendingInvestmentsApi = async (filters = {}) => {
     if (filters.end_date) params.end_date = filters.end_date;
 
     const response = await api.get("/admin/investments/pending", { params });
-    const data = response.data;
-    return { success: true, data: Array.isArray(data) ? data : [] };
+    return { success: true, data: getListData(response.data) };
   } catch (error) {
-    let errorMessage =
-      error.response?.data?.message ||
-      error.response?.data?.error ||
-      "Unable to load pending investments";
-    return { success: false, error: errorMessage };
+    return { success: false, error: getErrorMessage(error, "Unable to load pending investments") };
   }
 };
 
@@ -54,14 +57,9 @@ export const getActiveInvestmentsApi = async (filters = {}) => {
     if (filters.end_date) params.end_date = filters.end_date;
 
     const response = await api.get("/admin/investments/active", { params });
-    const data = response.data;
-    return { success: true, data: Array.isArray(data) ? data : [] };
+    return { success: true, data: getListData(response.data) };
   } catch (error) {
-    let errorMessage =
-      error.response?.data?.message ||
-      error.response?.data?.error ||
-      "Unable to load active investments";
-    return { success: false, error: errorMessage };
+    return { success: false, error: getErrorMessage(error, "Unable to load active investments") };
   }
 };
 
@@ -72,14 +70,9 @@ export const getActiveInvestmentsApi = async (filters = {}) => {
 export const getTodayReturnsApi = async () => {
   try {
     const response = await api.get("/admin/investments/today-returns");
-    const data = response.data;
-    return { success: true, data: Array.isArray(data) ? data : [] };
+    return { success: true, data: getListData(response.data) };
   } catch (error) {
-    let errorMessage =
-      error.response?.data?.message ||
-      error.response?.data?.error ||
-      "Unable to load today's returns";
-    return { success: false, error: errorMessage };
+    return { success: false, error: getErrorMessage(error, "Unable to load today's returns") };
   }
 };
 
@@ -93,11 +86,7 @@ export const approveReturnApi = async (id, remarks = "") => {
     const response = await api.put(`/admin/investments/${id}/approve-return`, payload);
     return { success: true, data: response.data };
   } catch (error) {
-    let errorMessage =
-      error.response?.data?.message ||
-      error.response?.data?.error ||
-      "Unable to approve return";
-    return { success: false, error: errorMessage };
+    return { success: false, error: getErrorMessage(error, "Unable to approve return") };
   }
 };
 
@@ -107,13 +96,9 @@ export const approveReturnApi = async (id, remarks = "") => {
 export const getAdminInvestmentDetailsApi = async (id) => {
   try {
     const response = await api.get(`/admin/investments/${id}`);
-    return { success: true, data: response.data };
+    return { success: true, data: response.data?.data || response.data };
   } catch (error) {
-    let errorMessage =
-      error.response?.data?.message ||
-      error.response?.data?.error ||
-      "Unable to load investment details";
-    return { success: false, error: errorMessage };
+    return { success: false, error: getErrorMessage(error, "Unable to load investment details") };
   }
 };
 
@@ -127,10 +112,6 @@ export const approveRejectInvestmentApi = async (id, approvalStatus) => {
     const response = await api.put(`/admin/investments/${id}`, payload);
     return { success: true, data: response.data };
   } catch (error) {
-    let errorMessage =
-      error.response?.data?.message ||
-      error.response?.data?.error ||
-      "Unable to update investment status";
-    return { success: false, error: errorMessage };
+    return { success: false, error: getErrorMessage(error, "Unable to update investment status") };
   }
 };

@@ -313,6 +313,7 @@ function Investments() {
         </div>
 
         <div className="investments-table-card">
+          <h2 className="section-title">Investment History</h2>
           <div className="table-responsive">
             <table className="investments-table">
               <thead>

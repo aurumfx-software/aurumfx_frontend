@@ -66,3 +66,212 @@
     padding: 12px;
   }
 }
+
+[data-theme="light"] .admin-layout {
+  background: #f7f8fa;
+}
+
+[data-theme="light"] .dashboard-content {
+  color: #141414;
+}
+
+/* Admin Fee page fallback styles. Kept in the shared layout stylesheet so
+   the settings screen remains styled even when its route CSS is stale. */
+.admin-fee-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-bottom: 40px;
+}
+
+.admin-fee-header,
+.admin-fee-card-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.admin-fee-header h1 {
+  margin: 0;
+  color: #f8fafc;
+  font-size: 24px;
+}
+
+.admin-fee-breadcrumb {
+  display: flex;
+  gap: 8px;
+  margin-top: 5px;
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.admin-fee-breadcrumb strong {
+  color: #f5d061;
+}
+
+.admin-fee-primary-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 9px;
+  background: #f5d061;
+  color: #141414;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.admin-fee-primary-btn:hover {
+  background: #f7da7d;
+}
+
+.admin-fee-card {
+  overflow: hidden;
+  border: 1px solid rgba(212, 175, 55, 0.18);
+  border-radius: 14px;
+  background: #111111;
+}
+
+.admin-fee-card-title {
+  padding: 22px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.admin-fee-card-title h2 {
+  margin: 0;
+  color: #f8fafc;
+  font-size: 17px;
+}
+
+.admin-fee-card-title p {
+  margin: 5px 0 0;
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.admin-fee-table-wrap {
+  overflow-x: auto;
+}
+
+.admin-fee-table {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.admin-fee-table th {
+  padding: 13px 18px;
+  background: #141414;
+  color: #94a3b8;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.admin-fee-table td {
+  padding: 14px 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  color: #e2e8f0;
+  font-size: 13px;
+}
+
+.admin-fee-empty {
+  padding: 32px !important;
+  color: #94a3b8 !important;
+  text-align: center;
+}
+
+[data-theme="light"] .admin-fee-page .admin-fee-header h1 {
+  color: #171717;
+}
+
+[data-theme="light"] .admin-fee-page .admin-fee-card {
+  background: #ffffff;
+  border-color: rgba(197, 155, 39, 0.22);
+  box-shadow: 0 4px 16px rgba(45, 35, 20, 0.06);
+}
+
+[data-theme="light"] .admin-fee-page .admin-fee-card-title {
+  border-bottom-color: #e5e7eb;
+}
+
+[data-theme="light"] .admin-fee-page .admin-fee-card-title h2 {
+  color: #1f2937;
+}
+
+[data-theme="light"] .admin-fee-page .admin-fee-card-title p,
+[data-theme="light"] .admin-fee-page .admin-fee-empty {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .admin-fee-page .admin-fee-table th {
+  background: linear-gradient(90deg, rgba(197, 155, 39, 0.06), rgba(197, 155, 39, 0.18));
+  color: #a67c1f;
+}
+
+[data-theme="light"] .admin-fee-page .admin-fee-table td {
+  color: #141414;
+  border-top-color: rgba(197, 155, 39, 0.14);
+}
+
+[data-theme="light"] .admin-help-page {
+  color: #141414;
+}
+
+[data-theme="light"] .admin-help-page .admin-help-header h1 {
+  color: #171717;
+}
+
+[data-theme="light"] .admin-help-page .admin-help-breadcrumb {
+  color: #6b7280;
+}
+
+[data-theme="light"] .admin-help-page .admin-help-card,
+[data-theme="light"] .admin-help-page .admin-help-modal {
+  background: #ffffff;
+  border-color: rgba(197, 155, 39, 0.22);
+  box-shadow: 0 4px 16px rgba(45, 35, 20, 0.06);
+}
+
+[data-theme="light"] .admin-help-page .admin-help-card-heading,
+[data-theme="light"] .admin-help-page .admin-help-modal-header {
+  border-bottom-color: #e5e7eb;
+}
+
+[data-theme="light"] .admin-help-page .admin-help-card-heading h2,
+[data-theme="light"] .admin-help-page .admin-help-modal-header h2 {
+  color: #1f2937;
+}
+
+[data-theme="light"] .admin-help-page .admin-help-card-heading p,
+[data-theme="light"] .admin-help-page .admin-help-empty,
+[data-theme="light"] .admin-help-page .admin-help-message {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .admin-help-page .admin-help-table th {
+  background: linear-gradient(90deg, rgba(197, 155, 39, 0.06), rgba(197, 155, 39, 0.18));
+  color: #a67c1f;
+}
+
+[data-theme="light"] .admin-help-page .admin-help-table td {
+  color: #141414;
+  border-top-color: rgba(197, 155, 39, 0.14);
+}
+
+[data-theme="light"] .admin-help-page .admin-help-conversation,
+[data-theme="light"] .admin-help-page .admin-help-reply-form {
+  background: #ffffff;
+}
+
+[data-theme="light"] .admin-help-page .admin-help-reply-form textarea,
+[data-theme="light"] .admin-help-page .admin-help-attachment {
+  background: #ffffff;
+  color: #141414;
+  border-color: rgba(197, 155, 39, 0.25);
+}

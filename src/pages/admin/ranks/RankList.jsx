@@ -12,12 +12,14 @@ function RankList() {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [toDelete, setToDelete] = useState(null);
   const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     async function load() {
       try {
         const data = await getAllRanksApi();
-        setRanks(data || []);
+        if (data.success) setRanks(data.data);
+        else setError(data.error || "Unable to load ranks");
       } catch (err) {
         console.error("Failed to load ranks", err);
       } finally {
@@ -40,7 +42,8 @@ function RankList() {
 
   async function confirmDelete() {
     try {
-      await deleteRankApi(toDelete);
+      const result = await deleteRankApi(toDelete);
+      if (!result.success) throw new Error(result.error);
       setRanks((s) => s.filter((r) => r.id !== toDelete));
       showMessage("Rank deleted");
     } catch (err) {
@@ -68,18 +71,22 @@ function RankList() {
   async function handleSubmit(form) {
     try {
       if (editing) {
-        const updated = await updateRankApi(editing.id, form);
+        const result = await updateRankApi(editing.id, form);
+        if (!result.success) throw new Error(result.error);
+        const updated = result.data;
         setRanks((s) => s.map((r) => (r.id === updated.id ? updated : r)));
         showMessage("Rank updated");
       } else {
-        const created = await createRankApi(form);
-        setRanks((s) => [created, ...s]);
+        const result = await createRankApi(form);
+        if (!result.success) throw new Error(result.error);
+        setRanks((s) => [result.data, ...s]);
         showMessage("Rank created");
       }
       setModalOpen(false);
       setEditing(null);
     } catch (err) {
       console.error(err);
+      setError(err.message || "Save failed");
       showMessage("Save failed");
     }
   }
@@ -92,6 +99,7 @@ function RankList() {
       minimum_total_lots: 0,
       minimum_direct_sponsors: 0,
       reward_income: 0,
+      criteria: "",
       status: true,
       conditions: [],
     };
@@ -128,20 +136,23 @@ function RankList() {
         <div className="page-header">
           <div>
             <h2 className="page-title">Admin Ranks</h2>
+            <div className="breadcrumb">
+              <span>Dashboard</span>
+              <span className="separator">•</span>
+              <span className="current">Ranks</span>
+            </div>
           </div>
           <div>
             <button className="btn-primary" onClick={openCreate}>Create Rank</button>
           </div>
         </div>
         {message && <div className="success-banner">{message}</div>}
+        {error && <div className="error-banner">{error}</div>}
         {loading ? (
           <p>Loading…</p>
         ) : (
           <div className="ranks-card level-table-card">
             <div className="table-responsive">
-            {ranks.length === 0 ? (
-              <p className="empty-cell">No ranks configured.</p>
-            ) : (
               <table className="level-table">
                 <thead>
                   <tr>
@@ -151,20 +162,26 @@ function RankList() {
                     <th>Min Lots</th>
                     <th>Direct Sponsors</th>
                     <th>Reward</th>
+                    <th>Criteria</th>
                     <th>Status</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {ranks.map((r) => (
+                  {ranks.length === 0 ? (
+                    <tr>
+                      <td colSpan="9" className="empty-cell">No ranks configured.</td>
+                    </tr>
+                  ) : ranks.map((r) => (
                     <tr key={r.id}>
                       <td>{r.id}</td>
                       <td>{r.rank_name}</td>
                       <td>{r.rank_no}</td>
-                      <td>{r.minimum_total_lots}</td>
-                      <td>{r.minimum_direct_sponsors}</td>
-                      <td>{r.reward_income}</td>
-                      <td>{r.status ? "Active" : "Inactive"}</td>
+                      <td>{r.minimum_total_lots ?? "-"}</td>
+                      <td>{r.minimum_direct_sponsors ?? "-"}</td>
+                      <td>{r.reward_income ?? "-"}</td>
+                      <td>{r.criteria || "-"}</td>
+                      <td>{r.status === undefined ? "-" : r.status ? "Active" : "Inactive"}</td>
                       <td className="cell-actions">
                         <div>
                           <button className="btn-secondary" onClick={() => navigator.clipboard.writeText(JSON.stringify(r))}>Copy</button>
@@ -176,7 +193,6 @@ function RankList() {
                   ))}
                 </tbody>
               </table>
-            )}
             </div>
           </div>
         )}
@@ -198,6 +214,11 @@ function RankList() {
                     <label>Rank No</label>
                     <input type="number" value={rankForm.rank_no} onChange={(e) => updateField("rank_no", Number(e.target.value))} />
                   </div>
+                </div>
+
+                <div className="field">
+                  <label>Criteria</label>
+                  <input value={rankForm.criteria} onChange={(e) => updateField("criteria", e.target.value)} />
                 </div>
 
                 <div className="form-row">

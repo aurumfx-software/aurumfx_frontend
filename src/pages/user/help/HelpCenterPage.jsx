@@ -282,7 +282,9 @@ function HelpCenterPage() {
           </form>
 
           <div className="tickets-table-card">
-            <table className="tickets-table">
+            <h2 className="section-title">Support Tickets</h2>
+            <div className="tickets-table-responsive">
+              <table className="tickets-table">
               <thead>
                 <tr>
                   <th>
@@ -362,7 +364,8 @@ function HelpCenterPage() {
                   ))
                 )}
               </tbody>
-            </table>
+              </table>
+            </div>
           </div>
         </div>
 

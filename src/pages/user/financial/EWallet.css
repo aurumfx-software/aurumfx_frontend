@@ -42,6 +42,8 @@
   color: var(--ew-text);
   background: var(--ew-bg);
   padding: 32px 36px 44px;
+  margin: -10px -30px -40px;
+  min-height: calc(100vh - 70px);
   animation: ew-page-in 0.4s ease both;
 }
 
@@ -83,6 +85,12 @@
   box-sizing: border-box;
 }
 
+
+[data-theme="light"] .ewallet-page {
+  --ew-bg: #f7f8fa;
+  --ew-surface: #ffffff;
+  --ew-card-bg: #ffffff;
+}
 /* ---------------------------------------------------------------------- */
 /* Page header — eyebrow + icon badge + title/subtitle stack               */
 /* ---------------------------------------------------------------------- */
@@ -800,6 +808,8 @@
 @media (max-width: 900px) {
   .ewallet-page {
     padding: 20px 16px 30px;
+    margin: -16px -16px -30px;
+    min-height: calc(100vh - 62px);
   }
 
   .ewallet-page.rank-page,
@@ -906,5 +916,36 @@
 
   .date-cell {
     color: var(--ew-text-faint);
+  }
+
+  .ewallet-page.rank-page .table-responsive {
+    overflow-x: auto;
+  }
+
+  .ewallet-page.rank-page .ewallet-table {
+    display: table;
+    width: max-content;
+    min-width: 420px;
+  }
+
+  .ewallet-page.rank-page .ewallet-table thead {
+    display: table-header-group;
+  }
+
+  .ewallet-page.rank-page .ewallet-table tbody {
+    display: table-row-group;
+  }
+
+  .ewallet-page.rank-page .ewallet-table tr {
+    display: table-row;
+    width: auto;
+    padding: 0;
+  }
+
+  .ewallet-page.rank-page .ewallet-table th,
+  .ewallet-page.rank-page .ewallet-table td {
+    display: table-cell;
+    width: auto;
+    padding: 12px 14px;
   }
 }

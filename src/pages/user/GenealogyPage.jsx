@@ -238,14 +238,14 @@ function GenealogyPage() {
   };
 
   const title =
-    view === "family" ? "Family" : view === "list" ? "List" : "Enroller";
+    view === "family" ? "Family" : view === "list" ? "List" : "Enrolment";
 
   const subtitle =
     view === "family"
       ? "Explore your downline across every generation, at a glance"
       : view === "list"
       ? "Every member in your network, with their investment at a glance"
-      : "Members you've personally enrolled into the network";
+      : "Members you have personally enrolled into your network";
 
   const searchPlaceholder =
     view === "family" ? "Enter User ID (e.g. FX007)" : "Search by User ID or Name";
@@ -288,7 +288,7 @@ function GenealogyPage() {
         <div className="page-header">
           <span className="page-eyebrow">
             <span className="page-eyebrow-dot" />
-            Genealogy Network
+            Network Overview
           </span>
 
           <div className="page-header-top">
@@ -411,7 +411,7 @@ function GenealogyPage() {
             </div>
           ) : (
             <div className="genealogy-empty">
-              {activeSearch ? `No results for “${searchInput.trim()}”.` : "No enrollers available."}
+              {activeSearch ? `No results for “${searchInput.trim()}”.` : "No enrolment records available."}
             </div>
           )}
         </div>

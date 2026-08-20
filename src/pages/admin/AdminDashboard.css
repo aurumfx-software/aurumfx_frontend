@@ -927,3 +927,93 @@
     min-height: 180px;
   }
 }
+
+.dashboard-error {
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  background: #3b0b0b;
+  color: #ffd2d2;
+}
+
+[data-theme="light"] .dashboard-error {
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+/* Admin dashboard light theme */
+[data-theme="light"] .admin-dashboard-tabs,
+[data-theme="light"] .biz-stat-card,
+[data-theme="light"] .biz-card,
+[data-theme="light"] .card,
+[data-theme="light"] .kpi-card {
+  background: #ffffff;
+  border-color: rgba(190, 125, 38, 0.2);
+  box-shadow: 0 2px 8px rgba(45, 35, 20, 0.06);
+}
+
+[data-theme="light"] .dashboard-tab {
+  color: #6b7280;
+}
+
+[data-theme="light"] .dashboard-tab:hover {
+  color: #414141;
+  background: rgba(190, 125, 38, 0.06);
+}
+
+[data-theme="light"] .dashboard-tab--active {
+  color: #8f6423 !important;
+  background: rgba(190, 125, 38, 0.12) !important;
+}
+
+[data-theme="light"] .stat-card-title,
+[data-theme="light"] .biz-card-header-title,
+[data-theme="light"] .period-name,
+[data-theme="light"] .card h3 {
+  color: #414141;
+}
+
+[data-theme="light"] .stat-card-val,
+[data-theme="light"] .period-amount,
+[data-theme="light"] .kpi-value,
+[data-theme="light"] .users-count,
+[data-theme="light"] .tickets-value,
+[data-theme="light"] .gauge-value,
+[data-theme="light"] .user-id {
+  color: #171717;
+}
+
+[data-theme="light"] .stat-card-lbl,
+[data-theme="light"] .period-date,
+[data-theme="light"] .date-field-lbl,
+[data-theme="light"] .kpi-label,
+[data-theme="light"] .users-label,
+[data-theme="light"] .gauge-label,
+[data-theme="light"] .tickets-label,
+[data-theme="light"] .user-email,
+[data-theme="light"] .empty-state-text {
+  color: #6b7280;
+}
+
+[data-theme="light"] .period-box,
+[data-theme="light"] .biz-table th,
+[data-theme="light"] .registrations-table th {
+  background: #f8fafc;
+  border-color: rgba(190, 125, 38, 0.16);
+}
+
+[data-theme="light"] .registrations-table td,
+[data-theme="light"] .sales-graph-legend,
+[data-theme="light"] .legend-item {
+  color: #5a5a5a;
+  border-bottom-color: #e5e7eb;
+}
+
+[data-theme="light"] .date-input-wrap input,
+[data-theme="light"] .card-select,
+[data-theme="light"] .banner-card-select {
+  color: #414141;
+  background: #ffffff;
+  border-color: rgba(190, 125, 38, 0.25);
+}

@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FiBell, FiSettings, FiMenu, FiUser, FiHome, FiLogOut } from "react-icons/fi";
 import { logoutApi } from "../../api/auth";
+import ThemeToggle from "../ThemeToggle/ThemeToggle";
 import "./AdminHeader.css";
 
 function AdminHeader({ onMenuToggle }) {
@@ -48,10 +49,7 @@ function AdminHeader({ onMenuToggle }) {
       <div className="header-spacer" />
 
       <div className="header-actions">
-        <button type="button" className="header-currency">
-          <span className="currency-full">INR ₹</span>
-          <span className="currency-short">₹</span>
-        </button>
+        <ThemeToggle variant="user-header" className="admin-theme-toggle" />
 
         {/* Notifications Dropdown */}
         <div className="header-dropdown-wrap" ref={notifRef}>

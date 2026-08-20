@@ -9,7 +9,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap');
 
 .profile-page {
-  --udb-bg: #ffffff;
+  --udb-bg: #f7f8fa;
   --udb-panel-bg: #ffffff;
   --udb-panel-border: rgba(190, 125, 38, 0.28);
   --udb-surface: #ffffff;
@@ -42,6 +42,12 @@
   font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
   color: var(--udb-text);
   background: var(--udb-bg);
+}
+
+[data-theme="light"] .profile-page {
+  --udb-bg: #f7f8fa;
+  --udb-panel-bg: #ffffff;
+  --udb-surface: #ffffff;
 }
 
 [data-theme="dark"] .profile-page {
@@ -83,7 +89,7 @@
   border: 1px solid var(--udb-border);
   border-radius: 20px;
   overflow: hidden;
-  background: var(--udb-surface);
+  background: var(--udb-bg);
 }
 
 /* ---------------------------------------------------------------------- */
@@ -293,7 +299,7 @@
 /* Content column                                                          */
 /* ---------------------------------------------------------------------- */
 .content-column {
-  background: var(--udb-surface);
+  background: var(--udb-bg);
   padding: 36px 44px 44px;
   min-width: 0;
 }
@@ -710,6 +716,7 @@
   width: 100%;
   min-width: 0;
   min-height: 58px;
+  overflow: hidden;
   border: 1.5px dashed var(--udb-border);
   border-radius: 10px;
   background: var(--udb-border-soft);
@@ -746,8 +753,9 @@
 }
 
 .upload-dropzone span {
+  width: 0;
   min-width: 0;
-  flex: 1;
+  flex: 1 1 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1057,6 +1065,7 @@
   }
 
   .upload-dropzone span {
+    width: auto;
     white-space: normal;
     overflow-wrap: anywhere;
   }

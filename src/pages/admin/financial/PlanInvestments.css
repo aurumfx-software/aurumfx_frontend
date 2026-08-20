@@ -8,6 +8,87 @@
   width: 100%;
 }
 
+[data-theme="light"] .plan-investments-page .admin-page-title,
+[data-theme="light"] .plan-investments-page .plan-modal-header h3 {
+  color: #171717;
+}
+
+[data-theme="light"] .plan-investments-page .admin-breadcrumb {
+  color: #6b7280;
+}
+
+[data-theme="light"] .plan-list-card,
+[data-theme="light"] .plan-modal-container {
+  background: #ffffff;
+  border-color: rgba(190, 125, 38, 0.2);
+  box-shadow: 0 4px 16px rgba(45, 35, 20, 0.06);
+}
+
+[data-theme="light"] .plans-table th {
+  background: #f8fafc;
+  color: #4b5563;
+}
+
+[data-theme="light"] .plans-table td,
+[data-theme="light"] .plan-name-cell,
+[data-theme="light"] .modal-field .field-label {
+  color: #414141;
+}
+
+[data-theme="light"] .plan-modal-body input,
+[data-theme="light"] .plan-modal-body select,
+[data-theme="light"] .plans-filter-row input,
+[data-theme="light"] .plans-filter-row select {
+  background: #ffffff;
+  color: #414141;
+  border-color: rgba(190, 125, 38, 0.25);
+}
+
+/* Match the user Genealogy enroller table treatment. */
+.plan-investments-page .plans-table-wrapper {
+  border-color: rgba(197, 155, 39, 0.22);
+  background: #ffffff;
+}
+
+.plan-investments-page .plans-table th {
+  background: linear-gradient(90deg, rgba(197, 155, 39, 0.06), rgba(197, 155, 39, 0.18));
+  color: #a67c1f;
+  font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 2px solid rgba(197, 155, 39, 0.28);
+}
+
+.plan-investments-page .plans-table td {
+  color: #141414;
+  border-bottom-color: rgba(197, 155, 39, 0.14);
+}
+
+.plan-investments-page .plans-table tr:hover td {
+  background: linear-gradient(90deg, rgba(197, 155, 39, 0.06), rgba(197, 155, 39, 0.18));
+}
+
+[data-theme="dark"] .plan-investments-page .plans-table-wrapper {
+  border-color: rgba(212, 175, 55, 0.18);
+  background: #111111;
+}
+
+[data-theme="dark"] .plan-investments-page .plans-table th {
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.05), rgba(212, 175, 55, 0.14));
+  color: #f5d061;
+  border-bottom-color: rgba(212, 175, 55, 0.25);
+}
+
+[data-theme="dark"] .plan-investments-page .plans-table td {
+  color: #e2e8f0;
+  border-bottom-color: rgba(255, 255, 255, 0.06);
+}
+
+[data-theme="dark"] .plan-investments-page .plans-table tr:hover td {
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.05), rgba(212, 175, 55, 0.13));
+}
+
 .admin-page-header {
   display: flex;
   align-items: flex-start;
@@ -131,6 +212,26 @@
   font-size: 13.5px;
   color: #e2e8f0;
   width: 100%;
+}
+
+[data-theme="dark"] .plan-investments-page .search-input-box,
+:root:not([data-theme="light"]) .plan-investments-page .search-input-box {
+  background: #111111;
+}
+
+[data-theme="dark"] .plan-investments-page .search-input-box input,
+:root:not([data-theme="light"]) .plan-investments-page .search-input-box input {
+  background: transparent !important;
+  color: #e2e8f0 !important;
+}
+
+[data-theme="light"] .plan-investments-page .search-input-box {
+  background: #ffffff;
+}
+
+[data-theme="light"] .plan-investments-page .search-input-box input {
+  background: transparent !important;
+  color: #414141 !important;
 }
 
 .filter-select-box select {

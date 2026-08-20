@@ -15,6 +15,12 @@
   transition: width 0.25s ease, transform 0.25s ease;
 }
 
+[data-theme="light"] .admin-sidebar {
+  background: #ffffff;
+  border-right-color: rgba(190, 125, 38, 0.2);
+  box-shadow: 4px 0 18px rgba(45, 35, 20, 0.05);
+}
+
 /* Collapsed Mode (Icon-Only Minimized Sidebar on Desktop) */
 .admin-sidebar.admin-sidebar--collapsed {
   width: 70px;
@@ -147,6 +153,11 @@
   transition: all 0.15s;
 }
 
+[data-theme="light"] .sidebar-toggle-full-btn {
+  background: #f7f8fa;
+  color: #6b7280;
+}
+
 .sidebar-toggle-full-btn:hover {
   background: rgba(212, 175, 55, 0.12);
   color: #f5d061;
@@ -188,6 +199,25 @@
   box-sizing: border-box;
 }
 
+[data-theme="light"] .nav-item {
+  color: #4b5563;
+}
+
+[data-theme="light"] .nav-item:hover {
+  background: rgba(190, 125, 38, 0.06);
+  color: #242424;
+}
+
+[data-theme="light"] .nav-item--active {
+  background: rgba(190, 125, 38, 0.11);
+  color: #8f6423;
+}
+
+[data-theme="light"] .nav-item--active .nav-icon,
+[data-theme="light"] .nav-subitem--active {
+  color: #b35c09;
+}
+
 .nav-item:hover {
   background: rgba(255, 255, 255, 0.04);
   color: #f1f5f9;
@@ -207,6 +237,10 @@
   flex-shrink: 0;
   margin-right: 10px;
   color: #94a3b8;
+}
+
+[data-theme="light"] .nav-icon {
+  color: #8b93a1;
 }
 
 .nav-label {
@@ -267,6 +301,20 @@
   transition: background 0.15s, color 0.15s;
 }
 
+[data-theme="light"] .nav-subitem {
+  color: #6b7280;
+}
+
+[data-theme="light"] .nav-subitem:hover {
+  background: rgba(190, 125, 38, 0.06);
+  color: #414141;
+}
+
+[data-theme="light"] .nav-subitem--active {
+  color: #f5d061;
+  font-weight: 500;
+}
+
 .nav-subitem:hover {
   background: rgba(255, 255, 255, 0.04);
   color: #e2e8f0;
@@ -293,6 +341,9 @@
 
   .admin-sidebar.admin-sidebar--open {
     transform: translateX(0);
+  }
+  [data-theme="light"] .admin-sidebar {
+    box-shadow: 4px 0 24px rgba(45, 35, 20, 0.16);
   }
 }
 

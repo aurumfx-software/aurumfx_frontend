@@ -6,7 +6,7 @@ import {
   createLevelApi,
   updateLevelApi,
   deleteLevelApi,
-} from "../../../api/level-settings";
+} from "../../../api/adminlevelsettings";
 import "./LevelSettings.css";
 
 function LevelSettings() {

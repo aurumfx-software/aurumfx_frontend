@@ -102,6 +102,8 @@ const navItems = [
       { id: "network", label: "Network", path: "/admin/settings/network" },
           { id: "ranks", label: "Ranks", path: "/admin/settings/ranks" },
       { id: "level-settings", label: "Level Commission", path: "/admin/settings/level-settings" },
+          { id: "admin-fee", label: "Admin Fee", path: "/admin/settings/admin-fee" },
+          { id: "referral-commission", label: "Referral Commission", path: "/admin/settings/referral-commission" },
       { id: "level-report", label: "Level Commission Report", path: "/admin/settings/level-report" },
       {
         id: "withdrawal",
@@ -113,6 +115,14 @@ const navItems = [
         label: "Advanced Settings",
         path: "/admin/settings/advanced",
       },
+    ],
+  },
+  {
+    id: "help-center",
+    label: "Help Center",
+    icon: FiMessageSquare,
+    children: [
+      { id: "help-center-tickets", label: "Support Tickets", path: "/admin/help-center" },
     ],
   },
   {

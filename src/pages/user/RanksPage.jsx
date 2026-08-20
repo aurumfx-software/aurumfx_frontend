@@ -131,47 +131,57 @@ function RanksPage() {
           </div>
         ) : ranks.length === 0 ? (
           <div className="ewallet-table-card">
-            <div className="empty-cell">No rank settings available yet.</div>
+            <h2 className="section-title" style={{ marginBottom: "14px" }}>Ranks</h2>
+            <div className="table-responsive">
+              <table className="ewallet-table ewallet-table--clean">
+                <thead>
+                  <tr>
+                    <th>Rank No</th>
+                    <th>Name</th>
+                    <th>Criteria</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td colSpan="3" className="empty-cell">No rank settings</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         ) : (
           <>
             <div className="ewallet-table-card">
               <h2 className="section-title" style={{ marginBottom: "14px" }}>Ranks</h2>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "14px" }}>
+              <div className="table-responsive">
+                <table className="ewallet-table ewallet-table--clean">
+                  <thead>
+                    <tr>
+                      <th>Rank No</th>
+                      <th>Name</th>
+                      <th>Criteria</th>
+                    </tr>
+                  </thead>
+                  <tbody>
                 {ranks.map((rank) => {
                   const rankId = getRankId(rank);
                   const isSelected = selectedRankId === rankId;
                   const name = getRankName(rank);
 
                   return (
-                    <button
+                    <tr
                       key={rankId ?? `${name}-${rank?.rank_no ?? "rank"}`}
-                      type="button"
                       onClick={() => setSelectedRankId(rankId)}
-                      style={{
-                        textAlign: "left",
-                        background: isSelected ? "rgba(212, 175, 55, 0.12)" : "#111111",
-                        border: isSelected ? "1px solid rgba(212, 175, 55, 0.5)" : "1px solid rgba(212, 175, 55, 0.2)",
-                        borderRadius: "14px",
-                        padding: "18px 18px",
-                        color: "#f8fafc",
-                        boxShadow: "0 1px 0 rgba(255,255,255,0.04)",
-                        cursor: "pointer",
-                        transition: "all 0.2s ease",
-                      }}
+                      className={isSelected ? "row--clickable row--selected" : "row--clickable"}
                     >
-                      <div style={{ fontSize: "11px", color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.4px" }}>
-                        Rank {rank?.rank_no ?? rankId ?? "#"}
-                      </div>
-                      <div style={{ fontSize: "22px", fontWeight: 800, marginTop: "8px", color: "#f5d061" }}>
-                        {name}
-                      </div>
-                      <div style={{ marginTop: "10px", fontSize: "13px", color: "#cbd5e1", lineHeight: 1.6 }}>
-                        {getRankCriteria(rank)}
-                      </div>
-                    </button>
+                      <td>{rank?.rank_no ?? "-"}</td>
+                      <td>{name}</td>
+                      <td>{getRankCriteria(rank)}</td>
+                    </tr>
                   );
                 })}
+                  </tbody>
+                </table>
               </div>
             </div>
 

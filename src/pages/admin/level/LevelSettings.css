@@ -13,6 +13,24 @@
   gap: 12px;
 }
 
+.level-settings-page > .page-header {
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  text-align: left;
+}
+
+.level-settings-page > .page-header > div:first-child {
+  text-align: left;
+}
+
+.level-settings-page .btn-primary {
+  color: #141414 !important;
+}
+.level-settings-page > .page-header > .btn-primary {
+  margin-top: 10px;
+}
+
 .page-title {
   font-size: 24px;
   font-weight: 800;
@@ -113,6 +131,11 @@
   letter-spacing: 0.4px;
   text-align: left;
   border-bottom: 1px solid rgba(212, 175, 55, 0.18);
+.level-settings-page .level-table th {
+  padding: 14px 18px;
+  text-align: left;
+  border-bottom-width: 2px;
+}
 }
 
 .level-table th:nth-child(2) { text-align: right; }
@@ -172,15 +195,20 @@
 .icon-btn {
   width: 34px;
   height: 34px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: transparent;
-  color: #94a3b8;
-  display: flex;
-  align-items: center;
+.level-settings-page .level-table td {
+  padding: 14px 18px;
+  text-align: left;
+}
+.level-table th:nth-child(2) { text-align: left; }
+.level-table th:nth-child(3) { text-align: left; }
+.level-table th:nth-child(4) { text-align: left; }
+.level-table td:nth-child(3) {
+  text-align: left;
+}
   justify-content: center;
   cursor: pointer;
   transition: all 0.15s ease;
+    margin-top: 0;
 }
 
 .icon-btn:hover {
@@ -336,6 +364,16 @@
 }
 
 @media (max-width: 640px) {
+  .level-settings-page > .page-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .level-settings-page > .page-header .btn-primary {
+    width: 100%;
+    justify-content: center;
+  }
+
   .page-header {
     flex-direction: column;
     align-items: stretch;
@@ -348,4 +386,117 @@
   .level-table-card {
     padding: 16px;
   }
+}
+
+[data-theme="light"] .level-settings-page {
+  color: #141414;
+}
+
+[data-theme="light"] .level-settings-page .page-title {
+  color: #171717;
+}
+
+[data-theme="light"] .level-settings-page .breadcrumb {
+  color: #6b7280;
+}
+
+[data-theme="light"] .level-settings-page .level-table-card {
+  background: #ffffff;
+  border-color: rgba(197, 155, 39, 0.22);
+  box-shadow: 0 4px 16px rgba(45, 35, 20, 0.06);
+}
+
+[data-theme="light"] .level-settings-page .level-table th {
+  background: linear-gradient(90deg, rgba(197, 155, 39, 0.06), rgba(197, 155, 39, 0.18));
+  color: #a67c1f;
+  border-bottom-color: rgba(197, 155, 39, 0.28);
+}
+
+[data-theme="light"] .level-settings-page .level-table td {
+  color: #141414;
+  border-bottom-color: rgba(197, 155, 39, 0.14);
+}
+
+[data-theme="light"] .level-settings-page .cell-level {
+  color: #141414;
+}
+
+[data-theme="light"] .level-settings-page .icon-btn {
+  color: #6b7280;
+  border-color: #e5e7eb;
+}
+
+[data-theme="light"] .level-settings-page .modal-container {
+  background: #ffffff;
+  border-color: rgba(197, 155, 39, 0.22);
+}
+
+[data-theme="light"] .level-settings-page .modal-header {
+  border-bottom-color: #e5e7eb;
+}
+
+[data-theme="light"] .level-settings-page .modal-header h3,
+[data-theme="light"] .level-settings-page .form-group label {
+  color: #374151;
+}
+
+[data-theme="light"] .level-settings-page .form-group input,
+[data-theme="light"] .level-settings-page .form-group select {
+  background: #ffffff;
+  border-color: #e5e7eb;
+  color: #141414;
+}
+
+.level-settings-page .modal-container {
+  background: #101214 !important;
+  border: 1px solid rgba(245, 208, 97, 0.44) !important;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.68), 0 0 0 1px rgba(245, 208, 97, 0.08) !important;
+}
+
+.level-settings-page .modal-header {
+  border-bottom-color: rgba(245, 208, 97, 0.2) !important;
+  background: linear-gradient(135deg, rgba(245, 208, 97, 0.15), rgba(16, 18, 20, 0.98) 72%);
+}
+
+.level-settings-page .modal-header h3 {
+  color: #f8fafc !important;
+}
+
+.level-settings-page .form-group label {
+  color: #d6dbe3 !important;
+}
+
+.level-settings-page .form-group input,
+.level-settings-page .form-group select {
+  background: #191c20 !important;
+  border: 1px solid rgba(245, 208, 97, 0.3) !important;
+  color: #f8fafc !important;
+}
+
+.level-settings-page .form-group input:hover,
+.level-settings-page .form-group select:hover {
+  border-color: rgba(245, 208, 97, 0.58) !important;
+}
+
+[data-theme="light"] .level-settings-page .modal-container {
+  background: #ffffff !important;
+  border-color: rgba(197, 155, 39, 0.42) !important;
+  box-shadow: 0 24px 70px rgba(45, 35, 20, 0.22) !important;
+}
+
+[data-theme="light"] .level-settings-page .modal-header {
+  border-bottom-color: #e5e7eb !important;
+  background: linear-gradient(135deg, rgba(197, 155, 39, 0.12), #ffffff 72%);
+}
+
+[data-theme="light"] .level-settings-page .modal-header h3,
+[data-theme="light"] .level-settings-page .form-group label {
+  color: #374151 !important;
+}
+
+[data-theme="light"] .level-settings-page .form-group input,
+[data-theme="light"] .level-settings-page .form-group select {
+  background: #ffffff !important;
+  border-color: rgba(197, 155, 39, 0.3) !important;
+  color: #141414 !important;
 }

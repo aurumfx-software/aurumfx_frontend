@@ -228,6 +228,7 @@
 .admin-reports-page .reports-table-card {
   background: #111111;
   border-color: rgba(212, 175, 55, 0.15);
+  border-radius: 16px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
@@ -255,11 +256,32 @@
 .admin-reports-page .reports-reset-btn:hover { background: rgba(245, 208, 97, 0.12); }
 
 .admin-reports-page .reports-table thead tr {
-  background: #141414;
-  border-bottom-color: rgba(212, 175, 55, 0.2);
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.05), rgba(212, 175, 55, 0.14));
+  border-bottom-color: rgba(212, 175, 55, 0.25);
 }
 
-.admin-reports-page .reports-table th { color: #f1f5f9; }
+.admin-reports-page .reports-table {
+  width: 100%;
+  min-width: 1100px;
+}
+
+.admin-reports-page .reports-table th {
+  padding: 14px 18px;
+  color: #f5d061;
+  font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  border-bottom: 2px solid rgba(212, 175, 55, 0.25);
+}
+
+.admin-reports-page .reports-table td {
+  padding: 14px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  vertical-align: middle;
+  white-space: nowrap;
+}
 
 .admin-reports-page .reports-table tbody tr {
   border-bottom-color: rgba(255, 255, 255, 0.08);
@@ -267,6 +289,13 @@
 
 .admin-reports-page .reports-table tbody tr:hover {
   background: rgba(245, 208, 97, 0.06);
+}
+
+.admin-reports-page .reports-empty-cell {
+  padding: 30px 16px !important;
+  color: #94a3b8;
+  text-align: center;
+  white-space: normal;
 }
 
 .admin-reports-page .reports-pagination {
@@ -277,4 +306,93 @@
   background: #1a1a1a;
   border-color: rgba(212, 175, 55, 0.25);
   color: #cbd5e1;
+}
+
+[data-theme="light"] .admin-reports-page .reports-filter-bar,
+[data-theme="light"] .admin-reports-page .reports-table-card {
+  background: #ffffff;
+  border-color: rgba(197, 155, 39, 0.22);
+  box-shadow: 0 4px 16px rgba(45, 35, 20, 0.06);
+}
+
+[data-theme="light"] .admin-reports-page .admin-page-title,
+[data-theme="light"] .admin-reports-page .reports-date-input,
+[data-theme="light"] .admin-reports-page .reports-user-select,
+[data-theme="light"] .admin-reports-page .reports-table td {
+  color: #141414;
+}
+
+[data-theme="light"] .admin-reports-page .admin-breadcrumb {
+  color: #6b7280;
+}
+
+[data-theme="light"] .admin-reports-page .reports-date-field,
+[data-theme="light"] .admin-reports-page .reports-user-select {
+  background: #ffffff;
+  border-color: rgba(197, 155, 39, 0.28);
+}
+
+[data-theme="light"] .admin-reports-page .reports-table thead tr {
+  background: linear-gradient(90deg, rgba(197, 155, 39, 0.06), rgba(197, 155, 39, 0.18));
+  border-bottom-color: rgba(197, 155, 39, 0.28);
+}
+
+[data-theme="light"] .admin-reports-page .reports-table th {
+  color: #a67c1f;
+}
+
+[data-theme="light"] .admin-reports-page .reports-table tbody tr {
+  border-bottom-color: rgba(197, 155, 39, 0.14);
+}
+
+[data-theme="light"] .admin-reports-page .reports-table tbody tr:hover {
+  background: rgba(197, 155, 39, 0.06);
+}
+
+[data-theme="light"] .admin-reports-page .reports-pagination {
+  border-top-color: rgba(197, 155, 39, 0.14);
+}
+
+[data-theme="light"] .admin-reports-page .reports-page-btn {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  color: #64748b;
+}
+
+[data-theme="light"] .admin-reports-page .reports-page-btn--active {
+  background: #f5d061;
+  border-color: #f5d061;
+  color: #1a1608;
+}
+
+[data-theme="light"] .admin-reports-page .reports-table thead tr {
+  background: linear-gradient(90deg, rgba(197, 155, 39, 0.06), rgba(197, 155, 39, 0.18));
+  border-bottom-color: rgba(197, 155, 39, 0.28);
+}
+
+[data-theme="light"] .admin-reports-page .reports-table th {
+  color: #a67c1f;
+}
+
+[data-theme="light"] .admin-reports-page .reports-table td {
+  border-bottom-color: rgba(197, 155, 39, 0.14);
+}
+
+[data-theme="light"] .admin-reports-page .reports-empty-cell {
+  color: #64748b;
+}
+
+@media (max-width: 768px) {
+  .admin-reports-page .reports-table-card {
+    border-radius: 12px;
+  }
+
+  .admin-reports-page .reports-table {
+    min-width: 1100px;
+  }
+
+  .admin-reports-page .reports-table th,
+  .admin-reports-page .reports-table td {
+    padding: 12px 14px;
+  }
 }

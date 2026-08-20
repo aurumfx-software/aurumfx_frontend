@@ -11,6 +11,11 @@
   z-index: 50;
 }
 
+[data-theme="light"] .admin-header {
+  background: #ffffff;
+  border-bottom-color: rgba(190, 125, 38, 0.22);
+}
+
 .header-menu-btn {
   display: none;
   width: 40px;
@@ -24,6 +29,12 @@
   color: #cbd5e1;
   font-size: 20px;
   flex-shrink: 0;
+}
+
+[data-theme="light"] .header-menu-btn {
+  background: #ffffff;
+  border-color: rgba(190, 125, 38, 0.28);
+  color: #5a5a5a;
 }
 
 .header-menu-btn:hover {
@@ -41,28 +52,14 @@
   gap: 12px;
 }
 
-.header-currency {
-  padding: 8px 16px;
-  border: 1px solid rgba(212, 175, 55, 0.25);
-  border-radius: 8px;
-  background: #111;
-  font-size: 14px;
-  font-weight: 600;
-  color: #f5d061;
-  cursor: pointer;
-}
-
-.header-currency:hover {
-  background: rgba(212, 175, 55, 0.08);
-  border-color: #d4af37;
-}
-
-.currency-short {
-  display: none;
-}
-
 .header-dropdown-wrap {
   position: relative;
+}
+
+[data-theme="light"] .header-icon-btn {
+  background: #ffffff;
+  border-color: rgba(190, 125, 38, 0.25);
+  color: #5a5a5a;
 }
 
 .header-icon-btn {
@@ -123,6 +120,12 @@
   overflow: hidden;
 }
 
+[data-theme="light"] .header-popover {
+  background: #ffffff;
+  border-color: rgba(190, 125, 38, 0.25);
+  box-shadow: 0 10px 30px rgba(45, 35, 20, 0.14);
+}
+
 @keyframes fadeInDown {
   from {
     opacity: 0;
@@ -144,6 +147,15 @@
   font-weight: 700;
   color: #f5d061;
   margin-bottom: 4px;
+}
+
+[data-theme="light"] .popover-user-id,
+[data-theme="light"] .popover-item {
+  color: #414141;
+}
+
+[data-theme="light"] .popover-menu-list {
+  border-top-color: rgba(190, 125, 38, 0.15);
 }
 
 .popover-sub {
@@ -246,18 +258,6 @@
   .admin-header {
     height: 56px;
     padding: 0 12px;
-  }
-
-  .currency-full {
-    display: none;
-  }
-
-  .currency-short {
-    display: inline;
-  }
-
-  .header-currency {
-    padding: 8px 12px;
   }
 
   .header-settings-btn {

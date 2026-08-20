@@ -15,12 +15,13 @@ import {
   createLotApi,
   updateLotApi,
   deleteLotApi,
-} from "../../../api/lot-settings";
+} from "../../../api/adminlotsettings";
 import "./PlanInvestments.css";
 
 function AdminLotSettings() {
   const [lots, setLots] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [listError, setListError] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
 
@@ -42,8 +43,14 @@ function AdminLotSettings() {
 
   const fetchLots = async () => {
     setLoading(true);
+    setListError("");
     const res = await getLotsApi();
-    if (res.success) setLots(res.data);
+    if (res.success) {
+      setLots(res.data);
+    } else {
+      setLots([]);
+      setListError(res.error || "Unable to load lots.");
+    }
     setLoading(false);
   };
 
@@ -188,6 +195,8 @@ function AdminLotSettings() {
               <tbody>
                 {loading ? (
                   <tr><td colSpan="6" className="no-data-cell">Loading...</td></tr>
+                ) : listError ? (
+                  <tr><td colSpan="6" className="no-data-cell">{listError}</td></tr>
                 ) : filteredLots.length > 0 ? (
                   filteredLots.map((lot, index) => (
                     <tr key={lot.id}>
