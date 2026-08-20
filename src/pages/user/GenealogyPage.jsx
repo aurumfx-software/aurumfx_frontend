@@ -1,6 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { FiUsers, FiUser, FiBriefcase, FiCalendar, FiAward, FiDollarSign } from "react-icons/fi";
+import {
+  FiUsers,
+  FiUser,
+  FiBriefcase,
+  FiCalendar,
+  FiAward,
+  FiDollarSign,
+  FiSearch,
+  FiRefreshCw,
+} from "react-icons/fi";
 import UserLayout from "../../components/User/UserLayout";
 import {
   getUserGenealogyApi,
@@ -22,6 +31,35 @@ function colorForId(id = "") {
   let hash = 0;
   for (let i = 0; i < id.length; i++) hash = id.charCodeAt(i) + ((hash << 5) - hash);
   return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
+}
+
+/**
+ * Recursively looks for a node whose user_id/userId matches the query
+ * (case-insensitive). Returns that node — with its own `children` intact —
+ * so the tree can be re-rooted at the searched user, showing only them
+ * and their downline instead of the whole network.
+ */
+function findNodeById(node, query) {
+  if (!node) return null;
+  const id = String(node.user_id || node.userId || "").toLowerCase();
+  if (id === query) return node;
+
+  const children = Array.isArray(node.children) ? node.children : [];
+  for (const child of children) {
+    const found = findNodeById(child, query);
+    if (found) return found;
+  }
+  return null;
+}
+
+/** Filters a flat list (List / Enroller views) by user id or name. */
+function filterByUser(list, query) {
+  if (!Array.isArray(list)) return [];
+  return list.filter((item) => {
+    const id = String(item.user_id || item.userId || "").toLowerCase();
+    const name = String(item.full_name || item.fullname || item.name || "").toLowerCase();
+    return id.includes(query) || name.includes(query);
+  });
 }
 
 function FamNode({ node }) {
@@ -90,11 +128,50 @@ function FamilyOrgTree({ data }) {
   );
 }
 
+/* ---------------------------------------------------------------------- */
+/* Search bar — shared across Family / List / Enroller                     */
+/* ---------------------------------------------------------------------- */
+function GenSearchBar({ value, onChange, onSearch, onReset, placeholder, hasActiveSearch }) {
+  return (
+    <div className="gen-search-bar">
+      <div className="gen-search-input-wrap">
+        <FiSearch size={14} className="gen-search-icon" />
+        <input
+          type="text"
+          className="gen-search-input"
+          placeholder={placeholder}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") onSearch();
+          }}
+        />
+      </div>
+      <button type="button" className="gen-search-btn" onClick={onSearch}>
+        Search User
+      </button>
+      <button
+        type="button"
+        className="gen-search-reset"
+        onClick={onReset}
+        disabled={!hasActiveSearch && !value}
+      >
+        <FiRefreshCw size={13} />
+        Reset
+      </button>
+    </div>
+  );
+}
+
 function GenealogyPage() {
   const location = useLocation();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const [searchInput, setSearchInput] = useState("");
+  const [activeSearch, setActiveSearch] = useState("");
+  const [searchMiss, setSearchMiss] = useState(false);
 
   const userId = useMemo(() => localStorage.getItem("userId") || "FX001", []);
 
@@ -128,8 +205,37 @@ function GenealogyPage() {
       setLoading(false);
     };
 
+    // Reset any active search whenever the tab changes.
+    setSearchInput("");
+    setActiveSearch("");
+    setSearchMiss(false);
+
     loadData();
   }, [view]);
+
+  const handleSearch = () => {
+    const q = searchInput.trim().toLowerCase();
+    if (!q) {
+      setActiveSearch("");
+      setSearchMiss(false);
+      return;
+    }
+    setActiveSearch(q);
+
+    if (view === "family") {
+      setSearchMiss(!findNodeById(data, q));
+    } else if (view === "list") {
+      setSearchMiss(filterByUser(data, q).length === 0);
+    } else {
+      setSearchMiss(filterByUser(data?.enrollers, q).length === 0);
+    }
+  };
+
+  const handleReset = () => {
+    setSearchInput("");
+    setActiveSearch("");
+    setSearchMiss(false);
+  };
 
   const title =
     view === "family" ? "Family" : view === "list" ? "List" : "Enroller";
@@ -141,6 +247,9 @@ function GenealogyPage() {
       ? "Every member in your network, with their investment at a glance"
       : "Members you've personally enrolled into the network";
 
+  const searchPlaceholder =
+    view === "family" ? "Enter User ID (e.g. FX007)" : "Search by User ID or Name";
+
   const columnIcons = {
     user: <FiUser size={12} />,
     name: <FiUsers size={12} />,
@@ -149,6 +258,29 @@ function GenealogyPage() {
     rank: <FiAward size={12} />,
     lots: <FiBriefcase size={12} />,
   };
+
+  // Search-aware datasets. With no active search these fall back to the
+  // full data set, so List/Enroller behave exactly as before by default.
+  const familyDisplayNode =
+    view === "family" ? (activeSearch ? findNodeById(data, activeSearch) : data) : null;
+
+  const listDisplayRows =
+    view === "list"
+      ? activeSearch
+        ? filterByUser(data, activeSearch)
+        : Array.isArray(data)
+        ? data
+        : []
+      : [];
+
+  const enrollerDisplayRows =
+    view === "enroller"
+      ? activeSearch
+        ? filterByUser(data?.enrollers, activeSearch)
+        : Array.isArray(data?.enrollers)
+        ? data.enrollers
+        : []
+      : [];
 
   return (
     <UserLayout user={{ name: localStorage.getItem("userName") || "User", userId }}>
@@ -168,7 +300,6 @@ function GenealogyPage() {
               <p className="page-subtitle">{subtitle}</p>
             </div>
           </div>
-
         </div>
 
         <div className="genealogy-panel">
@@ -176,42 +307,82 @@ function GenealogyPage() {
             <h2>User: {userId}</h2>
           </div>
 
+          <GenSearchBar
+            value={searchInput}
+            onChange={setSearchInput}
+            onSearch={handleSearch}
+            onReset={handleReset}
+            placeholder={searchPlaceholder}
+            hasActiveSearch={!!activeSearch}
+          />
+
           {loading ? (
             <div className="genealogy-empty">Loading {title.toLowerCase()}...</div>
           ) : error ? (
             <div className="genealogy-error">{error}</div>
           ) : view === "family" ? (
-            data ? (
-              <FamilyOrgTree data={data} />
+            activeSearch && searchMiss ? (
+              <div className="genealogy-empty">
+                No user found for “{searchInput.trim()}”.
+              </div>
+            ) : familyDisplayNode ? (
+              <FamilyOrgTree data={familyDisplayNode} />
             ) : (
               <div className="genealogy-empty">No family data available.</div>
             )
           ) : view === "list" ? (
-            Array.isArray(data) && data.length > 0 ? (
+            listDisplayRows.length > 0 ? (
               <div className="list-table-wrapper">
                 <table className="genealogy-table">
                   <thead>
                     <tr>
-                      <th><span className="genealogy-head-label"><span className="genealogy-head-icon">{columnIcons.user}</span>User ID</span></th>
-                      <th><span className="genealogy-head-label"><span className="genealogy-head-icon">{columnIcons.name}</span>Name</span></th>
-                      <th><span className="genealogy-head-label"><span className="genealogy-head-icon">{columnIcons.investment}</span>Investment</span></th>
+                      <th>
+                        <span className="genealogy-head-label">
+                          <span className="genealogy-head-icon">{columnIcons.user}</span>
+                          User ID
+                        </span>
+                      </th>
+                      <th>
+                        <span className="genealogy-head-label">
+                          <span className="genealogy-head-icon">{columnIcons.name}</span>
+                          Name
+                        </span>
+                      </th>
+                      <th>
+                        <span className="genealogy-head-label">
+                          <span className="genealogy-head-icon">{columnIcons.joined}</span>
+                          Date of Join
+                        </span>
+                      </th>
+                      <th>
+                        <span className="genealogy-head-label">
+                          <span className="genealogy-head-icon">{columnIcons.investment}</span>
+                          Investment
+                        </span>
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
-                    {data.map((item, index) => (
-                      <tr key={`${item.user_id || item.userId || "genealogy-list-"}${index}`}>
-                        <td>{item.user_id || item.userId || "-"}</td>
-                        <td>{item.full_name || item.name || "-"}</td>
-                        <td>₹{Number(item.total_investment || 0).toLocaleString()}</td>
-                      </tr>
-                    ))}
+                    {listDisplayRows.map((item, index) => {
+                      const joinDate = item.date_of_join || item.date_of_joining;
+                      return (
+                        <tr key={`${item.user_id || item.userId || "genealogy-list-"}${index}`}>
+                          <td>{item.user_id || item.userId || "-"}</td>
+                          <td>{item.full_name || item.name || "-"}</td>
+                          <td>{joinDate ? new Date(joinDate).toLocaleDateString() : "-"}</td>
+                          <td>₹{Number(item.total_investment || 0).toLocaleString()}</td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
             ) : (
-              <div className="genealogy-empty">No list data available.</div>
+              <div className="genealogy-empty">
+                {activeSearch ? `No results for “${searchInput.trim()}”.` : "No list data available."}
+              </div>
             )
-          ) : Array.isArray(data?.enrollers) && data.enrollers.length > 0 ? (
+          ) : enrollerDisplayRows.length > 0 ? (
             <div className="list-table-wrapper">
               <table className="genealogy-table">
                 <thead>
@@ -225,7 +396,7 @@ function GenealogyPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {data.enrollers.map((item, index) => (
+                  {enrollerDisplayRows.map((item, index) => (
                     <tr key={`${item.user_id || item.userId || "enroller-"}${index}`}>
                       <td>{item.user_id || "-"}</td>
                       <td>{item.fullname || item.full_name || "-"}</td>
@@ -239,7 +410,9 @@ function GenealogyPage() {
               </table>
             </div>
           ) : (
-            <div className="genealogy-empty">No enrollers available.</div>
+            <div className="genealogy-empty">
+              {activeSearch ? `No results for “${searchInput.trim()}”.` : "No enrollers available."}
+            </div>
           )}
         </div>
       </div>

@@ -106,7 +106,7 @@ function RanksPage() {
 
   return (
     <UserLayout user={{ name: userName, userId }}>
-      <div className="ewallet-page" style={{ gap: "18px" }}>
+      <div className="ewallet-page rank-page" style={{ gap: "18px" }}>
         <div className="page-header">
           <span className="page-eyebrow">
             <span className="page-eyebrow-dot" />

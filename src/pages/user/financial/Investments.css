@@ -19,6 +19,7 @@
   --inv-accent-hover: #a67c1f;
   --inv-accent-soft: rgba(197, 155, 39, 0.14);
   --inv-accent-line: rgba(197, 155, 39, 0.28);
+  --inv-nav-gradient-soft: linear-gradient(90deg, rgba(197, 155, 39, 0.06), rgba(197, 155, 39, 0.18));
   --inv-accent-contrast: #ffffff;
 
   --inv-success: #1f8d54;
@@ -64,6 +65,7 @@
   --inv-accent-hover: #f0c876;
   --inv-accent-soft: rgba(243, 199, 108, 0.1);
   --inv-accent-line: rgba(243, 199, 108, 0.3);
+  --inv-nav-gradient-soft: linear-gradient(90deg, rgba(212, 175, 55, 0.05), rgba(212, 175, 55, 0.14));
   --inv-accent-contrast: #17130a;
 
   --inv-success: #3db77d;
@@ -368,6 +370,55 @@
   display: none;
 }
 
+.payment-proof-field {
+  max-width: 520px;
+}
+
+.payment-proof-upload {
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 14px;
+  overflow: hidden;
+  border: 1px dashed var(--inv-border-strong);
+  border-radius: var(--inv-radius-md);
+  color: var(--inv-text-muted);
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.payment-proof-upload:hover,
+.payment-proof-upload.is-filled {
+  color: var(--inv-accent-hover);
+  border-color: var(--inv-accent);
+  background: var(--inv-accent-soft);
+}
+
+.payment-proof-thumb {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  object-fit: cover;
+  border: 1px solid var(--inv-border-strong);
+  border-radius: 6px;
+}
+
+.payment-proof-upload span {
+  display: block;
+  min-width: 0;
+  flex: 1 1 0%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+}
+
+.payment-proof-upload input {
+  display: none;
+}
+
 .file-hint {
   font-size: 11.5px;
   color: var(--inv-text-muted);
@@ -538,7 +589,7 @@
 }
 
 .investments-table th {
-  background: rgba(198, 123, 29, 0.05);
+  background: var(--inv-nav-gradient-soft);
   padding: 12px 18px;
   font-size: 11px;
   font-weight: 700;
@@ -598,6 +649,96 @@
 
 .download-btn:hover {
   background: var(--inv-accent-soft);
+}
+
+.proof-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 180px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  background: transparent;
+  color: var(--inv-accent-hover);
+  font: inherit;
+  font-size: 12px;
+  text-decoration: underline;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.proof-link:hover {
+  color: var(--inv-accent);
+}
+
+.proof-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(15, 23, 42, 0.62);
+}
+
+.proof-modal {
+  width: min(100%, 720px);
+  max-height: calc(100vh - 40px);
+  overflow: auto;
+  padding: 20px;
+  background: var(--inv-surface);
+  border: 1px solid var(--inv-border);
+  border-radius: var(--inv-radius-lg);
+  box-shadow: var(--inv-shadow-hover);
+}
+
+.proof-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.proof-modal-header h2 {
+  margin: 0;
+  color: var(--inv-text);
+  font-size: 18px;
+}
+
+.proof-close-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--inv-text-muted);
+  cursor: pointer;
+}
+
+.proof-close-btn:hover {
+  color: var(--inv-danger);
+  background: var(--inv-danger-soft);
+}
+
+.payment-proof-preview {
+  display: block;
+  width: 100%;
+  max-height: calc(100vh - 150px);
+  object-fit: contain;
+  border-radius: var(--inv-radius-md);
+  background: var(--inv-surface-muted);
+}
+
+.proof-modal-message {
+  margin: 24px 0;
+  color: var(--inv-text-muted);
+  text-align: center;
 }
 
 /* Plan badge — neutral chip, accent reserved for CTAs */
@@ -711,6 +852,10 @@
 }
 
 @media (max-width: 768px) {
+  .investments-page {
+    padding: 18px 14px 32px;
+  }
+
   .form-row {
     grid-template-columns: 1fr;
   }
@@ -732,6 +877,16 @@
 }
 
 @media (max-width: 576px) {
+  .payment-proof-field,
+  .payment-proof-upload {
+    width: 100%;
+    max-width: none;
+  }
+
+  .payment-proof-upload {
+    min-width: 0;
+  }
+
   .history-filter-form {
     grid-template-columns: 1fr;
   }

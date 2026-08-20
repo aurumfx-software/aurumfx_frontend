@@ -5,6 +5,8 @@ import {
   FiCheckCircle,
   FiTrendingUp,
   FiX,
+  FiSearch,
+  FiRefreshCw,
 } from "react-icons/fi";
 import UserLayout from "../../../components/User/UserLayout";
 import {
@@ -21,6 +23,8 @@ function EWallet() {
   const [transactions, setTransactions] = useState([]);
   const [txLoading, setTxLoading] = useState(true);
   const [txError, setTxError] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const [activeSearch, setActiveSearch] = useState("");
 
   const [detailOpen, setDetailOpen] = useState(false);
   const [detailData, setDetailData] = useState(null);
@@ -74,6 +78,23 @@ function EWallet() {
       return s || "-";
     }
   };
+
+  const handleSearch = () => {
+    setActiveSearch(searchInput.trim().toLowerCase());
+  };
+
+  const handleReset = () => {
+    setSearchInput("");
+    setActiveSearch("");
+  };
+
+  const filteredTransactions = activeSearch
+    ? transactions.filter((tx) => {
+        const investorId = String(tx.investor_id || tx.user_id || "").toLowerCase();
+        const investorName = String(tx.investor_name || tx.user_name || "").toLowerCase();
+        return investorId.includes(activeSearch) || investorName.includes(activeSearch);
+      })
+    : transactions;
 
   return (
     <UserLayout user={{ name: userName, userId }}>
@@ -160,6 +181,34 @@ function EWallet() {
           </div>
         </div>
 
+        <div className="ewallet-search-bar">
+          <div className="ewallet-search-input-wrap">
+            <FiSearch size={14} className="ewallet-search-icon" />
+            <input
+              type="text"
+              className="ewallet-search-input"
+              placeholder="Search by User ID or Name"
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleSearch();
+              }}
+            />
+          </div>
+          <button type="button" className="ewallet-search-btn" onClick={handleSearch}>
+            Search User
+          </button>
+          <button
+            type="button"
+            className="ewallet-search-reset"
+            onClick={handleReset}
+            disabled={!activeSearch && !searchInput}
+          >
+            <FiRefreshCw size={13} />
+            Reset
+          </button>
+        </div>
+
         {/* Commission history */}
         <div className="ewallet-table-card">
           <h2 className="section-title">Commission History</h2>
@@ -196,14 +245,16 @@ function EWallet() {
                       {txError}
                     </td>
                   </tr>
-                ) : transactions.length === 0 ? (
+                ) : filteredTransactions.length === 0 ? (
                   <tr>
                     <td colSpan="6" className="empty-cell">
-                      No commission records found.
+                      {activeSearch
+                        ? `No users found for “${searchInput.trim()}”.`
+                        : "No commission records found."}
                     </td>
                   </tr>
                 ) : (
-                  transactions.map((tx, idx) => {
+                  filteredTransactions.map((tx, idx) => {
                     const status = (tx.status || "").toString();
                     const statusClass =
                       status.toUpperCase() === "PENDING"

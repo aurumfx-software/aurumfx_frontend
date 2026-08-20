@@ -10,7 +10,7 @@ import {
   getProfileImageApi,
 } from "../../api/auth";
 import UserLayout from "../../components/User/UserLayout";
-import { NAV_ITEMS, normalizeStatus } from "./profileTabs/shared";
+import { NAV_ITEMS, hasBankSubmission, normalizeStatus } from "./profileTabs/shared";
 import OverviewTab from "./profileTabs/OverviewTab";
 import EditInfoTab from "./profileTabs/EditInfoTab";
 import SettingsTab from "./profileTabs/SettingsTab";
@@ -343,7 +343,11 @@ function Profile({ defaultTab = "profile" }) {
             nominee_aadhar: nd.nominee_aadhar || "",
             nominee_mobile: nd.nominee_mobile || "",
           });
-          setBankStatus(normalizeStatus(bd?.bank_status || bd?.status));
+          setBankStatus(
+            hasBankSubmission(bd, nd)
+              ? normalizeStatus(bd?.bank_status || bd?.status)
+              : "not_submitted"
+          );
           setBankRejectionReason(bd?.rejection_reason || "");
           setProofDocumentName(bd?.proof_document_name || bd?.proof_document || (bd?.bank_proof ? "Existing passbook proof" : ""));
           setProofDocumentUrl(bd?.bank_proof || bd?.proof_document || "");
@@ -381,7 +385,11 @@ function Profile({ defaultTab = "profile" }) {
         nominee_aadhar: nd.nominee_aadhar || prev.nominee_aadhar,
         nominee_mobile: nd.nominee_mobile || prev.nominee_mobile,
       }));
-      setBankStatus(normalizeStatus(bd.bank_status || bd.status));
+      setBankStatus(
+        hasBankSubmission(bd, nd)
+          ? normalizeStatus(bd.bank_status || bd.status)
+          : "not_submitted"
+      );
       setProofDocumentName(bd.bank_proof ? "Existing passbook proof" : "");
       setProofDocumentUrl(bd.bank_proof || "");
       setNomineeAadharFrontUrl(nd.nominee_aadhar_front || "");

@@ -15,9 +15,13 @@ const normalizePayoutItems = (payload) => {
   return [];
 };
 
-export const getMyPayoutHistoryApi = async () => {
+export const getMyPayoutHistoryApi = async (filters = {}) => {
   try {
-    const response = await api.get("/payout/history");
+    const params = {};
+    if (filters.start_date) params.start_date = filters.start_date;
+    if (filters.end_date) params.end_date = filters.end_date;
+
+    const response = await api.get("/payout/history", { params });
     const payload = response.data || {};
     const items = normalizePayoutItems(payload);
 

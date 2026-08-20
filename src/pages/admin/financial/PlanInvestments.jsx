@@ -15,13 +15,13 @@ import {
   createInvestmentPlanApi,
   updateInvestmentPlanApi,
   deleteInvestmentPlanApi,
-  MOCK_INVESTMENT_PLANS,
-} from "../../../api/plans";
+} from "../../../api/adminplans";
 import "./PlanInvestments.css";
 
 function PlanInvestments() {
-  const [plans, setPlans] = useState(MOCK_INVESTMENT_PLANS);
-  const [loading, setLoading] = useState(false);
+  const [plans, setPlans] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [listError, setListError] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
 
@@ -35,11 +35,7 @@ function PlanInvestments() {
     duration_months: "",
     return_percentage: "",
     minimum_amount: "",
-    commission_percentage: "",
-    daily_commission_limit: "",
     status: true,
-    admin_fee_percentage: "",
-    return_type: "Monthly",
   });
 
   const [formError, setFormError] = useState("");
@@ -51,9 +47,13 @@ function PlanInvestments() {
 
   const fetchPlans = async () => {
     setLoading(true);
+    setListError("");
     const res = await getInvestmentPlansApi();
     if (res.success && res.data) {
       setPlans(res.data);
+    } else {
+      setPlans([]);
+      setListError(res.error || "Unable to load investment plans.");
     }
     setLoading(false);
   };
@@ -70,10 +70,6 @@ function PlanInvestments() {
         duration_months: plan.duration_months ?? "",
         return_percentage: plan.return_percentage ?? "",
         minimum_amount: plan.minimum_amount ?? "",
-        commission_percentage: plan.commission_percentage ?? "",
-        daily_commission_limit: plan.daily_commission_limit ?? "",
-        admin_fee_percentage: plan.admin_fee_percentage ?? "",
-        return_type: plan.return_type || "Monthly",
         status: plan.status ?? true,
       });
     } else {
@@ -83,10 +79,6 @@ function PlanInvestments() {
         duration_months: 10,
         return_percentage: 14.0,
         minimum_amount: 5000,
-        commission_percentage: 5.0,
-        daily_commission_limit: 10000,
-        admin_fee_percentage: 2.0,
-        return_type: "Monthly",
         status: true,
       });
     }
@@ -128,9 +120,6 @@ function PlanInvestments() {
       duration_months: normalizeNumberValue(formData.duration_months),
       return_percentage: normalizeNumberValue(formData.return_percentage),
       minimum_amount: normalizeNumberValue(formData.minimum_amount),
-      commission_percentage: normalizeNumberValue(formData.commission_percentage),
-      daily_commission_limit: normalizeNumberValue(formData.daily_commission_limit),
-      admin_fee_percentage: normalizeNumberValue(formData.admin_fee_percentage),
     };
 
     if (editingPlan) {
@@ -150,7 +139,6 @@ function PlanInvestments() {
         const newPlan = {
           id: res.data?.id || Date.now(),
           ...sanitizedFormData,
-          return_type: sanitizedFormData.return_type || "Monthly",
         };
         setPlans([newPlan, ...plans]);
         setFormSuccess("Investment plan created successfully!");
@@ -259,17 +247,21 @@ function PlanInvestments() {
                   <th>Plan Name</th>
                   <th>Duration (Months)</th>
                   <th>Return (%)</th>
-                  <th>Return Type</th>
                   <th>Minimum Amount</th>
-                  <th>Commission (%)</th>
-                  <th>Daily Commission Limit</th>
-                  <th>Admin Fee (%)</th>
                   <th>Status</th>
                   <th className="text-right">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {filteredPlans.length > 0 ? (
+                {loading ? (
+                  <tr>
+                    <td colSpan="7" className="no-data-cell">Loading investment plans...</td>
+                  </tr>
+                ) : listError ? (
+                  <tr>
+                    <td colSpan="7" className="no-data-cell">{listError}</td>
+                  </tr>
+                ) : filteredPlans.length > 0 ? (
                   filteredPlans.map((plan, index) => (
                     <tr key={plan.id || index}>
                       <td>{index + 1}</td>
@@ -281,19 +273,9 @@ function PlanInvestments() {
                       <td className="text-green font-bold">
                         {Number(plan.return_percentage).toFixed(2)}%
                       </td>
-                      <td>
-                        <span className="modal-type-badge">
-                          {plan.return_type || "Monthly"}
-                        </span>
-                      </td>
                       <td className="amount-cell">
                         ₹{Number(plan.minimum_amount).toLocaleString()}
                       </td>
-                      <td>{Number(plan.commission_percentage).toFixed(2)}%</td>
-                      <td>
-                        ₹{Number(plan.daily_commission_limit).toLocaleString()}
-                      </td>
-                      <td>{Number(plan.admin_fee_percentage || 0).toFixed(2)}%</td>
                       <td>
                         <button
                           type="button"
@@ -338,7 +320,7 @@ function PlanInvestments() {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="9" className="no-data-cell">
+                    <td colSpan="7" className="no-data-cell">
                       No Investment Plans Found
                     </td>
                   </tr>
@@ -437,92 +419,7 @@ function PlanInvestments() {
                   />
                 </div>
 
-
-                {/* 5 & 6. Commission % & Daily Commission Limit */}
-                <div className="modal-field-row">
-                  <div className="modal-field">
-                    <label className="field-label">Commission (%)</label>
-                    <input
-                      type="number"
-                      placeholder="e.g. 5.0"
-                      value={formData.commission_percentage}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          commission_percentage: e.target.value,
-                        })
-                      }
-                      step="any"
-                    />
-                  </div>
-                  <div className="modal-field">
-                    <label className="field-label">
-                      Daily Commission Limit (₹)
-                    </label>
-                    <input
-                      type="number"
-                      placeholder="e.g. 10000"
-                      value={formData.daily_commission_limit}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          daily_commission_limit: e.target.value,
-                        })
-                      }
-                      step="any"
-                    />
-                  </div>
-                </div>
-
-                {/* Admin Fee (%) & Return Type */}
-                <div className="modal-field-row">
-                  <div className="modal-field">
-                    <label className="field-label">Admin Fee (%)</label>
-                    <input
-                      type="number"
-                      placeholder="e.g. 2.0"
-                      value={formData.admin_fee_percentage}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          admin_fee_percentage: e.target.value,
-                        })
-                      }
-                      step="any"
-                    />
-                  </div>
-                  <div className="modal-field">
-                    <label className="field-label">Return Type</label>
-                    <select
-                      className="modal-select"
-                      style={{
-                        border: "1.5px solid #cbd5e1",
-                        borderRadius: "8px",
-                        padding: "10px 14px",
-                        fontSize: "13.5px",
-                        color: "#1e293b",
-                        outline: "none",
-                        background: "#fff",
-                      }}
-                      value={formData.return_type}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          return_type: e.target.value,
-                        })
-                      }
-                    >
-                      <option value="Monthly">Monthly</option>
-                      <option value="Weekly">Weekly</option>
-                      <option value="Daily">Daily</option>
-                      <option value="Annual">Annual</option>
-                    </select>
-                  </div>
-                </div>
-
-
-
-                {/* 7. Status Toggle */}
+                {/* Status Toggle */}
                 <div className="modal-field status-toggle-field">
                   <label className="field-label">Status</label>
                   <div className="toggle-wrapper">

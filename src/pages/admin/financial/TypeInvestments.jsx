@@ -16,7 +16,7 @@ import {
   updateInvestmentTypeApi,
   deleteInvestmentTypeApi,
   MOCK_INVESTMENT_TYPES,
-} from "../../../api/investmentTypes";
+} from "../../../api/adminreturntype";
 import "./PlanInvestments.css";
 
 function TypeInvestments() {

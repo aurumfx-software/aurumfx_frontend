@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FiBell, FiMenu } from "react-icons/fi";
 import { getMyKycApi, getProfileBankDetailsApi } from "../../api/auth";
 import { logout } from "../../utils/auth";
+import { hasBankSubmission } from "../../pages/user/profileTabs/shared";
 import ThemeToggle from "../ThemeToggle/ThemeToggle";
 import "./UserHeader.css";
 
@@ -74,9 +75,11 @@ function UserHeader({ onMenuToggle, user }) {
             : "pending";
 
       const bankPayload = bankRes.success ? (bankRes.data?.data || bankRes.data || {}) : {};
-      const bank = normalizeStatus(
-        bankPayload.bank_details?.bank_status || bankPayload.bank_details?.status
-      );
+      const bankDetails = bankPayload.bank_details || {};
+      const nomineeDetails = bankPayload.nominee_details || {};
+      const bank = hasBankSubmission(bankDetails, nomineeDetails)
+        ? normalizeStatus(bankDetails.bank_status || bankDetails.status)
+        : "not_submitted";
       setVerificationStatuses({ kyc, bank });
     });
 
@@ -200,8 +203,13 @@ function UserHeader({ onMenuToggle, user }) {
           {dropdownOpen && (
             <div className="user-avatar-dropdown">
               <div className="dropdown-user-info">
-                <div className="dropdown-user-id">{userId}</div>
-                <div className="dropdown-user-email">{userEmail}</div>
+                <span className="dropdown-user-mark" aria-hidden="true">
+                  {String(userName || "P").charAt(0).toUpperCase()}
+                </span>
+                <div className="dropdown-user-details">
+                  <div className="dropdown-user-id">{userId}</div>
+                  <div className="dropdown-user-email">{userEmail}</div>
+                </div>
               </div>
               <div className="dropdown-menu-list">
                 <Link

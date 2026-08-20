@@ -757,6 +757,24 @@
   display: none;
 }
 
+[data-theme="dark"] .profile-page .upload-dropzone {
+  background: #11100d;
+  border-color: rgba(212, 175, 55, 0.32);
+  color: #d1d5db;
+}
+
+[data-theme="dark"] .profile-page .upload-dropzone:hover {
+  background: rgba(245, 208, 97, 0.12);
+  border-color: rgba(245, 208, 97, 0.45);
+  color: #f5d061;
+}
+
+[data-theme="dark"] .profile-page .upload-dropzone.is-filled {
+  background: rgba(52, 211, 153, 0.13);
+  border-color: #34d399;
+  color: #34d399;
+}
+
 /* ---------------------------------------------------------------------- */
 /* KYC — dynamic photo slots (2 for Aadhaar, 1 for everything else)        */
 /* ---------------------------------------------------------------------- */
@@ -814,6 +832,21 @@
   border-radius: 7px;
   background: var(--udb-surface);
   color: var(--udb-text-soft);
+}
+
+[data-theme="dark"] .profile-page .kyc-photo-preview,
+[data-theme="dark"] .profile-page .bank-document-preview {
+  background: #0a0a0a;
+}
+
+[data-theme="dark"] .profile-page .kyc-photo-preview img,
+[data-theme="dark"] .profile-page .bank-document-preview img {
+  background: #17150f;
+}
+
+[data-theme="dark"] .profile-page .kyc-photo-preview a,
+[data-theme="dark"] .profile-page .bank-document-preview a {
+  background: #0a0a0a;
 }
 
 .bank-document-preview {

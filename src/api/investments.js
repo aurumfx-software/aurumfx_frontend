@@ -4,23 +4,21 @@ import api from "./axios";
  * Create Investment via POST /investments/
  */
 export const createInvestmentApi = async (data) => {
-  const payload = {
-    investment_plan_id: Number(data.investment_plan_id) || 0,
-    return_type_id: Number(data.return_type_id) || 0,
-    amount: Number(data.amount) || 0,
-    bank_transaction_id: String(data.bank_transaction_id || "").trim(),
-    enroller_id: String(
-      data.enroller_id ||
-      localStorage.getItem("enrollerId") ||
-      localStorage.getItem("userId") ||
-      "FX034"
-    ).trim(),
-    investment_date:
-      data.investment_date || new Date().toISOString().split("T")[0],
-  };
+  const payload = new FormData();
+  payload.append("investment_plan_id", String(Number(data.investment_plan_id) || 0));
+  payload.append("amount", String(Number(data.amount) || 0));
+  payload.append("return_type_id", String(Number(data.return_type_id) || 0));
+  payload.append("bank_transaction_id", String(data.bank_transaction_id || "").trim());
+  payload.append(
+    "investment_date",
+    data.investment_date || new Date().toISOString().split("T")[0]
+  );
+  if (data.payment_proof) payload.append("payment_proof", data.payment_proof);
 
   try {
-    const response = await api.post("/investments", payload);
+    const response = await api.post("/investments", payload, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
     return { success: true, data: response.data };
   } catch (error) {
     let errorMessage =
@@ -61,7 +59,7 @@ export const getMyInvestmentsApi = async (filters = {}) => {
 export const getInvestmentDetailsApi = async (investmentId) => {
   try {
     const response = await api.get(`/investments/${investmentId}`);
-    return { success: true, data: response.data };
+    return { success: true, data: response.data?.data || response.data };
   } catch (error) {
     let errorMessage =
       error.response?.data?.message ||

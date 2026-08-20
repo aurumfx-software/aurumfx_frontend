@@ -1,17 +1,21 @@
 import { useState, useEffect } from "react";
-import { FiCalendar, FiDownload } from "react-icons/fi";
+import { FiCalendar, FiEye, FiUpload, FiX } from "react-icons/fi";
 import UserLayout from "../../../components/User/UserLayout";
 import {
   createInvestmentApi,
   getMyInvestmentsApi,
+  getInvestmentDetailsApi,
 } from "../../../api/investments";
-import { getInvestmentPlansApi } from "../../../api/plans";
-import { getInvestmentTypesApi } from "../../../api/investmentTypes";
+import { API_BASE_URL } from "../../../api/axios";
+import { getInvestmentPlansApi } from "../../../api/adminplans";
+import { getInvestmentTypesApi } from "../../../api/adminreturntype";
 import "./Investments.css";
 
 function Investments() {
   const [amount, setAmount] = useState("");
   const [bankTxId, setBankTxId] = useState("");
+  const [paymentProof, setPaymentProof] = useState(null);
+  const [paymentProofPreview, setPaymentProofPreview] = useState("");
 
   // NEW — plan & return type selection
   const [plans, setPlans] = useState([]);
@@ -30,6 +34,9 @@ function Investments() {
   const [investments, setInvestments] = useState([]);
   const [listLoading, setListLoading] = useState(true);
   const [listError, setListError] = useState("");
+  const [detailOpen, setDetailOpen] = useState(false);
+  const [detailLoading, setDetailLoading] = useState(false);
+  const [detailData, setDetailData] = useState(null);
 
   const loadInvestments = async (filters = {}) => {
     setListLoading(true);
@@ -65,6 +72,17 @@ function Investments() {
     loadOptions();
   }, []);
 
+  useEffect(() => {
+    if (!paymentProof) {
+      setPaymentProofPreview("");
+      return undefined;
+    }
+
+    const previewUrl = URL.createObjectURL(paymentProof);
+    setPaymentProofPreview(previewUrl);
+    return () => URL.revokeObjectURL(previewUrl);
+  }, [paymentProof]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSuccessMsg("");
@@ -79,6 +97,10 @@ function Investments() {
       setErrorMsg("Please enter a Bank Transaction ID");
       return;
     }
+    if (!paymentProof) {
+      setErrorMsg("Please upload the payment proof");
+      return;
+    }
     if (!selectedPlanId) {
       setErrorMsg("Please select an Investment Plan");
       return;
@@ -91,8 +113,8 @@ function Investments() {
       return_type_id: Number(selectedReturnTypeId) || 0,
       amount: numAmount,
       bank_transaction_id: bankTxId.trim(),
-      enroller_id: localStorage.getItem("userId") || "FX034",
       investment_date: new Date().toISOString().split("T")[0],
+      payment_proof: paymentProof,
     });
 
     if (!apiRes.success) {
@@ -104,9 +126,31 @@ function Investments() {
     setSuccessMsg("Investment request submitted successfully!");
     setAmount("");
     setBankTxId("");
+    setPaymentProof(null);
+    document.getElementById("payment-proof-upload").value = "";
     setLoading(false);
 
     await loadInvestments();
+  };
+
+  const handleProofClick = async (investmentId) => {
+    setDetailOpen(true);
+    setDetailLoading(true);
+    setDetailData(null);
+    const res = await getInvestmentDetailsApi(investmentId);
+    if (res.success) setDetailData(res.data);
+    setDetailLoading(false);
+  };
+
+  const resolveProofUrl = (path) => {
+    if (!path || path instanceof File || String(path).startsWith("blob:")) return "";
+    if (/^https?:\/\//i.test(path)) return path;
+    return `${API_BASE_URL.replace(/\/api\/?$/, "")}/${String(path).replace(/^\//, "")}`;
+  };
+
+  const getProofName = (path) => {
+    if (!path) return "View proof";
+    return decodeURIComponent(String(path).split("?")[0].split("/").pop() || "View proof");
   };
 
   const handleFilterSubmit = async (e) => {
@@ -213,6 +257,24 @@ function Investments() {
               </div>
             </div>
 
+            <div className="form-group payment-proof-field">
+              <label className="separated-label">Payment Proof</label>
+              <label className={`payment-proof-upload ${paymentProof ? "is-filled" : ""}`} htmlFor="payment-proof-upload">
+                {paymentProofPreview ? (
+                  <img className="payment-proof-thumb" src={paymentProofPreview} alt="Selected payment proof" />
+                ) : (
+                  <FiUpload />
+                )}
+                <span>{paymentProof ? paymentProof.name : "Add your payment proof"}</span>
+                <input
+                  id="payment-proof-upload"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setPaymentProof(e.target.files?.[0] || null)}
+                />
+              </label>
+            </div>
+
             {errorMsg && <p className="form-error-msg">{errorMsg}</p>}
             {successMsg && <p className="form-success-msg">{successMsg}</p>}
 
@@ -268,15 +330,16 @@ function Investments() {
                   <th>Investment Status</th>
                   <th>Approval Status</th>
                   <th>Investment Date</th>
+                  <th>Payment Proof</th>
                 </tr>
               </thead>
               <tbody>
                 {listLoading ? (
-                  <tr><td colSpan="13" className="empty-cell">Loading...</td></tr>
+                  <tr><td colSpan="14" className="empty-cell">Loading...</td></tr>
                 ) : listError ? (
-                  <tr><td colSpan="13" className="empty-cell">{listError}</td></tr>
+                  <tr><td colSpan="14" className="empty-cell">{listError}</td></tr>
                 ) : investments.length === 0 ? (
-                  <tr><td colSpan="13" className="empty-cell">No investments yet.</td></tr>
+                  <tr><td colSpan="14" className="empty-cell">No investments yet.</td></tr>
                 ) : (
                   investments.map((inv, idx) => (
                     <tr key={inv.id}>
@@ -293,6 +356,13 @@ function Investments() {
                       <td><span className="status-badge status--active">{inv.investment_status}</span></td>
                       <td><span className="status-badge status--approved">{inv.approval_status}</span></td>
                       <td className="date-cell">{inv.investment_date}</td>
+                      <td>
+                        {inv.payment_proof ? (
+                          <button type="button" className="proof-link" onClick={() => handleProofClick(inv.id)}>
+                            <FiEye size={14} /> {getProofName(inv.payment_proof)}
+                          </button>
+                        ) : "-"}
+                      </td>
                     </tr>
                   ))
                 )}
@@ -305,6 +375,26 @@ function Investments() {
             <button type="button" className="page-nav-btn" disabled>&gt;</button>
           </div>
         </div>
+
+        {detailOpen && (
+          <div className="proof-modal-backdrop" onClick={() => setDetailOpen(false)}>
+            <div className="proof-modal" onClick={(e) => e.stopPropagation()}>
+              <div className="proof-modal-header">
+                <h2>Payment Proof</h2>
+                <button type="button" className="proof-close-btn" onClick={() => setDetailOpen(false)} aria-label="Close">
+                  <FiX size={18} />
+                </button>
+              </div>
+              {detailLoading ? (
+                <p className="proof-modal-message">Loading...</p>
+              ) : detailData?.payment_proof ? (
+                <img className="payment-proof-preview" src={resolveProofUrl(detailData.payment_proof)} alt="Payment proof" />
+              ) : (
+                <p className="proof-modal-message">Payment proof is unavailable.</p>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </UserLayout>
   );

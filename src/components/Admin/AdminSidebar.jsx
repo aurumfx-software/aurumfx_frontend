@@ -50,7 +50,7 @@ const navItems = [
       },
       {
         id: "investment-type",
-        label: "Investment Type",
+        label: "Return Type",
         path: "/admin/financial/investment-type",
       },
           {

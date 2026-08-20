@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import {
   FiInfo,
   FiMessageSquare,
-  FiPlus,
   FiPaperclip,
   FiX,
   FiImage,
@@ -30,7 +29,6 @@ function HelpCenterPage() {
   const [listLoading, setListLoading] = useState(true);
   const [listError, setListError] = useState("");
 
-  const [showNewTicket, setShowNewTicket] = useState(false);
   const [ticketSubject, setTicketSubject] = useState("");
   const [ticketMsg, setTicketMsg] = useState("");
   const [ticketFile, setTicketFile] = useState(null);
@@ -134,7 +132,6 @@ function HelpCenterPage() {
 
     setTimeout(() => {
       setTicketSubmitted(false);
-      setShowNewTicket(false);
     }, 1800);
   };
 
@@ -197,17 +194,9 @@ function HelpCenterPage() {
               <FiMessageSquare className="card-header-icon" />
               <h2 className="section-title">Your Support Requests</h2>
             </div>
-            <button
-              type="button"
-              className="create-ticket-btn"
-              onClick={() => setShowNewTicket((v) => !v)}
-            >
-              <FiPlus /> <span>New Ticket</span>
-            </button>
           </div>
 
-          {showNewTicket && (
-            <form onSubmit={handleTicketSubmit} className="new-ticket-form">
+          <form onSubmit={handleTicketSubmit} className="new-ticket-form">
               <h4 className="form-title">How Can We Help?</h4>
 
               <div className="form-group">
@@ -290,8 +279,7 @@ function HelpCenterPage() {
               <button type="submit" className="submit-ticket-btn" disabled={submitting}>
                 {submitting ? "Submitting..." : "Submit Ticket"}
               </button>
-            </form>
-          )}
+          </form>
 
           <div className="tickets-table-card">
             <table className="tickets-table">

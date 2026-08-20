@@ -48,6 +48,25 @@ export const normalizeStatus = (raw) => {
   return "not_submitted";
 };
 
+export const hasBankSubmission = (bankDetails = {}, nomineeDetails = {}) => {
+  const submittedFields = [
+    bankDetails.bank_name,
+    bankDetails.bank_account,
+    bankDetails.account_number,
+    bankDetails.ifsc,
+    bankDetails.bank_proof,
+    bankDetails.proof_document,
+    nomineeDetails.nominee_name,
+    nomineeDetails.nominee_relation,
+    nomineeDetails.nominee_aadhar,
+    nomineeDetails.nominee_mobile,
+    nomineeDetails.nominee_aadhar_front,
+    nomineeDetails.nominee_aadhar_back,
+  ];
+
+  return submittedFields.some((value) => String(value || "").trim() !== "");
+};
+
 export const formatDocType = (value) => {
   const match = [
     ...KYC_DOC_TYPES,
