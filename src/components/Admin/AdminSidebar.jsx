@@ -91,6 +91,16 @@ const navItems = [
         label: "Genealogy",
         path: "/admin/genealogy",
       },
+      {
+        id: "enrollers",
+        label: "Enrolment",
+        path: "/admin/enrollers",
+      },
+      {
+        id: "genealogy-list",
+        label: "Genealogy List",
+        path: "/admin/genealogy/list",
+      },
     ],
   },
   {

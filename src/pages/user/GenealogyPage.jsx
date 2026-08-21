@@ -62,22 +62,42 @@ function filterByUser(list, query) {
   });
 }
 
-function FamNode({ node }) {
+function FamNode({ node, openNodeId, onToggleDetails, onHoverDetails }) {
   if (!node) return null;
 
   const id = node.user_id || node.userId || "-";
-  const name = node.name || node.full_name || "User";
+  const name = node.name || node.full_name || node.fullname || "User";
   const photo = node.photo || node.avatar || node.profile_image;
   const children = Array.isArray(node.children) ? node.children : [];
-  const isActive = node.status ? node.status === "active" : true;
+  const investmentStatus = String(node.investment_status || "INACTIVE").toUpperCase();
+  const isActive = investmentStatus === "ACTIVE";
+  const detailsOpen = openNodeId === id;
 
   return (
     <li>
-      <div className="fam-node">
+      <div
+        className={`fam-node ${detailsOpen ? "is-details-open" : ""}`}
+        role="button"
+        tabIndex={0}
+        onClick={() => onToggleDetails(id)}
+        onMouseEnter={() => onHoverDetails(id)}
+        onMouseLeave={() => onHoverDetails(null, id)}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            onToggleDetails(id);
+          }
+        }}
+        aria-expanded={detailsOpen}
+        aria-label={`Show details for ${name}`}
+      >
         <div className="fam-avatar" style={{ background: colorForId(id) }}>
           {photo ? <img src={photo} alt={name} /> : name.charAt(0).toUpperCase()}
         </div>
-        <span className={`fam-badge ${isActive ? "" : "is-inactive"}`}>{id}</span>
+        <span className={`fam-badge ${isActive ? "is-active" : "is-inactive"}`}>{id}</span>
+        <span className={`fam-investment-status ${isActive ? "is-active" : "is-inactive"}`}>
+          {investmentStatus}
+        </span>
 
         <div className="fam-tooltip">
           <div className="fam-tooltip-row">
@@ -86,7 +106,7 @@ function FamNode({ node }) {
           </div>
           <div className="fam-tooltip-row">
             <span>Date of Join</span>
-            <span>{node.date_of_join ? new Date(node.date_of_join).toLocaleDateString() : "-"}</span>
+            <span>{(node.date_of_joining || node.date_of_join) ? new Date(node.date_of_joining || node.date_of_join).toLocaleDateString() : "-"}</span>
           </div>
           <div className="fam-tooltip-row">
             <span>Rank</span>
@@ -100,6 +120,10 @@ function FamNode({ node }) {
             <span>Total Lots</span>
             <span>{Number(node.total_lots || 0)}</span>
           </div>
+          <div className="fam-tooltip-row">
+            <span>Investment Status</span>
+            <span>{investmentStatus}</span>
+          </div>
         </div>
       </div>
 
@@ -109,6 +133,9 @@ function FamNode({ node }) {
             <FamNode
               key={child.user_id || child.userId || `${id}-${Math.random()}`}
               node={child}
+              openNodeId={openNodeId}
+              onToggleDetails={onToggleDetails}
+              onHoverDetails={onHoverDetails}
             />
           ))}
         </ul>
@@ -119,10 +146,43 @@ function FamNode({ node }) {
 
 function FamilyOrgTree({ data }) {
   if (!data) return null;
+  const [openNodeId, setOpenNodeId] = useState(null);
+
+  const handleToggleDetails = (id) => {
+    setOpenNodeId((currentId) => (currentId === id ? null : id));
+  };
+
+  const handleHoverDetails = (id, previousId) => {
+    if (!window.matchMedia("(hover: hover)").matches) return;
+    setOpenNodeId((currentId) => {
+      if (id === null && currentId === previousId) return null;
+      return id || currentId;
+    });
+  };
+
+  useEffect(() => {
+    if (!openNodeId) return undefined;
+
+    const handleOutsideClick = (event) => {
+      const openNode = event.target.closest?.(".fam-node.is-details-open");
+      if (!openNode) {
+        setOpenNodeId(null);
+      }
+    };
+
+    document.addEventListener("pointerdown", handleOutsideClick);
+    return () => document.removeEventListener("pointerdown", handleOutsideClick);
+  }, [openNodeId]);
+
   return (
     <div className="fam-tree-scroll">
       <ul className="tree">
-        <FamNode node={data} />
+        <FamNode
+          node={data}
+          openNodeId={openNodeId}
+          onToggleDetails={handleToggleDetails}
+          onHoverDetails={handleHoverDetails}
+        />
       </ul>
     </div>
   );

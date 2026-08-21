@@ -1,19 +1,5 @@
 import api from "./axios";
 
-export const getAllGenealogyApi = async () => {
-  try {
-    const response = await api.get("/genealogy/");
-    const data = Array.isArray(response.data) ? response.data : response.data?.data || [];
-    return { success: true, data };
-  } catch (error) {
-    const message =
-      error.response?.data?.message ||
-      error.response?.data?.error ||
-      "Unable to load genealogy data.";
-    return { success: false, error: message };
-  }
-};
-
 export const getUserGenealogyApi = async () => {
   try {
     const response = await api.get("/user/genealogy/");

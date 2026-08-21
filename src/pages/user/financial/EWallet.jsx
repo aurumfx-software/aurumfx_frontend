@@ -4,15 +4,13 @@ import {
   FiClock,
   FiCheckCircle,
   FiTrendingUp,
-  FiX,
   FiSearch,
   FiRefreshCw,
 } from "react-icons/fi";
 import UserLayout from "../../../components/User/UserLayout";
 import {
   getWalletSummaryApi,
-  getCommissionHistoryApi,
-  getCommissionDetailsApi,
+  getWalletTransactionsApi,
 } from "../../../api/wallet";
 import "./EWallet.css";
 
@@ -26,10 +24,6 @@ function EWallet() {
   const [searchInput, setSearchInput] = useState("");
   const [activeSearch, setActiveSearch] = useState("");
 
-  const [detailOpen, setDetailOpen] = useState(false);
-  const [detailData, setDetailData] = useState(null);
-  const [detailLoading, setDetailLoading] = useState(false);
-
   useEffect(() => {
     const load = async () => {
       setSummaryLoading(true);
@@ -38,7 +32,8 @@ function EWallet() {
       setSummaryLoading(false);
 
       setTxLoading(true);
-      const txRes = await getCommissionHistoryApi();
+      setTxError("");
+      const txRes = await getWalletTransactionsApi();
       if (txRes.success) {
         setTransactions(txRes.data || []);
       } else {
@@ -48,16 +43,6 @@ function EWallet() {
     };
     load();
   }, []);
-
-  const handleRowClick = async (id) => {
-    if (id === undefined || id === null) return;
-    setDetailOpen(true);
-    setDetailLoading(true);
-    setDetailData(null);
-    const res = await getCommissionDetailsApi(id);
-    if (res.success) setDetailData(res.data);
-    setDetailLoading(false);
-  };
 
   const userId = localStorage.getItem("userId") || "FX256";
   const userName = localStorage.getItem("userName") || "SUCHITHRA";
@@ -90,9 +75,9 @@ function EWallet() {
 
   const filteredTransactions = activeSearch
     ? transactions.filter((tx) => {
-        const investorId = String(tx.investor_id || tx.user_id || "").toLowerCase();
-        const investorName = String(tx.investor_name || tx.user_name || "").toLowerCase();
-        return investorId.includes(activeSearch) || investorName.includes(activeSearch);
+        const fromUserId = String(tx.from_user?.user_id || tx.from_user_id || tx.user_id || "").toLowerCase();
+        const fromUserName = String(tx.from_user?.name || tx.from_user?.fullname || tx.user_name || "").toLowerCase();
+        return fromUserId.includes(activeSearch) || fromUserName.includes(activeSearch);
       })
     : transactions;
 
@@ -123,17 +108,15 @@ function EWallet() {
         <div className="balance-hero">
           <div className="balance-hero-left">
             <span className="balance-hero-label">
-              <FiDollarSign /> Available Balance
+              <FiDollarSign /> Total Amount
             </span>
             <div className="balance-hero-value">
-              {summaryLoading ? "—" : money(summary?.available_balance)}
+              {summaryLoading ? "—" : money(summary?.total_amount)}
             </div>
             <span className="balance-hero-sub">
-              Today's earning:{" "}
+              Amount:{" "}
               <strong>
-                {summaryLoading
-                  ? "—"
-                  : money(summary?.today_generated_commission)}
+                {summaryLoading ? "—" : money(summary?.amount)}
               </strong>
             </span>
           </div>
@@ -146,9 +129,9 @@ function EWallet() {
               <FiClock />
             </div>
             <div className="metric-body">
-              <span className="metric-label">Pending Commission</span>
+              <span className="metric-label">Pending Balance</span>
               <span className="metric-value">
-                {summaryLoading ? "—" : money(summary?.pending_commission)}
+                {summaryLoading ? "—" : money(summary?.pending_balance)}
               </span>
             </div>
           </div>
@@ -158,9 +141,9 @@ function EWallet() {
               <FiCheckCircle />
             </div>
             <div className="metric-body">
-              <span className="metric-label">Paid Commission</span>
+              <span className="metric-label">Amount</span>
               <span className="metric-value">
-                {summaryLoading ? "—" : money(summary?.paid_commission)}
+                {summaryLoading ? "—" : money(summary?.amount)}
               </span>
             </div>
           </div>
@@ -170,12 +153,9 @@ function EWallet() {
               <FiTrendingUp />
             </div>
             <div className="metric-body">
-              <span className="metric-label">Gross Commission</span>
+              <span className="metric-label">Admin Fee</span>
               <span className="metric-value">
-                {summaryLoading ? "—" : money(summary?.gross_commission)}
-              </span>
-              <span className="metric-footnote">
-                Admin fee: {summaryLoading ? "—" : money(summary?.admin_fee)}
+                {summaryLoading ? "—" : money(summary?.admin_fee)}
               </span>
             </div>
           </div>
@@ -209,25 +189,21 @@ function EWallet() {
           </button>
         </div>
 
-        {/* Commission history */}
+        {/* Wallet transaction history */}
         <div className="ewallet-table-card">
-          <h2 className="section-title">Commission History</h2>
+          <h2 className="section-title">Transaction History</h2>
           <div className="table-responsive">
             <table className="ewallet-table ewallet-table--clean">
               <colgroup>
-                <col />
-                <col />
-                <col />
-                <col />
-                <col />
-                <col />
+                <col /><col /><col /><col /><col /><col /><col />
               </colgroup>
               <thead>
                 <tr>
-                  <th>Investor</th>
-                  <th>Investment</th>
-                  <th>Commission</th>
-                  <th>Paid</th>
+                  <th>ID</th>
+                  <th>From User (Name / ID)</th>
+                  <th>Transaction Type</th>
+                  <th>Payment Type</th>
+                  <th>Amount</th>
                   <th>Status</th>
                   <th>Date</th>
                 </tr>
@@ -235,22 +211,22 @@ function EWallet() {
               <tbody>
                 {txLoading ? (
                   <tr>
-                    <td colSpan="6" className="empty-cell">
+                    <td colSpan="7" className="empty-cell">
                       Loading...
                     </td>
                   </tr>
                 ) : txError ? (
                   <tr>
-                    <td colSpan="6" className="empty-cell">
+                    <td colSpan="7" className="empty-cell">
                       {txError}
                     </td>
                   </tr>
                 ) : filteredTransactions.length === 0 ? (
                   <tr>
-                    <td colSpan="6" className="empty-cell">
+                    <td colSpan="7" className="empty-cell">
                       {activeSearch
                         ? `No users found for “${searchInput.trim()}”.`
-                        : "No commission records found."}
+                        : "No wallet transactions found."}
                     </td>
                   </tr>
                 ) : (
@@ -266,33 +242,27 @@ function EWallet() {
                     return (
                       <tr
                         key={tx.id ?? idx}
-                        onClick={() => handleRowClick(tx.id)}
-                        className={tx.id !== undefined ? "row--clickable" : ""}
+                        className="transaction-row"
                       >
-                        <td className="investor-cell">
+                        <td data-label="ID">{tx.id ?? "-"}</td>
+                        <td className="investor-cell" data-label="From User">
                           <span className="investor-name">
-                            {tx.investor_name ?? "-"}
+                            Name: {tx.from_user?.name || tx.from_user?.fullname || tx.from_user?.full_name || tx.from_user_name || "-"}
                           </span>
                           <span className="investor-id">
-                            {tx.investor_id ?? ""}
+                            ID: {tx.from_user?.user_id || tx.from_user?.id || tx.from_user_id || "-"}
                           </span>
                         </td>
-                        <td className="cell-amount">
-                          {money(tx.investment_amount)}
-                        </td>
-                        <td className="cell-gross">
-                          {money(tx.gross_commission)}
-                        </td>
-                        <td className="cell-paid">
-                          {money(tx.paid_amount)}
-                        </td>
-                        <td>
+                        <td data-label="Transaction Type">{tx.transaction_type || "-"}</td>
+                        <td data-label="Payment Type">{tx.payment_type || "-"}</td>
+                        <td className="cell-amount" data-label="Amount">{money(tx.amount)}</td>
+                        <td data-label="Status">
                           <span className={`status-pill ${statusClass}`}>
                             {status || "-"}
                           </span>
                         </td>
-                        <td className="date-cell">
-                          {formatDate(tx.created_at)}
+                        <td className="date-cell" data-label="Date">
+                          {formatDate(tx.date || tx.created_at)}
                         </td>
                       </tr>
                     );
@@ -302,72 +272,8 @@ function EWallet() {
             </table>
           </div>
         </div>
-
-        {/* Detail popup */}
-        {detailOpen && (
-          <div className="modal-backdrop" onClick={() => setDetailOpen(false)}>
-            <div className="modal-container" onClick={(e) => e.stopPropagation()}>
-              <div className="modal-header">
-                <h3>Commission Detail</h3>
-                <button
-                  className="modal-close-btn"
-                  onClick={() => setDetailOpen(false)}
-                >
-                  <FiX size={18} />
-                </button>
-              </div>
-              <div className="modal-body">
-                {detailLoading ? (
-                  <p>Loading...</p>
-                ) : detailData ? (
-                  <div className="detail-grid">
-                    <DetailRow label="Investor" value={detailData.investor_name} />
-                    <DetailRow
-                      label="Investment Amount"
-                      value={money(detailData.investment_amount)}
-                    />
-                    <DetailRow
-                      label="Commission %"
-                      value={`${detailData.commission_percentage ?? "-"}%`}
-                    />
-                    <DetailRow
-                      label="Gross Commission"
-                      value={money(detailData.gross_commission)}
-                    />
-                    <DetailRow
-                      label="Admin Fee"
-                      value={`${money(detailData.admin_fee_amount)} (${
-                        detailData.admin_fee_percentage ?? "-"
-                      }%)`}
-                    />
-                    <DetailRow
-                      label="Paid Amount"
-                      value={money(detailData.paid_amount)}
-                    />
-                    <DetailRow label="Status" value={detailData.status} />
-                    <DetailRow
-                      label="Date"
-                      value={formatDate(detailData.created_at)}
-                    />
-                  </div>
-                ) : (
-                  <p>Unable to load detail.</p>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </UserLayout>
-  );
-}
-
-function DetailRow({ label, value }) {
-  return (
-    <div className="detail-row">
-      <span className="detail-label">{label}</span>
-      <span className="detail-value">{value ?? "-"}</span>
-    </div>
   );
 }
 

@@ -738,6 +738,56 @@
   color: var(--gen-danger);
 }
 
+.fam-badge.is-active {
+  border-left-color: #16a34a;
+  color: #15803d;
+}
+
+.fam-investment-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 5px;
+  padding: 3px 8px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-family: var(--gen-font-mono);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  line-height: 1;
+}
+
+.fam-investment-status::before {
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.fam-investment-status.is-active {
+  color: #15803d;
+  background: rgba(22, 163, 74, 0.1);
+  border-color: rgba(22, 163, 74, 0.22);
+}
+
+.fam-investment-status.is-inactive {
+  color: var(--gen-danger);
+  background: var(--gen-danger-soft);
+  border-color: rgba(220, 38, 38, 0.18);
+}
+
+[data-theme="dark"] .fam-badge.is-active {
+  color: #4ade80;
+}
+
+[data-theme="dark"] .fam-investment-status.is-active {
+  color: #4ade80;
+  background: rgba(74, 222, 128, 0.12);
+  border-color: rgba(74, 222, 128, 0.25);
+}
+
 /* Tooltip */
 .fam-tooltip {
   display: none;
@@ -775,6 +825,18 @@
   display: block;
   opacity: 1;
   transform: translateX(-50%) translateY(0);
+}
+
+.fam-node.is-details-open .fam-tooltip {
+  display: block;
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+
+.fam-tree-scroll:has(.fam-node.is-details-open) .fam-node:hover:not(.is-details-open) .fam-tooltip {
+  display: none;
+  opacity: 0;
 }
 
 .fam-tooltip-row {

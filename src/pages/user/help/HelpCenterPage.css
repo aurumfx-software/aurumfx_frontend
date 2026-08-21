@@ -659,6 +659,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow-y: auto;
   padding: 20px;
   background: rgba(20, 14, 8, 0.45);
   backdrop-filter: blur(2px);
@@ -666,8 +667,11 @@
 
 .ticket-detail-modal {
   width: min(100%, 560px);
-  max-height: min(720px, 90vh);
-  overflow-y: auto;
+  max-height: min(720px, calc(100dvh - 40px));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  margin: 0;
   border: 1px solid var(--hc-border);
   border-radius: var(--hc-radius-lg);
   background: var(--hc-surface);
@@ -676,12 +680,18 @@
 
 .ticket-detail-header {
   display: flex;
+  flex-shrink: 0;
   align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
   padding: 20px 22px;
   border-bottom: 1px solid var(--hc-border);
   background: var(--hc-accent-soft);
+}
+
+.ticket-detail-modal-body {
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .detail-kicker {
@@ -800,5 +810,16 @@
   .tickets-table thead th,
   .tickets-table tbody td {
     padding: 11px 12px;
+  }
+
+  .ticket-detail-backdrop {
+    align-items: center;
+    padding: max(12px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom));
+  }
+
+  .ticket-detail-modal {
+    width: 100%;
+    max-height: calc(100dvh - 24px);
+    margin: 0 auto;
   }
 }

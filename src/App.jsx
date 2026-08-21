@@ -16,6 +16,8 @@ import AdminHoldingTank from "./pages/admin/members/AdminHoldingTank";
 import AdminBankApprove from "./pages/admin/members/AdminBankApprove";
 import AdminKYCDetails from "./pages/admin/members/AdminKYCDetails";
 import GenealogyPage from "./pages/admin/members/GenealogyPage";
+import GenealogyListPage from "./pages/admin/members/GenealogyListPage";
+import AdminEnrollersPage from "./pages/admin/members/AdminEnrollersPage";
 import AdminModulePage from "./pages/admin/AdminModulePage";
 import AdminHelpCenter from "./pages/admin/help/AdminHelpCenter";
 import BrandSettings from "./pages/admin/settings/BrandSettings";
@@ -452,6 +454,22 @@ function App() {
           element={
             <ProtectedRoute requiredRole="admin">
               <GenealogyPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/genealogy/list"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <GenealogyListPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/enrollers"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminEnrollersPage />
             </ProtectedRoute>
           }
         />

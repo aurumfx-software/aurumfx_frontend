@@ -318,45 +318,49 @@ function Investments() {
             <table className="investments-table">
               <thead>
                 <tr>
-                  <th>No</th>
+                  <th>ID</th>
                   <th>Investment ID</th>
-                  <th>Plan</th>
-                  <th>Invest Amount</th>
+                  <th>Investment Date</th>
+                  <th>Plan Name</th>
+                  <th>Return Type</th>
+                  <th>Investment Amount</th>
                   <th>Lots</th>
-                  <th>Return %</th>
-                  <th>Monthly Return</th>
-                  <th>Return Which</th>
-                  <th>Return Balance</th>
+                  <th>Monthly Return %</th>
+                  <th>Monthly Return Amount</th>
+                  <th>Total Returns</th>
+                  <th>Returns Paid</th>
+                  <th>Returns Remaining</th>
                   <th>Return Date</th>
                   <th>Investment Status</th>
                   <th>Approval Status</th>
-                  <th>Investment Date</th>
                   <th>Payment Proof</th>
                 </tr>
               </thead>
               <tbody>
                 {listLoading ? (
-                  <tr><td colSpan="14" className="empty-cell">Loading...</td></tr>
+                  <tr><td colSpan="16" className="empty-cell">Loading...</td></tr>
                 ) : listError ? (
-                  <tr><td colSpan="14" className="empty-cell">{listError}</td></tr>
+                  <tr><td colSpan="16" className="empty-cell">{listError}</td></tr>
                 ) : investments.length === 0 ? (
-                  <tr><td colSpan="14" className="empty-cell">No investments yet.</td></tr>
+                  <tr><td colSpan="16" className="empty-cell">No investments yet.</td></tr>
                 ) : (
                   investments.map((inv, idx) => (
                     <tr key={inv.id}>
                       <td>{idx + 1}</td>
                       <td>{inv.investment_id}</td>
+                      <td className="date-cell">{inv.investment_date}</td>
                       <td><span className="modal-type-badge">{inv.plan_name}</span></td>
+                      <td>{inv.return_type || inv.return_type_name || inv.return_which || "-"}</td>
                       <td className="amount-cell">₹{Number(inv.amount).toLocaleString()}</td>
                       <td>{inv.lots}</td>
                       <td>{inv.monthly_return_percentage}%</td>
                       <td>₹{Number(inv.monthly_return_amount).toLocaleString()}</td>
-                      <td>{inv.return_which}</td>
-                      <td>₹{Number(inv.return_balance).toLocaleString()}</td>
+                      <td>₹{Number(inv.total_returns ?? inv.total_return ?? 0).toLocaleString()}</td>
+                      <td>₹{Number(inv.returns_paid ?? inv.paid_returns ?? 0).toLocaleString()}</td>
+                      <td>₹{Number(inv.returns_remaining ?? inv.remaining_returns ?? inv.return_balance ?? 0).toLocaleString()}</td>
                       <td className="date-cell">{inv.return_date}</td>
                       <td><span className="status-badge status--active">{inv.investment_status}</span></td>
                       <td><span className="status-badge status--approved">{inv.approval_status}</span></td>
-                      <td className="date-cell">{inv.investment_date}</td>
                       <td>
                         {inv.payment_proof ? (
                           <button type="button" className="proof-link" onClick={() => handleProofClick(inv.id)}>

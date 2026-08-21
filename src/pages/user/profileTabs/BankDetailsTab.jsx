@@ -3,6 +3,14 @@ import { FiDownload } from "react-icons/fi";
 import { API_BASE_URL } from "../../../api/axios";
 import { StatusBadge, DocRow, maskAccount } from "./shared";
 
+const shortFileName = (value) => {
+  const name = String(value || "");
+  if (name.length <= 24) return name;
+  const extensionIndex = name.lastIndexOf(".");
+  const extension = extensionIndex > 0 ? name.slice(extensionIndex) : "";
+  return `${name.slice(0, Math.max(10, 21 - extension.length))}...${extension}`;
+};
+
 function BankDetailsTab({
   bankDetails,
   setBankDetails,
@@ -133,7 +141,7 @@ function BankDetailsTab({
               </label>
               <label className={`upload-dropzone ${proofDocument ? "is-filled" : ""}`} htmlFor="bank-proof-upload">
                 <FiUpload />
-                <span>{proofDocument ? proofDocument.name : proofDocumentName || "Choose passbook photo"}</span>
+                <span className="upload-file-name" title={proofDocument?.name || proofDocumentName}>{shortFileName(proofDocument?.name || proofDocumentName || "Choose passbook photo")}</span>
                 <input
                   id="bank-proof-upload"
                   type="file"
@@ -269,7 +277,7 @@ function BankDetailsTab({
                 htmlFor="nominee-aadhar-front-upload"
               >
                 <FiUpload />
-                <span>{nomineeAadharFront ? nomineeAadharFront.name : getFileLabel(nomineeAadharFrontUrl, "Existing front photo")}</span>
+                <span className="upload-file-name" title={nomineeAadharFront?.name || getFileLabel(nomineeAadharFrontUrl, "Existing front photo")}>{shortFileName(nomineeAadharFront?.name || getFileLabel(nomineeAadharFrontUrl, "Existing front photo"))}</span>
                 <input
                   id="nominee-aadhar-front-upload"
                   type="file"
@@ -288,7 +296,7 @@ function BankDetailsTab({
                 htmlFor="nominee-aadhar-back-upload"
               >
                 <FiUpload />
-                <span>{nomineeAadharBack ? nomineeAadharBack.name : getFileLabel(nomineeAadharBackUrl, "Existing back photo")}</span>
+                <span className="upload-file-name" title={nomineeAadharBack?.name || getFileLabel(nomineeAadharBackUrl, "Existing back photo")}>{shortFileName(nomineeAadharBack?.name || getFileLabel(nomineeAadharBackUrl, "Existing back photo"))}</span>
                 <input
                   id="nominee-aadhar-back-upload"
                   type="file"

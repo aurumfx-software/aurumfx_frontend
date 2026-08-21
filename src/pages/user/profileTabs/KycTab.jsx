@@ -12,6 +12,14 @@ import {
   KYC_DOC_TYPE_PAN,
 } from "./shared";
 
+const shortFileName = (value) => {
+  const name = String(value || "");
+  if (name.length <= 24) return name;
+  const extensionIndex = name.lastIndexOf(".");
+  const extension = extensionIndex > 0 ? name.slice(extensionIndex) : "";
+  return `${name.slice(0, Math.max(10, 21 - extension.length))}...${extension}`;
+};
+
 function KycTab({ profileData, setProfileData }) {
   const [aadhaarNumber, setAadhaarNumber] = useState(profileData?.aadharNo || "");
   const [panNumber, setPanNumber] = useState(profileData?.pan || "");
@@ -210,7 +218,7 @@ function KycTab({ profileData, setProfileData }) {
               htmlFor="aadhaar-front-upload"
             >
               <FiUpload />
-              <span>{aadhaarFront ? aadhaarFront.name : getDocumentFileName(KYC_DOC_TYPE_AADHAAR_FRONT) || "Choose front photo"}</span>
+              <span className="upload-file-name" title={aadhaarFront?.name || getDocumentFileName(KYC_DOC_TYPE_AADHAAR_FRONT)}>{shortFileName(aadhaarFront?.name || getDocumentFileName(KYC_DOC_TYPE_AADHAAR_FRONT) || "Choose front photo")}</span>
               <input
                 id="aadhaar-front-upload"
                 type="file"
@@ -233,7 +241,7 @@ function KycTab({ profileData, setProfileData }) {
               htmlFor="aadhaar-back-upload"
             >
               <FiUpload />
-              <span>{aadhaarBack ? aadhaarBack.name : getDocumentFileName(KYC_DOC_TYPE_AADHAAR_BACK, "back") || "Choose back photo"}</span>
+              <span className="upload-file-name" title={aadhaarBack?.name || getDocumentFileName(KYC_DOC_TYPE_AADHAAR_BACK, "back")}>{shortFileName(aadhaarBack?.name || getDocumentFileName(KYC_DOC_TYPE_AADHAAR_BACK, "back") || "Choose back photo")}</span>
               <input
                 id="aadhaar-back-upload"
                 type="file"
@@ -270,7 +278,7 @@ function KycTab({ profileData, setProfileData }) {
             <span className="kyc-photo-slot-label">PAN Card Photo</span>
             <label className={`upload-dropzone ${panFile ? "is-filled" : ""} ${kycLocked ? "is-disabled" : ""}`} htmlFor="pan-upload">
               <FiUpload />
-              <span>{panFile ? panFile.name : getDocumentFileName(KYC_DOC_TYPE_PAN) || "Choose PAN card photo"}</span>
+              <span className="upload-file-name" title={panFile?.name || getDocumentFileName(KYC_DOC_TYPE_PAN)}>{shortFileName(panFile?.name || getDocumentFileName(KYC_DOC_TYPE_PAN) || "Choose PAN card photo")}</span>
               <input
                 id="pan-upload"
                 type="file"

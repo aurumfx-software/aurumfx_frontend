@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { loginApi } from "../../api/auth";
 import logo from "../../assets/logo.png";
+import ThemeToggle from "../../components/ThemeToggle/ThemeToggle";
 import "./Login.css";
 import "./AdminLogin.css";
 
@@ -38,6 +39,9 @@ function AdminLogin() {
   return (
     <div className="login-page admin-login-page">
       <div className="login-card">
+        <div className="admin-login-theme-toggle">
+          <ThemeToggle variant="auth" />
+        </div>
         <img src={logo} alt="AurumFX Logo" className="logo" />
 
         <div className="admin-badge">🔒 Restricted Access</div>

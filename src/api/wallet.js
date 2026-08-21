@@ -17,18 +17,21 @@ export const getWalletSummaryApi = async () => {
 };
 
 /**
- * Commission History via GET /wallet/commissions
+ * Wallet Transaction History via GET /wallet/transactions
  */
-export const getCommissionHistoryApi = async () => {
+export const getWalletTransactionsApi = async () => {
   try {
-    const response = await api.get("/wallet/commissions");
-    const data = response.data;
-    return { success: true, data: Array.isArray(data) ? data : (data?.data || []) };
+    const response = await api.get("/wallet/transactions");
+    const payload = response.data;
+    const data = Array.isArray(payload)
+      ? payload
+      : payload?.transactions || payload?.data?.transactions || payload?.data || [];
+    return { success: true, data: Array.isArray(data) ? data : [] };
   } catch (error) {
     let errorMessage =
       error.response?.data?.message ||
       error.response?.data?.error ||
-      "Unable to load commission history";
+      "Unable to load wallet transaction history";
     return { success: false, error: errorMessage };
   }
 };

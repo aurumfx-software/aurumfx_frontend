@@ -19,6 +19,8 @@ import {
 import UserLayout from "../../components/User/UserLayout";
 import UserRankCard from "../../components/User/UserRankCard";
 import { getUserDashboardData } from "../../api/dashboard";
+import { getMyKycApi, getProfileBankDetailsApi } from "../../api/auth";
+import { hasBankSubmission, normalizeStatus } from "./profileTabs/shared";
 import "./UserDashboard.css";
 
 function getInitials(name) {
@@ -87,10 +89,15 @@ function TeamSparkline() {
   );
 }
 
+// Neutral, flat-ish sample shape used only to preview the chart interface
+// before the user has any real income — never treated as real data.
+const INCOME_CHART_PLACEHOLDER_VALUES = [2, 2.6, 2.2, 3, 2.5, 3.4];
+
 function UserDashboard() {
   const navigate = useNavigate();
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [verificationPrompt, setVerificationPrompt] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -104,6 +111,38 @@ function UserDashboard() {
         console.error("Error loading dashboard data:", err);
         if (isMounted) setLoading(false);
       });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    Promise.all([getMyKycApi(), getProfileBankDetailsApi()]).then(([kycRes, bankRes]) => {
+      if (!isMounted) return;
+
+      const kycPayload = kycRes.success ? (kycRes.data?.data || kycRes.data || {}) : {};
+      const kycDocuments = Array.isArray(kycPayload)
+        ? kycPayload
+        : kycPayload.documents || kycPayload.kyc_documents || (kycPayload.document_type ? [kycPayload] : []);
+      const bankPayload = bankRes.success ? (bankRes.data?.data || bankRes.data || {}) : {};
+      const bankDetails = bankPayload.bank_details || {};
+      const nomineeDetails = bankPayload.nominee_details || {};
+      const bankSubmitted = hasBankSubmission(bankDetails, nomineeDetails);
+      const prompts = [];
+      const kycRejected = kycDocuments.some((document) => normalizeStatus(document.status) === "rejected");
+      const bankRejected = normalizeStatus(
+        bankDetails.bank_status || bankDetails.status || bankPayload.bank_status || bankPayload.status
+      ) === "rejected";
+
+      if (!kycDocuments.length) prompts.push({ type: "kyc", status: "missing" });
+      else if (kycRejected) prompts.push({ type: "kyc", status: "rejected" });
+      if (!bankSubmitted) prompts.push({ type: "bank", status: "missing" });
+      else if (bankRejected) prompts.push({ type: "bank", status: "rejected" });
+      setVerificationPrompt(prompts.length ? prompts : null);
+    });
 
     return () => {
       isMounted = false;
@@ -139,7 +178,14 @@ function UserDashboard() {
   const CHART_H = 200;
   const incomeValues = incomeChart.map((m) => m.totalIncome);
   const hasIncomeData = incomeValues.some((v) => v > 0);
-  const { line, area, points } = buildLinePath(incomeValues, CHART_W, CHART_H);
+
+  // Always render a chart shape — real income in gold, or a muted placeholder
+  // shape that just previews the chart UI until real income comes in.
+  const chartSourceValues = hasIncomeData ? incomeValues : INCOME_CHART_PLACEHOLDER_VALUES;
+  const { line, area, points } = buildLinePath(chartSourceValues, CHART_W, CHART_H);
+  const chartMonthLabels = hasIncomeData
+    ? incomeChart.map((m) => m.monthName)
+    : chartSourceValues.map(() => "");
 
   const firstIncome = incomeValues[0] ?? 0;
   const lastIncome = incomeValues[incomeValues.length - 1] ?? 0;
@@ -175,6 +221,7 @@ function UserDashboard() {
               Signed in as <strong>{user.userId}</strong>
             </span>
           </div>
+
         </div>
 
         <div className="user-dashboard-grid">
@@ -313,62 +360,79 @@ function UserDashboard() {
                 </div>
               </div>
 
-              {hasIncomeData ? (
-                <div className="income-chart-svg-wrap">
-                  <svg
-                    viewBox={`0 0 ${CHART_W} ${CHART_H}`}
-                    className="income-chart-svg"
-                    preserveAspectRatio="none"
-                  >
-                    <defs>
-                      <linearGradient id="incomeFill" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="var(--udb-accent)" stopOpacity="0.35" />
-                        <stop offset="100%" stopColor="var(--udb-accent)" stopOpacity="0" />
-                      </linearGradient>
-                    </defs>
-                    <path d={area} fill="url(#incomeFill)" stroke="none" />
-                    <path
-                      d={line}
-                      fill="none"
-                      stroke="var(--udb-accent)"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    {points.map(([x, y], i) => (
-                      <circle
-                        key={i}
-                        cx={x}
-                        cy={y}
-                        r="4"
-                        fill="var(--udb-surface)"
-                        stroke="var(--udb-accent)"
-                        strokeWidth="2"
-                      >
+              {/* Chart is always shown: a muted, dashed placeholder shape before
+                  the user has real income, and the real gold trend line once
+                  income starts coming in. */}
+              <div
+                className={`income-chart-svg-wrap ${hasIncomeData ? "" : "is-placeholder"}`}
+              >
+                <svg
+                  viewBox={`0 0 ${CHART_W} ${CHART_H}`}
+                  className="income-chart-svg"
+                  preserveAspectRatio="none"
+                >
+                  <defs>
+                    <linearGradient id="incomeFill" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="var(--udb-accent)" stopOpacity="0.35" />
+                      <stop offset="100%" stopColor="var(--udb-accent)" stopOpacity="0" />
+                    </linearGradient>
+                    <linearGradient id="incomeFillMuted" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="var(--udb-chart-muted)" stopOpacity="0.25" />
+                      <stop offset="100%" stopColor="var(--udb-chart-muted)" stopOpacity="0" />
+                    </linearGradient>
+                  </defs>
+                  <path
+                    d={area}
+                    fill={hasIncomeData ? "url(#incomeFill)" : "url(#incomeFillMuted)"}
+                    stroke="none"
+                  />
+                  <path
+                    d={line}
+                    fill="none"
+                    stroke={hasIncomeData ? "var(--udb-accent)" : "var(--udb-chart-muted)"}
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeDasharray={hasIncomeData ? undefined : "6 6"}
+                  />
+                  {points.map(([x, y], i) => (
+                    <circle
+                      key={i}
+                      cx={x}
+                      cy={y}
+                      r="4"
+                      fill="var(--udb-surface)"
+                      stroke={hasIncomeData ? "var(--udb-accent)" : "var(--udb-chart-muted)"}
+                      strokeWidth="2"
+                    >
+                      {hasIncomeData && incomeChart[i] && (
                         <title>
                           {incomeChart[i].monthName}: {fmt(incomeChart[i].totalIncome)}
                         </title>
-                      </circle>
-                    ))}
-                  </svg>
-                  <div className="income-chart-labels">
-                    {incomeChart.map((m) => (
-                      <span key={m.label}>{m.monthName}</span>
-                    ))}
-                  </div>
+                      )}
+                    </circle>
+                  ))}
+                </svg>
+                <div className="income-chart-labels">
+                  {chartMonthLabels.map((label, i) => (
+                    <span key={i}>{label || "\u00A0"}</span>
+                  ))}
                 </div>
-              ) : (
-                <div className="empty-state">
-                  <div className="empty-state-icon">
-                    <FiBarChart2 />
+
+                {!hasIncomeData && (
+                  <div className="income-chart-empty-overlay">
+                    <div className="empty-state-icon">
+                      <FiBarChart2 />
+                    </div>
+                    <p className="empty-state-title">No income recorded yet</p>
+                    <p className="empty-state-sub">
+                      This is a preview of your income chart. Once your investments
+                      start generating income, it lights up in gold with your
+                      real monthly numbers.
+                    </p>
                   </div>
-                  <p className="empty-state-title">No income recorded yet</p>
-                  <p className="empty-state-sub">
-                    Your monthly earnings will appear here once your investments
-                    start generating income.
-                  </p>
-                </div>
-              )}
+                )}
+              </div>
             </div>
 
             {/* Tables row */}
@@ -475,6 +539,57 @@ function UserDashboard() {
             <UserRankCard user={user} />
           </div>
         </div>
+
+        {verificationPrompt && (
+          <div className="udb-verification-backdrop">
+            <section className="udb-verification-modal" role="dialog" aria-modal="true" aria-labelledby="verification-modal-title">
+              <div className="udb-verification-header">
+                <div>
+                  <span className="udb-verification-icon-badge">
+                    <FiShield />
+                  </span>
+                  <span className="udb-verification-kicker">Account setup</span>
+                  <h2 id="verification-modal-title">Complete your account</h2>
+                  <p>Please submit the following details to use all account features.</p>
+                </div>
+                <button
+                  type="button"
+                  className="udb-verification-close"
+                  onClick={() => setVerificationPrompt(null)}
+                  aria-label="Close account setup reminder"
+                >
+                  ×
+                </button>
+              </div>
+              <div className="udb-verification-actions">
+                {verificationPrompt.some((item) => item.type === "kyc") && (
+                  <button type="button" className="udb-verification-action" onClick={() => navigate("/user/account/kyc")}>
+                    <span className="udb-verification-action-icon">
+                      <FiShield />
+                    </span>
+                    <span className="udb-verification-action-text">
+                      <strong>{verificationPrompt.find((item) => item.type === "kyc")?.status === "rejected" ? "KYC rejected - upload again" : "Upload KYC documents"}</strong>
+                      <small>Aadhaar and PAN verification</small>
+                    </span>
+                    <span className="udb-verification-action-arrow" aria-hidden="true">→</span>
+                  </button>
+                )}
+                {verificationPrompt.some((item) => item.type === "bank") && (
+                  <button type="button" className="udb-verification-action" onClick={() => navigate("/user/account/bank-details")}>
+                    <span className="udb-verification-action-icon">
+                      <FiBookmark />
+                    </span>
+                    <span className="udb-verification-action-text">
+                      <strong>{verificationPrompt.find((item) => item.type === "bank")?.status === "rejected" ? "Bank details rejected - submit again" : "Submit bank details"}</strong>
+                      <small>Bank and nominee information</small>
+                    </span>
+                    <span className="udb-verification-action-arrow" aria-hidden="true">→</span>
+                  </button>
+                )}
+              </div>
+            </section>
+          </div>
+        )}
       </div>
 
     </UserLayout>

@@ -390,38 +390,40 @@ function HelpCenterPage() {
                 </button>
               </div>
 
-              {detailLoading && <p className="detail-state">Loading ticket details...</p>}
-              {detailError && <p className="form-error-msg">{detailError}</p>}
-              {selectedTicket && (
-                <>
-                  <div className="ticket-detail-content">
-                    <div className="detail-meta">
-                      <strong>{selectedTicket.subject}</strong>
-                      <span className={`status-badge status--${selectedTicket.status}`}>{selectedTicket.status}</span>
-                    </div>
-                    <p className="ticket-message">{selectedTicket.message}</p>
-                    {(selectedTicket.replies || []).map((reply) => (
-                      <div className="ticket-reply" key={reply.id}>
-                        <span>{reply.sender_type || "Reply"}</span>
-                        <p>{reply.message}</p>
+              <div className="ticket-detail-modal-body">
+                {detailLoading && <p className="detail-state">Loading ticket details...</p>}
+                {detailError && <p className="form-error-msg">{detailError}</p>}
+                {selectedTicket && (
+                  <>
+                    <div className="ticket-detail-content">
+                      <div className="detail-meta">
+                        <strong>{selectedTicket.subject}</strong>
+                        <span className={`status-badge status--${selectedTicket.status}`}>{selectedTicket.status}</span>
                       </div>
-                    ))}
-                  </div>
-                  <form className="reply-form" onSubmit={handleReplySubmit}>
-                    <textarea
-                      className="form-textarea"
-                      rows={3}
-                      placeholder="Write a reply..."
-                      value={replyMessage}
-                      onChange={(e) => setReplyMessage(e.target.value)}
-                    />
-                    {replyError && <p className="form-error-msg">{replyError}</p>}
-                    <button type="submit" className="submit-ticket-btn" disabled={replying || !replyMessage.trim()}>
-                      <FiSend /> {replying ? "Sending..." : "Send Reply"}
-                    </button>
-                  </form>
-                </>
-              )}
+                      <p className="ticket-message">{selectedTicket.message}</p>
+                      {(selectedTicket.replies || []).map((reply) => (
+                        <div className="ticket-reply" key={reply.id}>
+                          <span>{reply.sender_type || "Reply"}</span>
+                          <p>{reply.message}</p>
+                        </div>
+                      ))}
+                    </div>
+                    <form className="reply-form" onSubmit={handleReplySubmit}>
+                      <textarea
+                        className="form-textarea"
+                        rows={3}
+                        placeholder="Write a reply..."
+                        value={replyMessage}
+                        onChange={(e) => setReplyMessage(e.target.value)}
+                      />
+                      {replyError && <p className="form-error-msg">{replyError}</p>}
+                      <button type="submit" className="submit-ticket-btn" disabled={replying || !replyMessage.trim()}>
+                        <FiSend /> {replying ? "Sending..." : "Send Reply"}
+                      </button>
+                    </form>
+                  </>
+                )}
+              </div>
             </section>
           </div>
         )}

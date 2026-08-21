@@ -229,6 +229,7 @@
   background: var(--ew-surface);
   box-shadow: 0 12px 26px rgba(139, 93, 32, 0.08), inset 0 1px 0 rgba(255,255,255,0.7);
   min-height: 128px;
+  border-color: rgba(197, 155, 39, 0.46);
 }
 
 [data-theme="dark"] .ewallet-page .balance-hero {
@@ -302,10 +303,33 @@
   box-shadow: 0 14px 26px rgba(0,0,0,0.24), inset 0 1px 0 rgba(255,255,255,0.03);
 }
 
+[data-theme="dark"] .ewallet-page .metric-card:nth-child(1) { border-color: rgba(251, 146, 60, 0.5); }
+[data-theme="dark"] .ewallet-page .metric-card:nth-child(2) { border-color: rgba(74, 222, 128, 0.5); }
+[data-theme="dark"] .ewallet-page .metric-card:nth-child(3) { border-color: rgba(96, 165, 250, 0.5); }
+
 .ewallet-page .metric-card:hover {
   border-color: rgba(217,115,13,0.38);
   box-shadow: 0 16px 30px rgba(168, 109, 38, 0.12);
   transform: translateY(-2px);
+}
+
+.ewallet-page .metric-card:nth-child(1) { border-color: rgba(217, 119, 6, 0.42); }
+.ewallet-page .metric-card:nth-child(2) { border-color: rgba(22, 163, 74, 0.42); }
+.ewallet-page .metric-card:nth-child(3) { border-color: rgba(37, 99, 235, 0.38); }
+
+.ewallet-page .metric-card:nth-child(1):hover {
+  border-color: rgba(217, 119, 6, 0.72);
+  box-shadow: 0 16px 30px rgba(217, 119, 6, 0.14);
+}
+
+.ewallet-page .metric-card:nth-child(2):hover {
+  border-color: rgba(22, 163, 74, 0.72);
+  box-shadow: 0 16px 30px rgba(22, 163, 74, 0.14);
+}
+
+.ewallet-page .metric-card:nth-child(3):hover {
+  border-color: rgba(37, 99, 235, 0.68);
+  box-shadow: 0 16px 30px rgba(37, 99, 235, 0.14);
 }
 
 .ewallet-page .metric-icon {
@@ -912,6 +936,53 @@
     display: flex;
     justify-content: space-between;
     gap: 10px;
+  }
+
+  .ewallet-page .ewallet-table tbody td::before {
+    content: attr(data-label);
+    flex: 0 0 42%;
+    color: var(--ew-text-faint);
+    font-family: var(--ew-font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .ewallet-page .ewallet-table tbody td.investor-cell {
+    align-items: flex-start;
+  }
+
+  /* Keep transaction columns visible on mobile; users can swipe horizontally. */
+  .ewallet-page .ewallet-table--clean {
+    display: table;
+    width: max-content;
+    min-width: 760px;
+  }
+
+  .ewallet-page .ewallet-table--clean thead {
+    display: table-header-group;
+  }
+
+  .ewallet-page .ewallet-table--clean tbody {
+    display: table-row-group;
+  }
+
+  .ewallet-page .ewallet-table--clean tr {
+    display: table-row;
+    width: auto;
+    padding: 0;
+  }
+
+  .ewallet-page .ewallet-table--clean th,
+  .ewallet-page .ewallet-table--clean td {
+    display: table-cell;
+    width: auto;
+    padding: 12px 14px;
+  }
+
+  .ewallet-page .ewallet-table--clean td::before {
+    display: none;
   }
 
   .date-cell {

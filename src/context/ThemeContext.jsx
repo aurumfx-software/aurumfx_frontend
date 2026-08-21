@@ -3,10 +3,17 @@ import { useLocation } from "react-router-dom";
 
 const ThemeContext = createContext(null);
 const STORAGE_KEY = "aurumfx-theme";
+const ADMIN_STORAGE_KEY = "aurumfx-admin-theme";
 
-export function getStoredTheme() {
+function getThemeStorageKey(pathname) {
+  return pathname === "/admin" || pathname.startsWith("/admin/")
+    ? ADMIN_STORAGE_KEY
+    : STORAGE_KEY;
+}
+
+export function getStoredTheme(storageKey = STORAGE_KEY) {
   try {
-    const stored = localStorage.getItem(STORAGE_KEY);
+    const stored = localStorage.getItem(storageKey);
     if (stored === "light" || stored === "dark") return stored;
   } catch {
     /* ignore */
@@ -23,6 +30,7 @@ function getDefaultThemeForPath(pathname) {
   const publicRoutes = ["/", "/user/login", "/user/register", "/admin/login"];
   const isPublicRoute = publicRoutes.includes(pathname) || pathname.startsWith("/user/login") || pathname.startsWith("/user/register") || pathname.startsWith("/admin/login");
 
+  if (pathname === "/admin/login" || pathname.startsWith("/admin/login")) return "light";
   if (isPublicRoute) return "dark";
   return "light";
 }
@@ -30,13 +38,13 @@ function getDefaultThemeForPath(pathname) {
 export function ThemeProvider({ children }) {
   const location = useLocation();
   const [theme, setThemeState] = useState(() => {
-    const stored = getStoredTheme();
+    const stored = getStoredTheme(getThemeStorageKey(window.location.pathname));
     if (stored) return stored;
     return getDefaultThemeForPath(window.location.pathname);
   });
 
   useEffect(() => {
-    const stored = getStoredTheme();
+    const stored = getStoredTheme(getThemeStorageKey(location.pathname));
     if (stored) {
       setThemeState(stored);
       return;
@@ -55,7 +63,7 @@ export function ThemeProvider({ children }) {
       setThemeState(next);
       if (persist) {
         try {
-          localStorage.setItem(STORAGE_KEY, next);
+          localStorage.setItem(getThemeStorageKey(location.pathname), next);
         } catch {
           /* ignore */
         }

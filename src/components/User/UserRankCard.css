@@ -1,112 +1,219 @@
 .user-rank-widget {
-  background: #111111;
-  border-radius: 16px;
-  padding: 20px;
-  border: 1px solid rgba(212, 175, 55, 0.16);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.28);
+  background: #0a0a0a;
+  border-radius: 18px;
+  padding: 16px;
+  border: 1px solid rgba(224, 178, 86, 0.14);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
   height: 100%;
+  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
 }
 
-/* Golden VIP Card */
+/* ============================= */
+/* Black & Gold VIP Card         */
+/* ============================= */
 .gold-vip-card {
-  background: linear-gradient(135deg, #c4951b 0%, #e6be48 50%, #9e7510 100%);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   border-radius: 16px;
-  padding: 24px 20px 20px 20px;
-  color: #ffffff;
+  padding: 30px 20px 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 8px 20px rgba(196, 149, 27, 0.25);
+  text-align: center;
+
+  border: 1px solid transparent;
+  background:
+    linear-gradient(180deg, #14110a 0%, #0c0a07 60%, #060605 100%) padding-box,
+    linear-gradient(135deg, #f2c877 0%, rgba(224, 178, 86, 0.25) 35%, rgba(224, 178, 86, 0.5) 100%) border-box;
+
+  box-shadow:
+    0 18px 44px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
-.gold-vip-pattern {
+/* Ambient diagonal gold sheen — slow, subtle, never distracting */
+.gold-vip-sheen {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px);
-  background-size: 16px 16px;
+  inset: -40%;
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    rgba(242, 200, 119, 0.16) 46%,
+    rgba(242, 200, 119, 0.28) 50%,
+    rgba(242, 200, 119, 0.16) 54%,
+    transparent 70%
+  );
+  transform: translateX(-30%);
+  animation: udb-vip-sheen 7s ease-in-out infinite;
   pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes udb-vip-sheen {
+  0%, 100% { transform: translateX(-35%) translateY(-6%); }
+  50% { transform: translateX(10%) translateY(6%); }
+}
+
+/* Fine gold-dust grain, matches the dashboard's dotted pattern language */
+.gold-vip-grain {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(224, 178, 86, 0.12) 1px, transparent 1px);
+  background-size: 14px 14px;
+  opacity: 0.5;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.gold-vip-card > *:not(.gold-vip-sheen):not(.gold-vip-grain) {
+  position: relative;
+  z-index: 1;
 }
 
 .vip-avatar {
-  width: 60px;
-  height: 60px;
+  position: relative;
+  width: 68px;
+  height: 68px;
   border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.8);
-  overflow: hidden;
-  margin-bottom: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  margin-bottom: 14px;
 }
 
-.vip-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
+.vip-avatar img,
 .vip-avatar-fallback {
   width: 100%;
   height: 100%;
-  background: #1a202c;
-  color: #ffffff;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
+.vip-avatar-fallback {
+  background: linear-gradient(150deg, #1c1710, #0c0a07);
+  color: #f2c877;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
-  font-size: 22px;
+  font-weight: 800;
+  font-size: 25px;
+  border: 1px solid rgba(224, 178, 86, 0.4);
+}
+
+.vip-avatar-ring {
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(224, 178, 86, 0.55);
+  box-shadow: 0 0 0 5px rgba(224, 178, 86, 0.08), 0 0 18px rgba(224, 178, 86, 0.25);
+  pointer-events: none;
 }
 
 .vip-name {
   font-size: 15px;
-  font-weight: 700;
-  letter-spacing: 0.8px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
   text-transform: uppercase;
-  margin-bottom: 2px;
-  text-align: center;
-  color: #ffffff;
+  margin: 0 0 8px;
+  background: linear-gradient(135deg, #ffffff 0%, #f2e4c2 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.vip-id-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(224, 178, 86, 0.08);
+  border: 1px solid rgba(224, 178, 86, 0.3);
+  color: #e0b256;
+  font-family: "SFMono-Regular", "Menlo", "Consolas", monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 4px 11px;
+  border-radius: 999px;
+  margin-bottom: 10px;
+}
+
+.vip-id-pill svg {
+  font-size: 11px;
+  opacity: 0.85;
 }
 
 .vip-rank {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.9);
-  margin-bottom: 16px;
-  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #0c0a07;
+  background: linear-gradient(135deg, #f2c877, #d8a331);
+  padding: 5px 14px;
+  border-radius: 999px;
+  margin-bottom: 22px;
+  box-shadow: 0 4px 14px rgba(224, 178, 86, 0.3);
 }
 
-/* Referral link box */
+.vip-rank svg {
+  font-size: 13px;
+}
+
+/* Referral link */
+.referral-wrap {
+  width: 100%;
+}
+
+.referral-caption {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(224, 178, 86, 0.75);
+  margin-bottom: 8px;
+  text-align: left;
+}
+
 .referral-box {
   width: 100%;
-  background: rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 20px;
-  padding: 4px 6px 4px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(224, 178, 86, 0.28);
+  border-radius: 999px;
+  padding: 4px 4px 4px 14px;
   display: flex;
   align-items: center;
   gap: 6px;
+  backdrop-filter: blur(6px);
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.referral-box:focus-within,
+.referral-box:hover {
+  border-color: rgba(224, 178, 86, 0.55);
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .referral-box input {
   background: transparent;
   border: none;
-  color: #ffffff;
-  font-size: 12px;
+  color: #f3ecd9;
+  font-family: "SFMono-Regular", "Menlo", "Consolas", monospace;
+  font-size: 11.5px;
   width: 100%;
+  min-width: 0;
   outline: none;
 }
 
 .referral-action-btn {
-  background: rgba(255, 255, 255, 0.2);
-  border: none;
-  color: #ffffff;
-  width: 28px;
-  height: 28px;
+  background: rgba(224, 178, 86, 0.12);
+  border: 1px solid rgba(224, 178, 86, 0.25);
+  color: #f2c877;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
@@ -114,57 +221,96 @@
   justify-content: center;
   font-size: 13px;
   flex-shrink: 0;
-  transition: background 0.2s;
+  transition: background 0.2s ease, transform 0.15s ease, border-color 0.2s ease;
 }
 
 .referral-action-btn:hover {
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(224, 178, 86, 0.24);
+  border-color: rgba(224, 178, 86, 0.5);
+  transform: translateY(-1px);
 }
 
-/* Trophy Section */
+.referral-action-btn.is-copied {
+  background: rgba(63, 191, 127, 0.18);
+  border-color: rgba(63, 191, 127, 0.45);
+  color: #4fce93;
+  animation: udb-copy-pop 0.3s ease;
+}
+
+@keyframes udb-copy-pop {
+  0% { transform: scale(0.85); }
+  60% { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+
+/* ============================= */
+/* Trophy / Achievement Section  */
+/* ============================= */
 .trophy-section {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding-top: 10px;
+  padding: 20px 18px;
+  border-radius: 16px;
+  border: 1px solid rgba(224, 178, 86, 0.14);
+  background: linear-gradient(180deg, #0e0d0a 0%, #0a0908 100%);
 }
 
 .trophy-graphic {
-  margin-bottom: 12px;
+  position: relative;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.trophy-glow {
+  position: absolute;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(224, 178, 86, 0.32) 0%, transparent 72%);
+  filter: blur(2px);
+  z-index: 0;
 }
 
 .trophy-img {
-  height: 65px;
+  position: relative;
+  height: 64px;
   object-fit: contain;
+  z-index: 1;
+  filter: drop-shadow(0 6px 14px rgba(224, 178, 86, 0.25));
 }
 
 .achievement-title {
   font-size: 14px;
-  font-weight: 700;
-  color: #e5a800;
-  margin-bottom: 4px;
+  font-weight: 800;
+  margin: 0 0 4px;
+  background: linear-gradient(135deg, #f2c877, #e0b256);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .achievement-sub {
   font-size: 12px;
-  color: #8c98a4;
-  margin-bottom: 18px;
-  line-height: 1.4;
-  padding: 0 10px;
+  color: #8c8a83;
+  margin: 0 0 20px;
+  line-height: 1.5;
+  padding: 0 6px;
 }
 
-/* Rank Badges Box */
+/* Rank badges */
 .rank-badges {
-  background: #1a1a1a;
-  border: 1px solid rgba(212, 175, 55, 0.18);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(224, 178, 86, 0.16);
   border-radius: 12px;
-  padding: 12px 16px;
+  padding: 4px 16px;
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 15px;
+  margin-bottom: 14px;
 }
 
 .rank-badge-item {
@@ -172,32 +318,54 @@
   align-items: center;
   justify-content: space-between;
   font-size: 13px;
+  padding: 10px 0;
+}
+
+.rank-badge-divider {
+  height: 1px;
+  background: rgba(224, 178, 86, 0.12);
 }
 
 .badge-lbl {
-  color: #94a3b8;
+  color: #8c8a83;
+  font-weight: 500;
 }
 
 .badge-val {
   font-weight: 700;
-  color: #f1f5f9;
+  color: #f3ecd9;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
+}
+
+.badge-val--muted {
+  color: #b7ac8f;
+}
+
+.rank-icon {
+  font-size: 13px;
 }
 
 .total-lots-badge {
-  background: #1a1a1a;
-  border: 1px solid rgba(212, 175, 55, 0.18);
-  border-radius: 20px;
-  padding: 8px 18px;
-  font-size: 13px;
-  color: #94a3b8;
+  background: rgba(224, 178, 86, 0.08);
+  border: 1px solid rgba(224, 178, 86, 0.28);
+  border-radius: 999px;
+  padding: 8px 20px;
+  font-size: 12.5px;
+  color: #b7ac8f;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
 .total-lots-badge strong {
-  color: #f5d061;
+  color: #f2c877;
+  font-weight: 800;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gold-vip-sheen {
+    animation: none;
+  }
 }
