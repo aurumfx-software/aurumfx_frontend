@@ -75,11 +75,11 @@ function Login() {
               type="text"
               placeholder="Enter User ID"
               value={userId}
-              onChange={(e) => !isAutoFilled && setUserId(e.target.value)}
+              onChange={(e) => setUserId(e.target.value)}
               autoComplete="username"
-              readOnly={isAutoFilled}
+              aria-label="Editable User ID"
+              className="user-id-input"
               required
-              className={isAutoFilled ? "readonly-input" : ""}
             />
           </div>
 

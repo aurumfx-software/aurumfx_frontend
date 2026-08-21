@@ -149,16 +149,8 @@
   color: var(--text-faint, var(--text-muted));
 }
 
-.input-group input.readonly-input {
-  background: var(--bg-elevated);
-  color: var(--text-primary);
-  cursor: not-allowed;
-  opacity: 0.85;
-}
-
-.input-group input.readonly-input:focus {
-  border-color: var(--border-neutral);
-  box-shadow: none;
+.input-group input.user-id-input {
+  cursor: text;
 }
 
 .input-group input:focus {
