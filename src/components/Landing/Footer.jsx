@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import {
   FaFacebookF,
   FaInstagram,
@@ -40,11 +39,11 @@ const Footer = () => {
         <div className="footer-column">
           <h3>Platform</h3>
           <ul>
-            <li><Link to="/">Home</Link></li>
-            <li><a href="#markets">Markets</a></li>
-            <li><a href="#features">Features</a></li>
-            <li><Link to="/user/login">Sign In</Link></li>
-            <li><Link to="/user/register">Register</Link></li>
+            <li><a href="#hero">Home</a></li>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#mt5-chart">MT5 Chart</a></li>
+            <li><a href="#plans">Investment Plans</a></li>
+            <li><a href="#contact">Contact</a></li>
           </ul>
         </div>
 

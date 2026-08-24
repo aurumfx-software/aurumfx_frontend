@@ -13,6 +13,7 @@ function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [isAutoFilled, setIsAutoFilled] = useState(false);
+  const [shake, setShake] = useState(false);
   const passwordInputRef = useRef(null);
 
   // Load user ID from localStorage on component mount
@@ -30,6 +31,11 @@ function Login() {
     }
   }, []);
 
+  const triggerShake = () => {
+    setShake(true);
+    setTimeout(() => setShake(false), 500);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -45,9 +51,15 @@ function Login() {
       } else {
         const msg = result.error || "User Not Found";
         setError(msg.includes("status code") || msg.includes("Request failed") ? "User Not Found" : msg);
+        triggerShake();
       }
-    } catch {
-      setError("User Not Found");
+    } catch (requestError) {
+      const detail = requestError.response?.data?.detail;
+      const message = Array.isArray(detail)
+        ? detail.map((item) => item.msg).filter(Boolean).join(", ")
+        : detail || requestError.response?.data?.message || requestError.response?.data?.error;
+      setError(message || "User Not Found");
+      triggerShake();
     } finally {
       setLoading(false);
     }
@@ -55,20 +67,17 @@ function Login() {
 
   return (
     <div className="login-page">
-      <div className="top-right">
-        <span style={{ marginTop: "15px" }}>Don't have an account?</span>
-        <Link to="/user/register" className="register-btn">
-          Get Started
-        </Link>
-      </div>
-      <div className="login-card">
+      <div className="orb orb-top" aria-hidden="true" />
+      <div className="orb orb-bottom" aria-hidden="true" />
+
+      <div className={`login-card ${shake ? "shake" : ""}`}>
         <img src={logo} alt="AurumFX Logo" className="logo" />
 
         <h1>Hi, Welcome Back!</h1>
         <p>Sign in to AurumFX Trading Platform</p>
 
         <form onSubmit={handleSubmit}>
-          <div className="input-group">
+          <div className="input-group field-1">
             <label htmlFor="user_id">User ID</label>
             <input
               id="user_id"
@@ -83,7 +92,7 @@ function Login() {
             />
           </div>
 
-          <div className="input-group">
+          <div className="input-group field-2">
             <label htmlFor="password">Password</label>
             <div className="password-box">
               <input
@@ -107,9 +116,13 @@ function Login() {
             </div>
           </div>
 
-          {error && <p className="login-error">{error}</p>}
+          {error && (
+            <p className="login-error" role="alert">
+              {error}
+            </p>
+          )}
 
-          <div className="options">
+          <div className="options field-3">
             <label className="remember">
               <input type="checkbox" defaultChecked />
               Remember me
@@ -130,10 +143,24 @@ function Login() {
             )}
           </div>
 
-          <button type="submit" className="login-btn" disabled={loading}>
-            {loading ? "Signing in..." : "Sign In"}
+          <button type="submit" className="login-btn field-4" disabled={loading}>
+            {loading ? (
+              <span className="btn-loading">
+                <span className="spinner" aria-hidden="true" />
+                Signing in...
+              </span>
+            ) : (
+              "Sign In"
+            )}
           </button>
         </form>
+
+        <div className="login-register-prompt">
+          <span>Don't have an account?</span>
+          <Link to="/user/register" className="login-register-link">
+            Register
+          </Link>
+        </div>
       </div>
     </div>
   );

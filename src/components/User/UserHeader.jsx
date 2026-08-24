@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FiBell, FiMenu } from "react-icons/fi";
+import { FiArrowLeft, FiBell, FiMenu } from "react-icons/fi";
 import { getMyKycApi, getProfileBankDetailsApi } from "../../api/auth";
 import { logout } from "../../utils/auth";
+import { switchBackToAdminApi } from "../../api/admin-members-management";
 import { hasBankSubmission } from "../../pages/user/profileTabs/shared";
 import ThemeToggle from "../ThemeToggle/ThemeToggle";
 import "./UserHeader.css";
@@ -38,12 +39,15 @@ function UserHeader({ onMenuToggle, user }) {
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
+  const [switchingBack, setSwitchingBack] = useState(false);
+  const [switchBackError, setSwitchBackError] = useState("");
   const dropdownRef = useRef(null);
   const notifRef = useRef(null);
 
   const userName = user?.name || user?.fullName || "PRAVEEN";
   const userId = user?.userId || localStorage.getItem("userId") || "FX259";
   const userEmail = user?.email || "sreedharan1962@gmail.com";
+  const hasAdminSession = Boolean(sessionStorage.getItem("adminImpersonationSession"));
 
   // Notifications state (defaults to 0 unread messages matching screenshot)
   const [notifications] = useState([]);
@@ -110,8 +114,37 @@ function UserHeader({ onMenuToggle, user }) {
   }, []);
 
   const handleLogout = async () => {
+    sessionStorage.removeItem("adminImpersonationSession");
     await logout();
     navigate("/user/login");
+  };
+
+  const handleBackToAdmin = async () => {
+    const storedSession = sessionStorage.getItem("adminImpersonationSession");
+    if (!storedSession || switchingBack) return;
+
+    try {
+      setSwitchingBack(true);
+      setSwitchBackError("");
+      const result = await switchBackToAdminApi();
+      if (!result.success) {
+        setSwitchBackError(result.error || "Unable to switch back to admin.");
+        return;
+      }
+      const adminSession = JSON.parse(storedSession);
+      const returnedToken = result.data?.token || result.data?.access_token;
+      localStorage.setItem("token", returnedToken || adminSession.token || "");
+      localStorage.setItem("role", adminSession.role || "admin");
+      localStorage.setItem("userId", adminSession.userId || "");
+      if (adminSession.userName) localStorage.setItem("userName", adminSession.userName);
+      sessionStorage.removeItem("adminImpersonationSession");
+      navigate("/admin/members/network", { replace: true });
+    } catch {
+      sessionStorage.removeItem("adminImpersonationSession");
+      setSwitchBackError("Unable to switch back to admin.");
+    } finally {
+      setSwitchingBack(false);
+    }
   };
 
   return (
@@ -150,6 +183,16 @@ function UserHeader({ onMenuToggle, user }) {
       </div>
 
       <div className="user-header-right">
+        {hasAdminSession && (
+          <div className="back-to-admin-wrap">
+            <button type="button" className="back-to-admin-btn" onClick={handleBackToAdmin} disabled={switchingBack} title="Return to admin">
+              <FiArrowLeft />
+              <span>{switchingBack ? "Switching..." : "Back to Admin"}</span>
+            </button>
+            {switchBackError && <span className="back-to-admin-error">{switchBackError}</span>}
+          </div>
+        )}
+
         {/* Notifications Icon Button with Dropdown */}
         <div className="header-notif-dropdown-container" ref={notifRef}>
           <button

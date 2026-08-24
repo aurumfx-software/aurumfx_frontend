@@ -51,10 +51,13 @@ function BankDetailsTab({
     }
   };
 
-  const documentPreview = (url, label) => url && (
-    <div className="bank-document-preview">
-      <img src={url} alt={label} />
-      <a href={url} download title={`Download ${label}`}><FiDownload /></a>
+  const documentPreview = (url, label, showLabel = false) => url && (
+    <div className="bank-document-preview-wrap">
+      {showLabel && <span className="document-preview-label">{label}</span>}
+      <div className="bank-document-preview">
+        <img src={url} alt={label} />
+        <a href={url} download title={`Download ${label}`}><FiDownload /></a>
+      </div>
     </div>
   );
 
@@ -85,10 +88,12 @@ function BankDetailsTab({
           <DocRow label="Nominee Address" value={bankDetails.nominee_address} />
           <DocRow label="Nominee Aadhaar" value={bankDetails.nominee_aadhar} />
           <DocRow label="Nominee Mobile" value={bankDetails.nominee_mobile} />
-          <DocRow label="Passbook Proof" value={proofDocumentName || "Uploaded"} />
-          {documentPreview(proofUrl, "Passbook proof")}
-          {documentPreview(frontUrl, "Nominee Aadhaar front")}
-          {documentPreview(backUrl, "Nominee Aadhaar back")}
+          <DocRow label="Passbook Proof" value={proofUrl ? "Uploaded" : proofDocumentName || "Uploaded"} />
+          <div className="bank-document-gallery">
+            {documentPreview(proofUrl, "Bank Passbook Photo", true)}
+            {documentPreview(frontUrl, "Nominee Aadhaar Card Front Photo", true)}
+            {documentPreview(backUrl, "Nominee Aadhaar Card Back Photo", true)}
+          </div>
           <div className="locked-note">
             <FiLock />
             <span>Approved bank details are locked. Contact support to make changes.</span>

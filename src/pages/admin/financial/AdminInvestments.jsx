@@ -35,6 +35,8 @@ function AdminInvestments() {
   const [errorMsg, setErrorMsg] = useState("");
 
   const [confirmingId, setConfirmingId] = useState(null);
+  const [rejectModalId, setRejectModalId] = useState(null);
+  const [rejectionReason, setRejectionReason] = useState("");
   const [approvingReturnId, setApprovingReturnId] = useState(null);
 
   const [startDate, setStartDate] = useState("2026-08-01");
@@ -100,11 +102,19 @@ function AdminInvestments() {
   };
 
   const handleReject = async (id) => {
-    if (!window.confirm("Reject this investment request?")) return;
+    setRejectionReason("");
+    setRejectModalId(id);
+  };
+
+  const submitReject = async () => {
+    if (!rejectionReason.trim()) return;
+    const id = rejectModalId;
     setConfirmingId(id);
-    const res = await approveRejectInvestmentApi(id, "Rejected");
+    const res = await approveRejectInvestmentApi(id, "Rejected", rejectionReason);
     if (res.success) {
       setRequests((prev) => prev.filter((r) => r.id !== id));
+      setRejectModalId(null);
+      setRejectionReason("");
     } else {
       alert(res.error || "Failed to reject investment");
     }
@@ -442,6 +452,25 @@ function AdminInvestments() {
                   >
                     {approvingReturnId === returnModalId ? "Approving..." : "Approve"}
                   </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {rejectModalId && (
+          <div className="modal-backdrop" onClick={() => setRejectModalId(null)}>
+            <div className="modal-container investment-reject-modal" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <h3>Reject Investment</h3>
+                <button className="modal-close-btn" onClick={() => setRejectModalId(null)}><FiX size={18} /></button>
+              </div>
+              <div className="modal-body">
+                <label className="field-label" htmlFor="investment-rejection-reason">Rejection reason</label>
+                <textarea id="investment-rejection-reason" value={rejectionReason} onChange={(e) => setRejectionReason(e.target.value)} rows={4} className="form-input" style={{ width: "100%", marginTop: "8px" }} placeholder="Enter the reason for rejecting this investment" />
+                <div style={{ marginTop: "16px", display: "flex", gap: "10px", justifyContent: "flex-end" }}>
+                  <button type="button" className="cancel-btn" onClick={() => setRejectModalId(null)}>Cancel</button>
+                  <button type="button" className="action-confirm-btn action-reject-btn" onClick={submitReject} disabled={confirmingId === rejectModalId || !rejectionReason.trim()}>{confirmingId === rejectModalId ? "Rejecting..." : "Confirm Reject"}</button>
                 </div>
               </div>
             </div>

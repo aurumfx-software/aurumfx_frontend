@@ -33,3 +33,40 @@ export const payUserPayoutApi = async (userId) => {
     return { success: false, error: getErrorMessage(error, "Unable to pay user") };
   }
 };
+
+export const getPaidPayoutsApi = async () => {
+  try {
+    const response = await api.get("/admin/payout/paid");
+    const payload = response.data || {};
+    const items = Array.isArray(payload) ? payload : payload.items || payload.data?.items || payload.data || [];
+    return {
+      success: true,
+      data: {
+        total: Number(payload.total ?? items.length ?? 0),
+        items: Array.isArray(items) ? items : [],
+      },
+    };
+  } catch (error) {
+    return { success: false, error: getErrorMessage(error, "Unable to load paid payouts") };
+  }
+};
+
+export const getPayoutHistoryApi = async (filters = {}) => {
+  try {
+    const params = Object.fromEntries(
+      Object.entries(filters).filter(([, value]) => String(value || "").trim() !== "")
+    );
+    const response = await api.get("/admin/payout/history", { params });
+    const payload = response.data || {};
+    const items = Array.isArray(payload) ? payload : payload.items || payload.data?.items || payload.data || [];
+    return {
+      success: true,
+      data: {
+        total: Number(payload.total ?? items.length ?? 0),
+        items: Array.isArray(items) ? items : [],
+      },
+    };
+  } catch (error) {
+    return { success: false, error: getErrorMessage(error, "Unable to load payout history") };
+  }
+};

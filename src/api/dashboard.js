@@ -18,26 +18,29 @@ export const clearDashboardCache = () => {
 
 /**
  * Admin Dashboard fetch, deduped + cached
- * @param {string} timeframe - 'week' | 'month' | 'year'
+ * @param {{start_date?: string, end_date?: string}} filters
  */
-export const getAdminDashboardData = async (timeframe = "week") => {
+export const getAdminDashboardData = async (filters = {}) => {
+  const cacheKey = JSON.stringify(filters);
   const now = Date.now();
-  const cached = adminCache.get(timeframe);
+  const cached = adminCache.get(cacheKey);
   if (cached && now - cached.timestamp < CACHE_TTL) {
     return cached.data;
   }
 
-  if (adminInFlight.has(timeframe)) {
-    return adminInFlight.get(timeframe);
+  if (adminInFlight.has(cacheKey)) {
+    return adminInFlight.get(cacheKey);
   }
 
   const requestPromise = (async () => {
     try {
       const response = await api.get(`/admin/dashboard`, {
-        params: { timeframe },
+        params: Object.fromEntries(
+          Object.entries(filters).filter(([, value]) => String(value || "").trim() !== "")
+        ),
       });
       const resData = { success: true, data: response.data };
-      adminCache.set(timeframe, { data: resData, timestamp: Date.now() });
+      adminCache.set(cacheKey, { data: resData, timestamp: Date.now() });
       return resData;
     } catch (error) {
       console.error("Admin Dashboard API error:", error.message);
@@ -45,14 +48,14 @@ export const getAdminDashboardData = async (timeframe = "week") => {
         success: false,
         error: error.response?.data?.message || error.message,
       };
-      adminCache.set(timeframe, { data: errRes, timestamp: Date.now() });
+      adminCache.set(cacheKey, { data: errRes, timestamp: Date.now() });
       return errRes;
     } finally {
-      adminInFlight.delete(timeframe);
+      adminInFlight.delete(cacheKey);
     }
   })();
 
-  adminInFlight.set(timeframe, requestPromise);
+  adminInFlight.set(cacheKey, requestPromise);
   return requestPromise;
 };
 

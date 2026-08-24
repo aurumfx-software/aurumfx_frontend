@@ -23,9 +23,28 @@ const navItems = [
     id: "dashboard",
     label: "Dashboard",
     icon: FiGrid,
+    path: "/admin/dashboard",
+  },
+  {
+    id: "business",
+    label: "Business",
+    icon: FiBriefcase,
     children: [
-      { id: "business", label: "Business", path: "/admin/dashboard/business" },
-      { id: "network", label: "Network", path: "/admin/dashboard/network" },
+      {
+        id: "family",
+        label: "Family",
+        path: "/admin/genealogy",
+      },
+      {
+        id: "enrollers",
+        label: "Enrolment",
+        path: "/admin/enrollers",
+      },
+      {
+        id: "family-list",
+        label: "Family List",
+        path: "/admin/genealogy/list",
+      },
     ],
   },
   {
@@ -39,28 +58,17 @@ const navItems = [
         path: "/admin/wallet",
       },
       {
+        id: "payout",
+        label: "Payout",
+        path: "/admin/financial/payout",
+      },
+      {
         id: "investments",
         label: "Investments",
         path: "/admin/financial/investments/request",
       },
-      {
-        id: "investment-plan",
-        label: "Investment Plan",
-        path: "/admin/financial/investment-plan",
-      },
-      {
-        id: "investment-type",
-        label: "Return Type",
-        path: "/admin/financial/investment-type",
-      },
-          {
-            id: "lot-settings",
-            label: "Lot Settings",
-            path: "/admin/financial/lot-settings",
-          },
     ],
   },
-
   {
     id: "members",
     label: "Members Management",
@@ -72,11 +80,6 @@ const navItems = [
         path: "/admin/members/network",
       },
       {
-        id: "holding-tank",
-        label: "Holding Tank",
-        path: "/admin/members/holding-tank",
-      },
-      {
         id: "bank-account",
         label: "Bank Account",
         path: "/admin/members/bank-approve",
@@ -86,44 +89,58 @@ const navItems = [
         label: "KYC Details",
         path: "/admin/members/kyc-details",
       },
-      {
-        id: "genealogy",
-        label: "Genealogy",
-        path: "/admin/genealogy",
-      },
-      {
-        id: "enrollers",
-        label: "Enrolment",
-        path: "/admin/enrollers",
-      },
-      {
-        id: "genealogy-list",
-        label: "Genealogy List",
-        path: "/admin/genealogy/list",
-      },
     ],
+  },
+  {
+    id: "rank-list",
+    label: "Rank List",
+    icon: FiAward,
+    path: "/admin/rank-list",
   },
   {
     id: "settings",
     label: "Settings",
     icon: FiSettings,
     children: [
-      { id: "brand", label: "Brand", path: "/admin/settings/brand" },
-      { id: "network", label: "Network", path: "/admin/settings/network" },
-          { id: "ranks", label: "Ranks", path: "/admin/settings/ranks" },
+      { id: "investment-plan", label: "Investment Plan", path: "/admin/financial/investment-plan" },
+      { id: "investment-type", label: "Return Type", path: "/admin/financial/investment-type" },
+      { id: "lot-settings", label: "Lot Settings", path: "/admin/financial/lot-settings" },
+      { id: "ranks", label: "Ranks", path: "/admin/settings/ranks" },
       { id: "level-settings", label: "Level Commission", path: "/admin/settings/level-settings" },
-          { id: "admin-fee", label: "Admin Fee", path: "/admin/settings/admin-fee" },
-          { id: "referral-commission", label: "Referral Commission", path: "/admin/settings/referral-commission" },
-      { id: "level-report", label: "Level Commission Report", path: "/admin/settings/level-report" },
+      { id: "admin-fee", label: "Admin Fee", path: "/admin/settings/admin-fee" },
+      { id: "referral-commission", label: "Referral Commission", path: "/admin/settings/referral-commission" },
+      { id: "return-date-settings", label: "Return Date", path: "/admin/settings/return-date" },
+    ],
+  },
+  {
+    id: "reports",
+    label: "Reports",
+    icon: FiFileText,
+    children: [
       {
-        id: "withdrawal",
-        label: "Withdrawal",
-        path: "/admin/settings/withdrawal",
+        id: "investment-report",
+        label: "Investment Report",
+        path: "/admin/report/investment",
       },
       {
-        id: "advanced",
-        label: "Advanced Settings",
-        path: "/admin/settings/advanced",
+        id: "level-income-report",
+        label: "Level Income Report",
+        path: "/admin/report/level-income",
+      },
+      {
+        id: "referral-income-report",
+        label: "Referral Income Report",
+        path: "/admin/report/referral-income",
+      },
+      {
+        id: "rank-income-report",
+        label: "Rank Income Report",
+        path: "/admin/report/rank-income",
+      },
+      {
+        id: "payout-report",
+        label: "Payout Report",
+        path: "/admin/report/payout",
       },
     ],
   },
@@ -135,39 +152,6 @@ const navItems = [
       { id: "help-center-tickets", label: "Support Tickets", path: "/admin/help-center" },
     ],
   },
-  {
-    id: "reports",
-    label: "Reports",
-    icon: FiFileText,
-    children: [
-      {
-        id: "fund-transfer",
-        label: "Fund Transfer",
-        path: "/admin/report/fund-transfer",
-      },
-      {
-        id: "joining-report",
-        label: "Joining Report",
-        path: "/admin/report/joining",
-      },
-      {
-        id: "member-income",
-        label: "Member Income",
-        path: "/admin/report/income",
-      },
-      { id: "payout-report", label: "Payout", path: "/admin/report/payout" },
-      {
-        id: "point-history",
-        label: "Point History",
-        path: "/admin/report/point/history",
-      },
-      {
-        id: "top-earners",
-        label: "Top Earners",
-        path: "/admin/report/earners",
-      },
-    ],
-  },
 ];
 
 function AdminSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse }) {
@@ -175,12 +159,9 @@ function AdminSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse }) {
   const navigate = useNavigate();
   const itemRefs = useRef({});
   const lastExpandedId = useRef(null);
-
-  const isDashboardNetworkPath =
-    location.pathname === "/admin/dashboard" ||
-    location.pathname === "/admin/dashboard/network";
-
-  const isDashboardBusinessPath = location.pathname === "/admin/dashboard/business";
+  const adminId = localStorage.getItem("userId") || "ADMIN";
+  const storedAdminName = localStorage.getItem("userName");
+  const adminName = storedAdminName && storedAdminName !== adminId ? storedAdminName : "Admin User";
 
   const matchesChildPath = (childPath, currentPath) => {
     if (!childPath) return false;
@@ -215,14 +196,6 @@ function AdminSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse }) {
     navItems.forEach((item) => {
       if (item.children) {
         const hasActiveChild = item.children.some((child) => {
-          if (child.id === "network" && item.id === "dashboard") {
-            return isDashboardNetworkPath;
-          }
-
-          if (child.id === "business" && item.id === "dashboard") {
-            return isDashboardBusinessPath;
-          }
-
           return matchesChildPath(child.path, location.pathname);
         });
 
@@ -313,6 +286,16 @@ function AdminSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse }) {
         </button>
       </div>
 
+      {!isCollapsed && (
+        <div className="admin-sidebar-profile">
+          <div className="admin-sidebar-profile-avatar">{adminName.charAt(0).toUpperCase()}</div>
+          <div className="admin-sidebar-profile-details">
+            <strong>{adminName}</strong>
+            <span>{adminId}</span>
+          </div>
+        </div>
+      )}
+
       {isCollapsed && (
         <div className="sidebar-avatar">
           <div className="sidebar-avatar-circle">A</div>
@@ -325,14 +308,6 @@ function AdminSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse }) {
             location.pathname === item.path ||
             (item.children &&
               item.children.some((child) => {
-                if (child.id === "network" && item.id === "dashboard") {
-                  return isDashboardNetworkPath;
-                }
-
-                if (child.id === "business" && item.id === "dashboard") {
-                  return isDashboardBusinessPath;
-                }
-
                 return matchesChildPath(child.path, location.pathname);
               }));
 
@@ -361,12 +336,7 @@ function AdminSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse }) {
               {!isCollapsed && item.children && isExpanded && (
                 <div className="nav-submenu">
                   {item.children.map((child) => {
-                    const isChildActive =
-                      item.id === "dashboard" && child.id === "network"
-                        ? isDashboardNetworkPath
-                        : item.id === "dashboard" && child.id === "business"
-                          ? isDashboardBusinessPath
-                          : matchesChildPath(child.path, location.pathname);
+                    const isChildActive = matchesChildPath(child.path, location.pathname);
 
                     return (
                       <Link

@@ -10,9 +10,9 @@ import AdminInvestments from "./pages/admin/financial/AdminInvestments";
 import PlanInvestments from "./pages/admin/financial/PlanInvestments";
 import TypeInvestments from "./pages/admin/financial/TypeInvestments";
 import AdminLotSettings from "./pages/admin/financial/AdminLotSettings";
+import AdminPayout from "./pages/admin/financial/AdminPayout";
 import AdminWallet from "./pages/admin/wallet/AdminWallet";
 import AdminNetworkMembers from "./pages/admin/members/AdminNetworkMembers";
-import AdminHoldingTank from "./pages/admin/members/AdminHoldingTank";
 import AdminBankApprove from "./pages/admin/members/AdminBankApprove";
 import AdminKYCDetails from "./pages/admin/members/AdminKYCDetails";
 import GenealogyPage from "./pages/admin/members/GenealogyPage";
@@ -20,21 +20,17 @@ import GenealogyListPage from "./pages/admin/members/GenealogyListPage";
 import AdminEnrollersPage from "./pages/admin/members/AdminEnrollersPage";
 import AdminModulePage from "./pages/admin/AdminModulePage";
 import AdminHelpCenter from "./pages/admin/help/AdminHelpCenter";
-import BrandSettings from "./pages/admin/settings/BrandSettings";
-import NetworkSettings from "./pages/admin/settings/NetworkSettings";
-import WithdrawalSettings from "./pages/admin/settings/WithdrawalSettings";
 import AdminFeeSettings from "./pages/admin/settings/AdminFeeSettings";
 import ReferralCommissionSettings from "./pages/admin/settings/ReferralCommissionSettings";
-import AdvancedSettings from "./pages/admin/settings/AdvancedSettings";
+import ReturnDateSettings from "./pages/admin/settings/ReturnDateSettings";
 import LevelSettings from "./pages/admin/level/LevelSettings";
-import LevelCommissionReport from "./pages/admin/level/LevelCommissionReport";
 import RankList from "./pages/admin/ranks/RankList";
-import FundTransferReport from "./pages/admin/reports/FundTransfer";
-import JoiningReport from "./pages/admin/reports/JoiningReport";
-import MemberIncome from "./pages/admin/reports/MemberIncome";
+import RankHolders from "./pages/admin/ranks/RankHolders";
+import InvestmentReport from "./pages/admin/reports/InvestmentReport";
+import LevelIncomeReport from "./pages/admin/reports/LevelIncomeReport";
+import ReferralIncomeReport from "./pages/admin/reports/ReferralIncomeReport";
+import RankIncomeReport from "./pages/admin/reports/RankIncomeReport";
 import PayoutReport from "./pages/admin/reports/PayoutReport";
-import PointHistory from "./pages/admin/reports/PointHistory";
-import TopEarners from "./pages/admin/reports/TopEarners";
 
 
 
@@ -299,7 +295,7 @@ function App() {
         {/* Admin Routes (/admin prefix) */}
         <Route
           path="/admin"
-          element={<Navigate to="/admin/dashboard/business" replace />}
+          element={<Navigate to="/admin/dashboard" replace />}
         />
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route
@@ -308,27 +304,23 @@ function App() {
         />
         <Route
           path="/admin-dashboard"
-          element={<Navigate to="/admin/dashboard/business" replace />}
+          element={<Navigate to="/admin/dashboard" replace />}
         />
         <Route
           path="/admin/dashboard"
-          element={<Navigate to="/admin/dashboard/business" replace />}
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
         />
         <Route
           path="/admin/dashboard/network"
-          element={
-            <ProtectedRoute requiredRole="admin">
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
+          element={<Navigate to="/admin/dashboard" replace />}
         />
         <Route
           path="/admin/dashboard/business"
-          element={
-            <ProtectedRoute requiredRole="admin">
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
+          element={<Navigate to="/admin/dashboard" replace />}
         />
         {/* Financial Routes */}
         <Route
@@ -422,14 +414,6 @@ function App() {
           }
         />
         <Route
-          path="/admin/members/holding-tank"
-          element={
-            <ProtectedRoute requiredRole="admin">
-              <AdminHoldingTank />
-            </ProtectedRoute>
-          }
-        />
-        <Route
           path="/admin/members/bank-approve"
           element={
             <ProtectedRoute requiredRole="admin">
@@ -488,46 +472,6 @@ function App() {
 
         {/* Settings Routes */}
         <Route
-          path="/admin/settings/brand"
-          element={
-            <ProtectedRoute requiredRole="admin">
-              <BrandSettings />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/settings/network"
-          element={
-            <ProtectedRoute requiredRole="admin">
-              <NetworkSettings />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/settings/network/binaryMatching"
-          element={
-            <ProtectedRoute requiredRole="admin">
-              <NetworkSettings />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/settings/network/*"
-          element={
-            <ProtectedRoute requiredRole="admin">
-              <NetworkSettings />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/settings/withdrawal"
-          element={
-            <ProtectedRoute requiredRole="admin">
-              <WithdrawalSettings />
-            </ProtectedRoute>
-          }
-        />
-        <Route
           path="/admin/settings/level-settings"
           element={
             <ProtectedRoute requiredRole="admin">
@@ -552,6 +496,14 @@ function App() {
           }
         />
         <Route
+          path="/admin/settings/return-date"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <ReturnDateSettings />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/admin/settings/ranks"
           element={
             <ProtectedRoute requiredRole="admin">
@@ -560,24 +512,12 @@ function App() {
           }
         />
         <Route
-          path="/admin/settings/level-report"
+          path="/admin/rank-list"
           element={
             <ProtectedRoute requiredRole="admin">
-              <LevelCommissionReport />
+              <RankHolders />
             </ProtectedRoute>
           }
-        />
-        <Route
-          path="/admin/settings/advanced"
-          element={
-            <ProtectedRoute requiredRole="admin">
-              <AdvancedSettings />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/settings/general"
-          element={<Navigate to="/admin/settings/brand" replace />}
         />
         <Route
           path="/admin/help-center"
@@ -587,45 +527,45 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route
-          path="/admin/settings/payment"
-          element={<Navigate to="/admin/settings/withdrawal" replace />}
-        />
-        <Route
-          path="/admin/settings/commissions"
-          element={<Navigate to="/admin/settings/network" replace />}
-        />
 
         {/* Reports Routes */}
         <Route
-          path="/admin/report/fund-transfer"
+          path="/admin/report/investment"
           element={
             <ProtectedRoute requiredRole="admin">
-              <FundTransferReport />
+              <InvestmentReport />
             </ProtectedRoute>
           }
         />
         <Route
-          path="/admin/report/joining"
+          path="/admin/financial/payout"
           element={
             <ProtectedRoute requiredRole="admin">
-              <JoiningReport />
+              <AdminPayout />
             </ProtectedRoute>
           }
         />
         <Route
-          path="/admin/report/member-income"
+          path="/admin/report/level-income"
           element={
             <ProtectedRoute requiredRole="admin">
-              <MemberIncome />
+              <LevelIncomeReport />
             </ProtectedRoute>
           }
         />
         <Route
-          path="/admin/report/income"
+          path="/admin/report/referral-income"
           element={
             <ProtectedRoute requiredRole="admin">
-              <MemberIncome />
+              <ReferralIncomeReport />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/report/rank-income"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <RankIncomeReport />
             </ProtectedRoute>
           }
         />
@@ -636,43 +576,6 @@ function App() {
               <PayoutReport />
             </ProtectedRoute>
           }
-        />
-        <Route
-          path="/admin/report/point-history"
-          element={
-            <ProtectedRoute requiredRole="admin">
-              <PointHistory />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/report/point/history"
-          element={
-            <ProtectedRoute requiredRole="admin">
-              <PointHistory />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/report/earners"
-          element={
-            <ProtectedRoute requiredRole="admin">
-              <TopEarners />
-            </ProtectedRoute>
-          }
-        />
-        {/* Legacy report route aliases */}
-        <Route
-          path="/admin/reports/sales"
-          element={<Navigate to="/admin/report/joining" replace />}
-        />
-        <Route
-          path="/admin/reports/payout"
-          element={<Navigate to="/admin/report/payout" replace />}
-        />
-        <Route
-          path="/admin/reports/tax"
-          element={<Navigate to="/admin/report/earners" replace />}
         />
 
         {/* Admin Route Aliases */}

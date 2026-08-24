@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
+import { FiEdit2, FiTrash2 } from "react-icons/fi";
 import AdminLayout from "../../../components/Admin/AdminLayout";
-import { getAllRanksApi, deleteRankApi, createRankApi, updateRankApi } from "../../../api/admin-ranks";
-// RankModal inlined below per project pattern
+import { getAllRanksApi, getRankApi, deleteRankApi, createRankApi, updateRankApi } from "../../../api/admin-ranks";
 import "./RankList.css";
 
 function RankList() {
@@ -13,25 +13,44 @@ function RankList() {
   const [toDelete, setToDelete] = useState(null);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [searchRankId, setSearchRankId] = useState("");
 
   useEffect(() => {
-    async function load() {
-      try {
-        const data = await getAllRanksApi();
-        if (data.success) setRanks(data.data);
-        else setError(data.error || "Unable to load ranks");
-      } catch (err) {
-        console.error("Failed to load ranks", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    load();
+    loadAllRanks();
   }, []);
 
   function showMessage(txt) {
     setMessage(txt);
     setTimeout(() => setMessage(""), 3500);
+  }
+  async function handleSearch(event) {
+    event.preventDefault();
+    const rankId = searchRankId.trim();
+    if (!rankId) {
+      loadAllRanks();
+      return;
+    }
+    setLoading(true);
+    setError("");
+    const result = await getRankApi(rankId);
+    if (result.success) setRanks(result.data ? [result.data] : []);
+    else {
+      setRanks([]);
+      setError(result.error || "Unable to find rank");
+    }
+    setLoading(false);
+  }
+
+  async function loadAllRanks() {
+    setLoading(true);
+    setError("");
+    const result = await getAllRanksApi();
+    if (result.success) setRanks(result.data);
+    else {
+      setRanks([]);
+      setError(result.error || "Unable to load ranks");
+    }
+    setLoading(false);
   }
 
   async function handleDelete(id) {
@@ -39,6 +58,7 @@ function RankList() {
     setToDelete(id);
     setConfirmOpen(true);
   }
+
 
   async function confirmDelete() {
     try {
@@ -54,7 +74,6 @@ function RankList() {
       setToDelete(null);
     }
   }
-
   function openCreate() {
     setEditing(null);
     setEditing(null);
@@ -74,12 +93,12 @@ function RankList() {
         const result = await updateRankApi(editing.id, form);
         if (!result.success) throw new Error(result.error);
         const updated = result.data;
-        setRanks((s) => s.map((r) => (r.id === updated.id ? updated : r)));
+        setRanks((s) => s.map((r) => (r.id === editing.id ? { ...r, ...form, ...updated } : r)));
         showMessage("Rank updated");
       } else {
         const result = await createRankApi(form);
         if (!result.success) throw new Error(result.error);
-        setRanks((s) => [result.data, ...s]);
+        setRanks((s) => [{ ...form, ...result.data }, ...s]);
         showMessage("Rank created");
       }
       setModalOpen(false);
@@ -95,10 +114,10 @@ function RankList() {
   function emptyRank() {
     return {
       rank_name: "",
-      rank_no: 0,
-      minimum_total_lots: 0,
-      minimum_direct_sponsors: 0,
-      reward_income: 0,
+      rank_no: "",
+      minimum_total_lots: "",
+      minimum_direct_sponsors: "",
+      reward_income: "",
       criteria: "",
       status: true,
       conditions: [],
@@ -111,6 +130,10 @@ function RankList() {
     setRankForm((s) => ({ ...s, [key]: val }));
   }
 
+  function updateNumberField(key, event) {
+    updateField(key, event.target.value === "" ? "" : Number(event.target.value));
+  }
+
   function updateCondition(idx, key, val) {
     const next = [...(rankForm.conditions || [])];
     next[idx] = { ...next[idx], [key]: val };
@@ -118,7 +141,7 @@ function RankList() {
   }
 
   function addCondition() {
-    setRankForm((s) => ({ ...s, conditions: [...(s.conditions || []), { minimum_group_lots: 0, required_group_count: 0, order_no: (s.conditions || []).length + 1 }] }));
+    setRankForm((s) => ({ ...s, conditions: [...(s.conditions || []), { minimum_group_lots: "", required_group_count: "", order_no: (s.conditions || []).length + 1 }] }));
   }
 
   function removeCondition(idx) {
@@ -135,7 +158,7 @@ function RankList() {
       <div className="ranks-page">
         <div className="page-header">
           <div>
-            <h2 className="page-title">Admin Ranks</h2>
+            <h1 className="page-title">Admin Ranks</h1>
             <div className="breadcrumb">
               <span>Dashboard</span>
               <span className="separator">•</span>
@@ -151,7 +174,16 @@ function RankList() {
         {loading ? (
           <p>Loading…</p>
         ) : (
-          <div className="ranks-card level-table-card">
+          <div className="ranks-card">
+            <div className="ranks-card-heading">
+              <h3>Rank Configuration</h3>
+              <p>Manage rank requirements, rewards, and eligibility criteria.</p>
+            </div>
+            <form className="ranks-search-bar" onSubmit={handleSearch}>
+              <input type="number" min="1" placeholder="Search by Rank ID" value={searchRankId} onChange={(event) => setSearchRankId(event.target.value)} />
+              <button type="submit" className="btn-primary">Search</button>
+              <button type="button" className="btn-secondary" onClick={() => { setSearchRankId(""); loadAllRanks(); }}>Show All</button>
+            </form>
             <div className="table-responsive">
               <table className="level-table">
                 <thead>
@@ -165,17 +197,18 @@ function RankList() {
                     <th>Criteria</th>
                     <th>Status</th>
                     <th>Actions</th>
+                    <th>Conditions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {ranks.length === 0 ? (
                     <tr>
-                      <td colSpan="9" className="empty-cell">No ranks configured.</td>
+                      <td colSpan="10" className="empty-cell">No ranks configured.</td>
                     </tr>
                   ) : ranks.map((r) => (
                     <tr key={r.id}>
                       <td>{r.id}</td>
-                      <td>{r.rank_name}</td>
+                      <td>{r.rank_name || "-"}</td>
                       <td>{r.rank_no}</td>
                       <td>{r.minimum_total_lots ?? "-"}</td>
                       <td>{r.minimum_direct_sponsors ?? "-"}</td>
@@ -184,11 +217,11 @@ function RankList() {
                       <td>{r.status === undefined ? "-" : r.status ? "Active" : "Inactive"}</td>
                       <td className="cell-actions">
                         <div>
-                          <button className="btn-secondary" onClick={() => navigator.clipboard.writeText(JSON.stringify(r))}>Copy</button>
-                          <button className="btn-secondary" onClick={() => openEdit(r)}>Edit</button>
-                          <button className="icon-btn icon-btn--danger" onClick={() => handleDelete(r.id)}>Del</button>
+                          <button className="icon-btn" title="Edit rank" aria-label="Edit rank" onClick={() => openEdit(r)}><FiEdit2 size={15} /></button>
+                          <button className="icon-btn icon-btn--danger" title="Delete rank" aria-label="Delete rank" onClick={() => handleDelete(r.id)}><FiTrash2 size={15} /></button>
                         </div>
                       </td>
+                      <td>{Array.isArray(r.conditions) && r.conditions.length > 0 ? r.conditions.map((condition) => `${condition.minimum_group_lots ?? 0} lots / ${condition.required_group_count ?? 0} users`).join(", ") : "-"}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -212,7 +245,7 @@ function RankList() {
                   </div>
                   <div className="field">
                     <label>Rank No</label>
-                    <input type="number" value={rankForm.rank_no} onChange={(e) => updateField("rank_no", Number(e.target.value))} />
+                    <input type="number" value={rankForm.rank_no} onChange={(e) => updateNumberField("rank_no", e)} />
                   </div>
                 </div>
 
@@ -224,18 +257,18 @@ function RankList() {
                 <div className="form-row">
                   <div className="field">
                     <label>Minimum Total Lots</label>
-                    <input type="number" value={rankForm.minimum_total_lots} onChange={(e) => updateField("minimum_total_lots", Number(e.target.value))} />
+                    <input type="number" value={rankForm.minimum_total_lots} onChange={(e) => updateNumberField("minimum_total_lots", e)} />
                   </div>
                   <div className="field">
                     <label>Direct Sponsors</label>
-                    <input type="number" value={rankForm.minimum_direct_sponsors} onChange={(e) => updateField("minimum_direct_sponsors", Number(e.target.value))} />
+                    <input type="number" value={rankForm.minimum_direct_sponsors} onChange={(e) => updateNumberField("minimum_direct_sponsors", e)} />
                   </div>
                 </div>
 
                 <div className="form-row">
                   <div className="field">
                     <label>Reward Income</label>
-                    <input type="number" value={rankForm.reward_income} onChange={(e) => updateField("reward_income", Number(e.target.value))} />
+                    <input type="number" value={rankForm.reward_income} onChange={(e) => updateNumberField("reward_income", e)} />
                   </div>
                   <div className="field">
                     <label>Status</label>
@@ -247,17 +280,19 @@ function RankList() {
                 </div>
 
                 <div className="conditions-list">
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <strong>Conditions</strong>
-                    <button className="small-btn" onClick={addCondition}>Add Condition</button>
+                  <div className="conditions-heading">
+                    <div>
+                      <strong>Conditions</strong>
+                      <p>Define the group requirements for this rank.</p>
+                    </div>
+                    <button type="button" className="small-btn" onClick={addCondition}>Add Condition</button>
                   </div>
-
                   {(rankForm.conditions || []).map((c, idx) => (
                     <div className="condition-item" key={idx}>
-                      <input type="number" value={c.minimum_group_lots} onChange={(e) => updateCondition(idx, "minimum_group_lots", Number(e.target.value))} />
-                      <input type="number" value={c.required_group_count} onChange={(e) => updateCondition(idx, "required_group_count", Number(e.target.value))} />
-                      <input type="number" value={c.order_no} onChange={(e) => updateCondition(idx, "order_no", Number(e.target.value))} />
-                      <button className="small-btn" onClick={() => removeCondition(idx)}>Remove</button>
+                      <label>Minimum Group Lots<input type="number" value={c.minimum_group_lots ?? ""} onChange={(e) => updateCondition(idx, "minimum_group_lots", e.target.value === "" ? "" : Number(e.target.value))} /></label>
+                      <label>Required Group Count<input type="number" value={c.required_group_count ?? ""} onChange={(e) => updateCondition(idx, "required_group_count", e.target.value === "" ? "" : Number(e.target.value))} /></label>
+                      <label>Order No<input type="number" value={c.order_no ?? ""} onChange={(e) => updateCondition(idx, "order_no", e.target.value === "" ? "" : Number(e.target.value))} /></label>
+                      <button type="button" className="small-btn condition-remove-btn" onClick={() => removeCondition(idx)}>Remove</button>
                     </div>
                   ))}
                 </div>

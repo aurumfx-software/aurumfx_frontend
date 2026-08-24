@@ -140,31 +140,17 @@ function KycTab({ profileData, setProfileData }) {
 
     setUploading(true);
 
-    if (aadhaarFront || aadhaarBack) {
-      const aadhaarRes = await uploadKycDocumentApi({
-        documentType: "aadhar",
-        aadharNumber: aadhaarNumber.trim(),
-        frontFile: aadhaarFront,
-        backFile: aadhaarBack,
-      });
-      if (!aadhaarRes.success) {
-        setUploadError(aadhaarRes.error || "Failed to upload Aadhaar documents");
-        setUploading(false);
-        return;
-      }
-    }
-
-    if (panFile) {
-      const panRes = await uploadKycDocumentApi({
-        documentType: "pan",
-        panNumber: panNumber.trim().toUpperCase(),
-        file: panFile,
-      });
-      if (!panRes.success) {
-        setUploadError(panRes.error || "Failed to upload PAN document");
-        setUploading(false);
-        return;
-      }
+    const uploadRes = await uploadKycDocumentApi({
+      aadharNumber: aadhaarNumber.trim(),
+      aadhaarFront,
+      aadhaarBack,
+      panNumber: panNumber.trim().toUpperCase(),
+      panImage: panFile,
+    });
+    if (!uploadRes.success) {
+      setUploadError(uploadRes.error || "Failed to upload KYC documents");
+      setUploading(false);
+      return;
     }
 
     setUploading(false);
@@ -212,7 +198,7 @@ function KycTab({ profileData, setProfileData }) {
 
         <div className="kyc-photo-row">
           <div className="field-group">
-            <span className="kyc-photo-slot-label">Front Side</span>
+            <span className="kyc-photo-slot-label">Aadhaar Card Front Photo</span>
             <label
               className={`upload-dropzone ${aadhaarFront ? "is-filled" : ""} ${kycLocked ? "is-disabled" : ""}`}
               htmlFor="aadhaar-front-upload"
@@ -235,7 +221,7 @@ function KycTab({ profileData, setProfileData }) {
             )}
           </div>
           <div className="field-group">
-            <span className="kyc-photo-slot-label">Back Side</span>
+            <span className="kyc-photo-slot-label">Aadhaar Card Back Photo</span>
             <label
               className={`upload-dropzone ${aadhaarBack ? "is-filled" : ""} ${kycLocked ? "is-disabled" : ""}`}
               htmlFor="aadhaar-back-upload"

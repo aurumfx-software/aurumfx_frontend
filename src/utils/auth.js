@@ -2,6 +2,7 @@ import { logoutApi } from "../api/auth";
 
 export function login(userId, password, requiredRole = null) {
   const trimmed = String(userId || "").trim();
+  sessionStorage.removeItem("adminImpersonationSession");
   const role = String(user ? user.role : requiredRole || "user").toLowerCase();
   const token = user ? `demo-token-${user.role}` : `token-${role}-${Date.now()}`;
 

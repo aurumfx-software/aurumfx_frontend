@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { FiSearch, FiUsers } from "react-icons/fi";
+import { FiSearch } from "react-icons/fi";
 import AdminLayout from "../../../components/Admin/AdminLayout";
 import { getAdminEnrollersApi } from "../../../api/admin-genealogy";
 import "./GenealogyPage.css";
@@ -41,7 +41,6 @@ function AdminEnrollersPage() {
         <div className="agen-page-header">
           <span className="agen-eyebrow"><span className="agen-eyebrow-dot" />Business Overview</span>
           <div className="agen-page-header-top">
-            <span className="agen-title-icon" aria-hidden="true"><FiUsers /></span>
             <div className="agen-page-header-text">
               <h1 className="agen-page-title">Enrolment</h1>
               <p className="agen-page-subtitle">View every member and their sponsor relationship</p>

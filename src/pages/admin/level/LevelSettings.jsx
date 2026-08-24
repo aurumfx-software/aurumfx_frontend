@@ -124,6 +124,10 @@ function LevelSettings() {
         </div>
 
         <div className="level-table-card">
+          <div className="level-card-heading">
+            <h2>Commission Levels</h2>
+            <p>Configure the commission percentage assigned to each level.</p>
+          </div>
           <div className="table-responsive">
             <table className="level-table">
               <colgroup>

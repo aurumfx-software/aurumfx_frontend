@@ -614,3 +614,39 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+/* Shared by Investment Plan and Return Type modals. */
+[data-theme="light"] .plan-investments-page .plan-modal-container,
+:root:not([data-theme="dark"]) .plan-investments-page .plan-modal-container {
+  background: #ffffff;
+}
+
+[data-theme="light"] .plan-investments-page .plan-modal-body input,
+[data-theme="light"] .plan-investments-page .plan-modal-body select,
+:root:not([data-theme="dark"]) .plan-investments-page .plan-modal-body input,
+:root:not([data-theme="dark"]) .plan-investments-page .plan-modal-body select {
+  background: #ffffff !important;
+  border-color: #d8dee8;
+  color: #1f2937 !important;
+  color-scheme: light;
+}
+
+[data-theme="light"] .plan-investments-page .plan-modal-body input::placeholder,
+:root:not([data-theme="dark"]) .plan-investments-page .plan-modal-body input::placeholder {
+  color: #94a3b8;
+}
+
+[data-theme="light"] .plan-investments-page .field-label,
+:root:not([data-theme="dark"]) .plan-investments-page .field-label {
+  color: #475569;
+}
+
+[data-theme="light"] .plan-investments-page .plan-modal-header,
+:root:not([data-theme="dark"]) .plan-investments-page .plan-modal-header {
+  border-bottom-color: #e5e7eb;
+}
+
+[data-theme="light"] .plan-investments-page .plan-modal-header h3,
+:root:not([data-theme="dark"]) .plan-investments-page .plan-modal-header h3 {
+  color: #171717;
+}

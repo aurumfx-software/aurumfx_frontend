@@ -1,183 +1,152 @@
-import { useState } from "react";
-import { FiCalendar, FiChevronDown, FiFolder, FiCheck, FiX, FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { useEffect, useState } from "react";
+import { FiCheck, FiEye, FiRefreshCw, FiX } from "react-icons/fi";
 import AdminLayout from "../../../components/Admin/AdminLayout";
+import {
+  getAllAdminMembersBankDetailsApi,
+  getAdminMemberBankDetailsApi,
+  updateAdminMemberBankStatusApi,
+} from "../../../api/admin-bankdetails";
 import "./AdminBankApprove.css";
 
+const statusLabel = (value) => String(value || "NOT SUBMITTED").replace(/_/g, " ").toUpperCase();
+const detailFields = [
+  ["Bank Name", "bank_name"], ["Account Number", "bank_account"], ["IFSC Code", "ifsc"],
+  ["Nominee Name", "nominee_name"], ["Nominee Relation", "nominee_relation"], ["Nominee Gender", "nominee_gender"],
+  ["Nominee Date of Birth", "nominee_dob"], ["Nominee Address", "nominee_address"], ["Nominee Aadhaar", "nominee_aadhar"], ["Nominee Mobile", "nominee_mobile"],
+];
+const rankOptions = ["No Rank", "Investor", "Associate", "Manager"];
+
 function AdminBankApprove() {
-  const [records, setRecords] = useState([]);
+  const [members, setMembers] = useState([]);
+  const [selectedUserId, setSelectedUserId] = useState("");
+  const [details, setDetails] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [loadingDetails, setLoadingDetails] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [rejectionReason, setRejectionReason] = useState("");
+  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [filterUser, setFilterUser] = useState("");
+  const [filterUserId, setFilterUserId] = useState("");
+  const [rank, setRank] = useState("");
 
-  const handleApprove = (id) => {
-    setRecords(records.map(r => r.id === id ? { ...r, status: "Approved" } : r));
+  const loadMembers = async () => {
+    setLoading(true);
+    setError("");
+    const result = await getAllAdminMembersBankDetailsApi();
+    if (result.success) setMembers(result.data);
+    else setError(result.error || "Unable to load bank details.");
+    setLoading(false);
   };
 
-  const handleReject = (id) => {
-    setRecords(records.map(r => r.id === id ? { ...r, status: "Rejected" } : r));
+  useEffect(() => { loadMembers(); }, []);
+
+  const handleReport = (event) => {
+    event.preventDefault();
+    loadMembers();
+  };
+
+  const filteredMembers = members.filter((member) => {
+    const memberDate = member.date_of_joining || member.date_of_join || member.created_at || "";
+    const memberRank = member.rank || member.rank_name || "";
+    return (!filterUserId || String(member.user_id || "").toLowerCase().includes(filterUserId.toLowerCase()))
+      && (!rank || memberRank === rank)
+      && (!startDate || !memberDate || String(memberDate).slice(0, 10) >= startDate)
+      && (!endDate || !memberDate || String(memberDate).slice(0, 10) <= endDate);
+  });
+
+  const openDetails = async (member) => {
+    setSelectedUserId(member.user_id);
+    setDetails(null);
+    setRejectionReason(member.bank_details?.rejection_reason || "");
+    setError("");
+    setLoadingDetails(true);
+    const result = await getAdminMemberBankDetailsApi(member.user_id);
+    if (result.success) {
+      const response = result.data || {};
+      setDetails({
+        ...member,
+        ...response,
+        bank_details: {
+          ...member.bank_details,
+          ...response.bank_details,
+          bank_name: response.bank_name ?? response.bank_details?.bank_name,
+          bank_account: response.bank_account ?? response.bank_details?.bank_account,
+          ifsc: response.ifsc ?? response.bank_details?.ifsc,
+          bank_proof: response.bank_proof ?? response.bank_details?.bank_proof,
+          status: response.bank_status ?? response.status ?? response.bank_details?.status,
+          rejection_reason: response.rejection_reason ?? response.bank_details?.rejection_reason,
+        },
+        nominee_details: { ...member.nominee_details, ...response.nominee_details },
+      });
+    } else setDetails(member);
+    setLoadingDetails(false);
+  };
+
+  const closeDetails = () => {
+    if (!saving) {
+      setDetails(null);
+      setSelectedUserId("");
+      setError("");
+      setMessage("");
+    }
+  };
+
+  const handleStatusUpdate = async (status) => {
+    if (!selectedUserId) return;
+    if (status === "Rejected" && !rejectionReason.trim()) {
+      setError("Please enter a reason before rejecting bank details.");
+      return;
+    }
+    setSaving(true);
+    setError("");
+    const result = await updateAdminMemberBankStatusApi(selectedUserId, status, rejectionReason.trim());
+    if (result.success) {
+      setMembers((current) => current.map((member) => member.user_id === selectedUserId ? { ...member, bank_details: { ...member.bank_details, ...result.data, status } } : member));
+      setDetails((current) => ({ ...current, bank_details: { ...current.bank_details, ...result.data, status } }));
+      setMessage(result.data.message || `Bank details ${status.toLowerCase()} successfully.`);
+    } else setError(result.error || "Unable to update bank status.");
+    setSaving(false);
   };
 
   return (
     <AdminLayout>
       <div className="admin-bank-approve-page">
-        {/* Page Header */}
         <div className="admin-page-header">
-          <h1 className="admin-page-title">Bank Approve</h1>
-          <div className="admin-breadcrumb">
-            <span>Dashboard</span>
-            <span className="crumb-sep">•</span>
-            <span className="crumb-active">Bank Approve</span>
-          </div>
+          <div><h1 className="admin-page-title">Bank Account Details</h1><div className="admin-breadcrumb"><span>Dashboard</span><span className="crumb-sep">•</span><span className="crumb-active">Bank Account Details</span></div></div>
+          <button type="button" className="yellow-report-btn" onClick={loadMembers} disabled={loading}><FiRefreshCw /> Refresh</button>
         </div>
 
-        {/* Main Filters Card */}
-        <div className="bank-filters-card">
+        <form className="bank-filters-card" onSubmit={handleReport}>
           <div className="filters-grid">
-            <div className="filter-input-wrap">
-              <input
-                type="date"
-                placeholder="Pick Start Date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="filter-date-field"
-              />
-              <FiCalendar className="field-date-icon" />
-            </div>
-
-            <div className="filter-input-wrap">
-              <input
-                type="date"
-                placeholder="Pick End Date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="filter-date-field"
-              />
-              <FiCalendar className="field-date-icon" />
-            </div>
-
-            <div className="filter-select-wrap">
-              <select
-                value={filterUser}
-                onChange={(e) => setFilterUser(e.target.value)}
-                className="filter-select-field"
-              >
-                <option value="">User Name</option>
-                <option value="FX262">FX262</option>
-                <option value="FX261">FX261</option>
-                <option value="FX260">FX260</option>
-              </select>
-              <FiChevronDown className="field-arrow" />
-            </div>
-
-            <button type="button" className="yellow-report-btn">
-              Get Report
-            </button>
+            <div className="filter-input-wrap"><input type="date" value={startDate} onChange={(event) => setStartDate(event.target.value)} className="filter-date-field" aria-label="Start date" /></div>
+            <div className="filter-input-wrap"><input type="date" value={endDate} onChange={(event) => setEndDate(event.target.value)} className="filter-date-field" aria-label="End date" /></div>
+            <div className="filter-select-wrap"><select value={filterUserId} onChange={(event) => setFilterUserId(event.target.value)} className="filter-select-field" aria-label="Select member"><option value="">All members</option>{members.map((member) => <option key={member.user_id} value={member.user_id}>{member.user_id} - {member.fullname}</option>)}</select></div>
+            <div className="filter-select-wrap"><select value={rank} onChange={(event) => setRank(event.target.value)} className="filter-select-field" aria-label="Filter by rank"><option value="">All ranks</option>{rankOptions.map((option) => <option key={option} value={option}>{option}</option>)}</select></div>
+            <button type="submit" className="yellow-report-btn">Get Report</button>
           </div>
-        </div>
+        </form>
 
-        {/* List Content Card */}
-        <div className="bank-list-card">
-          <div className="table-overflow-box">
-            <table className="admin-bank-table">
-              <thead>
-                <tr>
-                  <th>No</th>
-                  <th>Status</th>
-                  <th>Account ID</th>
-                  <th>User Name</th>
-                  <th>Bank Country</th>
-                  <th>BIC</th>
-                  <th>IBAN</th>
-                  <th>Currency</th>
-                  <th>First Name</th>
-                  <th>Last Name</th>
-                  <th>Phone</th>
-                  <th>City</th>
-                  <th>Country</th>
-                  <th>Postcode</th>
-                  <th>Region</th>
-                  <th>Sort Code</th>
-                  <th>Account No</th>
-                  <th>Address</th>
-                  <th>Created At</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {records.map((r, idx) => (
-                  <tr key={r.id}>
-                    <td>{idx + 1}</td>
-                    <td>
-                      <span className={`status-badge badge-${r.status.toLowerCase().replace(" ", "")}`}>
-                        {r.status}
-                      </span>
-                    </td>
-                    <td>{r.accountId}</td>
-                    <td className="fw-bold">{r.username}</td>
-                    <td>{r.bankCountry}</td>
-                    <td>{r.bic}</td>
-                    <td>{r.iban}</td>
-                    <td>{r.currency}</td>
-                    <td>{r.firstName}</td>
-                    <td>{r.lastName}</td>
-                    <td>{r.phone}</td>
-                    <td>{r.city}</td>
-                    <td>{r.country}</td>
-                    <td>{r.postcode}</td>
-                    <td>{r.region}</td>
-                    <td>{r.sortCode}</td>
-                    <td>{r.accountNo}</td>
-                    <td className="addr-cell">{r.address}</td>
-                    <td>{r.createdAt}</td>
-                    <td>
-                      {r.status === "Pending" && (
-                        <div className="bank-actions">
-                          <button type="button" className="btn-approve" onClick={() => handleApprove(r.id)}>
-                            <FiCheck /> Approve
-                          </button>
-                          <button type="button" className="btn-reject" onClick={() => handleReject(r.id)}>
-                            <FiX /> Reject
-                          </button>
-                        </div>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-                {records.length === 0 && (
-                  <tr>
-                    <td colSpan="20" style={{ padding: 0 }}>
-                      <div className="docs-empty-state">
-                        <div className="empty-magnifier-box">
-                          <div className="magnifier-art">
-                            <FiFolder className="folder-back-art" />
-                            <div className="glass-lens-art">
-                              <span className="glass-quest">?</span>
-                            </div>
-                          </div>
-                        </div>
-                        <h4 className="empty-state-label">No Data Available</h4>
-                      </div>
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+        <section className="bank-details-card admin-bank-list-card">
+          <div className="admin-bank-list-heading"><div><h2>Member Bank Details</h2><p>Review submitted bank information and verification status.</p></div><span>{filteredMembers.length} members</span></div>
+          <div className="admin-bank-list-table-wrap">
+            <table className="admin-bank-list-table"><thead><tr><th>No</th><th>User ID</th><th>Name</th><th>Bank Name</th><th>Account Number</th><th>IFSC</th><th>Status</th><th>Action</th></tr></thead><tbody>
+              {loading ? <tr><td colSpan="8" className="bank-state">Loading bank details...</td></tr> : error ? <tr><td colSpan="8" className="bank-state">{error}</td></tr> : filteredMembers.length === 0 ? <tr><td colSpan="8" className="bank-state">No bank details submitted.</td></tr> : filteredMembers.map((member, index) => { const bank = member.bank_details || {}; return <tr key={member.user_id}><td>{index + 1}</td><td className="bank-member-id">{member.user_id || "-"}</td><td>{member.fullname || "-"}</td><td>{bank.bank_name || "-"}</td><td>{bank.bank_account || "-"}</td><td>{bank.ifsc || "-"}</td><td><span className={`bank-status bank-status--${String(bank.status || "not-submitted").toLowerCase()}`}>{statusLabel(bank.status)}</span></td><td><button type="button" className="bank-view-btn" onClick={() => openDetails(member)}><FiEye /> View</button></td></tr>; })}
+            </tbody></table>
           </div>
+        </section>
 
-          {/* Table Pagination Footer */}
-          <div className="table-pagination-footer">
-            <button type="button" className="page-nav-btn" disabled>
-              <FiChevronLeft />
-            </button>
-            <button type="button" className="page-number-btn page-number-btn--active">
-              1
-            </button>
-            <button type="button" className="page-nav-btn" disabled>
-              <FiChevronRight />
-            </button>
+        {details && <div className="admin-bank-modal-backdrop" onClick={closeDetails}>
+          <div className="admin-bank-modal" onClick={(event) => event.stopPropagation()}>
+            <div className="admin-bank-modal-header"><div><span className="bank-details-eyebrow">Member Bank Verification</span><h2>{details.fullname || selectedUserId}</h2><span className="bank-member-id">{details.user_id || selectedUserId}</span></div><button type="button" onClick={closeDetails} aria-label="Close"><FiX /></button></div>
+            {loadingDetails ? <div className="bank-state"><FiRefreshCw className="bank-spinner" /> Loading details...</div> : <>
+              <div className="admin-bank-modal-body"><div className="admin-bank-modal-status"><span>Status</span><strong>{statusLabel(details.bank_details?.status || details.bank_status)}</strong></div><div className="bank-details-section"><h3>Bank and Nominee Information</h3><div className="bank-details-grid">{detailFields.map(([label, key]) => <div className="bank-detail-item" key={key}><span>{label}</span><strong>{details.bank_details?.[key] || details.nominee_details?.[key] || "Not provided"}</strong></div>)}</div></div><div className="bank-details-section"><h3>Uploaded Documents</h3><div className="admin-bank-document-grid">{[ ["Bank Proof", details.bank_details?.bank_proof], ["Nominee Aadhaar Front", details.nominee_details?.nominee_aadhar_front], ["Nominee Aadhaar Back", details.nominee_details?.nominee_aadhar_back] ].map(([label, url]) => url ? <a className="bank-document-link" href={url} target="_blank" rel="noreferrer" key={label}><img src={url} alt={label} /><span>{label}</span></a> : <span className="bank-documents-empty" key={label}>{label}: Not provided</span>)}</div></div></div>
+              {error && <div className="bank-feedback bank-feedback--error">{error}</div>}{message && <div className="bank-feedback bank-feedback--success">{message}</div>}
+              <div className="bank-status-actions"><div className="rejection-field"><label htmlFor="bank-rejection-reason">Rejection reason</label><textarea id="bank-rejection-reason" value={rejectionReason} onChange={(event) => setRejectionReason(event.target.value)} placeholder="Required when rejecting" rows="3" /></div><div className="bank-action-buttons"><button type="button" className="btn-approve" onClick={() => handleStatusUpdate("Approved")} disabled={saving}><FiCheck /> Approve</button><button type="button" className="btn-reject" onClick={() => handleStatusUpdate("Rejected")} disabled={saving}><FiX /> Reject</button></div></div>
+            </>}
           </div>
-        </div>
-
+        </div>}
       </div>
     </AdminLayout>
   );

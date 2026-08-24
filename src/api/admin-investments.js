@@ -106,8 +106,11 @@ export const getAdminInvestmentDetailsApi = async (id) => {
  * Approve/Reject Investment via PUT /admin/investments/{id}
  * Body: { approval_status: string }  e.g. "Approved" | "Rejected"
  */
-export const approveRejectInvestmentApi = async (id, approvalStatus) => {
-  const payload = { approval_status: approvalStatus };
+export const approveRejectInvestmentApi = async (id, approvalStatus, rejectionReason = "") => {
+  const payload = {
+    approval_status: approvalStatus,
+    ...(approvalStatus === "Rejected" && { rejection_reason: rejectionReason.trim() }),
+  };
   try {
     const response = await api.put(`/admin/investments/${id}`, payload);
     return { success: true, data: response.data };

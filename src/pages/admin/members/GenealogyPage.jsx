@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { FiUsers, FiSearch, FiBriefcase } from "react-icons/fi";
+import { FiSearch, FiBriefcase } from "react-icons/fi";
 import AdminLayout from "../../../components/Admin/AdminLayout";
 import {
   getAllGenealogyApi,
@@ -175,9 +175,6 @@ function GenealogyPage() {
           </span>
 
           <div className="agen-page-header-top">
-            <span className="agen-title-icon" aria-hidden="true">
-              <FiUsers />
-            </span>
             <div className="agen-page-header-text">
               <h1 className="agen-page-title">Genealogy</h1>
               <p className="agen-page-subtitle">

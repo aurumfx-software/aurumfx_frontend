@@ -1,10 +1,4 @@
-/* ==========================================================================
-   Profile — simple modern layout
-   Flat white/near-black cards, soft shadows, one warm accent color, clean
-   sans-serif type. No ornamental framing, corner marks, or dashed rules,
-   and no background gradients — flat surfaces with gold accent borders.
-   Driven entirely by CSS variables so light/dark just work.
-   ========================================================================== */
+
 
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap');
 
@@ -878,12 +872,49 @@
   background: var(--udb-surface);
 }
 
+.bank-document-preview-wrap {
+  width: 100%;
+  max-width: 280px;
+  margin-top: 14px;
+}
+
+.bank-document-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 18px;
+}
+
+.bank-document-gallery .bank-document-preview-wrap {
+  max-width: none;
+  margin-top: 0;
+}
+
+.document-preview-label {
+  display: block;
+  min-height: 18px;
+  margin-bottom: 8px;
+  color: var(--udb-text);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.bank-document-preview-wrap .bank-document-preview {
+  margin-top: 0;
+}
+
 .bank-document-preview img {
   display: block;
   width: 100%;
-  height: 140px;
+  height: 220px;
   object-fit: contain;
   background: var(--udb-accent-soft);
+}
+
+.bank-document-gallery .bank-document-preview {
+  border-radius: 12px;
+  box-shadow: 0 8px 22px rgba(76, 55, 18, 0.08);
 }
 
 .bank-document-preview a {
@@ -899,6 +930,16 @@
   border-radius: 7px;
   background: var(--udb-surface);
   color: var(--udb-text-soft);
+}
+
+@media (max-width: 760px) {
+  .bank-document-gallery {
+    grid-template-columns: 1fr;
+  }
+
+  .bank-document-gallery .bank-document-preview img {
+    height: 200px;
+  }
 }
 
 /* ---------------------------------------------------------------------- */

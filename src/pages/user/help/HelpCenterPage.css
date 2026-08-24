@@ -1,10 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&display=swap');
 
-/* ==========================================================================
-   Help Center — Support Tickets only
-   Same warm gold token system as Investments.css / EWallet.css.
-   Tables styled to match GenealogyPage's enroller/list table.
-   ========================================================================== */
+
 
 .help-center-page {
   --hc-bg: #f7f8fa;

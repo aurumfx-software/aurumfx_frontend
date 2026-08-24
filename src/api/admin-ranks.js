@@ -46,6 +46,16 @@ export async function getRankApi(rankId) {
   }
 }
 
+export async function getRankHoldersApi(rankId) {
+  try {
+    const res = await axios.get(`/admin/ranks/${rankId}/holders`);
+    const data = res.data?.data || res.data || [];
+    return { success: true, data: Array.isArray(data) ? data : [] };
+  } catch (error) {
+    return { success: false, error: getErrorMessage(error, "Unable to load rank holders") };
+  }
+}
+
 export async function createRankApi(payload) {
   try {
     const res = await axios.post(`/admin/ranks/`, normalizeRankPayload(payload));
@@ -76,6 +86,7 @@ export async function deleteRankApi(rankId) {
 export default {
   getAllRanksApi,
   getRankApi,
+  getRankHoldersApi,
   createRankApi,
   updateRankApi,
   deleteRankApi,

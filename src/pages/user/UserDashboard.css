@@ -3,7 +3,7 @@
 }
 
 .user-dashboard-container {
-  /* ---- Light theme: aliased to global AurumFX tokens (theme.css) ---- */
+  
   --udb-bg: #ffffff;
   --udb-surface: var(--bg-surface);
   --udb-surface-alt: var(--bg-elevated);

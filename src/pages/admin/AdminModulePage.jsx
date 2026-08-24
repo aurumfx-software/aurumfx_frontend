@@ -29,7 +29,6 @@ const moduleTitles = {
   "/admin/tools/videos": { title: "Videos", category: "Tools" },
   "/admin/tools/faqs": { title: "FAQ Management", category: "Tools" },
   "/admin/members/network": { title: "Network Members", category: "Members Management" },
-  "/admin/members/holding-tank": { title: "Holding Tank", category: "Members Management" },
   "/admin/members/bank-account": { title: "Bank Account Details", category: "Members Management" },
   "/admin/members/bank-approve": { title: "Bank Approve", category: "Members Management" },
   "/admin/members/kyc-details": { title: "KYC Details", category: "Members Management" },
@@ -38,9 +37,10 @@ const moduleTitles = {
   "/admin/settings/general": { title: "General Settings", category: "Settings" },
   "/admin/settings/payment": { title: "Payment Gateways", category: "Settings" },
   "/admin/settings/commissions": { title: "Commission Structure", category: "Settings" },
-  "/admin/reports/sales": { title: "Sales Reports", category: "Reports" },
-  "/admin/reports/payout": { title: "Payout Reports", category: "Reports" },
-  "/admin/reports/tax": { title: "Tax & Analytics", category: "Reports" },
+  "/admin/report/investment": { title: "Investment Report", category: "Reports" },
+  "/admin/report/level-income": { title: "Level Income Report", category: "Reports" },
+  "/admin/report/referral-income": { title: "Referral Income Report", category: "Reports" },
+  "/admin/report/rank-income": { title: "Rank Income Report", category: "Reports" },
 };
 
 function AdminModulePage() {

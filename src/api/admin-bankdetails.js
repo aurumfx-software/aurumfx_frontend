@@ -1,0 +1,41 @@
+import api from "./axios";
+
+const getErrorMessage = (error, fallback) =>
+  error.response?.data?.message ||
+  error.response?.data?.error ||
+  error.response?.data?.detail?.[0]?.msg ||
+  fallback;
+
+/** GET /api/admin/members/{user_id}/bank-details */
+export const getAllAdminMembersBankDetailsApi = async () => {
+  try {
+    const response = await api.get("/api/admin/members/bank-details");
+    const data = response.data?.data || response.data || [];
+    return { success: true, data: Array.isArray(data) ? data : [] };
+  } catch (error) {
+    return { success: false, error: getErrorMessage(error, "Unable to load members bank details.") };
+  }
+};
+
+/** GET /api/admin/members/{user_id}/bank-details */
+export const getAdminMemberBankDetailsApi = async (userId) => {
+  try {
+    const response = await api.get(`/api/admin/members/${encodeURIComponent(userId)}/bank-details`);
+    return { success: true, data: response.data?.data || response.data || {} };
+  } catch (error) {
+    return { success: false, error: getErrorMessage(error, "Unable to load bank details.") };
+  }
+};
+
+/** PATCH /api/admin/members/{user_id}/bank-status */
+export const updateAdminMemberBankStatusApi = async (userId, status, rejectionReason = "") => {
+  try {
+    const response = await api.patch(`/api/admin/members/${encodeURIComponent(userId)}/bank-status`, {
+      status,
+      rejection_reason: rejectionReason || null,
+    });
+    return { success: true, data: response.data?.data || response.data || {} };
+  } catch (error) {
+    return { success: false, error: getErrorMessage(error, "Unable to update bank status.") };
+  }
+};

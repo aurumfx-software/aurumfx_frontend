@@ -349,7 +349,7 @@ function Profile({ defaultTab = "profile" }) {
               : "not_submitted"
           );
           setBankRejectionReason(bd?.rejection_reason || "");
-          setProofDocumentName(bd?.proof_document_name || bd?.proof_document || (bd?.bank_proof ? "Existing passbook proof" : ""));
+          setProofDocumentName(bd?.proof_document_name || (bd?.bank_proof ? "Uploaded" : ""));
           setProofDocumentUrl(bd?.bank_proof || bd?.proof_document || "");
           setNomineeAadharFrontUrl(nd.nominee_aadhar_front || "");
           setNomineeAadharBackUrl(nd.nominee_aadhar_back || "");
@@ -390,7 +390,7 @@ function Profile({ defaultTab = "profile" }) {
           ? normalizeStatus(bd.bank_status || bd.status)
           : "not_submitted"
       );
-      setProofDocumentName(bd.bank_proof ? "Existing passbook proof" : "");
+      setProofDocumentName(bd.bank_proof ? "Uploaded" : "");
       setProofDocumentUrl(bd.bank_proof || "");
       setNomineeAadharFrontUrl(nd.nominee_aadhar_front || "");
       setNomineeAadharBackUrl(nd.nominee_aadhar_back || "");

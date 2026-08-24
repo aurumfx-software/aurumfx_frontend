@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { FiCopy, FiShare2, FiCheck, FiAward, FiHash } from "react-icons/fi";
+import { FiCopy, FiShare2, FiCheck, FiHash } from "react-icons/fi";
 import trophyImg from "../../assets/goldbar.png";
+import logoImg from "../../assets/logo.png";
 import "./UserRankCard.css";
 
 function UserRankCard({ user }) {
@@ -8,30 +9,35 @@ function UserRankCard({ user }) {
 
   const fullName = user?.fullName || "PRAVEEN DINESH";
   const userId = user?.userId || "FX001";
-  const rank = user?.rank || "FX Hero";
+  const rank = user?.rank && user.rank !== "Unranked" ? user.rank : "";
   const nextRank = user?.nextRank || "FX Legend";
   const totalLots = user?.totalLots || 1;
   const referralLink =
     user?.referralLink || `https://app.aurumfx.net/auth/register?ref=${userId}`;
 
   const handleCopy = () => {
-    if (navigator?.clipboard?.writeText) {
+    if (navigator.clipboard?.writeText) {
       navigator.clipboard.writeText(referralLink).catch(() => {});
     }
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleShare = () => {
-    if (navigator?.share) {
-      navigator
-        .share({
-          title: "Join AurumFX",
-          text: "Join me on AurumFX",
-          url: referralLink,
-        })
-        .catch(() => {});
-    } else {
+  const handleShare = async () => {
+    if (!navigator?.share) {
+      handleCopy();
+      return;
+    }
+
+    try {
+      const shareData = {
+        title: "Join AurumFX",
+        text: `Join ${fullName} on AurumFX: ${referralLink}`,
+        url: referralLink,
+      };
+      await navigator.share(shareData);
+    } catch {
+      // Use the link-only copy fallback when sharing is unavailable or cancelled.
       handleCopy();
     }
   };
@@ -42,6 +48,8 @@ function UserRankCard({ user }) {
       <div className="gold-vip-card">
         <div className="gold-vip-sheen" />
         <div className="gold-vip-grain" />
+
+        <img src={logoImg} alt="AurumFX" className="vip-logo" />
 
         <div className="vip-avatar">
           {user?.avatar ? (
@@ -58,11 +66,6 @@ function UserRankCard({ user }) {
           <FiHash />
           <span>{userId}</span>
         </div>
-
-        <span className="vip-rank">
-          <FiAward />
-          {rank}
-        </span>
 
         {/* Referral URL box */}
         <div className="referral-wrap">

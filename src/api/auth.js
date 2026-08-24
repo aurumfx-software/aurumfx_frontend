@@ -7,6 +7,7 @@ import api from "./axios";
  */
 export const loginApi = async (userId, password, requiredRole = null) => {
   const trimmedUserId = String(userId || "").trim();
+  sessionStorage.removeItem("adminImpersonationSession");
   try {
     const loginEndpoint =
       requiredRole && requiredRole.toLowerCase() === "admin"
@@ -91,8 +92,11 @@ export const loginApi = async (userId, password, requiredRole = null) => {
       return { success: true, redirect: "/admin/dashboard/business" };
     }
 
-    let errorMessage =
-      error.response?.data?.message || error.response?.data?.error;
+    const responseData = error.response?.data || {};
+    const detail = Array.isArray(responseData.detail)
+      ? responseData.detail.map((item) => item.msg).filter(Boolean).join(", ")
+      : responseData.detail;
+    let errorMessage = responseData.message || responseData.error || detail;
 
     if (
       !errorMessage ||
@@ -417,25 +421,23 @@ export const uploadProfileImageApi = async (file) => {
 /* ------------------------------------------------------------------------ */
 
 /**
- * Upload KYC documents via POST /api/user/kyc/upload
- * multipart/form-data: { document_type, aadhar_no, pan, front_file, back_file, file }
+ * Upload Aadhaar and PAN documents via POST /api/user/kyc/upload.
+ * multipart/form-data: { aadhar_no, aadhar_front, aadhar_back, pan_no, pan_image }
  */
 export const uploadKycDocumentApi = async ({
-  documentType,
   aadharNumber,
   panNumber,
-  frontFile,
-  backFile,
-  file,
+  aadhaarFront,
+  aadhaarBack,
+  panImage,
 }) => {
   try {
     const formData = new FormData();
-    formData.append("document_type", documentType);
     if (aadharNumber) formData.append("aadhar_no", aadharNumber);
-    if (panNumber) formData.append("pan", panNumber);
-    if (frontFile) formData.append("front_file", frontFile);
-    if (backFile) formData.append("back_file", backFile);
-    if (file) formData.append("file", file);
+    if (aadhaarFront) formData.append("aadhar_front", aadhaarFront);
+    if (aadhaarBack) formData.append("aadhar_back", aadhaarBack);
+    if (panNumber) formData.append("pan_no", panNumber);
+    if (panImage) formData.append("pan_image", panImage);
 
     const response = await api.post("/api/user/kyc/upload", formData, {
       headers: {

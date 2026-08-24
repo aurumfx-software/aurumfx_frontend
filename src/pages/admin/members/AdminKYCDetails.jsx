@@ -1,199 +1,94 @@
-import { useState } from "react";
-import { FiCalendar, FiChevronDown, FiEye, FiEdit2, FiCheck, FiX } from "react-icons/fi";
+import { useEffect, useState } from "react";
+import { FiCheck, FiEye, FiRefreshCw, FiX } from "react-icons/fi";
 import AdminLayout from "../../../components/Admin/AdminLayout";
+import {
+  getAllAdminMembersKycApi,
+  getAdminMemberKycApi,
+  updateAdminMemberKycStatusApi,
+} from "../../../api/admin-kyc";
 import "./AdminKYCDetails.css";
+import "./AdminBankApprove.css";
 
-const initialKYC = [
-  { no: 1, username: "FX259", name: "Abhijay", email: "sreedharan1962@gmail.com", status: "Pending", date: "30 Jul 2026", panNumber: "TNTPS8613G", aadharNumber: "785633372449" },
-  { no: 2, username: "FX258", name: "Aravind", email: "arumugamlali1232@gmail.com", status: "Pending", date: "29 Jul 2026", panNumber: "FURPA8972D", aadharNumber: "635741961916" },
-  { no: 3, username: "FX256", name: "SUCHITHRA", email: "suchithrasatheesh007@gmail.com", status: "Pending", date: "29 Jul 2026", panNumber: "EJUPG0140L", aadharNumber: "692913103271" },
-  { no: 4, username: "FX255", name: "Mohanan", email: "mobivivi@gmail.com", status: "Pending", date: "26 Jul 2026", panNumber: "EWIPP2897E", aadharNumber: "356022903905" }
-];
+const statusLabel = (value) => String(value || "NOT SUBMITTED").replace(/_/g, " ").toUpperCase();
+const fields = [["Aadhaar Number", "aadhar_no"], ["PAN Number", "pan_no"], ["Uploaded At", "uploaded_at"], ["Last Updated", "updated_at"]];
+const formatDate = (value) => value ? new Date(value).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) : "-";
 
 function AdminKYCDetails() {
-  const [kycList, setKycList] = useState(initialKYC);
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [filterUser, setFilterUser] = useState("");
-  const [filterStatus, setFilterStatus] = useState("");
+  const [members, setMembers] = useState([]);
+  const [selectedUserId, setSelectedUserId] = useState("");
+  const [details, setDetails] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [loadingDetails, setLoadingDetails] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [rejectionReason, setRejectionReason] = useState("");
+  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
 
-  const handleApprove = (username) => {
-    setKycList(kycList.map(item => item.username === username ? { ...item, status: "Approved" } : item));
+  const loadMembers = async () => {
+    setLoading(true);
+    setError("");
+    const result = await getAllAdminMembersKycApi();
+    if (result.success) setMembers(result.data);
+    else setError(result.error || "Unable to load KYC details.");
+    setLoading(false);
   };
 
-  const handleReject = (username) => {
-    setKycList(kycList.map(item => item.username === username ? { ...item, status: "Rejected" } : item));
+  useEffect(() => { loadMembers(); }, []);
+
+  const openDetails = async (member) => {
+    setSelectedUserId(member.user_id);
+    setDetails(null);
+    setRejectionReason(member.kyc?.rejection_reason || "");
+    setError("");
+    setLoadingDetails(true);
+    const result = await getAdminMemberKycApi(member.user_id);
+    setDetails(result.success ? { ...member, ...result.data, kyc: { ...member.kyc, ...result.data?.kyc, ...result.data } } : member);
+    setLoadingDetails(false);
   };
 
-  const handleGetReport = () => {
-    let filtered = initialKYC;
-    if (filterUser) {
-      filtered = filtered.filter(item => item.username === filterUser);
+  const closeDetails = () => {
+    if (!saving) {
+      setDetails(null);
+      setSelectedUserId("");
+      setError("");
+      setMessage("");
     }
-    if (filterStatus) {
-      filtered = filtered.filter(item => item.status === filterStatus);
-    }
-    setKycList(filtered);
   };
 
+  const handleStatusUpdate = async (status) => {
+    if (!selectedUserId) return;
+    if (status === "Rejected" && !rejectionReason.trim()) {
+      setError("Please enter a reason before rejecting KYC.");
+      return;
+    }
+    setSaving(true);
+    setError("");
+    const result = await updateAdminMemberKycStatusApi(selectedUserId, status, rejectionReason.trim());
+    if (result.success) {
+      const updated = result.data || {};
+      setMembers((current) => current.map((member) => member.user_id === selectedUserId ? { ...member, kyc: { ...member.kyc, ...updated, status } } : member));
+      setDetails((current) => ({ ...current, kyc: { ...current.kyc, ...updated, status } }));
+      setMessage(updated.message || `KYC ${status.toLowerCase()} successfully.`);
+    } else setError(result.error || "Unable to update KYC status.");
+    setSaving(false);
+  };
+
+  const kyc = details?.kyc || {};
   return (
     <AdminLayout>
-      <div className="admin-kyc-page">
-        {/* Page Header */}
-        <div className="admin-page-header">
-          <h1 className="admin-page-title">KYC Details</h1>
-          <div className="admin-breadcrumb">
-            <span>Dashboard</span>
-            <span className="crumb-sep">•</span>
-            <span className="crumb-active">KYC Details</span>
-          </div>
-        </div>
+      <div className="admin-bank-approve-page admin-kyc-page">
+        <div className="admin-page-header"><div><h1 className="admin-page-title">KYC Details</h1><div className="admin-breadcrumb"><span>Dashboard</span><span className="crumb-sep">•</span><span className="crumb-active">KYC Details</span></div></div><button type="button" className="yellow-report-btn" onClick={loadMembers} disabled={loading}><FiRefreshCw /> Refresh</button></div>
+        <section className="bank-details-card admin-bank-list-card">
+          <div className="admin-bank-list-heading"><div><h2>Member KYC Details</h2><p>Review submitted identity documents and verification status.</p></div><span>{members.length} members</span></div>
+          <div className="admin-bank-list-table-wrap"><table className="admin-bank-list-table"><thead><tr><th>No</th><th>User ID</th><th>Name</th><th>Aadhaar Number</th><th>PAN Number</th><th>Status</th><th>Action</th></tr></thead><tbody>
+            {loading ? <tr><td colSpan="7" className="bank-state">Loading KYC details...</td></tr> : error ? <tr><td colSpan="7" className="bank-state">{error}</td></tr> : members.length === 0 ? <tr><td colSpan="7" className="bank-state">No KYC details submitted.</td></tr> : members.map((member, index) => <tr key={member.user_id}><td>{index + 1}</td><td className="bank-member-id">{member.user_id || "-"}</td><td>{member.fullname || "-"}</td><td>{member.kyc?.aadhar_no || "-"}</td><td>{member.kyc?.pan_no || "-"}</td><td><span className={`bank-status bank-status--${String(member.kyc?.status || "not-submitted").toLowerCase()}`}>{statusLabel(member.kyc?.status)}</span></td><td><button type="button" className="bank-view-btn" onClick={() => openDetails(member)}><FiEye /> View</button></td></tr>)}
+          </tbody></table></div>
+        </section>
 
-        {/* Filters Card */}
-        <div className="kyc-filters-card">
-          <div className="filters-grid">
-            <div className="filter-input-wrap">
-              <input
-                type="date"
-                placeholder="Pick Start Date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="filter-date-field"
-              />
-              <FiCalendar className="field-date-icon" />
-            </div>
-
-            <div className="filter-input-wrap">
-              <input
-                type="date"
-                placeholder="Pick End Date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="filter-date-field"
-              />
-              <FiCalendar className="field-date-icon" />
-            </div>
-
-            <div className="filter-select-wrap">
-              <select
-                value={filterUser}
-                onChange={(e) => setFilterUser(e.target.value)}
-                className="filter-select-field"
-              >
-                <option value="">Username</option>
-                {initialKYC.map(item => (
-                  <option key={item.username} value={item.username}>{item.username}</option>
-                ))}
-              </select>
-              <FiChevronDown className="field-arrow" />
-            </div>
-
-            <div className="filter-select-wrap">
-              <select
-                value={filterStatus}
-                onChange={(e) => setFilterStatus(e.target.value)}
-                className="filter-select-field"
-              >
-                <option value="">Status</option>
-                <option value="Pending">Pending</option>
-                <option value="Approved">Approved</option>
-                <option value="Rejected">Rejected</option>
-              </select>
-              <FiChevronDown className="field-arrow" />
-            </div>
-
-            <button type="button" className="yellow-report-btn" onClick={handleGetReport}>
-              Get Report
-            </button>
-          </div>
-        </div>
-
-        {/* List Content Card */}
-        <div className="kyc-list-card">
-          <div className="table-overflow-box">
-            <table className="admin-kyc-table">
-              <thead>
-                <tr>
-                  <th>No</th>
-                  <th>Username</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Status</th>
-                  <th>Date</th>
-                  <th>PanCard</th>
-                  <th>Pancard Number</th>
-                  <th>Aadhar card front</th>
-                  <th>Aadhar card back</th>
-                  <th>Aadhar card number</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {kycList.map((item, idx) => (
-                  <tr key={item.username}>
-                    <td>{idx + 1}</td>
-                    <td className="fw-bold">{item.username}</td>
-                    <td>{item.name}</td>
-                    <td>{item.email}</td>
-                    <td>
-                      <span className={`status-badge badge-${item.status.toLowerCase()}`}>
-                        {item.status}
-                      </span>
-                    </td>
-                    <td>{item.date}</td>
-                    <td>
-                      <div className="kyc-doc-actions">
-                        <button type="button" className="btn-doc-view" title="View Document">
-                          <FiEye />
-                        </button>
-                        <button type="button" className="btn-doc-edit" title="Edit/Verify">
-                          <FiEdit2 />
-                        </button>
-                      </div>
-                    </td>
-                    <td>{item.panNumber}</td>
-                    <td>
-                      <div className="kyc-doc-actions">
-                        <button type="button" className="btn-doc-view" title="View Document">
-                          <FiEye />
-                        </button>
-                        <button type="button" className="btn-doc-edit" title="Edit/Verify">
-                          <FiEdit2 />
-                        </button>
-                      </div>
-                    </td>
-                    <td>
-                      <div className="kyc-doc-actions">
-                        <button type="button" className="btn-doc-view" title="View Document">
-                          <FiEye />
-                        </button>
-                        <button type="button" className="btn-doc-edit" title="Edit/Verify">
-                          <FiEdit2 />
-                        </button>
-                      </div>
-                    </td>
-                    <td>{item.aadharNumber}</td>
-                    <td>
-                      {item.status === "Pending" ? (
-                        <div className="kyc-actions">
-                          <button type="button" className="btn-approve" onClick={() => handleApprove(item.username)}>
-                            <FiCheck /> Approve
-                          </button>
-                          <button type="button" className="btn-reject" onClick={() => handleReject(item.username)}>
-                            <FiX /> Reject
-                          </button>
-                        </div>
-                      ) : (
-                        <span className="kyc-finalized-label">Finalized</span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
+        {details && <div className="admin-bank-modal-backdrop" onClick={closeDetails}><div className="admin-bank-modal" onClick={(event) => event.stopPropagation()}>
+          <div className="admin-bank-modal-header"><div><span className="bank-details-eyebrow">Member KYC Verification</span><h2>{details.fullname || selectedUserId}</h2><span className="bank-member-id">{details.user_id || selectedUserId}</span></div><button type="button" onClick={closeDetails} aria-label="Close"><FiX /></button></div>
+          {loadingDetails ? <div className="bank-state"><FiRefreshCw className="bank-spinner" /> Loading details...</div> : <><div className="admin-bank-modal-body"><div className="admin-bank-modal-status"><span>Status</span><strong>{statusLabel(kyc.status)}</strong></div><div className="bank-details-section"><h3>Identity Information</h3><div className="bank-details-grid">{fields.map(([label, key]) => <div className="bank-detail-item" key={key}><span>{label}</span><strong>{key === "uploaded_at" || key === "updated_at" ? formatDate(kyc[key]) : kyc[key] || "Not provided"}</strong></div>)}</div></div><div className="bank-details-section"><h3>Uploaded Documents</h3><div className="admin-bank-document-grid">{[["Aadhaar Front", kyc.aadhar_front], ["Aadhaar Back", kyc.aadhar_back], ["PAN Card", kyc.pan_image]].map(([label, url]) => url ? <a className="bank-document-link" href={url} target="_blank" rel="noreferrer" key={label}><img src={url} alt={label} /><span>{label}</span></a> : <span className="bank-documents-empty" key={label}>{label}: Not provided</span>)}</div></div></div>{error && <div className="bank-feedback bank-feedback--error">{error}</div>}{message && <div className="bank-feedback bank-feedback--success">{message}</div>}<div className="bank-status-actions"><div className="rejection-field"><label htmlFor="kyc-rejection-reason">Rejection reason</label><textarea id="kyc-rejection-reason" value={rejectionReason} onChange={(event) => setRejectionReason(event.target.value)} placeholder="Required when rejecting" rows="3" /></div><div className="bank-action-buttons"><button type="button" className="btn-approve" onClick={() => handleStatusUpdate("Approved")} disabled={saving}><FiCheck /> Approve</button><button type="button" className="btn-reject" onClick={() => handleStatusUpdate("Rejected")} disabled={saving}><FiX /> Reject</button></div></div></>}
+        </div></div>}
       </div>
     </AdminLayout>
   );
