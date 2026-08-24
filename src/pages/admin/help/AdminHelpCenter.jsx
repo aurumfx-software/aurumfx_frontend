@@ -7,6 +7,7 @@ import {
   replyToAdminTicketApi,
 } from "../../../api/admin-help-center";
 import "./AdminHelpCenter.css";
+import "../../../styles/AdminGenealogyHeader.css";
 
 const attachmentUrl = (value) => {
   if (!value || /^https?:\/\//i.test(value)) return value || "";
@@ -69,11 +70,15 @@ function AdminHelpCenter() {
   return (
     <AdminLayout>
       <div className="admin-help-page">
-        <div className="admin-help-header">
-          <div>
-            <h1>Help Center</h1>
-            <div className="admin-help-breadcrumb"><span>Dashboard</span><span>•</span><strong>Help Center</strong></div>
+        <div className="agen-page-header">
+          <span className="agen-eyebrow"><span className="agen-eyebrow-dot" />Support Center</span>
+          <div className="agen-page-header-top">
+            <div className="agen-page-header-text">
+              <h1 className="agen-page-title">Help Center</h1>
+              <p className="agen-page-subtitle">Review user requests and reply from the admin panel</p>
+            </div>
           </div>
+          <div className="agen-breadcrumb"><span>Dashboard</span><span className="agen-crumb-sep">•</span><span className="agen-crumb-active">Help Center</span></div>
         </div>
 
         <div className="admin-help-card">

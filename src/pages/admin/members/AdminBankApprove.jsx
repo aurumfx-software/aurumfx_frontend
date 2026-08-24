@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { FiCheck, FiEye, FiRefreshCw, FiX } from "react-icons/fi";
 import AdminLayout from "../../../components/Admin/AdminLayout";
 import {
@@ -113,9 +114,20 @@ function AdminBankApprove() {
   return (
     <AdminLayout>
       <div className="admin-bank-approve-page">
-        <div className="admin-page-header">
-          <div><h1 className="admin-page-title">Bank Account Details</h1><div className="admin-breadcrumb"><span>Dashboard</span><span className="crumb-sep">•</span><span className="crumb-active">Bank Account Details</span></div></div>
-          <button type="button" className="yellow-report-btn" onClick={loadMembers} disabled={loading}><FiRefreshCw /> Refresh</button>
+        <div className="agen-page-header">
+          <span className="agen-eyebrow">
+            <span className="agen-eyebrow-dot" />
+            Member Verification
+          </span>
+          <div className="agen-page-header-top">
+            <div className="agen-page-header-text">
+              <h1 className="agen-page-title">Bank Account Details</h1>
+              <p className="agen-page-subtitle">Review and manage submitted member bank information</p>
+            </div>
+          </div>
+          <div className="agen-breadcrumb">
+            <span>Dashboard</span><span className="agen-crumb-sep">•</span><span className="agen-crumb-active">Bank Account Details</span>
+          </div>
         </div>
 
         <form className="bank-filters-card" onSubmit={handleReport}>
@@ -137,7 +149,7 @@ function AdminBankApprove() {
           </div>
         </section>
 
-        {details && <div className="admin-bank-modal-backdrop" onClick={closeDetails}>
+        {details && createPortal(<div className="admin-bank-modal-backdrop" onClick={closeDetails}>
           <div className="admin-bank-modal" onClick={(event) => event.stopPropagation()}>
             <div className="admin-bank-modal-header"><div><span className="bank-details-eyebrow">Member Bank Verification</span><h2>{details.fullname || selectedUserId}</h2><span className="bank-member-id">{details.user_id || selectedUserId}</span></div><button type="button" onClick={closeDetails} aria-label="Close"><FiX /></button></div>
             {loadingDetails ? <div className="bank-state"><FiRefreshCw className="bank-spinner" /> Loading details...</div> : <>
@@ -146,7 +158,7 @@ function AdminBankApprove() {
               <div className="bank-status-actions"><div className="rejection-field"><label htmlFor="bank-rejection-reason">Rejection reason</label><textarea id="bank-rejection-reason" value={rejectionReason} onChange={(event) => setRejectionReason(event.target.value)} placeholder="Required when rejecting" rows="3" /></div><div className="bank-action-buttons"><button type="button" className="btn-approve" onClick={() => handleStatusUpdate("Approved")} disabled={saving}><FiCheck /> Approve</button><button type="button" className="btn-reject" onClick={() => handleStatusUpdate("Rejected")} disabled={saving}><FiX /> Reject</button></div></div>
             </>}
           </div>
-        </div>}
+        </div>, document.body)}
       </div>
     </AdminLayout>
   );

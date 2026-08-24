@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { FiPlus, FiEdit2, FiTrash2, FiX, FiLayers } from "react-icons/fi";
 import AdminLayout from "../../../components/Admin/AdminLayout";
 import {
@@ -8,6 +9,7 @@ import {
   deleteLevelApi,
 } from "../../../api/adminlevelsettings";
 import "./LevelSettings.css";
+import "../settings/SettingsHeader.css";
 
 function LevelSettings() {
   const [levels, setLevels] = useState([]);
@@ -109,18 +111,16 @@ function LevelSettings() {
   return (
     <AdminLayout>
       <div className="level-settings-page">
-        <div className="page-header">
-          <div>
-            <h1 className="page-title">Level Commission</h1>
-            <div className="breadcrumb">
-              <span>Dashboard</span>
-              <span className="separator">•</span>
-              <span className="current">Level Commission</span>
+        <div className="agen-page-header">
+          <span className="agen-eyebrow"><span className="agen-eyebrow-dot" />Settings Management</span>
+          <div className="agen-page-header-top">
+            <div className="agen-page-header-text">
+              <h1 className="agen-page-title">Level Commission</h1>
+              <p className="agen-page-subtitle">Configure the commission percentage assigned to each level</p>
             </div>
+            <button className="btn-primary" onClick={openCreate}><FiPlus /> Add Level</button>
           </div>
-          <button className="btn-primary" onClick={openCreate}>
-            <FiPlus /> Add Level
-          </button>
+          <div className="agen-breadcrumb"><span>Dashboard</span><span className="agen-crumb-sep">•</span><span className="agen-crumb-active">Level Commission</span></div>
         </div>
 
         <div className="level-table-card">
@@ -212,7 +212,7 @@ function LevelSettings() {
           </div>
         </div>
 
-        {formOpen && (
+        {formOpen && createPortal(
           <div className="modal-backdrop" onClick={closeForm}>
             <div className="modal-container" onClick={(e) => e.stopPropagation()}>
               <div className="modal-header">
@@ -278,7 +278,7 @@ function LevelSettings() {
               </form>
             </div>
           </div>
-        )}
+        , document.body)}
       </div>
     </AdminLayout>
   );

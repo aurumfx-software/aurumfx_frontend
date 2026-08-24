@@ -68,7 +68,9 @@ function PayoutReport() {
       <div className="admin-reports-page">
         <div className="ft-page-header">
           <div className="admin-page-header">
+            <span className="admin-eyebrow"><span className="admin-eyebrow-dot" />Reports</span>
             <h1 className="admin-page-title">Payout Report</h1>
+            <p className="admin-page-subtitle">Review payout requests, amounts, and processing status</p>
             <div className="admin-breadcrumb"><span>Dashboard</span><span className="crumb-sep">•</span><span className="crumb-active">Payout Report</span></div>
           </div>
           <button type="button" className="ft-export-btn" onClick={handlePrint} disabled={printing}><FiPrinter size={14} /> {printing ? "Preparing..." : "Print"}</button>

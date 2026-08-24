@@ -47,8 +47,17 @@ function AdminWallet() {
     <AdminLayout>
       <div className="admin-wallet-page">
         <div className="admin-page-header">
+          <span className="admin-eyebrow">
+            <span className="admin-eyebrow-dot" />
+            Finance
+          </span>
           <h1 className="admin-page-title">Admin Wallet</h1>
-          <div className="admin-breadcrumb"><span>Dashboard</span><span className="crumb-sep">•</span><span className="crumb-active">Admin Wallet</span></div>
+          <p className="admin-page-subtitle">Track wallet transactions across the platform</p>
+          <div className="admin-breadcrumb">
+            <span>Dashboard</span>
+            <span className="crumb-sep">•</span>
+            <span className="crumb-active">Admin Wallet</span>
+          </div>
         </div>
 
         <div className="admin-wallet-history-card">
@@ -63,7 +72,7 @@ function AdminWallet() {
           </form>
 
           <div className="table-overflow-box" style={{ marginTop: "16px" }}>
-            <table className="admin-wallet-table admin-wallet-table--clean">
+            <table className="agen-list-table">
               <thead><tr><th>No</th><th>Transaction ID</th><th>User ID</th><th>Transaction Type</th><th>Amount</th><th>Balance</th><th>Description</th><th>Date</th></tr></thead>
               <tbody>
                 {loading ? <tr><td colSpan="8"><FiRefreshCw className="wallet-spinner" /> Loading wallet transactions...</td></tr> : error ? <tr><td colSpan="8">{error}</td></tr> : transactions.length === 0 ? <tr><td colSpan="8">No wallet transactions found.</td></tr> : transactions.map((transaction, index) => (

@@ -87,10 +87,23 @@ function AdminNetworkMembers() {
   return (
     <AdminLayout>
       <div className="admin-network-page">
-        <div className="admin-page-header">
-          <h1 className="admin-page-title">Network Members</h1>
-          <div className="admin-breadcrumb">
-            <span>Dashboard</span><span className="crumb-sep">•</span><span className="crumb-active">Network Members</span>
+        <div className="agen-page-header">
+          <span className="agen-eyebrow">
+            <span className="agen-eyebrow-dot" />
+            Network Overview
+          </span>
+
+          <div className="agen-page-header-top">
+            <div className="agen-page-header-text">
+              <h1 className="agen-page-title">Network Members</h1>
+              <p className="agen-page-subtitle">Browse and manage every member in the network</p>
+            </div>
+          </div>
+
+          <div className="agen-breadcrumb">
+            <span>Dashboard</span>
+            <span className="agen-crumb-sep">•</span>
+            <span className="agen-crumb-active">Network Members</span>
           </div>
         </div>
 

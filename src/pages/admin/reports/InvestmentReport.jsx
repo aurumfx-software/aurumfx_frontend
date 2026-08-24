@@ -82,7 +82,9 @@ function InvestmentReport() {
       <div className="admin-reports-page">
         <div className="ft-page-header">
           <div className="admin-page-header">
+            <span className="admin-eyebrow"><span className="admin-eyebrow-dot" />Reports</span>
             <h1 className="admin-page-title">Investment Report</h1>
+            <p className="admin-page-subtitle">Review investment activity, amounts, and status across the platform</p>
             <div className="admin-breadcrumb"><span>Dashboard</span><span className="crumb-sep">•</span><span className="crumb-active">Investment Report</span></div>
           </div>
           <button type="button" className="ft-export-btn" onClick={handlePrint} disabled={printing}><FiPrinter size={14} /> {printing ? "Preparing..." : "Print"}</button>

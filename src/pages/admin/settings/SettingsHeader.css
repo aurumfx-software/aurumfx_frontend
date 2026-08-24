@@ -1,0 +1,625 @@
+.admin-fee-page,
+.referral-commission-page,
+.return-date-page {
+  --agen-text: #171717;
+  --agen-text-soft: #64748b;
+  --agen-accent: #c59b27;
+  --agen-accent-strong: #a67c1f;
+  --agen-accent-soft: rgba(197, 155, 39, 0.12);
+  --agen-accent-line: rgba(197, 155, 39, 0.28);
+  --agen-gradient-soft: linear-gradient(90deg, rgba(197, 155, 39, 0.05), rgba(197, 155, 39, 0.14));
+  --agen-font-display: "Manrope", "Inter", "Segoe UI", sans-serif;
+  --agen-font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+  animation: settings-page-in 0.4s ease both;
+}
+
+[data-theme="dark"] .admin-fee-page,
+[data-theme="dark"] .referral-commission-page,
+[data-theme="dark"] .return-date-page {
+  --agen-text: #f3f4f6;
+  --agen-text-soft: #d1d5db;
+  --agen-accent: #f5d061;
+  --agen-accent-strong: #d4af37;
+  --agen-accent-soft: rgba(245, 208, 97, 0.1);
+  --agen-accent-line: rgba(212, 175, 55, 0.25);
+  --agen-gradient-soft: linear-gradient(90deg, rgba(212, 175, 55, 0.05), rgba(212, 175, 55, 0.12));
+}
+
+@keyframes settings-page-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes settings-fade-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.admin-fee-page .agen-page-header,
+.referral-commission-page .agen-page-header,
+.return-date-page .agen-page-header {
+  display: flex;
+  flex-direction: column;
+  animation: settings-fade-up 0.5s ease 0.05s both;
+}
+
+.admin-fee-page .agen-eyebrow,
+.referral-commission-page .agen-eyebrow,
+.return-date-page .agen-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 10px;
+  font-family: var(--agen-font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--agen-accent-strong);
+}
+
+.admin-fee-page .agen-eyebrow-dot,
+.referral-commission-page .agen-eyebrow-dot,
+.return-date-page .agen-eyebrow-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--agen-accent);
+  box-shadow: 0 0 0 3px var(--agen-accent-soft);
+}
+
+.admin-fee-page .agen-page-header-top,
+.referral-commission-page .agen-page-header-top,
+.return-date-page .agen-page-header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.admin-fee-page .agen-page-header-text,
+.referral-commission-page .agen-page-header-text,
+.return-date-page .agen-page-header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.admin-fee-page .agen-page-title,
+.referral-commission-page .agen-page-title,
+.return-date-page .agen-page-title {
+  margin: 0;
+  font-family: var(--agen-font-display);
+  font-size: 27px;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  color: var(--agen-text);
+}
+
+.admin-fee-page .agen-page-subtitle,
+.referral-commission-page .agen-page-subtitle,
+.return-date-page .agen-page-subtitle {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--agen-text-soft);
+}
+
+.admin-fee-page .agen-breadcrumb,
+.referral-commission-page .agen-breadcrumb,
+.return-date-page .agen-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 12px;
+  font-family: var(--agen-font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--agen-text-soft);
+}
+
+.admin-fee-page .agen-crumb-sep,
+.referral-commission-page .agen-crumb-sep,
+.return-date-page .agen-crumb-sep { color: var(--agen-accent-line); }
+
+.admin-fee-page .agen-crumb-active,
+.referral-commission-page .agen-crumb-active,
+.return-date-page .agen-crumb-active {
+  margin-left: 6px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  color: var(--agen-accent-strong);
+  font-weight: 700;
+  background: var(--agen-gradient-soft);
+}
+
+.admin-fee-page .admin-fee-card,
+.referral-commission-page .referral-card,
+.return-date-page .return-date-card {
+  animation: settings-fade-up 0.5s ease 0.1s both;
+}
+
+.plan-investments-page {
+  --agen-text: #171717;
+  --agen-text-soft: #64748b;
+  --agen-accent: #c59b27;
+  --agen-accent-strong: #a67c1f;
+  --agen-accent-soft: rgba(197, 155, 39, 0.12);
+  --agen-accent-line: rgba(197, 155, 39, 0.28);
+  --agen-gradient-soft: linear-gradient(90deg, rgba(197, 155, 39, 0.05), rgba(197, 155, 39, 0.14));
+  --agen-font-display: "Manrope", "Inter", "Segoe UI", sans-serif;
+  --agen-font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+  animation: settings-page-in 0.4s ease both;
+}
+
+[data-theme="dark"] .plan-investments-page {
+  --agen-text: #f3f4f6;
+  --agen-text-soft: #d1d5db;
+  --agen-accent: #f5d061;
+  --agen-accent-strong: #d4af37;
+  --agen-accent-soft: rgba(245, 208, 97, 0.1);
+  --agen-accent-line: rgba(212, 175, 55, 0.25);
+  --agen-gradient-soft: linear-gradient(90deg, rgba(212, 175, 55, 0.05), rgba(212, 175, 55, 0.12));
+}
+
+.plan-investments-page .agen-page-header {
+  display: flex;
+  flex-direction: column;
+  animation: settings-fade-up 0.5s ease 0.05s both;
+}
+
+.plan-investments-page .agen-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 10px;
+  font-family: var(--agen-font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--agen-accent-strong);
+}
+
+.plan-investments-page .agen-eyebrow-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--agen-accent);
+  box-shadow: 0 0 0 3px var(--agen-accent-soft);
+}
+
+.plan-investments-page .agen-page-header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.plan-investments-page .agen-page-header-text { display: flex; flex-direction: column; gap: 3px; }
+
+.plan-investments-page .agen-page-title {
+  margin: 0;
+  font-family: var(--agen-font-display);
+  font-size: 27px;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  color: var(--agen-text);
+}
+
+.plan-investments-page .agen-page-subtitle { margin: 0; font-size: 13.5px; font-weight: 500; color: var(--agen-text-soft); }
+
+.plan-investments-page .agen-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 12px;
+  font-family: var(--agen-font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--agen-text-soft);
+}
+
+.plan-investments-page .agen-crumb-sep { color: var(--agen-accent-line); }
+.plan-investments-page .agen-crumb-active { margin-left: 6px; padding: 2px 8px; border-radius: 6px; color: var(--agen-accent-strong); font-weight: 700; background: var(--agen-gradient-soft); }
+.plan-investments-page .plan-list-card { animation: settings-fade-up 0.5s ease 0.1s both; }
+
+.level-settings-page {
+  --agen-text: #171717;
+  --agen-text-soft: #64748b;
+  --agen-accent: #c59b27;
+  --agen-accent-strong: #a67c1f;
+  --agen-accent-soft: rgba(197, 155, 39, 0.12);
+  --agen-accent-line: rgba(197, 155, 39, 0.28);
+  --agen-gradient-soft: linear-gradient(90deg, rgba(197, 155, 39, 0.05), rgba(197, 155, 39, 0.14));
+  --agen-font-display: "Manrope", "Inter", "Segoe UI", sans-serif;
+  --agen-font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+  animation: settings-page-in 0.4s ease both;
+}
+
+[data-theme="dark"] .level-settings-page {
+  --agen-text: #f3f4f6;
+  --agen-text-soft: #d1d5db;
+  --agen-accent: #f5d061;
+  --agen-accent-strong: #d4af37;
+  --agen-accent-soft: rgba(245, 208, 97, 0.1);
+  --agen-accent-line: rgba(212, 175, 55, 0.25);
+  --agen-gradient-soft: linear-gradient(90deg, rgba(212, 175, 55, 0.05), rgba(212, 175, 55, 0.12));
+}
+
+.level-settings-page .agen-page-header { display: flex; flex-direction: column; animation: settings-fade-up 0.5s ease 0.05s both; }
+.level-settings-page .agen-eyebrow { display: inline-flex; align-items: center; gap: 7px; margin-bottom: 10px; font-family: var(--agen-font-mono); font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--agen-accent-strong); }
+.level-settings-page .agen-eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--agen-accent); box-shadow: 0 0 0 3px var(--agen-accent-soft); }
+.level-settings-page .agen-page-header-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.level-settings-page .agen-page-header-text { display: flex; flex-direction: column; gap: 3px; }
+.level-settings-page .agen-page-title { margin: 0; font-family: var(--agen-font-display); font-size: 27px; font-weight: 800; letter-spacing: -0.015em; line-height: 1.2; color: var(--agen-text); }
+.level-settings-page .agen-page-subtitle { margin: 0; font-size: 13.5px; font-weight: 500; color: var(--agen-text-soft); }
+.level-settings-page .agen-breadcrumb { display: flex; align-items: center; gap: 14px; margin-top: 12px; font-family: var(--agen-font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--agen-text-soft); }
+.level-settings-page .agen-crumb-sep { color: var(--agen-accent-line); }
+.level-settings-page .agen-crumb-active { margin-left: 6px; padding: 2px 8px; border-radius: 6px; color: var(--agen-accent-strong); font-weight: 700; background: var(--agen-gradient-soft); }
+.level-settings-page .level-table-card { animation: settings-fade-up 0.5s ease 0.1s both; }
+
+.admin-fee-page .agen-page-header-top,
+.referral-commission-page .agen-page-header-top,
+.return-date-page .agen-page-header-top,
+.plan-investments-page .agen-page-header-top,
+.level-settings-page .agen-page-header-top {
+  width: 100%;
+}
+
+.admin-fee-modal-backdrop,
+.referral-modal-backdrop,
+.return-date-modal-backdrop,
+.plan-modal-backdrop,
+.level-settings-page .modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+  padding: 24px;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+body > .admin-fee-modal-backdrop,
+body > .referral-modal-backdrop,
+body > .return-date-modal-backdrop,
+body > .plan-modal-backdrop,
+body > .modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+  padding: 24px;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+body > .admin-fee-modal-backdrop > .admin-fee-modal,
+body > .referral-modal-backdrop > .referral-modal,
+body > .return-date-modal-backdrop > .return-date-modal,
+body > .plan-modal-backdrop > .plan-modal-container,
+body > .modal-backdrop > .modal-container {
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+[data-theme="light"] body > .admin-fee-modal-backdrop > .admin-fee-modal,
+[data-theme="light"] body > .referral-modal-backdrop > .referral-modal,
+[data-theme="light"] body > .return-date-modal-backdrop > .return-date-modal,
+[data-theme="light"] body > .plan-modal-backdrop > .plan-modal-container,
+[data-theme="light"] body > .modal-backdrop > .modal-container {
+  background: #ffffff;
+  color: #141414;
+}
+
+[data-theme="dark"] body > .admin-fee-modal-backdrop > .admin-fee-modal,
+[data-theme="dark"] body > .referral-modal-backdrop > .referral-modal,
+[data-theme="dark"] body > .return-date-modal-backdrop > .return-date-modal,
+[data-theme="dark"] body > .plan-modal-backdrop > .plan-modal-container,
+[data-theme="dark"] body > .modal-backdrop > .modal-container {
+  background: #111111;
+  color: #f8fafc;
+}
+
+[data-theme="light"] body > .admin-fee-modal-backdrop input,
+[data-theme="light"] body > .referral-modal-backdrop input,
+[data-theme="light"] body > .referral-modal-backdrop select,
+[data-theme="light"] body > .return-date-modal-backdrop input,
+[data-theme="light"] body > .return-date-modal-backdrop select,
+[data-theme="light"] body > .plan-modal-backdrop input,
+[data-theme="light"] body > .plan-modal-backdrop select,
+[data-theme="light"] body > .modal-backdrop input,
+[data-theme="light"] body > .modal-backdrop select {
+  background: #ffffff;
+  color: #141414;
+}
+
+[data-theme="dark"] body > .admin-fee-modal-backdrop input,
+[data-theme="dark"] body > .referral-modal-backdrop input,
+[data-theme="dark"] body > .referral-modal-backdrop select,
+[data-theme="dark"] body > .return-date-modal-backdrop input,
+[data-theme="dark"] body > .return-date-modal-backdrop select,
+[data-theme="dark"] body > .plan-modal-backdrop input,
+[data-theme="dark"] body > .plan-modal-backdrop select,
+[data-theme="dark"] body > .modal-backdrop input,
+[data-theme="dark"] body > .modal-backdrop select {
+  background: #1a1a1a;
+  color: #f8fafc;
+}
+
+body > .plan-modal-backdrop > .plan-modal-container {
+  width: min(650px, calc(100vw - 48px));
+  max-width: none;
+  border: 1px solid rgba(197, 155, 39, 0.28);
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 24px 70px rgba(45, 35, 20, 0.24);
+}
+
+body > .plan-modal-backdrop > .plan-modal-container .plan-modal-header {
+  padding: 20px 26px;
+  border-bottom: 1px solid #e5e7eb;
+  background: linear-gradient(135deg, rgba(197, 155, 39, 0.1), #ffffff 72%);
+}
+
+body > .plan-modal-backdrop > .plan-modal-container .plan-modal-header h3 {
+  color: #1f2937;
+  font-size: 19px;
+  font-weight: 800;
+}
+
+body > .plan-modal-backdrop > .plan-modal-container .plan-modal-body {
+  padding: 26px;
+  gap: 18px;
+}
+
+body > .plan-modal-backdrop > .plan-modal-container .modal-field-row {
+  gap: 16px;
+}
+
+body > .plan-modal-backdrop > .plan-modal-container .field-label {
+  color: #475569;
+  font-size: 12px;
+}
+
+body > .plan-modal-backdrop > .plan-modal-container .modal-field input,
+body > .plan-modal-backdrop > .plan-modal-container .modal-field select {
+  min-height: 42px;
+  border: 1px solid #d8dee8;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #1f2937;
+}
+
+body > .plan-modal-backdrop > .plan-modal-container .plan-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 4px;
+}
+
+[data-theme="dark"] body > .plan-modal-backdrop > .plan-modal-container {
+  border-color: rgba(212, 175, 55, 0.28);
+  background: #111111;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
+}
+
+[data-theme="dark"] body > .plan-modal-backdrop > .plan-modal-container .plan-modal-header {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+  background: linear-gradient(135deg, rgba(245, 208, 97, 0.14), #111111 72%);
+}
+
+[data-theme="dark"] body > .plan-modal-backdrop > .plan-modal-container .plan-modal-header h3,
+[data-theme="dark"] body > .plan-modal-backdrop > .plan-modal-container .field-label {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] body > .plan-modal-backdrop > .plan-modal-container .modal-field input,
+[data-theme="dark"] body > .plan-modal-backdrop > .plan-modal-container .modal-field select {
+  border-color: rgba(245, 208, 97, 0.28);
+  background: #1a1a1a;
+  color: #f8fafc;
+}
+
+body > .modal-backdrop > .modal-container,
+body > .admin-fee-modal-backdrop > .admin-fee-modal {
+  width: min(650px, calc(100vw - 48px));
+  max-width: none;
+  border: 1px solid rgba(197, 155, 39, 0.28);
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 24px 70px rgba(45, 35, 20, 0.24);
+}
+
+body > .modal-backdrop > .modal-container .modal-header,
+body > .admin-fee-modal-backdrop > .admin-fee-modal .admin-fee-modal-header {
+  padding: 20px 26px;
+  border-bottom: 1px solid #e5e7eb;
+  background: linear-gradient(135deg, rgba(197, 155, 39, 0.1), #ffffff 72%);
+}
+
+body > .modal-backdrop > .modal-container .modal-header h3,
+body > .admin-fee-modal-backdrop > .admin-fee-modal .admin-fee-modal-header h2 {
+  margin: 0;
+  color: #1f2937;
+  font-size: 19px;
+  font-weight: 800;
+}
+
+body > .modal-backdrop > .modal-container .modal-body,
+body > .admin-fee-modal-backdrop > .admin-fee-modal .admin-fee-form {
+  padding: 26px;
+  gap: 18px;
+}
+
+body > .modal-backdrop > .modal-container .form-group label,
+body > .admin-fee-modal-backdrop > .admin-fee-modal .admin-fee-form > label,
+body > .admin-fee-modal-backdrop > .admin-fee-modal .admin-fee-toggle-label {
+  color: #414141;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+body > .modal-backdrop > .modal-container .form-group input,
+body > .modal-backdrop > .modal-container .form-group select,
+body > .admin-fee-modal-backdrop > .admin-fee-modal .admin-fee-form input[type="number"] {
+  min-height: 42px;
+  border: 1px solid #d8dee8;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #414141;
+}
+
+body > .modal-backdrop > .modal-container .modal-actions,
+body > .admin-fee-modal-backdrop > .admin-fee-modal .admin-fee-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+[data-theme="dark"] body > .modal-backdrop > .modal-container,
+[data-theme="dark"] body > .admin-fee-modal-backdrop > .admin-fee-modal {
+  border-color: rgba(212, 175, 55, 0.28);
+  background: #111111;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
+}
+
+[data-theme="dark"] body > .modal-backdrop > .modal-container .modal-header,
+[data-theme="dark"] body > .admin-fee-modal-backdrop > .admin-fee-modal .admin-fee-modal-header {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+  background: linear-gradient(135deg, rgba(245, 208, 97, 0.14), #111111 72%);
+}
+
+[data-theme="dark"] body > .modal-backdrop > .modal-container .modal-header h3,
+[data-theme="dark"] body > .admin-fee-modal-backdrop > .admin-fee-modal .admin-fee-modal-header h2,
+[data-theme="dark"] body > .modal-backdrop > .modal-container .form-group label,
+[data-theme="dark"] body > .admin-fee-modal-backdrop > .admin-fee-modal .admin-fee-form > label,
+[data-theme="dark"] body > .admin-fee-modal-backdrop > .admin-fee-modal .admin-fee-toggle-label {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] body > .modal-backdrop > .modal-container .form-group input,
+[data-theme="dark"] body > .modal-backdrop > .modal-container .form-group select,
+[data-theme="dark"] body > .admin-fee-modal-backdrop > .admin-fee-modal .admin-fee-form input[type="number"] {
+  border-color: rgba(245, 208, 97, 0.28);
+  background: #1a1a1a;
+  color: #f8fafc;
+}
+
+@media (max-width: 640px) {
+  body > .admin-fee-modal-backdrop,
+  body > .referral-modal-backdrop,
+  body > .return-date-modal-backdrop,
+  body > .plan-modal-backdrop,
+  body > .modal-backdrop { padding: 12px; }
+}
+
+@media (max-width: 640px) {
+  .admin-fee-page .agen-page-header-top,
+  .referral-commission-page .agen-page-header-top,
+  .return-date-page .agen-page-header-top,
+  .plan-investments-page .agen-page-header-top,
+  .level-settings-page .agen-page-header-top {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .admin-fee-page .agen-page-header-top > button,
+  .referral-commission-page .agen-page-header-top > button,
+  .return-date-page .agen-page-header-top > button,
+  .plan-investments-page .agen-page-header-top > button,
+  .level-settings-page .agen-page-header-top > button {
+    width: auto;
+    flex: 0 0 auto;
+    min-height: 42px;
+    padding: 0 14px;
+    border-radius: 9px;
+    font-size: 13px;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .admin-fee-page .agen-page-header-text,
+  .referral-commission-page .agen-page-header-text,
+  .return-date-page .agen-page-header-text,
+  .plan-investments-page .agen-page-header-text,
+  .level-settings-page .agen-page-header-text {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+}
+
+.admin-fee-modal,
+.referral-modal,
+.return-date-modal,
+.plan-modal-container,
+.level-settings-page .modal-container {
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.admin-fee-form input[type="number"],
+.referral-form input,
+.referral-form select,
+.return-date-form input,
+.return-date-form select,
+.plan-modal-body input,
+.plan-modal-body select,
+.level-settings-page .modal-body input,
+.level-settings-page .modal-body select {
+  background: #ffffff;
+  color: #141414;
+}
+
+[data-theme="dark"] .admin-fee-form input[type="number"],
+[data-theme="dark"] .referral-form input,
+[data-theme="dark"] .referral-form select,
+[data-theme="dark"] .return-date-form input,
+[data-theme="dark"] .return-date-form select,
+[data-theme="dark"] .plan-modal-body input,
+[data-theme="dark"] .plan-modal-body select,
+[data-theme="dark"] .level-settings-page .modal-body input,
+[data-theme="dark"] .level-settings-page .modal-body select {
+  background: #1a1a1a;
+  color: #f8fafc;
+}
+
+[data-theme="light"] body > .plan-modal-backdrop .plan-modal-container {
+  background: #ffffff;
+  color: #141414;
+  border-color: rgba(197, 155, 39, 0.28);
+}
+
+[data-theme="dark"] body > .plan-modal-backdrop .plan-modal-container {
+  background: #111111;
+  color: #f8fafc;
+  border-color: rgba(212, 175, 55, 0.28);
+}
+
+[data-theme="light"] body > .plan-modal-backdrop .plan-modal-body input,
+[data-theme="light"] body > .plan-modal-backdrop .plan-modal-body select {
+  background: #ffffff;
+  color: #141414;
+}
+
+[data-theme="dark"] body > .plan-modal-backdrop .plan-modal-body input,
+[data-theme="dark"] body > .plan-modal-backdrop .plan-modal-body select {
+  background: #1a1a1a;
+  color: #f8fafc;
+}

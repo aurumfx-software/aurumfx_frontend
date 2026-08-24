@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import {
   FiPlus,
   FiSearch,
@@ -17,6 +18,7 @@ import {
   deleteLotApi,
 } from "../../../api/adminlotsettings";
 import "./PlanInvestments.css";
+import "../settings/SettingsHeader.css";
 
 function AdminLotSettings() {
   const [lots, setLots] = useState([]);
@@ -143,21 +145,16 @@ function AdminLotSettings() {
   return (
     <AdminLayout>
       <div className="plan-investments-page">
-        <div className="admin-page-header">
-          <div className="header-title-block">
-            <h1 className="admin-page-title">Lot Settings</h1>
-            <div className="admin-breadcrumb">
-              <span>Dashboard</span>
-              <span className="crumb-sep">•</span>
-              <span>Financial</span>
-              <span className="crumb-sep">•</span>
-              <span className="crumb-active">Lot Settings</span>
+        <div className="agen-page-header">
+          <span className="agen-eyebrow"><span className="agen-eyebrow-dot" />Settings Management</span>
+          <div className="agen-page-header-top">
+            <div className="agen-page-header-text">
+              <h1 className="agen-page-title">Lot Settings</h1>
+              <p className="agen-page-subtitle">Configure lot ranges used across investment plans</p>
             </div>
+            <button type="button" className="create-plan-btn" onClick={() => handleOpenModal()}><FiPlus size={16} /><span>Add Lot</span></button>
           </div>
-          <button type="button" className="create-plan-btn" onClick={() => handleOpenModal()}>
-            <FiPlus size={16} />
-            <span>Add Lot</span>
-          </button>
+          <div className="agen-breadcrumb"><span>Dashboard</span><span className="agen-crumb-sep">•</span><span className="agen-crumb-active">Lot Settings</span></div>
         </div>
 
         <div className="plan-list-card">
@@ -238,7 +235,7 @@ function AdminLotSettings() {
           </div>
         </div>
 
-        {isModalOpen && (
+        {isModalOpen && createPortal(
           <div className="plan-modal-backdrop" onClick={handleCloseModal}>
             <div className="plan-modal-container" onClick={(e) => e.stopPropagation()}>
               <div className="plan-modal-header">
@@ -297,7 +294,7 @@ function AdminLotSettings() {
               </form>
             </div>
           </div>
-        )}
+        , document.body)}
       </div>
     </AdminLayout>
   );

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   FiGrid,
@@ -157,8 +157,6 @@ const navItems = [
 function AdminSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse }) {
   const location = useLocation();
   const navigate = useNavigate();
-  const itemRefs = useRef({});
-  const lastExpandedId = useRef(null);
   const adminId = localStorage.getItem("userId") || "ADMIN";
   const storedAdminName = localStorage.getItem("userName");
   const adminName = storedAdminName && storedAdminName !== adminId ? storedAdminName : "Admin User";
@@ -213,19 +211,7 @@ function AdminSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse }) {
     });
   }, [location.pathname]);
 
-  useEffect(() => {
-    if (!lastExpandedId.current) return;
-    const id = lastExpandedId.current;
-    if (expanded[id] && itemRefs.current[id]) {
-      itemRefs.current[id].scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-      });
-    }
-  }, [expanded]);
-
   const toggleExpand = (id) => {
-    lastExpandedId.current = id;
     setExpanded((prev) => {
       const isOpen = prev[id];
       const nextState = {
@@ -317,9 +303,6 @@ function AdminSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse }) {
             <div key={item.id} className="nav-group">
               <button
                 type="button"
-                ref={(el) => {
-                  if (el) itemRefs.current[item.id] = el;
-                }}
                 className={`nav-item ${isItemActive ? "nav-item--active" : ""}`}
                 onClick={() => handleParentClick(item)}
                 title={item.label}

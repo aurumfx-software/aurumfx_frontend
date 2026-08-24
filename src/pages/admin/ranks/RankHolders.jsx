@@ -3,6 +3,7 @@ import { FiX } from "react-icons/fi";
 import AdminLayout from "../../../components/Admin/AdminLayout";
 import { getAllRanksApi, getRankHoldersApi } from "../../../api/admin-ranks";
 import "./RankHolders.css";
+import "../../../styles/AdminGenealogyHeader.css";
 
 function RankHolders() {
   const [ranks, setRanks] = useState([]);
@@ -46,11 +47,15 @@ function RankHolders() {
   return (
     <AdminLayout>
       <div className="rank-holders-page">
-        <div className="rank-holders-header">
-          <div>
-            <h1>Rank List</h1>
-            <div className="rank-holders-breadcrumb"><span>Dashboard</span><span>•</span><strong>Rank List</strong></div>
+        <div className="agen-page-header">
+          <span className="agen-eyebrow"><span className="agen-eyebrow-dot" />Rank Management</span>
+          <div className="agen-page-header-top">
+            <div className="agen-page-header-text">
+              <h1 className="agen-page-title">Rank List</h1>
+              <p className="agen-page-subtitle">Review members assigned to each configured rank</p>
+            </div>
           </div>
+          <div className="agen-breadcrumb"><span>Dashboard</span><span className="agen-crumb-sep">•</span><span className="agen-crumb-active">Rank List</span></div>
         </div>
 
         <div className="rank-holders-card">

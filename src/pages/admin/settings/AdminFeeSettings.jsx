@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { FiEdit2, FiPlus, FiTrash2, FiX } from "react-icons/fi";
 import AdminLayout from "../../../components/Admin/AdminLayout";
 import {
@@ -8,6 +9,7 @@ import {
   updateAdminFeeApi,
 } from "../../../api/admin-fees";
 import "./AdminFeeSettings.css";
+import "./SettingsHeader.css";
 
 function AdminFeeSettings() {
   const [fees, setFees] = useState([]);
@@ -86,16 +88,18 @@ function AdminFeeSettings() {
   return (
     <AdminLayout>
       <div className="admin-fee-page">
-        <div className="admin-fee-header">
-          <div>
-            <h1>Admin Fee</h1>
-            <div className="admin-fee-breadcrumb">
-              <span>Dashboard</span><span>•</span><strong>Admin Fee</strong>
+        <div className="agen-page-header">
+          <span className="agen-eyebrow"><span className="agen-eyebrow-dot" />Settings Management</span>
+          <div className="agen-page-header-top">
+            <div className="agen-page-header-text">
+              <h1 className="agen-page-title">Admin Fee</h1>
+              <p className="agen-page-subtitle">Manage the percentage applied to applicable admin transactions</p>
             </div>
-          </div>
           <button type="button" className="admin-fee-primary-btn" onClick={() => openModal()}>
             <FiPlus size={16} /> Add Admin Fee
           </button>
+          </div>
+          <div className="agen-breadcrumb"><span>Dashboard</span><span className="agen-crumb-sep">•</span><span className="agen-crumb-active">Admin Fee</span></div>
         </div>
 
         <div className="admin-fee-card">
@@ -135,7 +139,7 @@ function AdminFeeSettings() {
           </div>
         </div>
 
-        {modalOpen && (
+        {modalOpen && createPortal(
           <div className="admin-fee-modal-backdrop" onClick={closeModal}>
             <div className="admin-fee-modal" onClick={(event) => event.stopPropagation()}>
               <div className="admin-fee-modal-header">
@@ -157,7 +161,7 @@ function AdminFeeSettings() {
               </form>
             </div>
           </div>
-        )}
+        , document.body)}
       </div>
     </AdminLayout>
   );

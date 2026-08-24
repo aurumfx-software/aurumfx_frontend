@@ -81,10 +81,19 @@ function AdminPayout() {
     <AdminLayout>
       <div className="admin-reports-page">
         <div className="ft-page-header">
-          <div className="admin-page-header">
-            <h1 className="admin-page-title">Payout</h1>
-            <div className="admin-breadcrumb"><span>Dashboard</span><span className="crumb-sep">•</span><span className="crumb-active">Payout</span></div>
-          </div>
+           <div className="admin-page-header">
+              <span className="admin-eyebrow">
+                <span className="admin-eyebrow-dot" />
+                Finance
+              </span>
+              <h1 className="admin-page-title">Payout</h1>
+              <p className="admin-page-subtitle">Review and process pending, paid, and historical payouts</p>
+              <div className="admin-breadcrumb">
+                <span>Dashboard</span>
+                <span className="crumb-sep">•</span>
+                <span className="crumb-active">Payout</span>
+              </div>
+            </div>
         </div>
 
         <div className="investments-tabs-header" style={{ marginBottom: "20px" }}>

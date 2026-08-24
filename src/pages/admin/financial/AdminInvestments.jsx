@@ -227,7 +227,12 @@ function AdminInvestments() {
     <AdminLayout>
       <div className="admin-investments-page">
         <div className="admin-page-header">
+          <span className="admin-eyebrow">
+            <span className="admin-eyebrow-dot" />
+            Finance
+          </span>
           <h1 className="admin-page-title">Investments</h1>
+          <p className="admin-page-subtitle">Manage and review investment requests, active plans, returns, and history.</p>
           <div className="admin-breadcrumb">
             <span>Dashboard</span>
             <span className="crumb-sep">•</span>

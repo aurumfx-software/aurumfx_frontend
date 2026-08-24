@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import {
   FiPlus,
   FiSearch,
@@ -18,6 +19,7 @@ import {
   MOCK_INVESTMENT_TYPES,
 } from "../../../api/adminreturntype";
 import "./PlanInvestments.css";
+import "../settings/SettingsHeader.css";
 
 function TypeInvestments() {
   const [types, setTypes] = useState(MOCK_INVESTMENT_TYPES);
@@ -166,26 +168,23 @@ function TypeInvestments() {
   return (
     <AdminLayout>
       <div className="plan-investments-page">
-        {/* Header & Breadcrumbs */}
-        <div className="admin-page-header">
-          <div className="header-title-block">
-            <h1 className="admin-page-title">Return Type</h1>
-            <div className="admin-breadcrumb">
-              <span>Dashboard</span>
-              <span className="crumb-sep">•</span>
-              <span>Financial</span>
-              <span className="crumb-sep">•</span>
-              <span className="crumb-active">Return Type</span>
+        <div className="agen-page-header">
+          <span className="agen-eyebrow"><span className="agen-eyebrow-dot" />Settings Management</span>
+          <div className="agen-page-header-top">
+            <div className="agen-page-header-text">
+              <h1 className="agen-page-title">Return Type</h1>
+              <p className="agen-page-subtitle">Manage the return types available for investment plans</p>
             </div>
-          </div>
-          <button
+            <button
             type="button"
             className="create-plan-btn"
             onClick={() => handleOpenModal()}
           >
             <FiPlus size={16} />
             <span>Add Return Type</span>
-          </button>
+            </button>
+          </div>
+          <div className="agen-breadcrumb"><span>Dashboard</span><span className="agen-crumb-sep">•</span><span className="agen-crumb-active">Return Type</span></div>
         </div>
 
         {/* List Card Container */}
@@ -290,7 +289,7 @@ function TypeInvestments() {
         </div>
 
         {/* Create / Edit Return Type Modal */}
-        {isModalOpen && (
+        {isModalOpen && createPortal(
           <div className="plan-modal-backdrop" onClick={handleCloseModal}>
             <div
               className="plan-modal-container"
@@ -379,7 +378,7 @@ function TypeInvestments() {
               </form>
             </div>
           </div>
-        )}
+        , document.body)}
       </div>
     </AdminLayout>
   );

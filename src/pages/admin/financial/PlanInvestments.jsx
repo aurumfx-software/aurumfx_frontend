@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import {
   FiPlus,
   FiSearch,
@@ -17,6 +18,7 @@ import {
   deleteInvestmentPlanApi,
 } from "../../../api/adminplans";
 import "./PlanInvestments.css";
+import "../settings/SettingsHeader.css";
 
 function PlanInvestments() {
   const [plans, setPlans] = useState([]);
@@ -188,26 +190,23 @@ function PlanInvestments() {
   return (
     <AdminLayout>
       <div className="plan-investments-page">
-        {/* Header & Breadcrumbs */}
-        <div className="admin-page-header">
-          <div className="header-title-block">
-            <h1 className="admin-page-title">Investment Plan</h1>
-            <div className="admin-breadcrumb">
-              <span>Dashboard</span>
-              <span className="crumb-sep">•</span>
-              <span>Financial</span>
-              <span className="crumb-sep">•</span>
-              <span className="crumb-active">Investment Plan</span>
+        <div className="agen-page-header">
+          <span className="agen-eyebrow"><span className="agen-eyebrow-dot" />Settings Management</span>
+          <div className="agen-page-header-top">
+            <div className="agen-page-header-text">
+              <h1 className="agen-page-title">Investment Plan</h1>
+              <p className="agen-page-subtitle">Manage investment plans, returns, and eligibility criteria</p>
             </div>
-          </div>
-          <button
+            <button
             type="button"
             className="create-plan-btn"
             onClick={() => handleOpenModal()}
           >
             <FiPlus size={16} />
             <span>Add New Plan</span>
-          </button>
+            </button>
+          </div>
+          <div className="agen-breadcrumb"><span>Dashboard</span><span className="agen-crumb-sep">•</span><span className="agen-crumb-active">Investment Plan</span></div>
         </div>
 
         {/* List Card Container */}
@@ -331,7 +330,7 @@ function PlanInvestments() {
         </div>
 
         {/* Create / Edit Plan Modal */}
-        {isModalOpen && (
+        {isModalOpen && createPortal(
           <div className="plan-modal-backdrop" onClick={handleCloseModal}>
             <div
               className="plan-modal-container"
@@ -473,7 +472,7 @@ function PlanInvestments() {
               </form>
             </div>
           </div>
-        )}
+        , document.body)}
       </div>
     </AdminLayout>
   );

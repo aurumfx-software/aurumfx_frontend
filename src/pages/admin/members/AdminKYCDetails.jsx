@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { FiCheck, FiEye, FiRefreshCw, FiX } from "react-icons/fi";
 import AdminLayout from "../../../components/Admin/AdminLayout";
 import {
@@ -77,7 +78,21 @@ function AdminKYCDetails() {
   return (
     <AdminLayout>
       <div className="admin-bank-approve-page admin-kyc-page">
-        <div className="admin-page-header"><div><h1 className="admin-page-title">KYC Details</h1><div className="admin-breadcrumb"><span>Dashboard</span><span className="crumb-sep">•</span><span className="crumb-active">KYC Details</span></div></div><button type="button" className="yellow-report-btn" onClick={loadMembers} disabled={loading}><FiRefreshCw /> Refresh</button></div>
+        <div className="agen-page-header">
+          <span className="agen-eyebrow">
+            <span className="agen-eyebrow-dot" />
+            Member Verification
+          </span>
+          <div className="agen-page-header-top">
+            <div className="agen-page-header-text">
+              <h1 className="agen-page-title">KYC Details</h1>
+              <p className="agen-page-subtitle">Review submitted identity documents and verification status</p>
+            </div>
+          </div>
+          <div className="agen-breadcrumb">
+            <span>Dashboard</span><span className="agen-crumb-sep">•</span><span className="agen-crumb-active">KYC Details</span>
+          </div>
+        </div>
         <section className="bank-details-card admin-bank-list-card">
           <div className="admin-bank-list-heading"><div><h2>Member KYC Details</h2><p>Review submitted identity documents and verification status.</p></div><span>{members.length} members</span></div>
           <div className="admin-bank-list-table-wrap"><table className="admin-bank-list-table"><thead><tr><th>No</th><th>User ID</th><th>Name</th><th>Aadhaar Number</th><th>PAN Number</th><th>Status</th><th>Action</th></tr></thead><tbody>
@@ -85,10 +100,10 @@ function AdminKYCDetails() {
           </tbody></table></div>
         </section>
 
-        {details && <div className="admin-bank-modal-backdrop" onClick={closeDetails}><div className="admin-bank-modal" onClick={(event) => event.stopPropagation()}>
+        {details && createPortal(<div className="admin-bank-modal-backdrop" onClick={closeDetails}><div className="admin-bank-modal" onClick={(event) => event.stopPropagation()}>
           <div className="admin-bank-modal-header"><div><span className="bank-details-eyebrow">Member KYC Verification</span><h2>{details.fullname || selectedUserId}</h2><span className="bank-member-id">{details.user_id || selectedUserId}</span></div><button type="button" onClick={closeDetails} aria-label="Close"><FiX /></button></div>
           {loadingDetails ? <div className="bank-state"><FiRefreshCw className="bank-spinner" /> Loading details...</div> : <><div className="admin-bank-modal-body"><div className="admin-bank-modal-status"><span>Status</span><strong>{statusLabel(kyc.status)}</strong></div><div className="bank-details-section"><h3>Identity Information</h3><div className="bank-details-grid">{fields.map(([label, key]) => <div className="bank-detail-item" key={key}><span>{label}</span><strong>{key === "uploaded_at" || key === "updated_at" ? formatDate(kyc[key]) : kyc[key] || "Not provided"}</strong></div>)}</div></div><div className="bank-details-section"><h3>Uploaded Documents</h3><div className="admin-bank-document-grid">{[["Aadhaar Front", kyc.aadhar_front], ["Aadhaar Back", kyc.aadhar_back], ["PAN Card", kyc.pan_image]].map(([label, url]) => url ? <a className="bank-document-link" href={url} target="_blank" rel="noreferrer" key={label}><img src={url} alt={label} /><span>{label}</span></a> : <span className="bank-documents-empty" key={label}>{label}: Not provided</span>)}</div></div></div>{error && <div className="bank-feedback bank-feedback--error">{error}</div>}{message && <div className="bank-feedback bank-feedback--success">{message}</div>}<div className="bank-status-actions"><div className="rejection-field"><label htmlFor="kyc-rejection-reason">Rejection reason</label><textarea id="kyc-rejection-reason" value={rejectionReason} onChange={(event) => setRejectionReason(event.target.value)} placeholder="Required when rejecting" rows="3" /></div><div className="bank-action-buttons"><button type="button" className="btn-approve" onClick={() => handleStatusUpdate("Approved")} disabled={saving}><FiCheck /> Approve</button><button type="button" className="btn-reject" onClick={() => handleStatusUpdate("Rejected")} disabled={saving}><FiX /> Reject</button></div></div></>}
-        </div></div>}
+        </div></div>, document.body)}
       </div>
     </AdminLayout>
   );

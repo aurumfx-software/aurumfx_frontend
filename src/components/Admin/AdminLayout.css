@@ -16,12 +16,13 @@
 
 .dashboard-main {
   flex: 1;
-  margin-left: 240px;
+  margin-left: 220px;
   display: flex;
   flex-direction: column;
   min-width: 0;
   width: 100%;
   transition: margin-left 0.25s ease;
+  border-left: 1px solid rgba(255,255,255,0.06);
 }
 
 .admin-layout.sidebar-collapsed .dashboard-main {
@@ -31,7 +32,7 @@
 
 .dashboard-content {
   flex: 1;
-  padding: 20px 28px 32px;
+  padding: 28px 32px 40px;
   color: #e2e8f0;
 }
 
@@ -73,6 +74,31 @@
 
 [data-theme="light"] .dashboard-content {
   color: #141414;
+}
+
+.dashboard-content h1.admin-page-title,
+.dashboard-content h1.agen-page-title,
+.dashboard-content h1.page-title,
+.dashboard-content .admin-help-header h1,
+.dashboard-content .rank-holders-header h1,
+.dashboard-content .admin-fee-header h1,
+.dashboard-content .referral-commission-header h1,
+.dashboard-content .return-date-header h1 {
+  font-size: 27px !important;
+  line-height: 1.2;
+}
+
+@media (max-width: 768px) {
+  .dashboard-content h1.admin-page-title,
+  .dashboard-content h1.agen-page-title,
+  .dashboard-content h1.page-title,
+  .dashboard-content .admin-help-header h1,
+  .dashboard-content .rank-holders-header h1,
+  .dashboard-content .admin-fee-header h1,
+  .dashboard-content .referral-commission-header h1,
+  .dashboard-content .return-date-header h1 {
+    font-size: 21px !important;
+  }
 }
 
 /* Admin Fee page fallback styles. Kept in the shared layout stylesheet so

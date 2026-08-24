@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { FiEdit2, FiTrash2 } from "react-icons/fi";
 import AdminLayout from "../../../components/Admin/AdminLayout";
 import { getAllRanksApi, getRankApi, deleteRankApi, createRankApi, updateRankApi } from "../../../api/admin-ranks";
@@ -156,17 +157,22 @@ function RankList() {
   return (
     <AdminLayout>
       <div className="ranks-page">
-        <div className="page-header">
-          <div>
-            <h1 className="page-title">Admin Ranks</h1>
-            <div className="breadcrumb">
-              <span>Dashboard</span>
-              <span className="separator">•</span>
-              <span className="current">Ranks</span>
+        <div className="agen-page-header">
+          <span className="agen-eyebrow">
+            <span className="agen-eyebrow-dot" />
+            Rank Management
+          </span>
+          <div className="agen-page-header-top">
+            <div className="agen-page-header-text">
+              <h1 className="agen-page-title">Admin Ranks</h1>
+              <p className="agen-page-subtitle">Manage rank requirements, rewards, and eligibility criteria</p>
             </div>
-          </div>
-          <div>
             <button className="btn-primary" onClick={openCreate}>Create Rank</button>
+          </div>
+          <div className="agen-breadcrumb">
+            <span>Dashboard</span>
+            <span className="agen-crumb-sep">•</span>
+            <span className="agen-crumb-active">Ranks</span>
           </div>
         </div>
         {message && <div className="success-banner">{message}</div>}
@@ -230,7 +236,7 @@ function RankList() {
           </div>
         )}
 
-        {modalOpen && (
+        {modalOpen && createPortal(
           <div className="modal-overlay">
             <div className="modal-card">
               <div className="modal-header">
@@ -303,8 +309,8 @@ function RankList() {
               </div>
             </div>
           </div>
-        )}
-        {confirmOpen && (
+        , document.body)}
+        {confirmOpen && createPortal(
           <div className="modal-overlay">
             <div className="modal-card">
               <div className="modal-header">
@@ -319,7 +325,7 @@ function RankList() {
               </div>
             </div>
           </div>
-        )}
+        , document.body)}
       </div>
     </AdminLayout>
   );

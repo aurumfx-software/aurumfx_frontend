@@ -1,37 +1,110 @@
 .admin-network-page {
+  --agen-bg: #f7f8fa;
+  --agen-text: #171717;
+  --agen-text-soft: #64748b;
+  --agen-accent: #c59b27;
+  --agen-accent-strong: #a67c1f;
+  --agen-accent-soft: rgba(197, 155, 39, 0.12);
+  --agen-accent-line: rgba(197, 155, 39, 0.28);
+  --agen-gradient: linear-gradient(90deg, rgba(197, 155, 39, 0.08), rgba(197, 155, 39, 0.22));
+  --agen-gradient-soft: linear-gradient(90deg, rgba(197, 155, 39, 0.05), rgba(197, 155, 39, 0.14));
+  --agen-font-display: "Manrope", "Inter", "Segoe UI", sans-serif;
+  --agen-font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
   display: flex;
   flex-direction: column;
   gap: 20px;
   width: 100%;
 }
 
+[data-theme="dark"] .admin-network-page {
+  --agen-text: #f3f4f6;
+  --agen-text-soft: #d1d5db;
+  --agen-accent: #f5d061;
+  --agen-accent-strong: #d4af37;
+  --agen-accent-soft: rgba(245, 208, 97, 0.1);
+  --agen-accent-line: rgba(212, 175, 55, 0.25);
+  --agen-gradient: linear-gradient(90deg, rgba(212, 175, 55, 0.08), rgba(212, 175, 55, 0.2));
+  --agen-gradient-soft: linear-gradient(90deg, rgba(212, 175, 55, 0.05), rgba(212, 175, 55, 0.12));
+}
+
 /* Page Header & Breadcrumb */
-.admin-page-header {
+.agen-page-header {
   display: flex;
   flex-direction: column;
-  gap: 4px;
 }
 
-.admin-page-title {
-  font-size: 24px;
+.agen-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 10px;
+  font-family: var(--agen-font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--agen-accent-strong);
+}
+
+.agen-eyebrow-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--agen-accent);
+  box-shadow: 0 0 0 3px var(--agen-accent-soft);
+}
+
+.agen-page-header-top {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.agen-page-header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.agen-page-title {
+  margin: 0;
+  font-family: var(--agen-font-display);
+  font-size: 27px;
   font-weight: 800;
-  color: #1e293b;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  color: var(--agen-text);
 }
 
-.admin-breadcrumb {
+.agen-page-subtitle {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--agen-text-soft);
+}
+
+.agen-breadcrumb {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 13.5px;
-  color: #64748b;
+  margin-top: 12px;
+  font-family: var(--agen-font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--agen-text-soft);
 }
 
-.crumb-sep {
-  color: #cbd5e1;
+.agen-crumb-sep {
+  color: var(--agen-accent-line);
 }
 
-.crumb-active {
-  color: #94a3b8;
+.agen-crumb-active {
+  color: var(--agen-accent-strong);
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: var(--agen-gradient-soft);
 }
 
 /* Filters Card Block */

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { FiEdit2, FiPlus, FiTrash2, FiX } from "react-icons/fi";
 import AdminLayout from "../../../components/Admin/AdminLayout";
 import {
@@ -9,6 +10,7 @@ import {
   updateReturnDateSettingApi,
 } from "../../../api/admin-return-date-settings";
 import "./ReturnDateSettings.css";
+import "./SettingsHeader.css";
 
 const emptyForm = { from_day: "", to_day: "", payout_day: "", status: true };
 
@@ -97,12 +99,16 @@ function ReturnDateSettings() {
   return (
     <AdminLayout>
       <div className="return-date-page">
-        <div className="return-date-header">
-          <div>
-            <h1>Return Date Settings</h1>
-            <div className="return-date-breadcrumb"><span>Dashboard</span><span>•</span><strong>Return Date Settings</strong></div>
+        <div className="agen-page-header">
+          <span className="agen-eyebrow"><span className="agen-eyebrow-dot" />Settings Management</span>
+          <div className="agen-page-header-top">
+            <div className="agen-page-header-text">
+              <h1 className="agen-page-title">Return Date Settings</h1>
+              <p className="agen-page-subtitle">Configure which day each investment range is paid</p>
+            </div>
+            <button type="button" className="return-date-primary-btn" onClick={() => openModal()}><FiPlus size={16} /> Add Setting</button>
           </div>
-          <button type="button" className="return-date-primary-btn" onClick={() => openModal()}><FiPlus size={16} /> Add Setting</button>
+          <div className="agen-breadcrumb"><span>Dashboard</span><span className="agen-crumb-sep">•</span><span className="agen-crumb-active">Return Date Settings</span></div>
         </div>
 
         <div className="return-date-card">
@@ -124,7 +130,7 @@ function ReturnDateSettings() {
           </div>
         </div>
 
-        {modalOpen && <div className="return-date-modal-backdrop" onClick={closeModal}><div className="return-date-modal" onClick={(event) => event.stopPropagation()}>
+        {modalOpen && createPortal(<div className="return-date-modal-backdrop" onClick={closeModal}><div className="return-date-modal" onClick={(event) => event.stopPropagation()}>
           <div className="return-date-modal-header"><h2>{editing ? "Edit Return Date" : "Add Return Date"}</h2><button type="button" onClick={closeModal} aria-label="Close"><FiX /></button></div>
           <form className="return-date-form" onSubmit={handleSubmit}>
             <div className="return-date-form-row"><div><label>From Day</label><input type="number" min="1" max="31" value={form.from_day} onChange={(event) => setField("from_day", event.target.value)} required /></div><div><label>To Day</label><input type="number" min="1" max="31" value={form.to_day} onChange={(event) => setField("to_day", event.target.value)} required /></div></div>
@@ -133,7 +139,7 @@ function ReturnDateSettings() {
             {formError && <p className="return-date-form-error">{formError}</p>}
             <div className="return-date-modal-actions"><button type="button" className="return-date-secondary-btn" onClick={closeModal}>Cancel</button><button type="submit" className="return-date-primary-btn" disabled={saving}>{saving ? "Saving..." : "Save"}</button></div>
           </form>
-        </div></div>}
+        </div></div>, document.body)}
       </div>
     </AdminLayout>
   );

@@ -35,11 +35,11 @@
 /* ===== Header ===== */
 .admin-dashboard-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap}
 .admin-dashboard-eyebrow{
-  display:inline-flex;align-items:center;gap:6px;color:var(--gold-700);font-size:11px;font-weight:800;
+  display:inline-flex;align-items:center;gap:6px;color:var(--gold-700);font-size:10px;font-weight:700;
   text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;
 }
 .admin-dashboard-eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--gold-500);box-shadow:0 0 0 3px var(--gold-100)}
-.admin-dashboard-heading h1{margin:0;color:var(--ink-900);font-size:27px;font-weight:800;letter-spacing:-.02em}
+.admin-dashboard-heading h1{margin:0;color:var(--ink-900);font-size:24px;font-weight:700;letter-spacing:-.01em}
 .admin-dashboard-heading p{margin:5px 0 0;color:var(--ink-500);font-size:13px}
 
 .admin-dashboard-filters{display:flex;align-items:flex-end;gap:10px}

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { FiEdit2, FiPlus, FiTrash2, FiX } from "react-icons/fi";
 import AdminLayout from "../../../components/Admin/AdminLayout";
 import { getInvestmentPlansApi } from "../../../api/adminplans";
@@ -9,6 +10,7 @@ import {
   updateReferralCommissionSettingApi,
 } from "../../../api/admin-referral-commission";
 import "./ReferralCommissionSettings.css";
+import "./SettingsHeader.css";
 
 const emptyForm = { investment_plan_id: "", minimum_amount: "", maximum_amount: "", commission_percentage: "", status: true };
 
@@ -90,12 +92,16 @@ function ReferralCommissionSettings() {
   return (
     <AdminLayout>
       <div className="referral-commission-page">
-        <div className="referral-commission-header">
-          <div>
-            <h1>Referral Commission</h1>
-            <div className="referral-commission-breadcrumb"><span>Dashboard</span><span>•</span><strong>Referral Commission</strong></div>
+        <div className="agen-page-header">
+          <span className="agen-eyebrow"><span className="agen-eyebrow-dot" />Settings Management</span>
+          <div className="agen-page-header-top">
+            <div className="agen-page-header-text">
+              <h1 className="agen-page-title">Referral Commission</h1>
+              <p className="agen-page-subtitle">Configure referral commission bands for each investment plan</p>
+            </div>
+            <button type="button" className="referral-primary-btn" onClick={() => openModal()}><FiPlus size={16} /> Add Setting</button>
           </div>
-          <button type="button" className="referral-primary-btn" onClick={() => openModal()}><FiPlus size={16} /> Add Setting</button>
+          <div className="agen-breadcrumb"><span>Dashboard</span><span className="agen-crumb-sep">•</span><span className="agen-crumb-active">Referral Commission</span></div>
         </div>
 
         <div className="referral-card">
@@ -119,7 +125,7 @@ function ReferralCommissionSettings() {
           </div>
         </div>
 
-        {modalOpen && <div className="referral-modal-backdrop" onClick={closeModal}><div className="referral-modal" onClick={(event) => event.stopPropagation()}>
+        {modalOpen && createPortal(<div className="referral-modal-backdrop" onClick={closeModal}><div className="referral-modal" onClick={(event) => event.stopPropagation()}>
           <div className="referral-modal-header"><h2>{editing ? "Edit Referral Commission" : "Add Referral Commission"}</h2><button type="button" onClick={closeModal} aria-label="Close"><FiX /></button></div>
           <form className="referral-form" onSubmit={handleSubmit}>
             <label>Investment Plan</label><select value={form.investment_plan_id} onChange={(event) => setField("investment_plan_id", event.target.value)} disabled={Boolean(editing)} required><option value="">Select plan</option>{plans.map((plan) => <option key={plan.id} value={plan.id}>{plan.plan_name}</option>)}</select>
@@ -129,7 +135,7 @@ function ReferralCommissionSettings() {
             {formError && <p className="referral-form-error">{formError}</p>}
             <div className="referral-modal-actions"><button type="button" className="referral-secondary-btn" onClick={closeModal}>Cancel</button><button type="submit" className="referral-primary-btn" disabled={saving}>{saving ? "Saving..." : "Save"}</button></div>
           </form>
-        </div></div>}
+        </div></div>, document.body)}
       </div>
     </AdminLayout>
   );
