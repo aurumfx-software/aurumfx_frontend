@@ -1,7 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
+import { FiX } from "react-icons/fi";
 import UserLayout from "../../components/User/UserLayout";
 import { getAllUserRankSettingsApi, getRankHoldersApi } from "../../api/user-rank";
 import "./financial/EWallet.css";
+import "./RanksPage.css";
 
 const formatNumber = (value) => {
   const num = Number(value);
@@ -12,6 +15,14 @@ const getRankId = (rank) => rank?.id ?? rank?.rank_id ?? null;
 
 const getRankName = (rank) =>
   rank?.rank_name || rank?.name || rank?.title || `Rank ${rank?.rank_no ?? rank?.id ?? ""}`;
+
+const formatAchievedDate = (value) => {
+  if (!value) return "-";
+  const date = new Date(value);
+  return Number.isNaN(date.getTime())
+    ? value
+    : date.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+};
 
 const getRankCriteria = (rank) => {
   const criteriaList = [];
@@ -56,7 +67,7 @@ function RanksPage() {
   const userId = useMemo(() => localStorage.getItem("userId") || "FX001", []);
   const userName = useMemo(() => localStorage.getItem("userName") || "User", []);
 
-  const selectedRank = ranks.find((rank) => getRankId(rank) === selectedRankId) ?? ranks[0] ?? null;
+  const selectedRank = ranks.find((rank) => getRankId(rank) === selectedRankId) ?? null;
 
   useEffect(() => {
     const loadRanks = async () => {
@@ -68,11 +79,7 @@ function RanksPage() {
         const rankList = Array.isArray(res.data) ? res.data : [];
         setRanks(rankList);
 
-        if (rankList.length > 0) {
-          setSelectedRankId(getRankId(rankList[0]));
-        } else {
-          setSelectedRankId(null);
-        }
+        setSelectedRankId(null);
       } else {
         setError(res.error || "Unable to load ranks.");
         setSelectedRankId(null);
@@ -165,17 +172,12 @@ function RanksPage() {
                   <tbody>
                 {ranks.map((rank) => {
                   const rankId = getRankId(rank);
-                  const isSelected = selectedRankId === rankId;
                   const name = getRankName(rank);
 
                   return (
-                    <tr
-                      key={rankId ?? `${name}-${rank?.rank_no ?? "rank"}`}
-                      onClick={() => setSelectedRankId(rankId)}
-                      className={isSelected ? "row--clickable row--selected" : "row--clickable"}
-                    >
+                    <tr key={rankId ?? `${name}-${rank?.rank_no ?? "rank"}`}>
                       <td>{rank?.rank_no ?? "-"}</td>
-                      <td>{name}</td>
+                      <td><button type="button" className="user-rank-name-button" onClick={() => setSelectedRankId(rankId)}>{name}</button></td>
                       <td>{getRankCriteria(rank)}</td>
                     </tr>
                   );
@@ -185,55 +187,33 @@ function RanksPage() {
               </div>
             </div>
 
-            <div className="ewallet-table-card">
-              {selectedRank ? (
-                <>
-                  <h2 className="section-title" style={{ marginBottom: "10px" }}>{getRankName(selectedRank)}</h2>
-                  <div style={{ marginBottom: "18px", color: "#cbd5e1", fontSize: "14px", lineHeight: 1.7 }}>
-                    <strong style={{ color: "#f5d061" }}>Criteria:</strong> {getRankCriteria(selectedRank)}
-                  </div>
-
-                  {holdersLoading ? (
-                    <div className="empty-cell">Loading rank holders...</div>
-                  ) : holders.length === 0 ? (
-                    <div className="empty-cell">No users hold this rank yet.</div>
-                  ) : (
-                    <div style={{ display: "grid", gap: "12px" }}>
-                      {holders.map((holder) => (
-                        <div
-                          key={holder?.id ?? `${holder?.user_id ?? "user"}-${holder?.first_name ?? ""}-${holder?.last_name ?? ""}`}
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            background: "rgba(255,255,255,0.02)",
-                            border: "1px solid rgba(212, 175, 55, 0.18)",
-                            borderRadius: "12px",
-                            padding: "12px 14px",
-                            color: "#f8fafc",
-                          }}
-                        >
-                          <div>
-                            <div style={{ fontWeight: 700, fontSize: "15px" }}>
-                              {holder?.first_name || "User"} {holder?.last_name || ""}
-                            </div>
-                            <div style={{ fontSize: "12px", color: "#94a3b8" }}>
-                              {holder?.user_id || holder?.id || "User ID unavailable"}
-                            </div>
-                          </div>
-                          <span style={{ color: "#f5d061", fontSize: "12px", fontWeight: 700, textTransform: "uppercase" }}>
-                            Rank Holder
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </>
-              ) : (
-                <div className="empty-cell">Select a rank to view holders.</div>
-              )}
-            </div>
           </>
+        )}
+
+        {selectedRank && createPortal(
+          <div className="user-rank-modal-backdrop" onClick={() => setSelectedRankId(null)}>
+            <div className="user-rank-modal" onClick={(event) => event.stopPropagation()}>
+              <div className="user-rank-modal-header">
+                <div>
+                  <h2>{getRankName(selectedRank)} Holders</h2>
+                  <p>{getRankCriteria(selectedRank)}</p>
+                </div>
+                <div className="user-rank-modal-heading-actions">
+                  <strong>{holders.length} holder{holders.length === 1 ? "" : "s"}</strong>
+                  <button type="button" onClick={() => setSelectedRankId(null)} aria-label="Close holders"><FiX /></button>
+                </div>
+              </div>
+              <div className="user-rank-table-wrap">
+                <table className="user-rank-table">
+                  <thead><tr><th>No</th><th>User ID</th><th>Name</th><th>Date</th><th>Image</th></tr></thead>
+                  <tbody>
+                    {holdersLoading ? <tr><td colSpan="5" className="user-rank-empty">Loading rank holders...</td></tr> : holders.length === 0 ? <tr><td colSpan="5" className="user-rank-empty">No users currently hold this rank.</td></tr> : holders.map((holder, index) => <tr key={holder?.id ?? holder?.user_id ?? index}><td>{index + 1}</td><td className="user-rank-holder-id">{holder?.user_id || "-"}</td><td>{`${holder?.first_name || ""} ${holder?.last_name || ""}`.trim() || "-"}</td><td>{formatAchievedDate(holder?.achieved_at)}</td><td>{holder?.image ? <img src={holder.image} alt={`${holder.user_id || "User"} profile`} /> : "-"}</td></tr>)}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>,
+          document.body,
         )}
       </div>
     </UserLayout>

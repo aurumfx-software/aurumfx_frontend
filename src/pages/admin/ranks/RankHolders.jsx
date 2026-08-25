@@ -1,9 +1,18 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { FiX } from "react-icons/fi";
 import AdminLayout from "../../../components/Admin/AdminLayout";
 import { getAllRanksApi, getRankHoldersApi } from "../../../api/admin-ranks";
 import "./RankHolders.css";
 import "../../../styles/AdminGenealogyHeader.css";
+
+const formatAchievedDate = (value) => {
+  if (!value) return "-";
+  const date = new Date(value);
+  return Number.isNaN(date.getTime())
+    ? value
+    : date.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+};
 
 function RankHolders() {
   const [ranks, setRanks] = useState([]);
@@ -76,21 +85,24 @@ function RankHolders() {
           </div>
         </div>
 
-        {selectedRank && <div className="rank-holders-modal-backdrop" onClick={() => setSelectedRankId("")}>
-          <div className="rank-holders-modal" onClick={(event) => event.stopPropagation()}>
-            <div className="rank-holders-card-heading">
-              <div><h2>{selectedRank.rank_name} Holders</h2><p>{selectedRank.criteria || "No criteria provided"}</p></div>
-              <div className="rank-holders-modal-heading-actions"><b className="rank-holder-count">{holders.length} holder{holders.length === 1 ? "" : "s"}</b><button type="button" className="rank-holders-close" onClick={() => setSelectedRankId("")} aria-label="Close holders"><FiX /></button></div>
+        {selectedRank && createPortal(
+          <div className="rank-holders-modal-backdrop" onClick={() => setSelectedRankId("")}>
+            <div className="rank-holders-modal" onClick={(event) => event.stopPropagation()}>
+              <div className="rank-holders-card-heading">
+                <div><h2>{selectedRank.rank_name} Holders</h2><p>{selectedRank.criteria || "No criteria provided"}</p></div>
+                <div className="rank-holders-modal-heading-actions"><b className="rank-holder-count">{holders.length} holder{holders.length === 1 ? "" : "s"}</b><button type="button" className="rank-holders-close" onClick={() => setSelectedRankId("")} aria-label="Close holders"><FiX /></button></div>
+              </div>
+              {error && <div className="rank-holders-error">{error}</div>}
+              <div className="rank-holders-table-wrap">
+                <table className="rank-holders-table">
+                  <thead><tr><th>No</th><th>User ID</th><th>Name</th><th>Date</th><th>Image</th></tr></thead>
+                  <tbody>{loadingHolders ? <tr><td colSpan="5" className="rank-holders-empty">Loading rank holders...</td></tr> : holders.length === 0 ? <tr><td colSpan="5" className="rank-holders-empty">No users currently hold this rank.</td></tr> : holders.map((holder, index) => <tr key={holder.id ?? holder.user_id}><td>{index + 1}</td><td className="rank-holder-id">{holder.user_id || "-"}</td><td>{`${holder.first_name || ""} ${holder.last_name || ""}`.trim() || "-"}</td><td>{formatAchievedDate(holder.achieved_at)}</td><td>{holder.image ? <img src={holder.image} alt={`${holder.user_id || "User"} profile`} /> : "-"}</td></tr>)}</tbody>
+                </table>
+              </div>
             </div>
-            {error && <div className="rank-holders-error">{error}</div>}
-            <div className="rank-holders-table-wrap">
-              <table className="rank-holders-table">
-                <thead><tr><th>No</th><th>User ID</th><th>First Name</th><th>Last Name</th><th>Rank ID</th><th>Image</th></tr></thead>
-                <tbody>{loadingHolders ? <tr><td colSpan="6" className="rank-holders-empty">Loading rank holders...</td></tr> : holders.length === 0 ? <tr><td colSpan="6" className="rank-holders-empty">No users currently hold this rank.</td></tr> : holders.map((holder, index) => <tr key={holder.id ?? holder.user_id}><td>{index + 1}</td><td className="rank-holder-id">{holder.user_id || "-"}</td><td>{holder.first_name || "-"}</td><td>{holder.last_name || "-"}</td><td>{holder.rank_id ?? selectedRank.id}</td><td>{holder.image ? <img src={holder.image} alt={`${holder.user_id || "User"} profile`} /> : "-"}</td></tr>)}</tbody>
-              </table>
-            </div>
-          </div>
-        </div>}
+          </div>,
+          document.body,
+        )}
       </div>
     </AdminLayout>
   );

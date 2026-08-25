@@ -5,6 +5,8 @@ import AdminLayout from "../../../components/Admin/AdminLayout";
 import { getAllRanksApi, getRankApi, deleteRankApi, createRankApi, updateRankApi } from "../../../api/admin-ranks";
 import "./RankList.css";
 
+const formatNumber = (value) => Number(value || 0).toLocaleString("en-IN");
+
 function RankList() {
   const [ranks, setRanks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -194,40 +196,59 @@ function RankList() {
               <table className="level-table">
                 <thead>
                   <tr>
-                    <th>ID</th>
-                    <th>Name</th>
                     <th>Rank No</th>
+                    <th>Name</th>
                     <th>Min Lots</th>
                     <th>Direct Sponsors</th>
                     <th>Reward</th>
                     <th>Criteria</th>
                     <th>Status</th>
                     <th>Actions</th>
-                    <th>Conditions</th>
+                    <th className="conditions-head">Conditions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {ranks.length === 0 ? (
                     <tr>
-                      <td colSpan="10" className="empty-cell">No ranks configured.</td>
+                      <td colSpan="9" className="empty-cell">No ranks configured.</td>
                     </tr>
                   ) : ranks.map((r) => (
                     <tr key={r.id}>
-                      <td>{r.id}</td>
-                      <td>{r.rank_name || "-"}</td>
                       <td>{r.rank_no}</td>
-                      <td>{r.minimum_total_lots ?? "-"}</td>
+                      <td>{r.rank_name || "-"}</td>
+                      <td>{formatNumber(r.minimum_total_lots)}</td>
                       <td>{r.minimum_direct_sponsors ?? "-"}</td>
-                      <td>{r.reward_income ?? "-"}</td>
+                      <td>{r.reward_income !== undefined && r.reward_income !== null ? `₹${formatNumber(r.reward_income)}` : "-"}</td>
                       <td>{r.criteria || "-"}</td>
-                      <td>{r.status === undefined ? "-" : r.status ? "Active" : "Inactive"}</td>
+                      <td>
+                        <span className={`status-pill ${r.status ? "status-pill--active" : "status-pill--inactive"}`}>
+                          {r.status === undefined ? "-" : r.status ? "Active" : "Inactive"}
+                        </span>
+                      </td>
                       <td className="cell-actions">
                         <div>
                           <button className="icon-btn" title="Edit rank" aria-label="Edit rank" onClick={() => openEdit(r)}><FiEdit2 size={15} /></button>
                           <button className="icon-btn icon-btn--danger" title="Delete rank" aria-label="Delete rank" onClick={() => handleDelete(r.id)}><FiTrash2 size={15} /></button>
                         </div>
                       </td>
-                      <td>{Array.isArray(r.conditions) && r.conditions.length > 0 ? r.conditions.map((condition) => `${condition.minimum_group_lots ?? 0} lots / ${condition.required_group_count ?? 0} users`).join(", ") : "-"}</td>
+                      <td className="conditions-cell">
+                        {Array.isArray(r.conditions) && r.conditions.length > 0 ? (
+                          <div className="condition-chip-list">
+                            {[...r.conditions]
+                              .sort((a, b) => (a.order_no ?? 0) - (b.order_no ?? 0))
+                              .map((condition, idx) => (
+                                <span className="condition-chip" key={condition.id ?? `${r.id}-${idx}`}>
+                                  <span className="condition-chip-order">{condition.order_no ?? idx + 1}</span>
+                                  <span className="condition-chip-text">
+                                    {formatNumber(condition.minimum_group_lots)} lots × {condition.required_group_count ?? 0} grp
+                                  </span>
+                                </span>
+                              ))}
+                          </div>
+                        ) : (
+                          <span className="condition-chip-empty">No conditions</span>
+                        )}
+                      </td>
                     </tr>
                   ))}
                 </tbody>

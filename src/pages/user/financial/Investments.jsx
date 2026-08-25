@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { FiCalendar, FiEye, FiUpload, FiX } from "react-icons/fi";
+import { FiCalendar, FiChevronDown, FiEye, FiUpload, FiX } from "react-icons/fi";
 import UserLayout from "../../../components/User/UserLayout";
 import {
   createInvestmentApi,
@@ -38,6 +38,8 @@ function Investments() {
   const [detailLoading, setDetailLoading] = useState(false);
   const [detailData, setDetailData] = useState(null);
 
+  const selectedPlan = plans.find((plan) => String(plan.id) === String(selectedPlanId));
+
   const loadInvestments = async (filters = {}) => {
     setListLoading(true);
     setListError("");
@@ -56,14 +58,16 @@ function Investments() {
     if (plansRes.success) {
       const realPlans = plansRes.data.filter((p) => p.status !== false);
       setPlans(realPlans);
-      if (realPlans.length > 0) setSelectedPlanId(String(realPlans[0].id));
+      const defaultPlan = realPlans.find((plan) => Number(plan.duration_months) === 30) || realPlans[0];
+      if (defaultPlan) setSelectedPlanId(String(defaultPlan.id));
     }
 
     const typesRes = await getInvestmentTypesApi();
     if (typesRes.success) {
       const realTypes = typesRes.data.filter((t) => t.status !== false);
       setReturnTypes(realTypes);
-      if (realTypes.length > 0) setSelectedReturnTypeId(String(realTypes[0].id));
+      const defaultType = realTypes.find((type) => String(type.return_type || type.type_name || "").toLowerCase().includes("month")) || realTypes[0];
+      if (defaultType) setSelectedReturnTypeId(String(defaultType.id));
     }
   };
 
@@ -193,41 +197,39 @@ function Investments() {
               {/* NEW — Plan selector */}
               <div className="form-group">
                 <label className="separated-label">Investment Plan</label>
-                <select
-                  value={selectedPlanId}
-                  onChange={(e) => setSelectedPlanId(e.target.value)}
-                  className="form-input form-select"
-                >
-                  {plans.length === 0 ? (
-                    <option value="">No plans available</option>
-                  ) : (
-                    plans.map((plan) => (
-                      <option key={plan.id} value={plan.id}>
-                        {plan.plan_name} — {plan.return_percentage}% / {plan.duration_months}mo
-                      </option>
-                    ))
-                  )}
-                </select>
+                <div className="select-control">
+                  <select
+                    value={selectedPlanId}
+                    onChange={(e) => setSelectedPlanId(e.target.value)}
+                    className="form-input form-select"
+                  >
+                    {plans.length === 0 ? <option value="">No plans available</option> : plans.map((plan) => <option key={plan.id} value={plan.id}>{plan.plan_name || `Plan #${plan.id}`}</option>)}
+                  </select>
+                  <FiChevronDown className="select-arrow" aria-hidden="true" />
+                </div>
+                {selectedPlan && (
+                  <div className="selected-plan-details" aria-live="polite">
+                    <div><span>Plan</span><strong>{selectedPlan.plan_name || `Plan #${selectedPlan.id}`}</strong></div>
+                    <div><span>Duration</span><strong>{selectedPlan.duration_months ?? 0} months</strong></div>
+                    <div><span>Return</span><strong>{Number(selectedPlan.return_percentage ?? 0).toFixed(2)}%</strong></div>
+                    <div><span>Minimum</span><strong>₹{Number(selectedPlan.minimum_amount ?? 0).toLocaleString("en-IN")}</strong></div>
+                  </div>
+                )}
               </div>
 
               {/* NEW — Return Type selector */}
               <div className="form-group">
                 <label className="separated-label">Return Type</label>
-                <select
-                  value={selectedReturnTypeId}
-                  onChange={(e) => setSelectedReturnTypeId(e.target.value)}
-                  className="form-input form-select"
-                >
-                  {returnTypes.length === 0 ? (
-                    <option value="">No return types available</option>
-                  ) : (
-                    returnTypes.map((rt) => (
-                      <option key={rt.id} value={rt.id}>
-                        {rt.return_type}
-                      </option>
-                    ))
-                  )}
-                </select>
+                <div className="select-control">
+                  <select
+                    value={selectedReturnTypeId}
+                    onChange={(e) => setSelectedReturnTypeId(e.target.value)}
+                    className="form-input form-select"
+                  >
+                    {returnTypes.length === 0 ? <option value="">No return types available</option> : returnTypes.map((rt) => <option key={rt.id} value={rt.id}>{rt.return_type || rt.type_name || `Type #${rt.id}`}</option>)}
+                  </select>
+                  <FiChevronDown className="select-arrow" aria-hidden="true" />
+                </div>
               </div>
             </div>
 
@@ -301,12 +303,15 @@ function Investments() {
             </div>
 
             <div className="filter-input-group select-group">
-              <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="filter-select">
-                <option value="All">Status</option>
-                <option value="Approved">Approved</option>
-                <option value="Pending">Pending</option>
-                <option value="Rejected">Rejected</option>
-              </select>
+              <div className="select-control">
+                <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="filter-select">
+                  <option value="All">Status</option>
+                  <option value="Approved">Approved</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Rejected">Rejected</option>
+                </select>
+                <FiChevronDown className="select-arrow" aria-hidden="true" />
+              </div>
             </div>
             <button type="submit" className="get-filter-btn">Get</button>
           </form>
@@ -318,8 +323,7 @@ function Investments() {
             <table className="investments-table">
               <thead>
                 <tr>
-                  <th>ID</th>
-                  <th>Investment ID</th>
+                  <th>No</th>
                   <th>Investment Date</th>
                   <th>Plan Name</th>
                   <th>Return Type</th>
@@ -338,16 +342,15 @@ function Investments() {
               </thead>
               <tbody>
                 {listLoading ? (
-                  <tr><td colSpan="16" className="empty-cell">Loading...</td></tr>
+                  <tr><td colSpan="15" className="empty-cell">Loading...</td></tr>
                 ) : listError ? (
-                  <tr><td colSpan="16" className="empty-cell">{listError}</td></tr>
+                  <tr><td colSpan="15" className="empty-cell">{listError}</td></tr>
                 ) : investments.length === 0 ? (
-                  <tr><td colSpan="16" className="empty-cell">No investments yet.</td></tr>
+                  <tr><td colSpan="15" className="empty-cell">No investments yet.</td></tr>
                 ) : (
                   investments.map((inv, idx) => (
                     <tr key={inv.id}>
                       <td>{idx + 1}</td>
-                      <td>{inv.investment_id}</td>
                       <td className="date-cell">{inv.investment_date}</td>
                       <td><span className="modal-type-badge">{inv.plan_name}</span></td>
                       <td>{inv.return_type || inv.return_type_name || inv.return_which || "-"}</td>
@@ -355,9 +358,9 @@ function Investments() {
                       <td>{inv.lots}</td>
                       <td>{inv.monthly_return_percentage}%</td>
                       <td>₹{Number(inv.monthly_return_amount).toLocaleString()}</td>
-                      <td>₹{Number(inv.total_returns ?? inv.total_return ?? 0).toLocaleString()}</td>
-                      <td>₹{Number(inv.returns_paid ?? inv.paid_returns ?? 0).toLocaleString()}</td>
-                      <td>₹{Number(inv.returns_remaining ?? inv.remaining_returns ?? inv.return_balance ?? 0).toLocaleString()}</td>
+                      <td>{inv.duration_months ?? 0}</td>
+                      <td>{inv.return_which ?? 0}</td>
+                      <td>{inv.return_balance ?? 0}</td>
                       <td className="date-cell">{inv.return_date}</td>
                       <td><span className="status-badge status--active">{inv.investment_status}</span></td>
                       <td><span className="status-badge status--approved">{inv.approval_status}</span></td>

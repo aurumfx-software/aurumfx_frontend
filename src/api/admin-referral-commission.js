@@ -30,7 +30,9 @@ export const getReferralCommissionSettingApi = async (id) => {
 const buildPayload = (data) => ({
   investment_plan_id: Number(data.investment_plan_id) || 0,
   minimum_amount: Number(data.minimum_amount) || 0,
-  maximum_amount: Number(data.maximum_amount) || 0,
+  maximum_amount: data.maximum_amount === "" || data.maximum_amount === null || data.maximum_amount === undefined
+    ? null
+    : Number(data.maximum_amount),
   commission_percentage: Number(data.commission_percentage) || 0,
   status: Boolean(data.status ?? true),
 });

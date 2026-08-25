@@ -390,6 +390,7 @@ function Profile({ defaultTab = "profile" }) {
           ? normalizeStatus(bd.bank_status || bd.status)
           : "not_submitted"
       );
+      setBankRejectionReason(bd.rejection_reason || "");
       setProofDocumentName(bd.bank_proof ? "Uploaded" : "");
       setProofDocumentUrl(bd.bank_proof || "");
       setNomineeAadharFrontUrl(nd.nominee_aadhar_front || "");

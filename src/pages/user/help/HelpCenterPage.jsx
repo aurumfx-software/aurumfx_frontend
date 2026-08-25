@@ -290,7 +290,7 @@ function HelpCenterPage() {
                   <th>
                     <span className="hc-head-label">
                       <span className="hc-head-icon"><FiHash size={12} /></span>
-                      Ticket ID
+                      Ticket No
                     </span>
                   </th>
                   <th>

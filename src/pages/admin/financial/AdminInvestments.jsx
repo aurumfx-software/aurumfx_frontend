@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FiCalendar, FiChevronDown, FiFolder, FiX } from "react-icons/fi";
 import AdminLayout from "../../../components/Admin/AdminLayout";
@@ -338,19 +339,18 @@ function AdminInvestments() {
                       <th>User</th>
                       <th>Plan</th>
                       <th>Amount</th>
-                      <th>Lots</th>
                       <th>Date</th>
                       <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
                     {loading ? (
-                      <tr><td colSpan="7">Loading...</td></tr>
+                      <tr><td colSpan="6">Loading...</td></tr>
                     ) : errorMsg ? (
-                      <tr><td colSpan="7">{errorMsg}</td></tr>
+                      <tr><td colSpan="6">{errorMsg}</td></tr>
                     ) : todayList.length === 0 ? (
                       <tr>
-                        <td colSpan="7" style={{ padding: 0 }}>
+                        <td colSpan="6" style={{ padding: 0 }}>
                           <div className="docs-empty-state">
                             <div className="empty-magnifier-box">
                               <div className="magnifier-art">
@@ -373,7 +373,6 @@ function AdminInvestments() {
                           </td>
                           <td>{item.plan_name}</td>
                           <td>₹{Number(item.amount).toLocaleString()}</td>
-                          <td>{item.lots}</td>
                           <td>{item.investment_date}</td>
                           <td>
                             <button
@@ -426,26 +425,25 @@ function AdminInvestments() {
           </div>
         )}
 
-        {returnModalId && (
-          <div className="modal-backdrop" onClick={() => setReturnModalId(null)}>
-            <div className="modal-container" onClick={(e) => e.stopPropagation()}>
-              <div className="modal-header">
+        {returnModalId && createPortal(
+          <div className="admin-return-modal-backdrop" onClick={() => setReturnModalId(null)}>
+            <div className="admin-return-modal" onClick={(e) => e.stopPropagation()}>
+              <div className="admin-return-modal-header">
                 <h3>Approve Monthly Return</h3>
-                <button className="modal-close-btn" onClick={() => setReturnModalId(null)}>
+                <button className="admin-return-modal-close" onClick={() => setReturnModalId(null)} aria-label="Close approval dialog">
                   <FiX size={18} />
                 </button>
               </div>
-              <div className="modal-body">
-                <label className="field-label">Remarks (optional)</label>
+              <div className="admin-return-modal-body">
+                <label className="admin-return-field-label">Remarks (optional)</label>
                 <textarea
                   value={remarks}
                   onChange={(e) => setRemarks(e.target.value)}
                   rows={3}
-                  className="form-input"
-                  style={{ width: "100%", marginTop: "8px" }}
+                  className="admin-return-textarea"
                   placeholder="e.g. Return processed for August"
                 />
-                <div style={{ marginTop: "16px", display: "flex", gap: "10px", justifyContent: "flex-end" }}>
+                <div className="admin-return-modal-actions">
                   <button type="button" className="cancel-btn" onClick={() => setReturnModalId(null)}>
                     Cancel
                   </button>
@@ -460,7 +458,8 @@ function AdminInvestments() {
                 </div>
               </div>
             </div>
-          </div>
+          </div>,
+          document.body,
         )}
 
         {rejectModalId && (

@@ -1406,4 +1406,294 @@ body > .modal-overlay > .modal-card .modal-actions .btn-secondary {
   border-top-color: rgba(245, 208, 97, 0.22) !important;
 }
 
+/* =====================================================================
+   MODERN RANK MODAL — final pass
+   The Create/Edit/Delete modals are rendered via createPortal(..., document.body),
+   so they land OUTSIDE the .ranks-page DOM subtree. All the ".ranks-page .modal-card"
+   rules above never actually reach them — that's why "Add Condition" was rendering
+   as a bare, gold-on-gold (invisible-text) default button instead of the intended
+   pill. Everything below targets ".modal-overlay" directly (no ancestor required),
+   so it reliably reaches the modal wherever it's mounted.
+   ===================================================================== */
 
+.modal-overlay{
+  animation: agen-modal-overlay-in .18s ease both;
+}
+.modal-overlay > .modal-card{
+  animation: agen-modal-card-in .32s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes agen-modal-overlay-in{ from{ opacity:0 } to{ opacity:1 } }
+@keyframes agen-modal-card-in{
+  from{ opacity:0; transform: translateY(16px) scale(.96); }
+  to{ opacity:1; transform: translateY(0) scale(1); }
+}
+
+.modal-overlay .modal-header h3{
+  font-family: "Manrope","Inter","Segoe UI",sans-serif !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.01em !important;
+}
+
+/* Field labels — clean sans-serif, not the code-style default */
+.modal-overlay .field label,
+.modal-overlay .condition-item label{
+  font-family: "Inter","Segoe UI",sans-serif !important;
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase;
+}
+
+/* Inputs — consistent rounding + a visible hover state */
+.modal-overlay .field input,
+.modal-overlay .field select,
+.modal-overlay .condition-item input{
+  border-radius: 10px !important;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+.modal-overlay .field input:hover,
+.modal-overlay .field select:hover,
+.modal-overlay .condition-item input:hover{
+  border-color: #c59b27 !important;
+}
+
+.modal-overlay .conditions-list{
+  border-radius: 14px !important;
+}
+
+/* Conditions heading — force top alignment between the title block and the
+   Add Condition button, regardless of which of the many legacy rules above
+   happened to set align-items differently. */
+.modal-overlay .conditions-heading{
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  gap: 16px !important;
+}
+.modal-overlay .conditions-heading strong{
+  font-family: "Manrope","Inter",sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  display: block;
+  line-height: 1.3;
+}
+.modal-overlay .conditions-heading p{
+  margin: 4px 0 0 !important;
+}
+.modal-overlay .conditions-heading .small-btn{
+  flex: none;
+  align-self: flex-start !important;
+  margin-top: 1px;
+}
+
+/* "Add Condition" — the button that was invisible (gold text on gold bg). Now a
+   proper solid gold pill with readable dark text and a real hover/active state. */
+.modal-overlay .small-btn{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 16px !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(197, 155, 39, 0.4) !important;
+  background: linear-gradient(180deg, #f5d061, #dcae2f) !important;
+  color: #1f1503 !important;
+  font-size: 12.5px !important;
+  font-weight: 800 !important;
+  box-shadow: 0 4px 12px rgba(197, 155, 39, 0.28) !important;
+  cursor: pointer;
+  transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+}
+.modal-overlay .small-btn:hover{
+  filter: brightness(1.05);
+  box-shadow: 0 6px 16px rgba(197, 155, 39, 0.36) !important;
+  transform: translateY(-1px);
+}
+.modal-overlay .small-btn:active{ transform: translateY(0) scale(.97); }
+
+/* "Remove" condition button — must read as a distinct, lower-emphasis, destructive
+   action, not a second gold pill. Different shape (rounded rect, not a capsule),
+   transparent fill, red outline — so it never gets mistaken for Add Condition. */
+.modal-overlay .condition-remove-btn.small-btn,
+.modal-overlay .condition-remove-btn{
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 9px 14px !important;
+  border-radius: 9px !important;
+  background: transparent !important;
+  background-image: none !important;
+  border: 1px solid rgba(220, 38, 38, 0.4) !important;
+  color: #dc2626 !important;
+  font-weight: 700 !important;
+  box-shadow: none !important;
+}
+.modal-overlay .condition-remove-btn.small-btn:hover,
+.modal-overlay .condition-remove-btn:hover{
+  background: rgba(220, 38, 38, 0.1) !important;
+  border-color: rgba(220, 38, 38, 0.6) !important;
+  color: #b91c1c !important;
+  filter: none !important;
+}
+[data-theme="dark"] .modal-overlay .condition-remove-btn.small-btn,
+[data-theme="dark"] .modal-overlay .condition-remove-btn{
+  background: rgba(248, 113, 113, 0.08) !important;
+  border-color: rgba(248, 113, 113, 0.4) !important;
+  color: #f87171 !important;
+}
+[data-theme="dark"] .modal-overlay .condition-remove-btn.small-btn:hover,
+[data-theme="dark"] .modal-overlay .condition-remove-btn:hover{
+  background: rgba(248, 113, 113, 0.16) !important;
+  border-color: rgba(248, 113, 113, 0.6) !important;
+  color: #fca5a5 !important;
+}
+
+/* Footer buttons — clear primary/secondary hierarchy with a real lift on hover */
+.modal-overlay .modal-actions .btn-secondary{
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #334155 !important;
+  border-radius: 10px !important;
+  font-weight: 700 !important;
+  transition: background .15s ease, border-color .15s ease, transform .15s ease;
+}
+.modal-overlay .modal-actions .btn-secondary:hover{
+  background: #eef2f6 !important;
+  border-color: #cbd5e1 !important;
+}
+.modal-overlay .modal-actions .btn-primary{
+  background: linear-gradient(180deg, #f5d061, #d9a82b) !important;
+  border: 1px solid rgba(197, 155, 39, 0.45) !important;
+  color: #221703 !important;
+  border-radius: 10px !important;
+  font-weight: 800 !important;
+  box-shadow: 0 6px 16px rgba(197, 155, 39, 0.3) !important;
+  transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+}
+.modal-overlay .modal-actions .btn-primary:hover{
+  filter: brightness(1.04);
+  box-shadow: 0 8px 20px rgba(197, 155, 39, 0.38) !important;
+  transform: translateY(-1px);
+}
+.modal-overlay .modal-actions .btn-primary:active{ transform: translateY(0) scale(.98); }
+
+/* Dark theme parity for the fixed elements */
+[data-theme="dark"] .modal-overlay .small-btn{
+  background: linear-gradient(180deg, #f5d061, #c79516) !important;
+  color: #171205 !important;
+}
+[data-theme="dark"] .modal-overlay .modal-actions .btn-secondary{
+  background: #191c20 !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #e2e8f0 !important;
+}
+[data-theme="dark"] .modal-overlay .modal-actions .btn-primary{
+  background: linear-gradient(180deg, #f5d061, #c79516) !important;
+  color: #171205 !important;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .modal-overlay, .modal-overlay > .modal-card{ animation: none !important; }
+}
+
+/* =====================================================================
+   CONDITIONS COLUMN — standard, scannable chip list instead of one long
+   comma-joined string. Each condition renders as its own small pill with
+   an order badge, so multi-condition ranks (Platinum, Ruby, Crown, etc.)
+   stay readable instead of overflowing a single cell.
+   ===================================================================== */
+
+.level-table th.conditions-head,
+.level-table td.conditions-cell{
+  width: 240px;
+  white-space: normal;
+}
+
+.condition-chip-list{
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.condition-chip{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  max-width: 100%;
+  padding: 3px 10px 3px 3px;
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  border-radius: 999px;
+  background: rgba(212, 175, 55, 0.06);
+}
+
+.condition-chip-order{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: linear-gradient(150deg, #f5d061, #c79516);
+  color: #171205;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.condition-chip-text{
+  color: #cbd5e1;
+  font-size: 11.5px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.condition-chip-empty{
+  color: #64748b;
+  font-size: 12px;
+}
+
+[data-theme="light"] .condition-chip{
+  border-color: rgba(197, 155, 39, 0.26);
+  background: rgba(197, 155, 39, 0.07);
+}
+[data-theme="light"] .condition-chip-text{
+  color: #334155;
+}
+[data-theme="light"] .condition-chip-empty{
+  color: #94a3b8;
+}
+
+/* Status column — small pill instead of bare "Active"/"Inactive" text */
+.status-pill{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 11px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.status-pill::before{
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+.status-pill--active{
+  background: rgba(45, 212, 167, 0.12);
+  color: #2dd4a7;
+}
+.status-pill--active::before{ background: #2dd4a7; }
+.status-pill--inactive{
+  background: rgba(148, 163, 184, 0.12);
+  color: #94a3b8;
+}
+.status-pill--inactive::before{ background: #94a3b8; }
+
+@media (max-width: 640px) {
+  .level-table th.conditions-head,
+  .level-table td.conditions-cell{
+    width: auto;
+    min-width: 220px;
+  }
+}

@@ -60,11 +60,11 @@ function ReferralCommissionSettings() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setFormError("");
-    if (!form.investment_plan_id || form.minimum_amount === "" || form.maximum_amount === "" || form.commission_percentage === "") {
-      setFormError("Plan, amount range, and commission percentage are required.");
+    if (!form.investment_plan_id || form.minimum_amount === "" || form.commission_percentage === "") {
+      setFormError("Plan, minimum amount, and commission percentage are required.");
       return;
     }
-    if (Number(form.maximum_amount) < Number(form.minimum_amount)) {
+    if (form.maximum_amount !== "" && Number(form.maximum_amount) < Number(form.minimum_amount)) {
       setFormError("Maximum amount must be greater than or equal to minimum amount.");
       return;
     }
@@ -129,7 +129,7 @@ function ReferralCommissionSettings() {
           <div className="referral-modal-header"><h2>{editing ? "Edit Referral Commission" : "Add Referral Commission"}</h2><button type="button" onClick={closeModal} aria-label="Close"><FiX /></button></div>
           <form className="referral-form" onSubmit={handleSubmit}>
             <label>Investment Plan</label><select value={form.investment_plan_id} onChange={(event) => setField("investment_plan_id", event.target.value)} disabled={Boolean(editing)} required><option value="">Select plan</option>{plans.map((plan) => <option key={plan.id} value={plan.id}>{plan.plan_name}</option>)}</select>
-            <div className="referral-form-row"><div><label>Minimum Amount</label><input type="number" min="0" step="0.01" value={form.minimum_amount} onChange={(event) => setField("minimum_amount", event.target.value)} required /></div><div><label>Maximum Amount</label><input type="number" min="0" step="0.01" value={form.maximum_amount} onChange={(event) => setField("maximum_amount", event.target.value)} required /></div></div>
+            <div className="referral-form-row"><div><label>Minimum Amount</label><input type="number" min="0" step="0.01" value={form.minimum_amount} onChange={(event) => setField("minimum_amount", event.target.value)} required /></div><div><label>Maximum Amount <span>(optional)</span></label><input type="number" min="0" step="0.01" value={form.maximum_amount} onChange={(event) => setField("maximum_amount", event.target.value)} /></div></div>
             <label>Commission Percentage (%)</label><input type="number" min="0" step="0.01" value={form.commission_percentage} onChange={(event) => setField("commission_percentage", event.target.value)} required />
             <label className="referral-toggle"><input type="checkbox" checked={form.status} onChange={(event) => setField("status", event.target.checked)} /> Active</label>
             {formError && <p className="referral-form-error">{formError}</p>}

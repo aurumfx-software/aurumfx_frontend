@@ -199,7 +199,7 @@ function EWallet() {
               </colgroup>
               <thead>
                 <tr>
-                  <th>ID</th>
+                  <th>No</th>
                   <th>From User (Name / ID)</th>
                   <th>Transaction Type</th>
                   <th>Payment Type</th>

@@ -55,6 +55,12 @@ function KycTab({ profileData, setProfileData }) {
       : kycDocs.some((doc) => normalizeStatus(doc.status) === "rejected")
         ? "rejected"
         : "pending";
+  const kycRejectionReason = [...new Set(
+    kycDocs
+      .filter((doc) => normalizeStatus(doc.status) === "rejected")
+      .map((doc) => doc.rejection_reason)
+      .filter(Boolean)
+  )].join(" • ");
 
   const getDocumentUrl = (type) => {
     const doc = getDocument(type);
@@ -179,6 +185,9 @@ function KycTab({ profileData, setProfileData }) {
         <div className="kyc-status-items">
           <span className="kyc-status-item">Aadhaar & PAN <StatusBadge status={kycStatus} /></span>
         </div>
+        {kycStatus === "rejected" && kycRejectionReason && (
+          <span className="status-reason">{kycRejectionReason}</span>
+        )}
       </div>
 
       <form onSubmit={handleUpload} className="doc-form kyc-upload-form">

@@ -46,6 +46,7 @@ function AdminDashboard() {
   const payouts = dashboard?.recent_payouts || [];
   const maxIncome = Math.max(...chart.map((item) => Number(item.total_income || 0)), 1);
   const periodLabel = dashboard?.filter?.start_date || dashboard?.filter?.end_date ? "Filtered period" : "All time";
+  const adminName = localStorage.getItem("userName") || "Admin";
 
   return (
     <AdminLayout>
@@ -53,6 +54,7 @@ function AdminDashboard() {
         <div className="admin-dashboard-heading">
           <div>
             <span className="admin-dashboard-eyebrow">Overview</span>
+            <div className="admin-dashboard-welcome">Welcome back, <strong>{adminName}</strong> <span aria-hidden="true">👋</span></div>
             <h1>Admin Dashboard</h1>
             <p>Platform performance and financial overview</p>
           </div>

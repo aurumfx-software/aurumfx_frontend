@@ -683,6 +683,14 @@
   font-style: italic;
 }
 
+.kyc-rejection-reason {
+  margin: 8px 0 0;
+  color: var(--udb-danger);
+  font-size: 12.5px;
+  font-style: italic;
+  line-height: 1.45;
+}
+
 .locked-note {
   display: flex;
   align-items: center;

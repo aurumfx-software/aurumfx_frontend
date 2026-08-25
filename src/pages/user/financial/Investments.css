@@ -327,6 +327,69 @@
   padding-right: 36px;
 }
 
+.select-control {
+  position: relative;
+}
+
+.select-control .form-select {
+  padding-right: 42px;
+}
+
+.select-control .filter-select {
+  padding-right: 42px;
+}
+
+.select-arrow {
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  width: 16px;
+  height: 16px;
+  transform: translateY(-50%);
+  color: var(--inv-accent);
+  pointer-events: none;
+}
+
+.selected-plan-details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 10px;
+  padding: 12px;
+  border: 1px solid var(--inv-border);
+  border-radius: var(--inv-radius-md);
+  background: linear-gradient(135deg, var(--inv-accent-soft), transparent 75%);
+}
+
+.selected-plan-details div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.selected-plan-details span {
+  color: var(--inv-text-muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.selected-plan-details strong {
+  overflow: hidden;
+  color: var(--inv-text);
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.selected-return-type {
+  margin: 9px 0 0;
+  color: var(--inv-text-muted);
+  font-size: 12px;
+}
+
 /* File upload (kept for compatibility) */
 .file-upload-group {
   margin-top: 4px;

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   FiGrid,
@@ -154,9 +154,13 @@ const navItems = [
   },
 ];
 
+const sidebarScrollStorageKey = "adminSidebarScrollTop";
+
 function AdminSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse }) {
   const location = useLocation();
   const navigate = useNavigate();
+  const sidebarRef = useRef(null);
+  const sidebarScrollTopRef = useRef(Number(sessionStorage.getItem(sidebarScrollStorageKey)) || 0);
   const adminId = localStorage.getItem("userId") || "ADMIN";
   const storedAdminName = localStorage.getItem("userName");
   const adminName = storedAdminName && storedAdminName !== adminId ? storedAdminName : "Admin User";
@@ -209,7 +213,14 @@ function AdminSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse }) {
       );
       return hasChange ? newExpanded : prev;
     });
+
   }, [location.pathname]);
+
+  useLayoutEffect(() => {
+    if (sidebarRef.current) {
+      sidebarRef.current.scrollTop = sidebarScrollTopRef.current;
+    }
+  }, [location.pathname, expanded]);
 
   const toggleExpand = (id) => {
     setExpanded((prev) => {
@@ -231,6 +242,7 @@ function AdminSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse }) {
   };
 
   const handleParentClick = (item) => {
+    sidebarScrollTopRef.current = sidebarRef.current?.scrollTop || 0;
     if (isCollapsed) {
       if (item.children && item.children.length > 0) {
         navigate(item.children[0].path);
@@ -249,6 +261,12 @@ function AdminSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse }) {
 
   return (
     <aside
+      ref={sidebarRef}
+      onScroll={() => {
+        const scrollTop = sidebarRef.current?.scrollTop || 0;
+        sidebarScrollTopRef.current = scrollTop;
+        sessionStorage.setItem(sidebarScrollStorageKey, String(scrollTop));
+      }}
       className={`admin-sidebar ${isOpen ? "admin-sidebar--open" : ""} ${
         isCollapsed ? "admin-sidebar--collapsed" : ""
       }`}
@@ -296,6 +314,9 @@ function AdminSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse }) {
               item.children.some((child) => {
                 return matchesChildPath(child.path, location.pathname);
               }));
+          const activeChildPath = item.children
+            ?.filter((child) => matchesChildPath(child.path, location.pathname))
+            .sort((first, second) => second.path.length - first.path.length)[0]?.path;
 
           const isExpanded = expanded[item.id];
 
@@ -319,7 +340,7 @@ function AdminSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse }) {
               {!isCollapsed && item.children && isExpanded && (
                 <div className="nav-submenu">
                   {item.children.map((child) => {
-                    const isChildActive = matchesChildPath(child.path, location.pathname);
+                    const isChildActive = child.path === activeChildPath;
 
                     return (
                       <Link
@@ -328,7 +349,10 @@ function AdminSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse }) {
                         className={`nav-subitem ${
                           isChildActive ? "nav-subitem--active" : ""
                         }`}
-                        onClick={onClose}
+                        onClick={() => {
+                          sidebarScrollTopRef.current = sidebarRef.current?.scrollTop || 0;
+                          onClose();
+                        }}
                       >
                         {isChildActive && <span className="nav-dot" />}
                         <span>{child.label}</span>
