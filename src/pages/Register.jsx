@@ -165,7 +165,6 @@ const Register = () => {
     const mandatoryFields = [
       { key: "email", label: "Email" },
       { key: "first_name", label: "First Name" },
-      { key: "last_name", label: "Last Name" },
       { key: "password", label: "Password" },
       { key: "confirm_password", label: "Confirm Password" },
       { key: "enroller_id", label: "Enroller ID" },
@@ -371,7 +370,7 @@ const Register = () => {
           <h3 className="form-section-title">Personal Details</h3>
           {renderInput("email", "Email", "email", true)}
           {renderInput("first_name", "First Name", "text", true)}
-          {renderInput("last_name", "Last Name", "text", true)}
+          {renderInput("last_name", "Last Name")}
 
           <div className="field-group">
             <label htmlFor="password">

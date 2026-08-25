@@ -7,7 +7,6 @@ import "./AdminDashboard.css";
 const money = (value) => `₹${Number(value || 0).toLocaleString("en-IN", { maximumFractionDigits: 0 })}`;
 const number = (value) => Number(value || 0).toLocaleString("en-IN");
 const dateValue = (value) => value ? new Date(value).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "-";
-const displayDate = (value) => value ? value.split("-").reverse().join("-") : "DD-MM-YYYY";
 const field = (row, ...keys) => keys.reduce((value, key) => value ?? row?.[key], undefined);
 
 // key, label, icon, format, accent color, is this the headline "hero" metric
@@ -60,8 +59,8 @@ function AdminDashboard() {
             <p>Platform performance and financial overview</p>
           </div>
           <form className="admin-dashboard-filters" onSubmit={(event) => { event.preventDefault(); loadDashboard(); }}>
-            <label><span>From</span><div className="admin-date-input"><input type="date" value={filters.start_date} aria-label="From date" onChange={(event) => setFilters((current) => ({ ...current, start_date: event.target.value }))} /><span>{displayDate(filters.start_date)}</span></div></label>
-            <label><span>To</span><div className="admin-date-input"><input type="date" value={filters.end_date} aria-label="To date" onChange={(event) => setFilters((current) => ({ ...current, end_date: event.target.value }))} /><span>{displayDate(filters.end_date)}</span></div></label>
+            <label><span>From</span><input type="date" value={filters.start_date} onChange={(event) => setFilters((current) => ({ ...current, start_date: event.target.value }))} /></label>
+            <label><span>To</span><input type="date" value={filters.end_date} onChange={(event) => setFilters((current) => ({ ...current, end_date: event.target.value }))} /></label>
             <button type="submit"><FiRefreshCw /> Apply</button>
           </form>
         </div>

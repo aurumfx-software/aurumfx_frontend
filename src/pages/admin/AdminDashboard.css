@@ -61,16 +61,11 @@
 
 .admin-dashboard-filters{display:flex;align-items:flex-end;gap:10px}
 .admin-dashboard-filters label{display:flex;flex-direction:column;gap:5px;color:var(--ink-500);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.03em}
-.admin-date-input{position:relative}
 .admin-dashboard-filters input{
   height:38px;padding:0 12px;border:1px solid var(--line);border-radius:9px;
   background:var(--surface);color:var(--ink-900);font-size:13px;
   transition:border-color .15s ease,box-shadow .15s ease;
 }
-.admin-date-input span{position:absolute;inset:0;display:flex;align-items:center;padding:0 12px;color:var(--ink-500);font-size:13px;pointer-events:none;text-transform:none}
-.admin-date-input input{position:relative;z-index:1;background:transparent;color:transparent;-webkit-text-fill-color:transparent;caret-color:transparent}
-.admin-date-input input::-webkit-calendar-picker-indicator{opacity:1}
-.admin-date-input input:focus-visible + span{color:var(--ink-900)}
 .admin-dashboard-filters input:hover{border-color:var(--gold-500)}
 .admin-dashboard-filters input:focus-visible{outline:none;border-color:var(--gold-600);box-shadow:var(--ring)}
 

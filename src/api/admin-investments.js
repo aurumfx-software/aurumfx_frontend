@@ -15,11 +15,16 @@ const getErrorMessage = (error, fallback) => {
 
 /**
  * All Investment Requests via GET /admin/investments/
- * No params
+ * Optional query: user_id, start_date, end_date
  */
-export const getAllAdminInvestmentsApi = async () => {
+export const getAllAdminInvestmentsApi = async (filters = {}) => {
   try {
-    const response = await api.get("/admin/investments/");
+    const params = {};
+    if (filters.user_id) params.user_id = filters.user_id;
+    if (filters.start_date) params.start_date = filters.start_date;
+    if (filters.end_date) params.end_date = filters.end_date;
+
+    const response = await api.get("/admin/investments/", { params });
     return { success: true, data: getListData(response.data) };
   } catch (error) {
     return { success: false, error: getErrorMessage(error, "Unable to load investments") };

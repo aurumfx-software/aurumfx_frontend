@@ -21,10 +21,16 @@ export const createInvestmentApi = async (data) => {
     });
     return { success: true, data: response.data };
   } catch (error) {
-    let errorMessage =
-      error.response?.data?.message ||
-      error.response?.data?.error ||
-      "Unable to submit investment";
+    const responseData = error.response?.data;
+    const errorMessage = Array.isArray(responseData)
+      ? responseData
+        .map((item) => item?.detail || item?.message || item?.error)
+        .filter(Boolean)
+        .join(", ") || "Unable to submit investment"
+      : responseData?.detail ||
+        responseData?.message ||
+        responseData?.error ||
+        "Unable to submit investment";
     return { success: false, error: errorMessage };
   }
 };

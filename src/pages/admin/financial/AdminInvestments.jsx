@@ -78,7 +78,11 @@ function AdminInvestments() {
       if (res.success) setTodayList(res.data);
       else setErrorMsg(res.error);
     } else {
-      const res = await getAllAdminInvestmentsApi();
+      const res = await getAllAdminInvestmentsApi({
+        user_id: usernameFilter || undefined,
+        start_date: startDate || undefined,
+        end_date: endDate || undefined,
+      });
       if (res.success) setHistory(res.data);
       else setErrorMsg(res.error);
     }
@@ -274,7 +278,7 @@ function AdminInvestments() {
           </div>
 
           <div className="investments-tab-content">
-            {(activeTab === "requests" || activeTab === "active") && (
+            {(activeTab === "requests" || activeTab === "active" || activeTab === "history") && (
               <form
                 className="history-filter-row"
                 onSubmit={(e) => { e.preventDefault(); loadTabData(); }}
