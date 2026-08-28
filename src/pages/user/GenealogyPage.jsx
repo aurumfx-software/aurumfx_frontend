@@ -27,6 +27,13 @@ const AVATAR_COLORS = [
   "#22c55e", "#ef4444", "#3b82f6", "#eab308",
 ];
 
+const formatJoinDate = (value) => {
+  if (!value) return "-";
+  const [datePart] = String(value).split("T");
+  const [year, month, day] = datePart.split("-");
+  return year && month && day ? `${day}-${month}-${year}` : datePart;
+};
+
 function colorForId(id = "") {
   let hash = 0;
   for (let i = 0; i < id.length; i++) hash = id.charCodeAt(i) + ((hash << 5) - hash);
@@ -106,7 +113,7 @@ function FamNode({ node, openNodeId, onToggleDetails, onHoverDetails }) {
           </div>
           <div className="fam-tooltip-row">
             <span>Date of Join</span>
-            <span>{(node.date_of_joining || node.date_of_join) ? new Date(node.date_of_joining || node.date_of_join).toLocaleDateString() : "-"}</span>
+            <span>{formatJoinDate(node.date_of_joining || node.date_of_join)}</span>
           </div>
           <div className="fam-tooltip-row">
             <span>Rank</span>
@@ -428,8 +435,8 @@ function GenealogyPage() {
                       return (
                         <tr key={`${item.user_id || item.userId || "genealogy-list-"}${index}`}>
                           <td>{item.user_id || item.userId || "-"}</td>
-                          <td>{item.full_name || item.name || "-"}</td>
-                          <td>{joinDate ? new Date(joinDate).toLocaleDateString() : "-"}</td>
+                          <td>{item.fullname || item.full_name || item.name || "-"}</td>
+                          <td>{formatJoinDate(joinDate)}</td>
                           <td>₹{Number(item.total_investment || 0).toLocaleString()}</td>
                         </tr>
                       );
@@ -460,7 +467,7 @@ function GenealogyPage() {
                     <tr key={`${item.user_id || item.userId || "enroller-"}${index}`}>
                       <td>{item.user_id || "-"}</td>
                       <td>{item.fullname || item.full_name || "-"}</td>
-                      <td>{item.date_of_joining || item.date_of_join || "-"}</td>
+                      <td>{formatJoinDate(item.date_of_joining || item.date_of_join)}</td>
                       <td>{item.rank || "-"}</td>
                       <td>₹{Number(item.total_investment_amount || 0).toLocaleString()}</td>
                       <td>{Number(item.total_lots || 0)}</td>

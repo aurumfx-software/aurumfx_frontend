@@ -195,35 +195,33 @@ function EWallet() {
           <div className="table-responsive">
             <table className="ewallet-table ewallet-table--clean">
               <colgroup>
-                <col /><col /><col /><col /><col /><col /><col />
+                <col /><col /><col /><col /><col />
               </colgroup>
               <thead>
                 <tr>
                   <th>No</th>
-                  <th>From User (Name / ID)</th>
-                  <th>Transaction Type</th>
-                  <th>Payment Type</th>
-                  <th>Amount</th>
-                  <th>Status</th>
                   <th>Date</th>
+                  <th>Amount</th>
+                  <th>Transaction Type</th>
+                  <th>Status</th>
                 </tr>
               </thead>
               <tbody>
                 {txLoading ? (
                   <tr>
-                    <td colSpan="7" className="empty-cell">
+                    <td colSpan="5" className="empty-cell">
                       Loading...
                     </td>
                   </tr>
                 ) : txError ? (
                   <tr>
-                    <td colSpan="7" className="empty-cell">
+                    <td colSpan="5" className="empty-cell">
                       {txError}
                     </td>
                   </tr>
                 ) : filteredTransactions.length === 0 ? (
                   <tr>
-                    <td colSpan="7" className="empty-cell">
+                    <td colSpan="5" className="empty-cell">
                       {activeSearch
                         ? `No users found for “${searchInput.trim()}”.`
                         : "No wallet transactions found."}
@@ -244,25 +242,14 @@ function EWallet() {
                         key={tx.id ?? idx}
                         className="transaction-row"
                       >
-                        <td data-label="ID">{tx.id ?? "-"}</td>
-                        <td className="investor-cell" data-label="From User">
-                          <span className="investor-name">
-                            Name: {tx.from_user?.name || tx.from_user?.fullname || tx.from_user?.full_name || tx.from_user_name || "-"}
-                          </span>
-                          <span className="investor-id">
-                            ID: {tx.from_user?.user_id || tx.from_user?.id || tx.from_user_id || "-"}
-                          </span>
-                        </td>
-                        <td data-label="Transaction Type">{tx.transaction_type || "-"}</td>
-                        <td data-label="Payment Type">{tx.payment_type || "-"}</td>
+                        <td data-label="No">{idx + 1}</td>
+                        <td data-label="Date">{formatDate(tx.date || tx.created_at || tx.transaction_date)}</td>
                         <td className="cell-amount" data-label="Amount">{money(tx.amount)}</td>
+                        <td data-label="Transaction Type">{tx.transaction_type || "-"}</td>
                         <td data-label="Status">
                           <span className={`status-pill ${statusClass}`}>
                             {status || "-"}
                           </span>
-                        </td>
-                        <td className="date-cell" data-label="Date">
-                          {formatDate(tx.date || tx.created_at)}
                         </td>
                       </tr>
                     );

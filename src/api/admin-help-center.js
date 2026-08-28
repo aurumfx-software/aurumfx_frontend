@@ -17,6 +17,7 @@ const normalizeTicket = (ticket = {}) => ({
   message: ticket.message ?? "",
   attachment: ticket.attachment ?? ticket.attachment_url ?? null,
   replies: Array.isArray(ticket.replies) ? ticket.replies : [],
+  admin_submitted: ticket.admin_submitted ?? ticket.admin_replied ?? ticket.has_admin_reply ?? false,
 });
 
 export const getAdminTicketsApi = async () => {

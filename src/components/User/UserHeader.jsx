@@ -46,7 +46,6 @@ function UserHeader({ onMenuToggle, user }) {
 
   const userName = user?.name || user?.fullName || "PRAVEEN";
   const userId = user?.userId || localStorage.getItem("userId") || "FX259";
-  const userEmail = user?.email || "sreedharan1962@gmail.com";
   const hasAdminSession = Boolean(sessionStorage.getItem("adminImpersonationSession"));
 
   // Notifications state (defaults to 0 unread messages matching screenshot)
@@ -251,7 +250,7 @@ function UserHeader({ onMenuToggle, user }) {
                 </span>
                 <div className="dropdown-user-details">
                   <div className="dropdown-user-id">{userId}</div>
-                  <div className="dropdown-user-email">{userEmail}</div>
+                  <div className="dropdown-user-email">{userName}</div>
                 </div>
               </div>
               <div className="dropdown-menu-list">

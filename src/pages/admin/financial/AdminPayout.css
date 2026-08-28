@@ -1,0 +1,175 @@
+.payout-action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.payout-reject-btn {
+  min-height: 32px;
+  padding: 0 12px;
+  background: transparent;
+  border: 1px solid #ef4444;
+  border-radius: 8px;
+  color: #dc2626;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.payout-reject-btn:hover:not(:disabled) {
+  background: #ef4444;
+  color: #fff;
+}
+
+.payout-status-paid {
+  color: #16a34a;
+  font-weight: 700;
+}
+
+.payout-reject-btn:disabled,
+.payout-confirm-reject-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.payout-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
+}
+
+.payout-modal-container {
+  width: 100%;
+  max-width: 480px;
+  overflow: hidden;
+  background: #111;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.payout-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.payout-modal-header h3 {
+  margin: 0;
+  color: #f8fafc;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.payout-modal-close {
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  background: transparent;
+  border: 0;
+  color: #94a3b8;
+  cursor: pointer;
+}
+
+.payout-modal-close:hover { color: #f5d061; }
+
+.payout-modal-body {
+  padding: 24px;
+  color: #e2e8f0;
+}
+
+.payout-modal-label {
+  display: block;
+  color: #cbd5e1;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.payout-modal-input {
+  width: 100%;
+  min-height: 96px;
+  margin-top: 8px;
+  padding: 10px 12px;
+  resize: vertical;
+  background: #fff;
+  border: 1px solid #dbe3ef;
+  border-radius: 8px;
+  color: #111827;
+  font: inherit;
+}
+
+.payout-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.payout-cancel-btn,
+.payout-confirm-reject-btn {
+  min-height: 40px;
+  padding: 0 20px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.payout-cancel-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #cbd5e1;
+}
+
+.payout-confirm-reject-btn {
+  background: #ef4444;
+  border: 1px solid #ef4444;
+  color: #fff;
+}
+
+.payout-confirm-reject-btn:hover:not(:disabled) { background: #dc2626; }
+
+[data-theme="light"] .payout-modal-container {
+  background: #fff;
+  border-color: rgba(197, 155, 39, 0.28);
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.2);
+}
+
+[data-theme="light"] .payout-modal-header {
+  border-bottom-color: #e5e7eb;
+}
+
+[data-theme="light"] .payout-modal-header h3 {
+  color: #171717;
+}
+
+[data-theme="light"] .payout-modal-close {
+  color: #64748b;
+}
+
+[data-theme="light"] .payout-modal-body {
+  color: #334155;
+}
+
+[data-theme="light"] .payout-modal-label {
+  color: #475569;
+}
+
+[data-theme="light"] .payout-modal-input {
+  background: #fff;
+  border-color: #dbe3ef;
+  color: #171717;
+}
+
+[data-theme="light"] .payout-cancel-btn {
+  border-color: #dbe3ef;
+  color: #475569;
+}

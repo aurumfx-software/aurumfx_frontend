@@ -25,6 +25,8 @@ const Register = () => {
     country: "",
     city: "",
     zip_code: "",
+    building_no: "",
+    street: "",
     mobile: "",
     aadhar_no: "",
     pan: "",
@@ -246,6 +248,8 @@ const Register = () => {
       const optionalFields = [
         "city",
         "zip_code",
+        "building_no",
+        "street",
         "pan",
         "bank_account",
         "bank_name",
@@ -436,6 +440,8 @@ const Register = () => {
           )}
           {renderInput("city", "City", "text", false)}
           {renderInput("zip_code", "ZIP Code", "text", false)}
+          {renderInput("building_no", "Building No.", "text", false)}
+          {renderInput("street", "Street", "text", false)}
           {renderInput("mobile", "Mobile", "tel", true)}
           {renderInput("aadhar_no", "Aadhaar Number", "text", true)}
           {renderInput("pan", "PAN Number", "text", false)}

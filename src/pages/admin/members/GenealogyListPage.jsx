@@ -4,6 +4,13 @@ import AdminLayout from "../../../components/Admin/AdminLayout";
 import { getAdminGenealogyListApi } from "../../../api/admin-genealogy";
 import "./GenealogyPage.css";
 
+const formatDate = (value) => {
+  if (!value) return "-";
+  const [datePart] = String(value).split("T");
+  const [year, month, day] = datePart.split("-");
+  return year && month && day ? `${day}-${month}-${year}` : datePart;
+};
+
 function GenealogyListPage() {
   const [users, setUsers] = useState([]);
   const [query, setQuery] = useState("");
@@ -66,7 +73,7 @@ function GenealogyListPage() {
                     return <tr key={user.user_id}>
                       <td className="agen-user-id">{user.user_id || "-"}</td>
                       <td>{user.fullname || user.full_name || user.name || "-"}</td>
-                      <td>{user.date_of_joining || user.date_of_join || "-"}</td>
+                      <td>{formatDate(user.date_of_joining || user.date_of_join)}</td>
                       <td>{user.rank || "-"}</td>
                       <td>₹{Number(user.total_investment || 0).toLocaleString("en-IN")}</td>
                       <td>{Number(user.total_lots || 0)}</td>

@@ -245,6 +245,10 @@
 .yellow-get-btn {
   height: 44px;
   padding: 0 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
   background: linear-gradient(135deg, #f7dc7a, #f0c14b);
   border: none;
   border-radius: 10px;

@@ -15,7 +15,10 @@ const buildParams = (filters = {}) => Object.fromEntries(
 export const getAdminInvestmentReportApi = async (filters = {}) => {
   try {
     const response = await api.get("/admin/investment-report/", { params: buildParams(filters) });
-    const payload = response.data?.data || response.data || {};
+    const responseData = response.data || {};
+    const payload = responseData.data && !Array.isArray(responseData.data)
+      ? responseData.data
+      : responseData;
     return {
       success: true,
       data: {

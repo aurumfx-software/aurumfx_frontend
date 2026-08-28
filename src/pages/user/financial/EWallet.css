@@ -614,6 +614,20 @@
   border-collapse: collapse;
 }
 
+.ewallet-page .payout-history-table {
+  border: 1px solid var(--ew-border);
+}
+
+.ewallet-page .payout-history-table th,
+.ewallet-page .payout-history-table td {
+  border-right: 1px solid var(--ew-border-soft);
+}
+
+.ewallet-page .payout-history-table th:last-child,
+.ewallet-page .payout-history-table td:last-child {
+  border-right: none;
+}
+
 .ewallet-page .ewallet-table thead th {
   text-align: left;
   font-family: var(--ew-font-mono);
@@ -713,6 +727,21 @@
 .ewallet-page .status-pill.status--paid {
   background: var(--ew-success-soft);
   color: var(--ew-success);
+}
+
+.ewallet-page .status-pill.status--rejected {
+  background: var(--ew-danger-soft);
+  color: var(--ew-danger);
+}
+
+.ewallet-page .payout-rejection-reason {
+  display: block;
+  max-width: 180px;
+  margin-top: 5px;
+  color: var(--ew-danger);
+  font-size: 10.5px;
+  line-height: 1.35;
+  white-space: normal;
 }
 
 /* ---------------------------------------------------------------------- */

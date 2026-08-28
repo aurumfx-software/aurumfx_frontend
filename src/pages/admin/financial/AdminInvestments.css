@@ -550,6 +550,29 @@
   transform: translateY(-1px);
 }
 
+.investments-refresh-btn {
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 18px;
+  background: transparent;
+  border: 1px solid var(--agen-accent-line);
+  border-radius: 10px;
+  color: var(--agen-accent-strong);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.1s ease;
+  white-space: nowrap;
+}
+
+.investments-refresh-btn:hover {
+  background: var(--agen-accent-soft);
+  transform: translateY(-1px);
+}
+
 /* Empty State Styles */
 .docs-empty-state {
   display: flex;

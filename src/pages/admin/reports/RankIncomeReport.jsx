@@ -13,11 +13,17 @@ const valueOf = (row, ...keys) => keys.reduce((value, key) => value ?? row?.[key
 const userIdOf = (row) => valueOf(row, "user_id", "userId", "username") || "-";
 const userNameOf = (row) => valueOf(row, "user_name", "userName", "fullname", "name") || "-";
 const rankOf = (row) => valueOf(row, "rank_name", "rank", "rankName") || "-";
-const incomeOf = (row) => valueOf(row, "income", "reward_income", "rank_income", "amount") || 0;
-const paidOf = (row) => valueOf(row, "paid", "paid_amount", "paidAmount") || 0;
-const pendingOf = (row) => valueOf(row, "pending", "pending_amount", "pendingAmount") || 0;
+const incomeOf = (row) => valueOf(row, "reward_income", "income", "rank_income", "amount") || 0;
+const paidOf = (row) => row.reward_paid ? incomeOf(row) : 0;
+const pendingOf = (row) => row.reward_paid ? 0 : incomeOf(row);
 const statusOf = (row) => valueOf(row, "status", "payment_status") || "-";
-const dateOf = (row) => valueOf(row, "date", "created_at", "income_date") || "-";
+const dateOf = (row) => valueOf(row, "achieved_at", "date", "created_at", "income_date") || "-";
+const formatDate = (value) => {
+  if (!value) return "-";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleDateString("en-IN", { day: "2-digit", month: "2-digit", year: "numeric" });
+};
 
 function RankIncomeReport() {
   const [filters, setFilters] = useState({ start_date: "", end_date: "", status: "", user_id: "", rank_id: "" });
@@ -73,7 +79,7 @@ function RankIncomeReport() {
         </form>
         <div className="investment-report-summary"><div><span>Total Records</span><strong>{report.total_records}</strong></div><div><span>Total Reward Income</span><strong>{money(report.total_income)}</strong></div><div><span>Total Paid</span><strong>{money(report.total_paid)}</strong></div><div><span>Total Pending</span><strong>{money(report.total_pending)}</strong></div></div>
         <div className="reports-table-card"><div className="ft-table-wrapper"><table className="reports-table"><thead><tr><th>No</th><th>User ID</th><th>User Name</th><th>Rank</th><th>Reward Income</th><th>Paid</th><th>Pending</th><th>Status</th><th>Date</th></tr></thead><tbody>
-          {loading ? <tr><td colSpan="9">Loading rank income report...</td></tr> : error ? <tr><td colSpan="9">{error}</td></tr> : report.items.length === 0 ? <tr><td colSpan="9" className="reports-empty-cell">No rank income records found.</td></tr> : report.items.map((row, index) => <tr key={row.id || `${userIdOf(row)}-${index}`}><td>{index + 1}</td><td>{userIdOf(row)}</td><td>{userNameOf(row)}</td><td>{rankOf(row)}</td><td>{money(incomeOf(row))}</td><td>{money(paidOf(row))}</td><td>{money(pendingOf(row))}</td><td>{statusOf(row)}</td><td>{dateOf(row)}</td></tr>)}
+          {loading ? <tr><td colSpan="9">Loading rank income report...</td></tr> : error ? <tr><td colSpan="9">{error}</td></tr> : report.items.length === 0 ? <tr><td colSpan="9" className="reports-empty-cell">No rank income records found.</td></tr> : report.items.map((row, index) => <tr key={row.id || `${userIdOf(row)}-${index}`}><td>{index + 1}</td><td>{userIdOf(row)}</td><td>{userNameOf(row)}</td><td>{rankOf(row)}{row.rank_no != null ? ` (#${row.rank_no})` : ""}</td><td>{money(incomeOf(row))}</td><td>{money(paidOf(row))}</td><td>{money(pendingOf(row))}</td><td>{statusOf(row)}</td><td>{formatDate(dateOf(row))}</td></tr>)}
         </tbody></table></div></div>
       </div>
     </AdminLayout>

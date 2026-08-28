@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   FiInfo,
   FiMessageSquare,
@@ -369,7 +370,7 @@ function HelpCenterPage() {
           </div>
         </div>
 
-        {(detailLoading || detailError || selectedTicket) && (
+        {(detailLoading || detailError || selectedTicket) && createPortal(
           <div className="ticket-detail-backdrop" onClick={() => setSelectedTicket(null)}>
             <section
               className="ticket-detail-modal"
@@ -425,7 +426,8 @@ function HelpCenterPage() {
                 )}
               </div>
             </section>
-          </div>
+          </div>,
+          document.body,
         )}
       </div>
     </UserLayout>

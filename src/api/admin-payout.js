@@ -34,6 +34,17 @@ export const payUserPayoutApi = async (userId) => {
   }
 };
 
+export const rejectUserPayoutApi = async (userId, rejectionReason) => {
+  try {
+    const response = await api.post(`/admin/payout/${userId}/reject`, {
+      rejection_reason: rejectionReason.trim(),
+    });
+    return { success: true, data: response.data };
+  } catch (error) {
+    return { success: false, error: getErrorMessage(error, "Unable to reject payout") };
+  }
+};
+
 export const getPaidPayoutsApi = async () => {
   try {
     const response = await api.get("/admin/payout/paid");
@@ -57,13 +68,25 @@ export const getPayoutHistoryApi = async (filters = {}) => {
       Object.entries(filters).filter(([, value]) => String(value || "").trim() !== "")
     );
     const response = await api.get("/admin/payout/history", { params });
-    const payload = response.data || {};
-    const items = Array.isArray(payload) ? payload : payload.items || payload.data?.items || payload.data || [];
+    const responseData = response.data || {};
+    const payload = responseData.data && !Array.isArray(responseData.data)
+      ? responseData.data
+      : responseData;
+    const items = Array.isArray(payload) ? payload : payload.items || payload.data || [];
     return {
       success: true,
       data: {
-        total: Number(payload.total ?? items.length ?? 0),
-        items: Array.isArray(items) ? items : [],
+        total: Number(payload.total ?? responseData.total ?? items.length ?? 0),
+        items: Array.isArray(items) ? items.map((item) => ({
+          ...item,
+          user_code: item.user_code ?? item.userCode ?? "",
+          user_name: item.user_name ?? item.userName ?? item.username ?? "",
+          bank_details: item.bank_details ?? item.bankDetails ?? null,
+          payout_method: item.payout_method ?? item.payoutMethod ?? "",
+          payout_information: item.payout_information ?? item.payoutInformation ?? null,
+          paid_at: item.paid_at ?? item.paidAt ?? null,
+          created_at: item.created_at ?? item.createdAt ?? null,
+        })) : [],
       },
     };
   } catch (error) {

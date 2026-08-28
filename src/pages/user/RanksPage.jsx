@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
-import { FiX } from "react-icons/fi";
+import { FiX, FiAward, FiChevronRight, FiInfo } from "react-icons/fi";
 import UserLayout from "../../components/User/UserLayout";
 import { getAllUserRankSettingsApi, getRankHoldersApi } from "../../api/user-rank";
 import "./financial/EWallet.css";
@@ -54,6 +54,22 @@ const getRankCriteria = (rank) => {
   }
 
   return criteriaList.length ? criteriaList.join(" • ") : "No criteria provided.";
+};
+
+// Rotates a small set of on-brand gradient pairs so initials avatars
+// feel varied without breaking the gold/charcoal palette.
+const AVATAR_THEMES = [
+  ["var(--ew-accent)", "var(--ew-accent-strong)"],
+  ["#e8b04b", "var(--ew-accent-strong)"],
+  ["#f7da7d", "#d4af37"],
+  ["#eec766", "#b8860b"],
+];
+
+const getInitials = (first, last) => {
+  const a = (first || "").trim().charAt(0);
+  const b = (last || "").trim().charAt(0);
+  const initials = `${a}${b}`.toUpperCase();
+  return initials || "?";
 };
 
 function RanksPage() {
@@ -160,6 +176,12 @@ function RanksPage() {
           <>
             <div className="ewallet-table-card">
               <h2 className="section-title" style={{ marginBottom: "14px" }}>Ranks</h2>
+
+              <div className="user-rank-hint">
+                <FiInfo aria-hidden="true" />
+                <span>Tap any rank button below to open its list of current holders.</span>
+              </div>
+
               <div className="table-responsive">
                 <table className="ewallet-table ewallet-table--clean">
                   <thead>
@@ -177,7 +199,17 @@ function RanksPage() {
                   return (
                     <tr key={rankId ?? `${name}-${rank?.rank_no ?? "rank"}`}>
                       <td>{rank?.rank_no ?? "-"}</td>
-                      <td><button type="button" className="user-rank-name-button" onClick={() => setSelectedRankId(rankId)}>{name}</button></td>
+                      <td>
+                        <button
+                          type="button"
+                          className="user-rank-pill-btn"
+                          onClick={() => setSelectedRankId(rankId)}
+                        >
+                          <span className="user-rank-pill-icon"><FiAward aria-hidden="true" /></span>
+                          <span className="user-rank-pill-label">{name}</span>
+                          <FiChevronRight className="user-rank-pill-arrow" aria-hidden="true" />
+                        </button>
+                      </td>
                       <td>{getRankCriteria(rank)}</td>
                     </tr>
                   );
@@ -203,13 +235,49 @@ function RanksPage() {
                   <button type="button" onClick={() => setSelectedRankId(null)} aria-label="Close holders"><FiX /></button>
                 </div>
               </div>
-              <div className="user-rank-table-wrap">
-                <table className="user-rank-table">
-                  <thead><tr><th>No</th><th>User ID</th><th>Name</th><th>Date</th><th>Image</th></tr></thead>
-                  <tbody>
-                    {holdersLoading ? <tr><td colSpan="5" className="user-rank-empty">Loading rank holders...</td></tr> : holders.length === 0 ? <tr><td colSpan="5" className="user-rank-empty">No users currently hold this rank.</td></tr> : holders.map((holder, index) => <tr key={holder?.id ?? holder?.user_id ?? index}><td>{index + 1}</td><td className="user-rank-holder-id">{holder?.user_id || "-"}</td><td>{`${holder?.first_name || ""} ${holder?.last_name || ""}`.trim() || "-"}</td><td>{formatAchievedDate(holder?.achieved_at)}</td><td>{holder?.image ? <img src={holder.image} alt={`${holder.user_id || "User"} profile`} /> : "-"}</td></tr>)}
-                  </tbody>
-                </table>
+
+              <div className="user-rank-grid-wrap">
+                {holdersLoading ? (
+                  <div className="user-rank-empty user-rank-empty-grid">Loading rank holders...</div>
+                ) : holders.length === 0 ? (
+                  <div className="user-rank-empty user-rank-empty-grid">No users currently hold this rank.</div>
+                ) : (
+                  <div className="user-holders-grid">
+                    {holders.map((holder, index) => {
+                      const name = `${holder?.first_name || ""} ${holder?.last_name || ""}`.trim() || "-";
+                      const [from, to] = AVATAR_THEMES[index % AVATAR_THEMES.length];
+                      return (
+                        <div
+                          key={holder?.id ?? holder?.user_id ?? index}
+                          className="user-holder-card"
+                          style={{ animationDelay: `${Math.min(index, 12) * 45}ms` }}
+                        >
+                          <div className="user-holder-avatar-wrap">
+                            {holder?.image ? (
+                              <img
+                                className="user-holder-avatar-img"
+                                src={holder.image}
+                                alt={`${holder.user_id || "User"} profile`}
+                              />
+                            ) : (
+                              <div
+                                className="user-holder-avatar-initials"
+                                style={{ background: `linear-gradient(135deg, ${from}, ${to})` }}
+                              >
+                                {getInitials(holder?.first_name, holder?.last_name)}
+                              </div>
+                            )}
+                          </div>
+                          <div className="user-holder-card-body">
+                            <span className="user-holder-name">{name}</span>
+                            <span className="user-holder-userid">{holder?.user_id || "-"}</span>
+                            <span className="user-holder-date">{formatAchievedDate(holder?.achieved_at)}</span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             </div>
           </div>,

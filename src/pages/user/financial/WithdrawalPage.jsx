@@ -119,30 +119,49 @@ function WithdrawalPage() {
             <div className="empty-cell">No payout history found.</div>
           ) : (
             <div className="table-responsive">
-              <table className="ewallet-table ewallet-table--clean" style={{ width: "100%" }}>
+              <table className="ewallet-table ewallet-table--clean payout-history-table" style={{ width: "100%" }}>
                 <thead>
                   <tr>
-                    <th>Amount</th>
+                    <th>No</th>
+                    <th>Total Income</th>
+                    <th>Admin Fee %</th>
+                    <th>Admin Fee</th>
+                    <th>Net Payable</th>
+                    <th>Payout Method</th>
                     <th>Status</th>
-                    <th>Method</th>
-                    <th>Reference</th>
-                    <th>Date</th>
+                    <th>Paid At</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {history.map((item, index) => (
-                    <tr key={item.id ?? item.reference ?? `${item.amount ?? "payout"}-${index}`}>
-                      <td>{formatMoney(item.amount ?? item.total ?? item.payout_amount)}</td>
+                  {history.map((item, index) => {
+                    const status = String(item.status || "").toUpperCase();
+                    const statusClass = status === "PAID"
+                      ? "status--paid"
+                      : status === "REJECTED"
+                        ? "status--rejected"
+                        : status === "PENDING"
+                          ? "status--pending"
+                          : "";
+                    return (
+                    <tr key={item.id ?? `${item.user_id ?? "payout"}-${index}`}>
+                      <td>{index + 1}</td>
+                      <td>{formatMoney(item.total_income)}</td>
+                      <td>{item.admin_fee_percentage != null ? `${item.admin_fee_percentage}%` : "-"}</td>
+                      <td>{formatMoney(item.admin_fee)}</td>
+                      <td>{formatMoney(item.net_payable)}</td>
+                      <td>{item.payout_method || "-"}</td>
                       <td>
-                        <span className="status-pill">
-                          {item.status || item.state || "Pending"}
+                        <span className={`status-pill ${statusClass}`}>
+                          {item.status || "-"}
                         </span>
+                        {status === "REJECTED" && item.rejection_reason && (
+                          <small className="payout-rejection-reason">{item.rejection_reason}</small>
+                        )}
                       </td>
-                      <td>{item.method || item.payment_method || "Bank"}</td>
-                      <td>{item.reference || item.txn_id || item.transaction_id || "-"}</td>
-                      <td>{formatDate(item.created_at || item.date || item.updated_at)}</td>
+                      <td>{formatDate(item.paid_at)}</td>
                     </tr>
-                  ))}
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

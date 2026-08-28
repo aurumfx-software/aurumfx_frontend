@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { FiCalendar, FiRefreshCw } from "react-icons/fi";
+import { FiCalendar, FiRefreshCw, FiSearch } from "react-icons/fi";
 import AdminLayout from "../../../components/Admin/AdminLayout";
 import { getAdminWalletTransactionsApi } from "../../../api/admin-wallet";
 import "./AdminWallet.css";
 
-const getValue = (row, ...keys) => keys.reduce((value, key) => value ?? row?.[key], undefined);
 const money = (value) => `₹${Number(value || 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}`;
 const formatDate = (value) => value ? new Date(value).toLocaleString() : "-";
 
@@ -24,8 +23,23 @@ function AdminWallet() {
   const loadTransactions = async (activeFilters = filters) => {
     setLoading(true);
     setError("");
-    const result = await getAdminWalletTransactionsApi(activeFilters);
-    if (result.success) setTransactions(result.data);
+    const searchValue = String(activeFilters.user_id || "").trim();
+    const isNumericUserId = /^\d+$/.test(searchValue);
+    const apiFilters = isNumericUserId || !searchValue
+      ? activeFilters
+      : { ...activeFilters, user_id: "" };
+    const result = await getAdminWalletTransactionsApi(apiFilters);
+    if (result.success) {
+      const normalizedSearch = searchValue.toLowerCase();
+      const filteredTransactions = normalizedSearch && !isNumericUserId
+        ? result.data.filter((transaction) => {
+          const user = transaction.user || {};
+          return String(user.user_id || "").toLowerCase() === normalizedSearch
+            || String(user.name || "").toLowerCase().includes(normalizedSearch);
+        })
+        : result.data;
+      setTransactions(filteredTransactions);
+    }
     else setError(result.error || "Unable to load wallet transactions.");
     setLoading(false);
   };
@@ -67,24 +81,24 @@ function AdminWallet() {
             <div className="filter-field-wrap"><span className="floating-top-label">End Date</span><input type="date" value={filters.end_date} onChange={(event) => setFilter("end_date", event.target.value)} className="filter-input-field" /><FiCalendar className="field-right-icon" /></div>
             <input type="search" placeholder="User ID" value={filters.user_id} onChange={(event) => setFilter("user_id", event.target.value)} className="filter-input-field" />
             <input type="search" placeholder="Transaction Type" value={filters.transaction_type} onChange={(event) => setFilter("transaction_type", event.target.value)} className="filter-input-field" />
-            <button type="submit" className="yellow-get-btn">Search</button>
+            <button type="submit" className="yellow-get-btn" aria-label="Search wallet transactions"><FiSearch size={15} /> Search Transactions</button>
             <button type="button" className="wallet-reset-btn" onClick={handleReset}>Reset <FiRefreshCw size={13} /></button>
           </form>
 
           <div className="table-overflow-box" style={{ marginTop: "16px" }}>
             <table className="agen-list-table">
-              <thead><tr><th>No</th><th>Transaction ID</th><th>User ID</th><th>Transaction Type</th><th>Amount</th><th>Balance</th><th>Description</th><th>Date</th></tr></thead>
+              <thead><tr><th>No</th><th>User ID</th><th>User Name</th><th>Transaction Type</th><th>Payment Type</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead>
               <tbody>
                 {loading ? <tr><td colSpan="8"><FiRefreshCw className="wallet-spinner" /> Loading wallet transactions...</td></tr> : error ? <tr><td colSpan="8">{error}</td></tr> : transactions.length === 0 ? <tr><td colSpan="8">No wallet transactions found.</td></tr> : transactions.map((transaction, index) => (
                   <tr key={transaction.id || transaction.transaction_id || index}>
                     <td>{index + 1}</td>
-                    <td>{getValue(transaction, "transaction_id", "id") || "-"}</td>
-                    <td>{getValue(transaction, "user_id", "userId") || "-"}</td>
-                    <td>{getValue(transaction, "transaction_type", "type") || "-"}</td>
-                    <td className="amount-cell">{money(getValue(transaction, "amount", "transaction_amount"))}</td>
-                    <td>{money(getValue(transaction, "balance", "wallet_balance", "running_balance"))}</td>
-                    <td>{getValue(transaction, "description", "remarks", "note") || "-"}</td>
-                    <td>{formatDate(getValue(transaction, "created_at", "date", "transaction_date"))}</td>
+                    <td>{transaction.user?.user_id || transaction.user_id || "-"}</td>
+                    <td>{transaction.user?.name || transaction.user_name || "-"}</td>
+                    <td>{transaction.transaction_type || "-"}</td>
+                    <td>{transaction.payment_type || "-"}</td>
+                    <td className="amount-cell">{money(transaction.amount)}</td>
+                    <td>{transaction.status || "-"}</td>
+                    <td>{formatDate(transaction.date)}</td>
                   </tr>
                 ))}
               </tbody>

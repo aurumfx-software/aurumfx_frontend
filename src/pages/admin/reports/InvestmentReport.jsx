@@ -17,6 +17,12 @@ const amountOf = (row) => valueOf(row, "amount", "investment_amount", "total_amo
 const lotsOf = (row) => valueOf(row, "lots", "lot_count") ?? "-";
 const statusOf = (row) => valueOf(row, "status", "approval_status", "investment_status") || "-";
 const dateOf = (row) => valueOf(row, "investment_date", "date", "created_at") || "-";
+const formatDate = (value) => {
+  if (!value || value === "-") return "-";
+  const [datePart] = String(value).split("T");
+  const [year, month, day] = datePart.split("-");
+  return year && month && day ? `${day}-${month}-${year}` : datePart;
+};
 
 function InvestmentReport() {
   const [filters, setFilters] = useState({
@@ -107,8 +113,8 @@ function InvestmentReport() {
           <div><span>Total Lots</span><strong>{report.total_lots}</strong></div>
         </div>
 
-        <div className="reports-table-card"><div className="ft-table-wrapper"><table className="reports-table"><thead><tr><th>No</th><th>Investment ID</th><th>User ID</th><th>User Name</th><th>Plan</th><th>Amount</th><th>Lots</th><th>Status</th><th>Date</th></tr></thead><tbody>
-          {loading ? <tr><td colSpan="9">Loading investment report...</td></tr> : error ? <tr><td colSpan="9">{error}</td></tr> : report.items.length === 0 ? <tr><td colSpan="9" className="reports-empty-cell">No investment records found.</td></tr> : report.items.map((row, index) => <tr key={row.id || row.investment_id || `${userIdOf(row)}-${index}`}><td>{index + 1}</td><td>{valueOf(row, "investment_id", "id") || "-"}</td><td>{userIdOf(row)}</td><td>{userNameOf(row)}</td><td>{planOf(row)}</td><td>{money(amountOf(row))}</td><td>{lotsOf(row)}</td><td>{statusOf(row)}</td><td>{dateOf(row)}</td></tr>)}
+        <div className="reports-table-card"><div className="ft-table-wrapper"><table className="reports-table"><thead><tr><th>No</th><th>User ID</th><th>User Name</th><th>Plan</th><th>Amount</th><th>Lots</th><th>Status</th><th>Date</th></tr></thead><tbody>
+          {loading ? <tr><td colSpan="8">Loading investment report...</td></tr> : error ? <tr><td colSpan="8">{error}</td></tr> : report.items.length === 0 ? <tr><td colSpan="8" className="reports-empty-cell">No investment records found.</td></tr> : report.items.map((row, index) => <tr key={row.id || row.investment_id || `${userIdOf(row)}-${index}`}><td>{index + 1}</td><td>{userIdOf(row)}</td><td>{userNameOf(row)}</td><td>{planOf(row)}</td><td>{money(amountOf(row))}</td><td>{lotsOf(row)}</td><td>{statusOf(row)}</td><td>{formatDate(dateOf(row))}</td></tr>)}
         </tbody></table></div></div>
       </div>
     </AdminLayout>

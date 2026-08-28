@@ -97,7 +97,7 @@ function KycTab({ profileData, setProfileData }) {
       const aadhaarDoc = docs.find((doc) => ["aadhar", "aadhaar", KYC_DOC_TYPE_AADHAAR_FRONT].includes(String(doc.document_type).toLowerCase()));
       const panDoc = docs.find((doc) => doc.document_type === KYC_DOC_TYPE_PAN);
       const loadedAadhaar = payload?.aadhar_no || payload?.aadhaar_no || aadhaarDoc?.aadhar_no || aadhaarDoc?.aadhar_number || aadhaarDoc?.aadhaar_number;
-      const loadedPan = payload?.pan || panDoc?.pan || panDoc?.pan_number;
+      const loadedPan = payload?.pan || payload?.pan_no || panDoc?.pan || panDoc?.pan_number || panDoc?.pan_no;
       if (loadedAadhaar) {
         setAadhaarNumber(String(loadedAadhaar));
         setProfileData((prev) => ({ ...prev, aadharNo: String(loadedAadhaar) }));

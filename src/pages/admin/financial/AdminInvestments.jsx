@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { useLocation, useNavigate } from "react-router-dom";
-import { FiCalendar, FiChevronDown, FiFolder, FiX } from "react-icons/fi";
+import { FiCalendar, FiChevronDown, FiFolder, FiRefreshCw, FiX } from "react-icons/fi";
 import AdminLayout from "../../../components/Admin/AdminLayout";
 import {
   getPendingInvestmentsApi,
@@ -13,6 +13,13 @@ import {
   getAdminInvestmentDetailsApi,
 } from "../../../api/admin-investments";
 import "./AdminInvestments.css";
+
+const formatDate = (value) => {
+  if (!value) return "-";
+  const [datePart] = String(value).split("T");
+  const [year, month, day] = datePart.split("-");
+  return year && month && day ? `${day}-${month}-${year}` : datePart;
+};
 
 function AdminInvestments() {
   const location = useLocation();
@@ -52,42 +59,70 @@ function AdminInvestments() {
   const [returnModalId, setReturnModalId] = useState(null);
   const [remarks, setRemarks] = useState("");
 
-  const loadTabData = async () => {
+  const filterInvestments = (items, filterValues = {}) => {
+    const activeUserFilter = filterValues.usernameFilter ?? usernameFilter;
+    const activeStartDate = filterValues.startDate ?? startDate;
+    const activeEndDate = filterValues.endDate ?? endDate;
+    const userSearch = activeUserFilter.trim().toLowerCase();
+    return items.filter((item) => {
+      const itemUserId = String(item.user_id ?? item.userId ?? "").toLowerCase();
+      const itemDate = String(item.investment_date ?? item.date ?? item.created_at ?? "").slice(0, 10);
+      const matchesUser = !userSearch || itemUserId.includes(userSearch);
+      const matchesStartDate = !activeStartDate || itemDate >= activeStartDate;
+      const matchesEndDate = !activeEndDate || itemDate <= activeEndDate;
+      return matchesUser && matchesStartDate && matchesEndDate;
+    });
+  };
+
+  const loadTabData = async (filterValues = {}) => {
     setLoading(true);
     setErrorMsg("");
+    const activeStartDate = filterValues.startDate ?? startDate;
+    const activeEndDate = filterValues.endDate ?? endDate;
+    const activeUserFilter = filterValues.usernameFilter ?? usernameFilter;
+    const activeStatusFilter = filterValues.statusFilter ?? statusFilter;
 
     if (activeTab === "requests") {
       const res = await getPendingInvestmentsApi({
-        user_id: usernameFilter || undefined,
-        start_date: startDate || undefined,
-        end_date: endDate || undefined,
+        user_id: activeUserFilter || undefined,
+        start_date: activeStartDate || undefined,
+        end_date: activeEndDate || undefined,
       });
-      if (res.success) setRequests(res.data);
+      if (res.success) setRequests(filterInvestments(res.data, filterValues));
       else setErrorMsg(res.error);
     } else if (activeTab === "active") {
       const res = await getActiveInvestmentsApi({
-        user_id: usernameFilter || undefined,
-        status: statusFilter || undefined,
-        start_date: startDate || undefined,
-        end_date: endDate || undefined,
+        user_id: activeUserFilter || undefined,
+        status: activeStatusFilter || undefined,
+        start_date: activeStartDate || undefined,
+        end_date: activeEndDate || undefined,
       });
-      if (res.success) setActiveList(res.data);
+      if (res.success) setActiveList(filterInvestments(res.data, filterValues));
       else setErrorMsg(res.error);
     } else if (activeTab === "today") {
       const res = await getTodayReturnsApi();
-      if (res.success) setTodayList(res.data);
+      if (res.success) setTodayList(filterInvestments(res.data, filterValues));
       else setErrorMsg(res.error);
     } else {
       const res = await getAllAdminInvestmentsApi({
-        user_id: usernameFilter || undefined,
-        start_date: startDate || undefined,
-        end_date: endDate || undefined,
+        user_id: activeUserFilter || undefined,
+        start_date: activeStartDate || undefined,
+        end_date: activeEndDate || undefined,
       });
-      if (res.success) setHistory(res.data);
+      if (res.success) setHistory(filterInvestments(res.data, filterValues));
       else setErrorMsg(res.error);
     }
 
     setLoading(false);
+  };
+
+  const handleRefresh = () => {
+    const clearedFilters = { startDate: "", endDate: "", usernameFilter: "", statusFilter: "" };
+    setStartDate("");
+    setEndDate("");
+    setUsernameFilter("");
+    setStatusFilter("");
+    loadTabData(clearedFilters);
   };
 
   useEffect(() => {
@@ -153,12 +188,10 @@ function AdminInvestments() {
       <thead>
         <tr>
           <th>No</th>
-          <th>User</th>
+          <th>User ID</th>
+          <th>User Name</th>
           <th>Plan</th>
-          <th>Return Type</th>
           <th>Amount</th>
-          <th>Lots</th>
-          <th>Investment Status</th>
           <th>Approval Status</th>
           <th>Date</th>
           {showActions && <th>Action</th>}
@@ -166,12 +199,12 @@ function AdminInvestments() {
       </thead>
       <tbody>
         {loading ? (
-          <tr><td colSpan={showActions ? 10 : 9}>Loading...</td></tr>
+          <tr><td colSpan={showActions ? 9 : 8}>Loading...</td></tr>
         ) : errorMsg ? (
-          <tr><td colSpan={showActions ? 10 : 9}>{errorMsg}</td></tr>
+          <tr><td colSpan={showActions ? 9 : 8}>{errorMsg}</td></tr>
         ) : dataList.length === 0 ? (
           <tr>
-            <td colSpan={showActions ? 10 : 9} style={{ padding: 0 }}>
+            <td colSpan={showActions ? 9 : 8} style={{ padding: 0 }}>
               <div className="docs-empty-state">
                 <div className="empty-magnifier-box">
                   <div className="magnifier-art">
@@ -190,15 +223,15 @@ function AdminInvestments() {
             <tr key={item.id}>
               <td>{idx + 1}</td>
               <td style={{ cursor: "pointer" }} onClick={() => handleRowClick(item.id)}>
-                {item.user_name} ({item.user_id})
+                {item.user_id || "-"}
+              </td>
+              <td style={{ cursor: "pointer" }} onClick={() => handleRowClick(item.id)}>
+                {item.user_name || "-"}
               </td>
               <td>{item.plan_name}</td>
-              <td>{item.return_type}</td>
               <td>₹{Number(item.amount).toLocaleString()}</td>
-              <td>{item.lots}</td>
-              <td><span className="invest-status-green">{item.investment_status}</span></td>
               <td><span className="invest-status-green">{item.approval_status}</span></td>
-              <td>{item.investment_date}</td>
+              <td>{formatDate(item.investment_date)}</td>
               {showActions && (
                 <td>
                   <div style={{ display: "flex", gap: "8px" }}>
@@ -327,6 +360,7 @@ function AdminInvestments() {
                   </div>
                 )}
                 <button type="submit" className="yellow-get-btn">Get Report</button>
+                <button type="button" className="investments-refresh-btn" onClick={handleRefresh}><FiRefreshCw size={14} /> Refresh</button>
               </form>
             )}
 
@@ -340,7 +374,8 @@ function AdminInvestments() {
                   <thead>
                     <tr>
                       <th>No</th>
-                      <th>User</th>
+                      <th>User ID</th>
+                      <th>User Name</th>
                       <th>Plan</th>
                       <th>Amount</th>
                       <th>Date</th>
@@ -349,12 +384,12 @@ function AdminInvestments() {
                   </thead>
                   <tbody>
                     {loading ? (
-                      <tr><td colSpan="6">Loading...</td></tr>
+                      <tr><td colSpan="7">Loading...</td></tr>
                     ) : errorMsg ? (
-                      <tr><td colSpan="6">{errorMsg}</td></tr>
+                      <tr><td colSpan="7">{errorMsg}</td></tr>
                     ) : todayList.length === 0 ? (
                       <tr>
-                        <td colSpan="6" style={{ padding: 0 }}>
+                        <td colSpan="7" style={{ padding: 0 }}>
                           <div className="docs-empty-state">
                             <div className="empty-magnifier-box">
                               <div className="magnifier-art">
@@ -373,11 +408,14 @@ function AdminInvestments() {
                         <tr key={item.id}>
                           <td>{idx + 1}</td>
                           <td style={{ cursor: "pointer" }} onClick={() => handleRowClick(item.id)}>
-                            {item.user_name} ({item.user_id})
+                            {item.user_id || "-"}
+                          </td>
+                          <td style={{ cursor: "pointer" }} onClick={() => handleRowClick(item.id)}>
+                            {item.user_name || "-"}
                           </td>
                           <td>{item.plan_name}</td>
                           <td>₹{Number(item.amount).toLocaleString()}</td>
-                          <td>{item.investment_date}</td>
+                          <td>{formatDate(item.investment_date)}</td>
                           <td>
                             <button
                               type="button"

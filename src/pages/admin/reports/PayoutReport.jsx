@@ -13,9 +13,16 @@ const valueOf = (row, ...keys) => keys.reduce((value, key) => value ?? row?.[key
 const incomeOf = (row, key) => valueOf(row, key, key.replace("_income", "Income"), key.replace("_income", "_amount")) || 0;
 const userIdOf = (row) => valueOf(row, "user_id", "userId", "username") || "-";
 const userNameOf = (row) => valueOf(row, "user_name", "userName", "fullname", "name") || "-";
-const rankOf = (row) => valueOf(row, "rank", "rank_name", "user_rank") || "-";
+const rankIncomeOf = (row) => valueOf(row, "rank_income", "rankIncome", "rank_amount") || 0;
 const statusOf = (row) => valueOf(row, "status", "payout_status") || "-";
 const paidDateOf = (row) => valueOf(row, "paid_date", "paid_at", "payment_date") || "-";
+const formatDateTime = (value) => {
+  if (!value || value === "-") return "-";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  const pad = (number) => String(number).padStart(2, "0");
+  return `${pad(date.getDate())}-${pad(date.getMonth() + 1)}-${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+};
 
 function PayoutReport() {
   const [filters, setFilters] = useState({ start_date: "", end_date: "", status: "", user_id: "" });
@@ -100,7 +107,7 @@ function PayoutReport() {
             const total = Number(valueOf(row, "total", "gross_income", "total_income") ?? referral + level + rank);
             const adminFee = Number(valueOf(row, "admin_fee", "admin_fee_amount") || 0);
             const netPayable = Number(valueOf(row, "net_payable", "netPayable") ?? total - adminFee);
-            return <tr key={row.id || `${userIdOf(row)}-${index}`}><td>{index + 1}</td><td>{userIdOf(row)}</td><td>{userNameOf(row)}</td><td>{money(referral)}</td><td>{money(level)}</td><td>{rankOf(row)}</td><td>{money(total)}</td><td>{money(adminFee)}</td><td>{money(netPayable)}</td><td>{statusOf(row)}</td><td>{paidDateOf(row)}</td></tr>;
+            return <tr key={row.id || `${userIdOf(row)}-${index}`}><td>{index + 1}</td><td>{userIdOf(row)}</td><td>{userNameOf(row)}</td><td>{money(referral)}</td><td>{money(level)}</td><td>{money(rankIncomeOf(row))}</td><td>{money(total)}</td><td>{money(adminFee)}</td><td>{money(netPayable)}</td><td>{statusOf(row)}</td><td>{formatDateTime(paidDateOf(row))}</td></tr>;
           })}
         </tbody></table></div></div>
       </div>
