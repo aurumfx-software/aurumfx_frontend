@@ -429,7 +429,7 @@
 /* Hero card: the one deliberate bold moment — black + gold in both themes */
 .hero-card {
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   border-radius: var(--udb-radius-lg);
   padding: 24px 24px 22px;
   display: flex;
@@ -444,6 +444,275 @@
     repeating-linear-gradient(70deg, rgba(224, 178, 86, 0.04) 0px, rgba(224, 178, 86, 0.04) 1px, transparent 1px, transparent 46px),
     linear-gradient(160deg, #17130a 0%, #0d0c09 55%, #0a0a0b 100%);
   border: 1px solid rgba(224, 178, 86, 0.35);
+}
+
+.investment-hover-card {
+  position: relative;
+  z-index: 20;
+  cursor: pointer;
+  overflow: visible;
+}
+
+/* ------------------------------------------------------------------------ */
+/* Investment History flyout — redesigned                                   */
+/* ------------------------------------------------------------------------ */
+
+@keyframes udb-flyout-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes udb-sheet-in {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.investment-history-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.investment-history-flyout {
+  position: relative;
+  width: min(760px, calc(100vw - 32px));
+  max-height: min(72vh, 430px);
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  border: 1px solid rgba(224, 178, 86, 0.32);
+  background: linear-gradient(180deg, rgba(21, 20, 17, 0.99) 0%, rgba(14, 13, 12, 0.99) 100%);
+  box-shadow: 0 24px 54px rgba(5, 5, 6, 0.5), 0 0 0 1px rgba(224, 178, 86, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  overflow: hidden;
+  z-index: 9999;
+  animation: udb-flyout-in 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.investment-history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 18px;
+  background: linear-gradient(180deg, rgba(224, 178, 86, 0.14) 0%, rgba(224, 178, 86, 0.02) 100%);
+  border-bottom: 1px solid rgba(224, 178, 86, 0.16);
+  color: #f3f1ea;
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+.investment-history-header strong {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  letter-spacing: -0.01em;
+}
+
+.investment-history-header strong::before {
+  content: "\20B9";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: rgba(224, 178, 86, 0.18);
+  color: #e0b256;
+  font-size: 13px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.investment-history-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: none;
+  background: rgba(255, 255, 255, 0.05);
+  color: #a8a49a;
+  font-size: 20px;
+  line-height: 1;
+  padding: 0;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+
+.investment-history-close:hover {
+  background: rgba(224, 178, 86, 0.16);
+  color: #f2c877;
+  transform: rotate(90deg);
+}
+
+.investment-history-table-wrap {
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 280px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(224, 178, 86, 0.35) transparent;
+}
+
+.investment-history-table-wrap::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+.investment-history-table-wrap::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.investment-history-table-wrap::-webkit-scrollbar-thumb {
+  background: rgba(224, 178, 86, 0.32);
+  border-radius: 999px;
+}
+
+.investment-history-table-wrap::-webkit-scrollbar-thumb:hover {
+  background: rgba(224, 178, 86, 0.5);
+}
+
+.investment-history-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 520px;
+}
+
+.investment-history-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  text-align: left;
+  padding: 11px 14px;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: #1a1815;
+  color: #8b8678;
+  border-bottom: 1px solid rgba(224, 178, 86, 0.14);
+}
+
+.investment-history-table td {
+  padding: 12px 14px;
+  font-size: 12.5px;
+  color: #cdc8ba;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  vertical-align: middle;
+  transition: background 0.15s ease;
+}
+
+.investment-history-table tbody tr:nth-child(even) td {
+  background: rgba(255, 255, 255, 0.015);
+}
+
+.investment-history-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.investment-history-table tbody tr:hover td {
+  background: rgba(224, 178, 86, 0.09);
+}
+
+.investment-plan-pill,
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 11px;
+  line-height: 1;
+  padding: 6px 10px;
+  white-space: nowrap;
+}
+
+.status-pill::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.investment-plan-pill {
+  background: rgba(224, 178, 86, 0.14);
+  color: #e0b256;
+  border: 1px solid rgba(224, 178, 86, 0.22);
+}
+
+.status-pill {
+  background: rgba(94, 114, 228, 0.14);
+  color: #8ea0f2;
+}
+
+.status-pill.approved,
+.status-pill.success {
+  background: rgba(63, 191, 127, 0.14);
+  color: #4fce93;
+}
+
+.status-pill.pending,
+.status-pill.waiting {
+  background: rgba(224, 178, 86, 0.14);
+  color: #e0b256;
+}
+
+.status-pill.rejected,
+.status-pill.failed {
+  background: rgba(226, 104, 93, 0.14);
+  color: #e2685d;
+}
+
+.investment-history-amount {
+  font-weight: 800;
+  color: #f5e6c8;
+  font-variant-numeric: tabular-nums;
+}
+
+.investment-history-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 140px;
+  padding: 18px;
+  color: #8b8678;
+  font-size: 13px;
+}
+
+/* Static footer note — purely decorative, no markup needed */
+.investment-history-flyout::after {
+  content: "Showing your most recent investment activity";
+  display: block;
+  padding: 9px 16px;
+  font-size: 10.5px;
+  font-weight: 500;
+  color: #6f6b60;
+  text-align: center;
+  border-top: 1px solid rgba(224, 178, 86, 0.1);
+  background: rgba(255, 255, 255, 0.015);
+  flex-shrink: 0;
 }
 
 .hero-photo-badge {
@@ -1107,6 +1376,31 @@
   .hero-row { grid-template-columns: 1fr; }
   .udb-header { align-items: flex-start; }
 
+  .investment-history-backdrop {
+    padding: 20px 12px;
+  }
+
+  .investment-history-flyout {
+    position: relative;
+    width: min(100%, 560px);
+    max-height: min(76vh, 540px);
+    border-radius: 20px;
+    box-shadow: 0 24px 54px rgba(5, 5, 6, 0.5), 0 0 0 1px rgba(224, 178, 86, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    animation: udb-flyout-in 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .investment-history-header {
+    padding: 16px 18px 14px;
+  }
+
+  .investment-history-table-wrap {
+    max-height: calc(76vh - 90px);
+  }
+
+  .investment-history-table {
+    min-width: 460px;
+  }
+
   .panel-head {
     flex-direction: column;
     align-items: flex-start;
@@ -1158,6 +1452,15 @@
   }
 
   .meta-name { max-width: 110px; }
+
+  .investment-history-flyout {
+    width: min(100%, 520px);
+    max-height: min(78vh, 520px);
+  }
+
+  .investment-history-table {
+    min-width: 420px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1167,8 +1470,13 @@
   .table-card,
   .user-dash-table tbody tr,
   .udb-verification-modal,
-  .udb-verification-backdrop {
+  .udb-verification-backdrop,
+  .investment-history-flyout {
     animation: none;
+  }
+
+  .investment-history-close:hover {
+    transform: none;
   }
 }
 

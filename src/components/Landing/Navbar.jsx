@@ -33,6 +33,10 @@ const Navbar = () => {
         </a>
 
         <nav className={`landing-nav-menu ${menuOpen ? "menu-open" : ""}`}>
+          <div className="landing-mobile-topbar">
+            <ThemeToggle variant="compact" />
+          </div>
+
           {navLinks.map((link) => (
             <a key={link.href} href={link.href} onClick={closeMenu}>
               {link.label}
@@ -40,7 +44,6 @@ const Navbar = () => {
           ))}
 
           <div className="landing-mobile-actions">
-            <ThemeToggle variant="compact" />
             <Link to="/user/login" className="nav-login" onClick={closeMenu}>
               <FiLogIn className="nav-login-icon" />
               Log In

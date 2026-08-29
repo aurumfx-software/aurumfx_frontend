@@ -60,6 +60,10 @@ section[id] {
   display: none;
 }
 
+.landing-mobile-topbar {
+  display: none;
+}
+
 .landing-nav-actions {
   display: flex;
   align-items: center;
@@ -193,38 +197,39 @@ section[id] {
     background: var(--hover-subtle);
   }
 
-  /* Professional header section for theme toggle */
+  .landing-mobile-topbar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    padding: 16px 20px 10px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .landing-mobile-topbar .theme-toggle--compact {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+  }
+
+  [data-theme="light"] .landing-mobile-topbar .theme-toggle--compact {
+    background: rgba(197, 155, 39, 0.12);
+    border-color: rgba(197, 155, 39, 0.35);
+  }
+
+  [data-theme="light"] .landing-mobile-topbar .theme-toggle--compact:hover {
+    background: rgba(197, 155, 39, 0.2);
+  }
+
   .landing-mobile-actions {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 8px;
     width: 100%;
-    margin-top: auto;
-    padding: 24px 20px;
+    padding: 18px 20px 24px;
     border-top: 1px solid var(--border-subtle);
-  }
-
-  /* Theme toggle positioned professionally in mobile menu */
-  .landing-mobile-actions .theme-toggle {
-    align-self: center;
-    margin-bottom: 8px;
-  }
-
-  .landing-mobile-actions .theme-toggle--compact {
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-  }
-
-  /* Light theme styling for mobile theme toggle */
-  [data-theme="light"] .landing-mobile-actions .theme-toggle--compact {
-    background: rgba(197, 155, 39, 0.12);
-    border-color: rgba(197, 155, 39, 0.35);
-  }
-
-  [data-theme="light"] .landing-mobile-actions .theme-toggle--compact:hover {
-    background: rgba(197, 155, 39, 0.2);
+    margin-top: 0;
   }
 
   .landing-mobile-actions .nav-login,
@@ -233,7 +238,7 @@ section[id] {
     justify-content: center;
     padding: 14px 22px;
     font-size: 16px;
-    margin-top: 4px;
+    margin-top: 0;
   }
 
   .landing-mobile-actions .nav-login {

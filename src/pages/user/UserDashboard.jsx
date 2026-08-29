@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import {
   FiShield,
@@ -20,6 +21,7 @@ import UserLayout from "../../components/User/UserLayout";
 import UserRankCard from "../../components/User/UserRankCard";
 import { getUserDashboardData } from "../../api/dashboard";
 import { getMyKycApi, getProfileBankDetailsApi } from "../../api/auth";
+import { getMyInvestmentsApi } from "../../api/investments";
 import { hasBankSubmission, normalizeStatus } from "./profileTabs/shared";
 import "./UserDashboard.css";
 
@@ -98,6 +100,24 @@ function UserDashboard() {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [verificationPrompt, setVerificationPrompt] = useState(null);
+  const [investmentHistory, setInvestmentHistory] = useState([]);
+  const [investmentHistoryLoading, setInvestmentHistoryLoading] = useState(false);
+  const [investmentHistoryOpen, setInvestmentHistoryOpen] = useState(false);
+  const isHoverCapableDevice =
+    typeof window !== "undefined"
+      ? window.matchMedia("(hover: hover) and (pointer: fine)").matches
+      : true;
+
+  const loadInvestmentHistory = async () => {
+    if (investmentHistoryLoading || investmentHistory.length) return;
+
+    setInvestmentHistoryLoading(true);
+    const res = await getMyInvestmentsApi();
+    if (res.success) {
+      setInvestmentHistory(Array.isArray(res.data) ? res.data : []);
+    }
+    setInvestmentHistoryLoading(false);
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -228,7 +248,22 @@ function UserDashboard() {
           <div className="grid-main-column">
             {/* Hero row */}
             <div className="hero-row">
-              <div className="hero-card">
+              <div
+                className="hero-card investment-hover-card"
+                onClick={() => {
+                  setInvestmentHistoryOpen(true);
+                  loadInvestmentHistory();
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    setInvestmentHistoryOpen(true);
+                    loadInvestmentHistory();
+                  }
+                }}
+                tabIndex={0}
+                aria-label="Total active investment history"
+              >
                 <div className="hero-photo-badge">
                   <FiImage />
                 </div>
@@ -247,12 +282,75 @@ function UserDashboard() {
                 <button
                   type="button"
                   className="hero-invest-btn"
-                  onClick={() => navigate("/user/financial/investments")}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    navigate("/user/financial/investments");
+                  }}
                   title="Add a new investment"
                 >
                   <FiPlusCircle size={15} />
                   <span>Add Investment</span>
                 </button>
+
+                {investmentHistoryOpen && createPortal(
+                  <div className="investment-history-backdrop" onClick={() => setInvestmentHistoryOpen(false)}>
+                    <div className="investment-history-flyout" role="dialog" aria-modal="true" aria-label="Investment history" onClick={(event) => event.stopPropagation()}>
+                      <div className="investment-history-header">
+                        <strong>Investment History</strong>
+                        <button
+                          type="button"
+                          className="investment-history-close"
+                          onClick={() => setInvestmentHistoryOpen(false)}
+                          aria-label="Close investment history"
+                        >
+                          ×
+                        </button>
+                      </div>
+
+                      {investmentHistoryLoading ? (
+                        <div className="investment-history-empty">Loading investments...</div>
+                      ) : investmentHistory.length ? (
+                        <div className="investment-history-table-wrap">
+                          <table className="investment-history-table">
+                            <thead>
+                              <tr>
+                                <th>Date</th>
+                                <th>Plan</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {investmentHistory.slice(0, 6).map((inv) => (
+                                <tr key={inv.id ?? `${inv.investment_date}-${inv.amount}`}>
+                                  <td>{formatDate(inv.investment_date)}</td>
+                                  <td>
+                                    <span className="investment-plan-pill">
+                                      {inv.plan_name || inv.plan || "-"}
+                                    </span>
+                                  </td>
+                                  <td className="investment-history-amount">
+                                    {fmt(inv.amount)}
+                                  </td>
+                                  <td>
+                                    <span className={`status-pill ${String(inv.investment_status || inv.approval_status || "Pending").toLowerCase()}`}>
+                                      {inv.investment_status || inv.approval_status || "Pending"}
+                                    </span>
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      ) : (
+                        <div className="investment-history-empty">
+                          No investment records yet.
+                        </div>
+                      )}
+                    </div>
+                  </div>,
+                  document.body
+                )}
               </div>
 
               <div className="metric-card metric--mint">

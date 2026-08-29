@@ -49,7 +49,7 @@
 /* ---------- Hint bar ---------- */
 .rank-holders-hint{
   display:flex;align-items:center;gap:9px;
-  margin:0 24px;padding:11px 16px;
+  margin:16px 24px 16px;padding:11px 16px;
   border:1px solid rgba(212,175,55,.22);
   border-radius:10px;
   background:linear-gradient(90deg,rgba(245,208,97,.09),rgba(245,208,97,.02));
@@ -63,7 +63,6 @@
   color:#7a5c14;
 }
 [data-theme="light"] .rank-holders-hint svg{color:#a67c1f}
-.rank-holders-card-heading + .rank-holders-hint{margin-top:16px;margin-bottom:16px}
 
 /* ---------- Rank pill button ---------- */
 .rank-pill-btn{
@@ -134,85 +133,153 @@
 .holders-grid{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
-  gap:14px;
+  gap:16px;
 }
 
+/* ---------- Holder card — modern gold-medal treatment ---------- */
 .holder-card{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
   display:flex;flex-direction:column;align-items:center;text-align:center;
   gap:10px;
-  padding:20px 14px 16px;
-  border:1px solid rgba(212,175,55,.16);
-  border-radius:14px;
-  background:linear-gradient(160deg,rgba(245,208,97,.05),rgba(255,255,255,.015));
+  padding:24px 16px 18px;
+  border:1px solid rgba(245,208,97,.22);
+  border-radius:16px;
+  background:
+    radial-gradient(120% 120% at 50% -10%, rgba(245,208,97,.16), transparent 55%),
+    linear-gradient(165deg, rgba(26,20,8,.94), rgba(9,7,3,.98));
+  box-shadow:0 10px 24px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04);
   opacity:0;
   transform:translateY(10px) scale(.97);
-  animation:holderCardIn .42s cubic-bezier(.22,.9,.32,1) forwards;
-  transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;
-}
-.holder-card:hover{
-  transform:translateY(-3px);
-  border-color:rgba(245,208,97,.45);
-  box-shadow:0 10px 26px rgba(0,0,0,.28);
+  animation:holder-card-in .42s cubic-bezier(.22,.9,.32,1) forwards;
+  transition:transform .25s cubic-bezier(.22,.9,.32,1), box-shadow .25s ease, border-color .25s ease;
 }
 
-@keyframes holderCardIn{
+/* Small gold spark accent, top-right corner */
+.holder-card::after{
+  content:"\2726";
+  position:absolute;
+  top:10px;right:14px;
+  font-size:11px;line-height:1;
+  color:rgba(245,208,97,.55);
+  z-index:1;
+  pointer-events:none;
+}
+
+/* Gradient shimmer ring, revealed on hover, drawn with a masked border */
+.holder-card::before{
+  content:"";
+  position:absolute;
+  inset:-1px;
+  border-radius:inherit;
+  padding:1.5px;
+  background:linear-gradient(
+    135deg,
+    rgba(245,208,97,0) 0%,
+    rgba(245,208,97,.6) 45%,
+    rgba(255,250,230,.95) 50%,
+    rgba(245,208,97,.6) 55%,
+    rgba(245,208,97,0) 100%
+  );
+  background-size:240% 240%;
+  background-position:0% 0%;
+  -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  opacity:0;
+  transition:opacity .3s ease, background-position .9s ease;
+  pointer-events:none;
+  z-index:0;
+}
+
+.holder-card:hover{
+  transform:translateY(-4px);
+  border-color:rgba(245,208,97,.5);
+  box-shadow:0 18px 34px rgba(0,0,0,.45), 0 0 0 1px rgba(245,208,97,.18), 0 0 26px rgba(245,208,97,.16);
+}
+
+.holder-card:hover::before{
+  opacity:1;
+  background-position:100% 100%;
+}
+
+@keyframes holder-card-in{
   to{opacity:1;transform:translateY(0) scale(1)}
 }
 
 @media(prefers-reduced-motion:reduce){
   .holder-card{animation:none;opacity:1;transform:none}
   .rank-pill-btn,.holder-card{transition:none}
+  .holder-card::before{transition:none;opacity:0!important}
 }
 
+/* Medal-style avatar ring */
 .holder-avatar-wrap{
-  width:64px;height:64px;border-radius:50%;
-  padding:2px;
-  background:linear-gradient(135deg,#f5d061,#a67c1f);
+  position:relative;
+  z-index:1;
+  width:68px;height:68px;
+  border-radius:50%;
+  padding:3px;
+  background:conic-gradient(from 180deg, #f5d061, #fff6d8, #d4af37, #f7da7d, #f5d061);
+  box-shadow:0 6px 16px rgba(245,208,97,.3);
   display:flex;align-items:center;justify-content:center;
   flex-shrink:0;
+}
+.holder-avatar-wrap::after{
+  content:"";
+  position:absolute;
+  inset:-4px;
+  border-radius:50%;
+  border:1px dashed rgba(245,208,97,.32);
+  pointer-events:none;
 }
 .holder-avatar-img{
   width:100%;height:100%;border-radius:50%;
   object-fit:cover;
-  border:2px solid #111;
+  border:2px solid #0d0a05;
   display:block;
 }
 .holder-avatar-initials{
   width:100%;height:100%;border-radius:50%;
   display:flex;align-items:center;justify-content:center;
-  border:2px solid #111;
+  border:2px solid #0d0a05;
   color:#171308;
   font-weight:800;font-size:19px;letter-spacing:.02em;
 }
 
-.holder-card-body{display:flex;flex-direction:column;gap:3px;width:100%}
-.holder-name{color:#f8fafc;font-weight:700;font-size:13.5px;line-height:1.3;overflow-wrap:anywhere}
+.holder-card-body{
+  position:relative;
+  z-index:1;
+  display:flex;flex-direction:column;gap:4px;width:100%;
+}
+.holder-name{
+  color:#fdf3d8;
+  font-weight:700;font-size:13.5px;line-height:1.3;
+  letter-spacing:.01em;
+  overflow-wrap:anywhere;
+}
 .holder-userid{
   display:inline-flex;align-self:center;
-  margin-top:2px;
-  padding:2px 10px;
+  margin-top:3px;
+  padding:3px 11px;
   border-radius:999px;
-  background:rgba(245,208,97,.12);
+  background:linear-gradient(135deg,rgba(245,208,97,.22),rgba(245,208,97,.08));
+  border:1px solid rgba(245,208,97,.32);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12);
   color:#f5d061;font-weight:700;font-size:11px;letter-spacing:.02em;
 }
-.holder-date{color:#94a3b8;font-size:11.5px;margin-top:2px}
+.holder-date{
+  color:#a89a78;
+  font-size:11.5px;margin-top:2px;
+}
 
-[data-theme="light"] .holder-card{
-  background:linear-gradient(160deg,rgba(197,155,39,.05),rgba(0,0,0,.01));
-  border-color:rgba(197,155,39,.18);
-}
-[data-theme="light"] .holder-card:hover{
-  border-color:rgba(197,155,39,.5);
-  box-shadow:0 10px 24px rgba(45,35,20,.12);
-}
-[data-theme="light"] .holder-avatar-img,[data-theme="light"] .holder-avatar-initials{border-color:#fff}
-[data-theme="light"] .holder-name{color:#1f2937}
-[data-theme="light"] .holder-userid{background:rgba(197,155,39,.14);color:#8b6914}
-[data-theme="light"] .holder-date{color:#64748b}
+/* Card intentionally stays the same black/gold look in both themes — no
+   [data-theme="light"] overrides here on purpose. */
 
 @media(max-width:640px){
   .rank-holders-grid-wrap{max-height:calc(100vh - 180px);padding:18px 16px 20px}
   .holders-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
-  .holder-card{padding:16px 10px 14px}
-  .holder-avatar-wrap{width:56px;height:56px}
+  .holder-card{padding:18px 10px 14px}
+  .holder-avatar-wrap{width:58px;height:58px}
 }

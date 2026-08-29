@@ -2,6 +2,12 @@ import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FiArrowLeft, FiBell, FiMenu } from "react-icons/fi";
 import { getMyKycApi, getProfileBankDetailsApi } from "../../api/auth";
+import {
+  getUserNotificationsApi,
+  getUserUnreadNotificationCountApi,
+  markUserNotificationAsReadApi,
+  markAllUserNotificationsAsReadApi,
+} from "../../api/user-notifications";
 import { logout } from "../../utils/auth";
 import { switchBackToAdminApi } from "../../api/admin-members-management";
 import { hasBankSubmission } from "../../pages/user/profileTabs/shared";
@@ -48,8 +54,59 @@ function UserHeader({ onMenuToggle, user }) {
   const userId = user?.userId || localStorage.getItem("userId") || "FX259";
   const hasAdminSession = Boolean(sessionStorage.getItem("adminImpersonationSession"));
 
-  // Notifications state (defaults to 0 unread messages matching screenshot)
-  const [notifications] = useState([]);
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [notificationsLoading, setNotificationsLoading] = useState(false);
+  const [notificationsError, setNotificationsError] = useState("");
+
+  const loadUnreadCount = async () => {
+    const result = await getUserUnreadNotificationCountApi();
+    if (result.success) setUnreadCount(result.data);
+  };
+
+  const loadNotifications = async () => {
+    setNotificationsLoading(true);
+    setNotificationsError("");
+    const [notificationsResult, countResult] = await Promise.all([
+      getUserNotificationsApi(),
+      getUserUnreadNotificationCountApi(),
+    ]);
+    if (notificationsResult.success) {
+      setNotifications(notificationsResult.data);
+    } else {
+      setNotificationsError(notificationsResult.error);
+    }
+    if (countResult.success) setUnreadCount(countResult.data);
+    setNotificationsLoading(false);
+  };
+
+  useEffect(() => {
+    Promise.resolve().then(loadUnreadCount);
+  }, []);
+
+  const handleNotificationClick = async (notification) => {
+    if (notification.is_read) return;
+    const result = await markUserNotificationAsReadApi(notification.id);
+    if (!result.success) return;
+    setNotifications((current) => current.map((item) => (
+      item.id === notification.id ? { ...item, is_read: true } : item
+    )));
+    setUnreadCount((current) => Math.max(0, current - 1));
+  };
+
+  const handleMarkAllAsRead = async () => {
+    if (unreadCount === 0) return;
+    const result = await markAllUserNotificationsAsReadApi();
+    if (!result.success) return;
+    setNotifications((current) => current.map((notification) => ({ ...notification, is_read: true })));
+    setUnreadCount(0);
+  };
+
+  const formatNotificationTime = (createdAt) => {
+    if (!createdAt) return "";
+    const date = new Date(createdAt);
+    return Number.isNaN(date.getTime()) ? "" : date.toLocaleString();
+  };
 
   const [verificationStatuses, setVerificationStatuses] = useState({
     kyc: "not_submitted",
@@ -197,25 +254,49 @@ function UserHeader({ onMenuToggle, user }) {
           <button
             type="button"
             className={`header-icon-btn ${notifOpen ? "header-icon-btn--active" : ""}`}
-            onClick={() => setNotifOpen((prev) => !prev)}
+            onClick={() => {
+              const nextOpen = !notifOpen;
+              setNotifOpen(nextOpen);
+              if (nextOpen) loadNotifications();
+            }}
             aria-label="Notifications"
             aria-expanded={notifOpen}
           >
             <FiBell className={notifOpen ? "bell-icon--active" : ""} />
-            {notifications.length > 0 && <span className="notification-dot" />}
+            {unreadCount > 0 && <span className="notification-badge">{unreadCount > 99 ? "99+" : unreadCount}</span>}
           </button>
 
           {notifOpen && (
             <div className="notifications-dropdown">
-              <h4 className="notif-title">Notifications</h4>
-              <p className="notif-sub">You have {notifications.length} unread messages</p>
-              {notifications.length > 0 && (
+              <div className="notif-popover-header">
+                <div>
+                  <h4 className="notif-title">Notifications</h4>
+                  <p className="notif-sub">You have {unreadCount} unread messages</p>
+                </div>
+                {unreadCount > 0 && (
+                  <button type="button" className="mark-all-read-btn" onClick={handleMarkAllAsRead}>
+                    Mark all read
+                  </button>
+                )}
+              </div>
+              {notificationsLoading && <p className="notif-status">Loading notifications...</p>}
+              {!notificationsLoading && notificationsError && <p className="notif-status notif-status--error">{notificationsError}</p>}
+              {!notificationsLoading && !notificationsError && notifications.length === 0 && (
+                <p className="notif-status">No notifications yet.</p>
+              )}
+              {!notificationsLoading && !notificationsError && notifications.length > 0 && (
                 <div className="notif-list">
-                  {notifications.map((n) => (
-                    <div key={n.id} className="notif-item">
-                      <span className="notif-msg">{n.message}</span>
-                      <span className="notif-time">{n.time}</span>
-                    </div>
+                  {notifications.map((notification) => (
+                    <button
+                      type="button"
+                      key={notification.id}
+                      className={`notif-item ${notification.is_read ? "notif-item--read" : ""}`}
+                      onClick={() => handleNotificationClick(notification)}
+                    >
+                      <span className="notif-item-title">{notification.title}</span>
+                      <span className="notif-item-message">{notification.message}</span>
+                      <span className="notif-item-time">{formatNotificationTime(notification.created_at)}</span>
+                    </button>
                   ))}
                 </div>
               )}

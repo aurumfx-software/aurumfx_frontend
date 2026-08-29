@@ -1,7 +1,13 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FiBell, FiSettings, FiMenu, FiUser, FiHome, FiLogOut } from "react-icons/fi";
+import { FiBell, FiMenu, FiUser, FiHome, FiLogOut } from "react-icons/fi";
 import { logoutApi } from "../../api/auth";
+import {
+  getAdminNotificationsApi,
+  getAdminUnreadNotificationCountApi,
+  markAdminNotificationAsReadApi,
+  markAllAdminNotificationsAsReadApi,
+} from "../../api/admin-notifications";
 import ThemeToggle from "../ThemeToggle/ThemeToggle";
 import "./AdminHeader.css";
 
@@ -9,12 +15,66 @@ function AdminHeader({ onMenuToggle }) {
   const navigate = useNavigate();
   const [showNotifications, setShowNotifications] = useState(false);
   const [showUserDropdown, setShowUserDropdown] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [notificationsLoading, setNotificationsLoading] = useState(false);
+  const [notificationsError, setNotificationsError] = useState("");
 
   const notifRef = useRef(null);
   const userRef = useRef(null);
 
   const userId = localStorage.getItem("userId") || "aurumfx";
   const userEmail = `${userId}@aurumfx.net`;
+
+  const loadUnreadCount = async () => {
+    const result = await getAdminUnreadNotificationCountApi();
+    if (result.success) setUnreadCount(result.data);
+  };
+
+  const loadNotifications = async () => {
+    setNotificationsLoading(true);
+    setNotificationsError("");
+    const [notificationsResult, countResult] = await Promise.all([
+      getAdminNotificationsApi(),
+      getAdminUnreadNotificationCountApi(),
+    ]);
+    if (notificationsResult.success) {
+      setNotifications(notificationsResult.data);
+    } else {
+      setNotificationsError(notificationsResult.error);
+    }
+    if (countResult.success) setUnreadCount(countResult.data);
+    setNotificationsLoading(false);
+  };
+
+  useEffect(() => {
+    Promise.resolve().then(loadUnreadCount);
+  }, []);
+
+  const handleNotificationClick = async (notification) => {
+    if (notification.is_read) return;
+    const result = await markAdminNotificationAsReadApi(notification.id);
+    if (!result.success) return;
+
+    setNotifications((current) => current.map((item) => (
+      item.id === notification.id ? { ...item, is_read: true } : item
+    )));
+    setUnreadCount((current) => Math.max(0, current - 1));
+  };
+
+  const handleMarkAllAsRead = async () => {
+    if (unreadCount === 0) return;
+    const result = await markAllAdminNotificationsAsReadApi();
+    if (!result.success) return;
+    setNotifications((current) => current.map((notification) => ({ ...notification, is_read: true })));
+    setUnreadCount(0);
+  };
+
+  const formatNotificationTime = (createdAt) => {
+    if (!createdAt) return "";
+    const date = new Date(createdAt);
+    return Number.isNaN(date.getTime()) ? "" : date.toLocaleString();
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -57,31 +117,55 @@ function AdminHeader({ onMenuToggle }) {
             type="button"
             className={`header-icon-btn ${showNotifications ? "header-icon-btn--active" : ""}`}
             onClick={() => {
-              setShowNotifications(!showNotifications);
+              const nextOpen = !showNotifications;
+              setShowNotifications(nextOpen);
+              if (nextOpen) loadNotifications();
               setShowUserDropdown(false);
             }}
             aria-label="Notifications"
+            aria-expanded={showNotifications}
           >
             <FiBell />
+            {unreadCount > 0 && <span className="notification-badge">{unreadCount > 99 ? "99+" : unreadCount}</span>}
           </button>
 
           {showNotifications && (
             <div className="header-popover notif-popover">
-              <h4 className="popover-title">Notifications</h4>
-              <p className="popover-sub">You have 0 unread messages</p>
+              <div className="notif-popover-header">
+                <div>
+                  <h4 className="popover-title">Notifications</h4>
+                  <p className="popover-sub">You have {unreadCount} unread messages</p>
+                </div>
+                {unreadCount > 0 && (
+                  <button type="button" className="mark-all-read-btn" onClick={handleMarkAllAsRead}>
+                    Mark all read
+                  </button>
+                )}
+              </div>
+              {notificationsLoading && <p className="notif-status">Loading notifications...</p>}
+              {!notificationsLoading && notificationsError && <p className="notif-status notif-status--error">{notificationsError}</p>}
+              {!notificationsLoading && !notificationsError && notifications.length === 0 && (
+                <p className="notif-status">No notifications yet.</p>
+              )}
+              {!notificationsLoading && !notificationsError && notifications.length > 0 && (
+                <div className="notif-list">
+                  {notifications.map((notification) => (
+                    <button
+                      type="button"
+                      key={notification.id}
+                      className={`notif-item ${notification.is_read ? "notif-item--read" : ""}`}
+                      onClick={() => handleNotificationClick(notification)}
+                    >
+                      <span className="notif-item-title">{notification.title}</span>
+                      <span className="notif-item-message">{notification.message}</span>
+                      <span className="notif-item-time">{formatNotificationTime(notification.created_at)}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </div>
-
-        {/* Settings Icon */}
-        <button
-          type="button"
-          className="header-icon-btn header-settings-btn"
-          aria-label="Settings"
-          onClick={() => navigate("/admin/settings/return-date")}
-        >
-          <FiSettings />
-        </button>
 
         {/* Admin Profile Dropdown */}
         <div className="header-dropdown-wrap" ref={userRef}>

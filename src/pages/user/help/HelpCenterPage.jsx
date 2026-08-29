@@ -10,6 +10,7 @@ import {
   FiHash,
   FiCheckCircle,
   FiCalendar,
+  FiHeadphones,
 } from "react-icons/fi";
 import UserLayout from "../../../components/User/UserLayout";
 import {
@@ -181,7 +182,9 @@ function HelpCenterPage() {
             Help &amp; Assistance
           </span>
           <div className="page-header-top">
-            <span className="page-title-icon" aria-hidden="true">🎫</span>
+            <span className="page-title-icon" aria-hidden="true">
+              <FiHeadphones size={22} />
+            </span>
             <div className="page-header-text">
               <h1 className="page-title">Help &amp; Support</h1>
               <p className="page-subtitle">We are here to help with questions, requests, and account support.</p>
