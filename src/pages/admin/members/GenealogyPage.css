@@ -304,6 +304,47 @@
 }
 
 /* ---------------------------------------------------------------------- */
+/* "Viewing drilled-in user" banner — shown only when a tree-node click   */
+/* has diverged the displayed tree from the dropdown's own selection.     */
+/* ---------------------------------------------------------------------- */
+.agen-view-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px 16px;
+  margin-bottom: 18px;
+  border: 1px solid var(--agen-accent-line);
+  border-radius: 10px;
+  background: var(--agen-gradient-soft);
+  color: var(--agen-text);
+  font-size: 12.5px;
+}
+
+.agen-view-banner strong {
+  color: var(--agen-accent-strong);
+  font-family: var(--agen-font-mono);
+}
+
+.agen-view-banner-reset {
+  margin-left: auto;
+  padding: 6px 12px;
+  border: 1px solid var(--agen-accent-line);
+  border-radius: 999px;
+  background: var(--agen-surface);
+  color: var(--agen-accent-strong);
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.agen-view-banner-reset:hover {
+  background: var(--agen-gradient);
+  box-shadow: 0 3px 10px rgba(197, 155, 39, 0.2);
+}
+
+/* ---------------------------------------------------------------------- */
 /* Empty / error states                                                    */
 /* ---------------------------------------------------------------------- */
 .agen-empty,
@@ -325,8 +366,21 @@
 }
 
 /* ==========================================================================
-   Family tree — org-chart avatar tree with hover tooltip, matching the
-   user-side "Family" view, scoped under agen- to stay collision-free.
+   Family tree — org-chart avatar tree, matching the user-side "Family"
+   view, scoped under agen- to stay collision-free.
+
+   NOTE: the tooltip is NO LONGER rendered inline inside the tree (it used
+   to be a `.agen-tooltip` child of `.agen-node`, shown via :hover). That
+   approach could get visually buried under sibling nodes because each
+   hovered node only becomes a *local* stacking context — a plain z-index
+   bump can't reliably beat every other node in a deep/wide tree, and
+   `.agen-tree-scroll`'s `overflow: auto` compounds the problem.
+
+   The tooltip is now rendered by AdminNodeTooltip via a React portal
+   straight onto <body>, positioned with `position: fixed` using the
+   hovered avatar's real bounding rect (see `.agen-tooltip-portal` below,
+   near the end of this file). That guarantees it always paints above
+   absolutely everything on the page.
    ========================================================================== */
 .agen-tree-scroll {
   overflow: auto;
@@ -447,7 +501,7 @@
 
 .agen-node:hover {
   transform: translateY(-2px);
-  z-index: 100;
+  z-index: 2;
 }
 
 .agen-avatar {
@@ -465,7 +519,7 @@
   border: 3px solid var(--agen-card-bg);
   outline: 2px solid var(--agen-accent-line);
   box-shadow: 0 4px 12px rgba(197, 155, 39, 0.2);
-  transition: outline-color 0.15s ease, box-shadow 0.15s ease;
+  transition: outline-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
 }
 
 .agen-node:hover .agen-avatar {
@@ -477,6 +531,26 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+/* Clickable affordance — clicking an avatar drills the tree into that
+   user's own subtree (see AdminFamNode's onViewUser in the JS file).
+   This is purely visual; it does not affect the dropdown at the top. */
+.agen-avatar--clickable {
+  cursor: pointer;
+}
+
+.agen-avatar--clickable:hover {
+  transform: scale(1.06);
+}
+
+.agen-avatar--clickable:active {
+  transform: scale(0.97);
+}
+
+.agen-avatar--clickable:focus-visible {
+  outline: 2px solid var(--agen-accent);
+  outline-offset: 2px;
 }
 
 .agen-badge {
@@ -498,67 +572,6 @@
 .agen-node:hover .agen-badge {
   background: var(--agen-gradient);
   box-shadow: 0 3px 10px rgba(197, 155, 39, 0.2);
-}
-
-.agen-tooltip {
-  display: none;
-  position: absolute;
-  top: calc(100% + 14px);
-  left: 50%;
-  transform: translateX(-50%) translateY(4px);
-  width: 220px;
-  background: var(--agen-surface);
-  border: 1px solid var(--agen-border);
-  border-radius: 12px;
-  padding: 14px 16px;
-  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.18);
-  z-index: 60;
-  text-align: left;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.18s ease, transform 0.18s ease;
-}
-
-.agen-tooltip::before {
-  content: "";
-  position: absolute;
-  top: -7px;
-  left: 50%;
-  transform: translateX(-50%) rotate(45deg);
-  width: 12px;
-  height: 12px;
-  background: var(--agen-surface);
-  border-left: 1px solid var(--agen-border);
-  border-top: 1px solid var(--agen-border);
-}
-
-.agen-node:hover .agen-tooltip {
-  display: block;
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-}
-
-.agen-tooltip-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  font-size: 12.5px;
-  padding: 4px 0;
-  color: var(--agen-text);
-}
-
-.agen-tooltip-row + .agen-tooltip-row {
-  border-top: 1px solid var(--agen-border-soft);
-}
-
-.agen-tooltip-row span:first-child {
-  font-weight: 700;
-  color: var(--agen-text-soft);
-}
-
-.agen-tooltip-row span:last-child {
-  font-weight: 600;
-  text-align: right;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -616,7 +629,7 @@
     font-size: 15px;
   }
 
-  .agen-tooltip {
+  .agen-tooltip-portal {
     width: 190px;
   }
 
@@ -627,6 +640,15 @@
 
   .agen-tree-scroll::-webkit-scrollbar {
     display: none;
+  }
+
+  .agen-view-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .agen-view-banner-reset {
+    margin-left: 0;
   }
 }
 
@@ -724,4 +746,88 @@
   color: #4ade80;
   background: rgba(74, 222, 128, 0.12);
   border-color: rgba(74, 222, 128, 0.25);
+}
+
+/* ==========================================================================
+   Portal tooltip — rendered onto document.body by AdminNodeTooltip, NOT
+   inside .agen-tree. `position: fixed` + a very high z-index means it
+   always sits above the entire page, immune to tree nesting/overflow.
+   ========================================================================== */
+.agen-tooltip-portal {
+  position: fixed;
+  width: 250px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.99) 0%, rgba(255,250,240,0.99) 100%);
+  border: 2px solid rgba(197, 155, 39, 0.9);
+  border-radius: 14px;
+  padding: 16px 18px;
+  box-shadow: 0 22px 48px rgba(15, 23, 42, 0.22), 0 0 0 4px rgba(197, 155, 39, 0.12);
+  z-index: 9999;
+  text-align: left;
+  pointer-events: none;
+  animation: agen-tooltip-in 0.14s ease both;
+  backdrop-filter: blur(2px);
+}
+
+/* IMPORTANT: only animate opacity here. The tooltip's actual position
+   (centering + above/below flip) is set via an inline `transform` style
+   from JS (see AdminNodeTooltip in the .jsx file). A CSS animation that
+   also touches `transform` will override that inline value for its
+   entire duration, silently cancelling the centering/flip and making
+   the tooltip render off-position, overlapping neighboring nodes. */
+@keyframes agen-tooltip-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Small pointer arrow. Points down when the tooltip sits above the node,
+   points up when it had to flip below (near the top of the viewport). */
+.agen-tooltip-portal::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 12px;
+  height: 12px;
+  background: rgba(255,250,240,0.99);
+  border: 0;
+}
+
+.agen-tooltip-portal.is-above::before {
+  bottom: -7px;
+  border-right: 1px solid var(--agen-border);
+  border-bottom: 1px solid var(--agen-border);
+}
+
+.agen-tooltip-portal.is-below::before {
+  top: -7px;
+  border-left: 1px solid var(--agen-border);
+  border-top: 1px solid var(--agen-border);
+}
+
+.agen-tooltip-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  font-size: 12.8px;
+  line-height: 1.5;
+  padding: 6px 0;
+  color: var(--agen-text);
+}
+
+.agen-tooltip-row + .agen-tooltip-row {
+  border-top: 1px solid var(--agen-border-soft);
+}
+
+.agen-tooltip-row span:first-child {
+  font-weight: 700;
+  color: #7a6d52;
+  min-width: 110px;
+}
+
+.agen-tooltip-row span:last-child {
+  font-weight: 800;
+  color: #171717;
+  text-align: right;
+  word-break: break-word;
 }

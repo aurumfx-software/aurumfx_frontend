@@ -559,10 +559,13 @@
    ========================================================================== */
 
 .fam-tree-scroll {
+  position: relative;
+  z-index: 1;
   overflow: auto;
   max-height: 70vh;
   padding: 10px 30px 260px;
   -webkit-overflow-scrolling: touch;
+  isolation: isolate;
 }
 
 .tree, .tree ul, .tree li {
@@ -675,12 +678,13 @@
   align-items: center;
   cursor: pointer;
   transition: transform 0.15s ease;
-  z-index: 1; 
+  z-index: 2;
 }
 
-.fam-node:hover {
+.fam-node:hover,
+.fam-node.is-details-open {
   transform: translateY(-2px);
-  z-index: 100;
+  z-index: 999;
 }
 
 .fam-avatar {
@@ -788,63 +792,57 @@
   border-color: rgba(74, 222, 128, 0.25);
 }
 
-/* Tooltip */
-.fam-tooltip {
-  display: none;
-  position: absolute;
-  top: calc(100% + 14px);
-  left: 50%;
-  transform: translateX(-50%) translateY(4px);
-  width: 230px;
-  background: var(--gen-surface);
-  border: 1px solid var(--gen-border);
-  border-radius: 12px;
-  padding: 14px 16px;
-  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.18);
-  z-index: 60;
+.fam-tooltip-portal {
+  position: fixed;
+  width: 250px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.99) 0%, rgba(255,250,240,0.99) 100%);
+  border: 2px solid rgba(197, 155, 39, 0.9);
+  border-radius: 14px;
+  padding: 16px 18px;
+  box-shadow: 0 22px 48px rgba(15, 23, 42, 0.22), 0 0 0 4px rgba(197, 155, 39, 0.12);
+  z-index: 9999;
   text-align: left;
   pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.18s ease, transform 0.18s ease;
+  animation: fam-tooltip-in 0.14s ease both;
+  backdrop-filter: blur(2px);
 }
 
-.fam-tooltip::before {
+@keyframes fam-tooltip-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fam-tooltip-portal::before {
   content: "";
   position: absolute;
-  top: -7px;
   left: 50%;
   transform: translateX(-50%) rotate(45deg);
   width: 12px;
   height: 12px;
-  background: var(--gen-surface);
-  border-left: 1px solid var(--gen-border);
-  border-top: 1px solid var(--gen-border);
+  background: rgba(255,250,240,0.99);
+  border: 0;
 }
 
-.fam-node:hover .fam-tooltip {
-  display: block;
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
+.fam-tooltip-portal.is-above::before {
+  bottom: -7px;
+  border-right: 1px solid rgba(197, 155, 39, 0.9);
+  border-bottom: 1px solid rgba(197, 155, 39, 0.9);
 }
 
-.fam-node.is-details-open .fam-tooltip {
-  display: block;
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-  pointer-events: auto;
-}
-
-.fam-tree-scroll:has(.fam-node.is-details-open) .fam-node:hover:not(.is-details-open) .fam-tooltip {
-  display: none;
-  opacity: 0;
+.fam-tooltip-portal.is-below::before {
+  top: -7px;
+  border-left: 1px solid rgba(197, 155, 39, 0.9);
+  border-top: 1px solid rgba(197, 155, 39, 0.9);
 }
 
 .fam-tooltip-row {
   display: flex;
   justify-content: space-between;
-  gap: 10px;
-  font-size: 12.5px;
-  padding: 4px 0;
+  align-items: center;
+  gap: 12px;
+  font-size: 12.8px;
+  line-height: 1.5;
+  padding: 6px 0;
   color: var(--gen-text);
 }
 
@@ -854,12 +852,15 @@
 
 .fam-tooltip-row span:first-child {
   font-weight: 700;
-  color: var(--gen-text-soft);
+  color: #7a6d52;
+  min-width: 110px;
 }
 
 .fam-tooltip-row span:last-child {
-  font-weight: 600;
+  font-weight: 800;
+  color: #171717;
   text-align: right;
+  word-break: break-word;
 }
 
 @media (max-width: 768px) {

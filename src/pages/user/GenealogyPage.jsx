@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useLocation } from "react-router-dom";
 import {
   FiUsers,
@@ -69,8 +70,77 @@ function filterByUser(list, query) {
   });
 }
 
+function UserNodeTooltip({ anchorRect, node }) {
+  const tipRef = useRef(null);
+  const [pos, setPos] = useState(null);
+
+  useLayoutEffect(() => {
+    if (!anchorRect || !tipRef.current) {
+      setPos(null);
+      return;
+    }
+
+    const tipRect = tipRef.current.getBoundingClientRect();
+    const GAP = 14;
+    const VIEWPORT_MARGIN = 8;
+    const showBelow = anchorRect.top < tipRect.height + GAP + VIEWPORT_MARGIN;
+
+    let left = anchorRect.left + anchorRect.width / 2 - tipRect.width / 2;
+    left = Math.max(VIEWPORT_MARGIN, Math.min(left, window.innerWidth - tipRect.width - VIEWPORT_MARGIN));
+
+    const top = showBelow
+      ? anchorRect.bottom + GAP
+      : anchorRect.top - GAP - tipRect.height;
+
+    setPos({ left, top, showBelow });
+  }, [anchorRect, node]);
+
+  if (!anchorRect) return null;
+
+  const investmentStatus = String(node.investment_status || "INACTIVE").toUpperCase();
+  const style = pos
+    ? { position: "fixed", left: pos.left, top: pos.top, visibility: "visible" }
+    : { position: "fixed", left: anchorRect.left, top: anchorRect.top, visibility: "hidden" };
+
+  const placementClass = pos ? (pos.showBelow ? "is-below" : "is-above") : "is-above";
+
+  return createPortal(
+    <div ref={tipRef} className={`fam-tooltip-portal ${placementClass}`} style={style}>
+      <div className="fam-tooltip-row">
+        <span>Full Name</span>
+        <span>{node.name || node.full_name || node.fullname || "User"}</span>
+      </div>
+      <div className="fam-tooltip-row">
+        <span>Date of Join</span>
+        <span>{formatJoinDate(node.date_of_joining || node.date_of_join)}</span>
+      </div>
+      <div className="fam-tooltip-row">
+        <span>Rank</span>
+        <span>{node.rank || "-"}</span>
+      </div>
+      <div className="fam-tooltip-row">
+        <span>Trade Amount</span>
+        <span>₹{Number(node.total_investment || 0).toLocaleString()}</span>
+      </div>
+      <div className="fam-tooltip-row">
+        <span>Total Lots</span>
+        <span>{Number(node.total_lots || 0)}</span>
+      </div>
+      <div className="fam-tooltip-row">
+        <span>Investment Status</span>
+        <span>{investmentStatus}</span>
+      </div>
+    </div>,
+    document.body
+  );
+}
+
 function FamNode({ node, openNodeId, onToggleDetails, onHoverDetails }) {
   if (!node) return null;
+
+  const nodeRef = useRef(null);
+  const [hovered, setHovered] = useState(false);
+  const [anchorRect, setAnchorRect] = useState(null);
 
   const id = node.user_id || node.userId || "-";
   const name = node.name || node.full_name || node.fullname || "User";
@@ -80,19 +150,39 @@ function FamNode({ node, openNodeId, onToggleDetails, onHoverDetails }) {
   const isActive = investmentStatus === "ACTIVE";
   const detailsOpen = openNodeId === id;
 
+  const handleMouseEnter = () => {
+    if (nodeRef.current) setAnchorRect(nodeRef.current.getBoundingClientRect());
+    setHovered(true);
+    onHoverDetails(id);
+  };
+
+  const handleMouseLeave = () => {
+    setHovered(false);
+    setAnchorRect(null);
+    onHoverDetails(null, id);
+  };
+
+  const handleNodeToggle = () => {
+    if (nodeRef.current) {
+      setAnchorRect(nodeRef.current.getBoundingClientRect());
+    }
+    onToggleDetails(id);
+  };
+
   return (
     <li>
       <div
+        ref={nodeRef}
         className={`fam-node ${detailsOpen ? "is-details-open" : ""}`}
         role="button"
         tabIndex={0}
-        onClick={() => onToggleDetails(id)}
-        onMouseEnter={() => onHoverDetails(id)}
-        onMouseLeave={() => onHoverDetails(null, id)}
+        onClick={handleNodeToggle}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
         onKeyDown={(event) => {
           if (event.key === "Enter" || event.key === " ") {
             event.preventDefault();
-            onToggleDetails(id);
+            handleNodeToggle();
           }
         }}
         aria-expanded={detailsOpen}
@@ -105,34 +195,9 @@ function FamNode({ node, openNodeId, onToggleDetails, onHoverDetails }) {
         <span className={`fam-investment-status ${isActive ? "is-active" : "is-inactive"}`}>
           {investmentStatus}
         </span>
-
-        <div className="fam-tooltip">
-          <div className="fam-tooltip-row">
-            <span>Full Name</span>
-            <span>{name}</span>
-          </div>
-          <div className="fam-tooltip-row">
-            <span>Date of Join</span>
-            <span>{formatJoinDate(node.date_of_joining || node.date_of_join)}</span>
-          </div>
-          <div className="fam-tooltip-row">
-            <span>Rank</span>
-            <span>{node.rank || "-"}</span>
-          </div>
-          <div className="fam-tooltip-row">
-            <span>Trade Amount</span>
-            <span>₹{Number(node.total_investment || 0).toLocaleString()}</span>
-          </div>
-          <div className="fam-tooltip-row">
-            <span>Total Lots</span>
-            <span>{Number(node.total_lots || 0)}</span>
-          </div>
-          <div className="fam-tooltip-row">
-            <span>Investment Status</span>
-            <span>{investmentStatus}</span>
-          </div>
-        </div>
       </div>
+
+      {(hovered || detailsOpen) && <UserNodeTooltip anchorRect={anchorRect} node={node} />}
 
       {children.length > 0 && (
         <ul>
