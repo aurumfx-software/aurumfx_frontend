@@ -558,6 +558,43 @@
    Family view — org-chart avatar tree with hover tooltip
    ========================================================================== */
 
+.fam-view-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px 16px;
+  margin: 16px 0 18px;
+  border: 1px solid var(--gen-accent-line);
+  border-radius: 10px;
+  background: var(--gen-nav-gradient-soft);
+  color: var(--gen-text);
+  font-size: 12.5px;
+}
+
+.fam-view-banner strong {
+  color: var(--gen-accent-strong);
+  font-family: var(--gen-font-mono);
+}
+
+.fam-view-banner-reset {
+  margin-left: auto;
+  padding: 6px 12px;
+  border: 1px solid var(--gen-accent-line);
+  border-radius: 999px;
+  background: var(--gen-surface);
+  color: var(--gen-accent-strong);
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.fam-view-banner-reset:hover {
+  background: var(--gen-nav-gradient);
+  box-shadow: 0 3px 10px rgba(197, 155, 39, 0.2);
+}
+
 .fam-tree-scroll {
   position: relative;
   z-index: 1;
@@ -703,6 +740,10 @@
   outline: 2px solid var(--gen-accent-line);
   box-shadow: 0 4px 12px rgba(197, 155, 39, 0.22);
   transition: outline-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.fam-avatar--clickable {
+  cursor: pointer;
 }
 
 .fam-node:hover .fam-avatar {

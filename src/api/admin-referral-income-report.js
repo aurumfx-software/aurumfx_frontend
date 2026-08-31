@@ -15,16 +15,24 @@ const buildParams = (filters = {}) => Object.fromEntries(
 export const getAdminReferralIncomeReportApi = async (filters = {}) => {
   try {
     const response = await api.get("/admin/referral-income-report/", { params: buildParams(filters) });
-    const payload = response.data?.data || response.data || {};
+    const payload = response.data && !Array.isArray(response.data) ? response.data : {};
+    const items = Array.isArray(payload.data)
+      ? payload.data
+      : Array.isArray(payload.items)
+      ? payload.items
+      : Array.isArray(response.data)
+      ? response.data
+      : [];
+
     return {
       success: true,
       data: {
-        total_records: Number(payload.total_records ?? 0),
+        total_records: Number(payload.total_records ?? items.length ?? 0),
         total_investment_amount: Number(payload.total_investment_amount ?? 0),
         total_commission_amount: Number(payload.total_commission_amount ?? 0),
         total_paid_amount: Number(payload.total_paid_amount ?? 0),
         total_washout_amount: Number(payload.total_washout_amount ?? 0),
-        items: Array.isArray(payload.data) ? payload.data : Array.isArray(payload.items) ? payload.items : [],
+        items,
       },
     };
   } catch (error) {

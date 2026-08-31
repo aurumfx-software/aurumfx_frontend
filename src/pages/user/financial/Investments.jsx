@@ -45,7 +45,7 @@ const formatDDMMYYYY = (value) => {
 };
 
 const isPdfFile = (file) => file?.type === "application/pdf" || /\.pdf$/i.test(file?.name || "");
-
+const MAX_PAYMENT_PROOF_SIZE = 50 * 1024 * 1024;
 
 function Investments() {
   const [amount, setAmount] = useState("");
@@ -146,6 +146,8 @@ function Investments() {
 
     if (!paymentProof) {
       errors.proof = "Please upload the payment proof.";
+    } else if (paymentProof.size > MAX_PAYMENT_PROOF_SIZE) {
+      errors.proof = "Payment proof must be 50 MB or less.";
     }
 
     return errors;
@@ -364,11 +366,19 @@ function Investments() {
                   type="file"
                   accept="image/*,.pdf,application/pdf"
                   onChange={(e) => {
-                    setPaymentProof(e.target.files?.[0] || null);
+                    const file = e.target.files?.[0] || null;
+                    if (file && file.size > MAX_PAYMENT_PROOF_SIZE) {
+                      setPaymentProof(null);
+                      setFieldErrors((prev) => ({ ...prev, proof: "Payment proof must be 50 MB or less." }));
+                      e.target.value = "";
+                      return;
+                    }
+                    setPaymentProof(file);
                     if (fieldErrors.proof) setFieldErrors((prev) => ({ ...prev, proof: "" }));
                   }}
                 />
               </label>
+              <span className="file-hint">Maximum file size: 50 MB.</span>
               {fieldErrors.proof && <span className="field-error">{fieldErrors.proof}</span>}
             </div>
 

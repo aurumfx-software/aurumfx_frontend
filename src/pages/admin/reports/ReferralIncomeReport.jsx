@@ -12,12 +12,22 @@ const money = (value) => `₹${Number(value || 0).toLocaleString("en-IN", { mini
 const valueOf = (row, ...keys) => keys.reduce((value, key) => value ?? row?.[key], undefined);
 const userIdOf = (row) => valueOf(row, "user_id", "userId", "username") || "-";
 const userNameOf = (row) => valueOf(row, "user_name", "userName", "fullname", "name") || "-";
+const investorNameOf = (row) => valueOf(row, "investor_name", "investorName", "investor_full_name") || "-";
 const investmentOf = (row) => valueOf(row, "investment_amount", "investmentAmount", "amount") || 0;
 const commissionOf = (row) => valueOf(row, "commission_amount", "commissionAmount", "commission", "income") || 0;
 const paidOf = (row) => valueOf(row, "paid_amount", "paidAmount") || 0;
 const washoutOf = (row) => valueOf(row, "washout_amount", "washoutAmount") || 0;
 const statusOf = (row) => valueOf(row, "status", "approval_status") || "-";
-const dateOf = (row) => valueOf(row, "date", "created_at", "income_date") || "-";
+const formatDate = (value) => {
+  if (!value) return "-";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return String(value);
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+  return `${day}-${month}-${year}`;
+};
+const dateOf = (row) => formatDate(valueOf(row, "date", "created_at", "income_date"));
 
 function ReferralIncomeReport() {
   const [filters, setFilters] = useState({ start_date: "", end_date: "", status: "", user_id: "" });
@@ -71,8 +81,8 @@ function ReferralIncomeReport() {
           <button type="submit" className="reports-search-btn">Search</button><button type="button" className="reports-reset-btn" onClick={handleReset}>Reset <FiRefreshCw size={13} /></button>
         </form>
         <div className="investment-report-summary"><div><span>Total Records</span><strong>{report.total_records}</strong></div><div><span>Total Investment</span><strong>{money(report.total_investment_amount)}</strong></div><div><span>Total Commission</span><strong>{money(report.total_commission_amount)}</strong></div><div><span>Total Paid</span><strong>{money(report.total_paid_amount)}</strong></div><div><span>Total Washout</span><strong>{money(report.total_washout_amount)}</strong></div></div>
-        <div className="reports-table-card"><div className="ft-table-wrapper"><table className="reports-table"><thead><tr><th>No</th><th>User ID</th><th>User Name</th><th>Investment Amount</th><th>Commission</th><th>Paid Amount</th><th>Washout</th><th>Status</th><th>Date</th></tr></thead><tbody>
-          {loading ? <tr><td colSpan="9">Loading referral income report...</td></tr> : error ? <tr><td colSpan="9">{error}</td></tr> : report.items.length === 0 ? <tr><td colSpan="9" className="reports-empty-cell">No referral income records found.</td></tr> : report.items.map((row, index) => <tr key={row.id || `${userIdOf(row)}-${index}`}><td>{index + 1}</td><td>{userIdOf(row)}</td><td>{userNameOf(row)}</td><td>{money(investmentOf(row))}</td><td>{money(commissionOf(row))}</td><td>{money(paidOf(row))}</td><td>{money(washoutOf(row))}</td><td>{statusOf(row)}</td><td>{dateOf(row)}</td></tr>)}
+        <div className="reports-table-card"><div className="ft-table-wrapper"><table className="reports-table"><thead><tr><th>No</th><th>User ID</th><th>User Name</th><th>Investor Name</th><th>Investment Amount</th><th>Commission</th><th>Paid Amount</th><th>Washout</th><th>Status</th><th>Date</th></tr></thead><tbody>
+          {loading ? <tr><td colSpan="10">Loading referral income report...</td></tr> : error ? <tr><td colSpan="10">{error}</td></tr> : report.items.length === 0 ? <tr><td colSpan="10" className="reports-empty-cell">No referral income records found.</td></tr> : report.items.map((row, index) => <tr key={row.id || `${userIdOf(row)}-${index}`}><td>{index + 1}</td><td>{userIdOf(row)}</td><td>{userNameOf(row)}</td><td>{investorNameOf(row)}</td><td>{money(investmentOf(row))}</td><td>{money(commissionOf(row))}</td><td>{money(paidOf(row))}</td><td>{money(washoutOf(row))}</td><td>{statusOf(row)}</td><td>{dateOf(row)}</td></tr>)}
         </tbody></table></div></div>
       </div>
     </AdminLayout>

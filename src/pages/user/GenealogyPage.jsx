@@ -47,16 +47,48 @@ function colorForId(id = "") {
  * so the tree can be re-rooted at the searched user, showing only them
  * and their downline instead of the whole network.
  */
+function getNodeId(node) {
+  if (!node) return "";
+  return String(
+    node.user_id ||
+    node.userId ||
+    node.id ||
+    node.member_id ||
+    node.referral_id ||
+    node.username ||
+    ""
+  ).toLowerCase();
+}
+
 function findNodeById(node, query) {
   if (!node) return null;
-  const id = String(node.user_id || node.userId || "").toLowerCase();
-  if (id === query) return node;
+  const queryId = String(query || "").toLowerCase();
 
-  const children = Array.isArray(node.children) ? node.children : [];
-  for (const child of children) {
-    const found = findNodeById(child, query);
-    if (found) return found;
+  const candidates = Array.isArray(node) ? node : [node];
+  for (const current of candidates) {
+    if (!current) continue;
+
+    if (getNodeId(current) === queryId) return current;
+
+    const childGroups = [
+      current.children,
+      current.downline,
+      current.descendants,
+      current.members,
+      current.child,
+      current.data,
+      current.user,
+    ];
+
+    for (const group of childGroups) {
+      const children = Array.isArray(group) ? group : group ? [group] : [];
+      for (const child of children) {
+        const found = findNodeById(child, queryId);
+        if (found) return found;
+      }
+    }
   }
+
   return null;
 }
 
@@ -135,7 +167,7 @@ function UserNodeTooltip({ anchorRect, node }) {
   );
 }
 
-function FamNode({ node, openNodeId, onToggleDetails, onHoverDetails }) {
+function FamNode({ node, openNodeId, onToggleDetails, onHoverDetails, onViewUser }) {
   if (!node) return null;
 
   const nodeRef = useRef(null);
@@ -169,6 +201,11 @@ function FamNode({ node, openNodeId, onToggleDetails, onHoverDetails }) {
     onToggleDetails(id);
   };
 
+  const handleAvatarClick = (event) => {
+    event.stopPropagation();
+    if (id && id !== "-" && onViewUser) onViewUser(id);
+  };
+
   return (
     <li>
       <div
@@ -188,7 +225,21 @@ function FamNode({ node, openNodeId, onToggleDetails, onHoverDetails }) {
         aria-expanded={detailsOpen}
         aria-label={`Show details for ${name}`}
       >
-        <div className="fam-avatar" style={{ background: colorForId(id) }}>
+        <div
+          className="fam-avatar fam-avatar--clickable"
+          style={{ background: colorForId(id) }}
+          onClick={handleAvatarClick}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              handleAvatarClick(event);
+            }
+          }}
+          role="button"
+          tabIndex={0}
+          title={`View ${id}'s tree`}
+          aria-label={`View ${name}'s tree`}
+        >
           {photo ? <img src={photo} alt={name} /> : name.charAt(0).toUpperCase()}
         </div>
         <span className={`fam-badge ${isActive ? "is-active" : "is-inactive"}`}>{id}</span>
@@ -208,6 +259,7 @@ function FamNode({ node, openNodeId, onToggleDetails, onHoverDetails }) {
               openNodeId={openNodeId}
               onToggleDetails={onToggleDetails}
               onHoverDetails={onHoverDetails}
+              onViewUser={onViewUser}
             />
           ))}
         </ul>
@@ -216,7 +268,7 @@ function FamNode({ node, openNodeId, onToggleDetails, onHoverDetails }) {
   );
 }
 
-function FamilyOrgTree({ data }) {
+function FamilyOrgTree({ data, onViewUser }) {
   if (!data) return null;
   const [openNodeId, setOpenNodeId] = useState(null);
 
@@ -254,6 +306,7 @@ function FamilyOrgTree({ data }) {
           openNodeId={openNodeId}
           onToggleDetails={handleToggleDetails}
           onHoverDetails={handleHoverDetails}
+          onViewUser={onViewUser}
         />
       </ul>
     </div>
@@ -304,6 +357,9 @@ function GenealogyPage() {
   const [searchInput, setSearchInput] = useState("");
   const [activeSearch, setActiveSearch] = useState("");
   const [searchMiss, setSearchMiss] = useState(false);
+  const [drillHistory, setDrillHistory] = useState([]);
+  const [viewRoot, setViewRoot] = useState(null);
+  const [drilledUserId, setDrilledUserId] = useState("");
 
   const userId = useMemo(() => localStorage.getItem("userId") || "FX001", []);
 
@@ -330,20 +386,51 @@ function GenealogyPage() {
 
       if (res.success) {
         setData(res.data);
+        setViewRoot(res.data || null);
       } else {
         setError(res.error || "Unable to load data.");
+        setViewRoot(null);
       }
 
       setLoading(false);
     };
 
-    // Reset any active search whenever the tab changes.
+    // Reset any active search and drill state whenever the tab changes.
     setSearchInput("");
     setActiveSearch("");
     setSearchMiss(false);
+    setDrillHistory([]);
+    setViewRoot(null);
+    setDrilledUserId("");
 
     loadData();
   }, [view]);
+
+  const handleViewUser = (id) => {
+    if (!id || activeSearch) return;
+    const selectedNode = findNodeById(viewRoot || data, id);
+    if (!selectedNode) return;
+
+    setDrillHistory((current) => [...current, viewRoot || data]);
+    setViewRoot(selectedNode);
+    setDrilledUserId(id);
+  };
+
+  const handleBackToPrevious = () => {
+    setDrillHistory((current) => {
+      if (current.length === 0) {
+        setViewRoot(data || null);
+        setDrilledUserId("");
+        return [];
+      }
+
+      const previous = current[current.length - 1];
+      const previousId = getNodeId(previous) || userId;
+      setViewRoot(previous);
+      setDrilledUserId(previousId);
+      return current.slice(0, -1);
+    });
+  };
 
   const handleSearch = () => {
     const q = searchInput.trim().toLowerCase();
@@ -367,6 +454,9 @@ function GenealogyPage() {
     setSearchInput("");
     setActiveSearch("");
     setSearchMiss(false);
+    setDrillHistory([]);
+    setViewRoot(data || null);
+    setDrilledUserId("");
   };
 
   const title =
@@ -394,7 +484,16 @@ function GenealogyPage() {
   // Search-aware datasets. With no active search these fall back to the
   // full data set, so List/Enroller behave exactly as before by default.
   const familyDisplayNode =
-    view === "family" ? (activeSearch ? findNodeById(data, activeSearch) : data) : null;
+    view === "family"
+      ? activeSearch
+        ? findNodeById(data, activeSearch)
+        : viewRoot || data
+      : null;
+
+  const previousViewUserId =
+    drillHistory.length > 0
+      ? getNodeId(drillHistory[drillHistory.length - 1]) || userId
+      : userId;
 
   const listDisplayRows =
     view === "list"
@@ -448,6 +547,19 @@ function GenealogyPage() {
             hasActiveSearch={!!activeSearch}
           />
 
+          {view === "family" && !activeSearch && drilledUserId && drilledUserId !== userId && (
+            <div className="fam-view-banner">
+              Viewing <strong>{drilledUserId}</strong>'s tree (drilled in from the diagram).
+              <button
+                type="button"
+                className="fam-view-banner-reset"
+                onClick={handleBackToPrevious}
+              >
+                Back to {previousViewUserId}
+              </button>
+            </div>
+          )}
+
           {loading ? (
             <div className="genealogy-empty">Loading {title.toLowerCase()}...</div>
           ) : error ? (
@@ -458,7 +570,7 @@ function GenealogyPage() {
                 No user found for “{searchInput.trim()}”.
               </div>
             ) : familyDisplayNode ? (
-              <FamilyOrgTree data={familyDisplayNode} />
+              <FamilyOrgTree data={familyDisplayNode} onViewUser={handleViewUser} />
             ) : (
               <div className="genealogy-empty">No family data available.</div>
             )
