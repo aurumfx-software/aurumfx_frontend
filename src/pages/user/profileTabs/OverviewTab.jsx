@@ -23,8 +23,6 @@ function OverviewTab({ loadingProfile, profileError, profileData }) {
           <DocRow emoji="📍" label="City" value={profileData.city} />
           <DocRow emoji="🌍" label="Country" value={profileData.country} />
           <DocRow emoji="📮" label="ZIP Code" value={profileData.zipCode} />
-          <DocRow emoji="🪪" label="Aadhaar Number" value={profileData.aadharNo} />
-          <DocRow emoji="🧾" label="PAN Number" value={profileData.pan} />
         </div>
       )}
     </>

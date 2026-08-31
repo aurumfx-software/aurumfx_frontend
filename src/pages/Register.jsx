@@ -73,11 +73,42 @@ const Register = () => {
     }
   };
 
+  const validatePasswordStrength = (password) => {
+    if (!password) return "";
+    if (password.length < 8) return "Password must be at least 8 characters";
+    if (!/[A-Z]/.test(password)) return "Password must contain at least one uppercase letter";
+    if (!/[a-z]/.test(password)) return "Password must contain at least one lowercase letter";
+    if (!/\d/.test(password)) return "Password must contain at least one number";
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) return "Password must contain at least one special character";
+    return "";
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     // clear general api/form error when user starts editing
     if (apiError) setApiError("");
-    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    setFormData((prev) => {
+      const nextData = { ...prev, [name]: value };
+
+      if (name === "password" || name === "confirm_password") {
+        const nextPassword = name === "password" ? value : nextData.password;
+        const nextConfirmPassword = name === "confirm_password" ? value : nextData.confirm_password;
+        const passwordError = validatePasswordStrength(nextPassword);
+        const confirmError = nextPassword && nextConfirmPassword && nextPassword !== nextConfirmPassword
+          ? "Passwords do not match"
+          : "";
+
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          password: name === "password" ? passwordError : (nextPassword ? validatePasswordStrength(nextPassword) : ""),
+          confirm_password: confirmError,
+        }));
+      }
+
+      return nextData;
+    });
+
     if (name === "enroller_id") {
       setEnrollerName("");
       if (enrollerTimer.current) clearTimeout(enrollerTimer.current);
@@ -187,8 +218,9 @@ const Register = () => {
       e.email = "Please enter a valid email address";
     }
 
-    if (formData.password && formData.password.length < 8) {
-      e.password = "Password must be at least 8 characters";
+    const passwordStrengthError = validatePasswordStrength(formData.password);
+    if (passwordStrengthError) {
+      e.password = passwordStrengthError;
     }
 
     if (formData.password && formData.confirm_password && formData.password !== formData.confirm_password) {

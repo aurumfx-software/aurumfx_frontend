@@ -245,9 +245,8 @@ export const getProfileApi = async () => {
 /**
  * Update user profile data via PUT /auth/profile
  * Payload matches the backend schema exactly:
- * { email, first_name, last_name, date_of_birth, country, city, zip_code, mobile, aadhar_no, pan, gender }
- * Bank account number and password are intentionally never sent from this
- * method — those are handled by their own dedicated endpoints/tabs.
+ * { email, first_name, last_name, date_of_birth, country, city, zip_code, mobile, gender }
+ * Profile image, Aadhaar and PAN are not part of this endpoint.
  */
 export const updateProfileApi = async (payload) => {
   try {
@@ -324,10 +323,17 @@ export const updateProfileBankDetailsApi = async (payload) => {
 
     return { success: true, data: response.data };
   } catch (error) {
-    let errorMessage =
-      error.response?.data?.message ||
-      error.response?.data?.error ||
-      error.response?.data?.detail?.[0]?.msg ||
+    const responseData = error.response?.data || {};
+    const detail = Array.isArray(responseData.detail)
+      ? responseData.detail.map((item) => item.msg).filter(Boolean).join(", ")
+      : typeof responseData.detail === "string"
+        ? responseData.detail
+        : responseData.detail?.msg || "";
+
+    const errorMessage =
+      responseData.message ||
+      responseData.error ||
+      detail ||
       "Unable to update bank details";
 
     return { success: false, error: errorMessage };

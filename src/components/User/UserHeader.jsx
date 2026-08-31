@@ -10,7 +10,11 @@ import {
 } from "../../api/user-notifications";
 import { logout } from "../../utils/auth";
 import { switchBackToAdminApi } from "../../api/admin-members-management";
-import { hasBankSubmission } from "../../pages/user/profileTabs/shared";
+import {
+  hasBankSubmission,
+  hasKycSubmission,
+  deriveSectionStatus,
+} from "../../pages/user/profileTabs/shared";
 import ThemeToggle from "../ThemeToggle/ThemeToggle";
 import "./UserHeader.css";
 
@@ -32,14 +36,6 @@ const STATUS_CONFIG = {
     className: "status-rejected",
   },
 };
-
-function normalizeStatus(value) {
-  const status = String(value || "").toLowerCase();
-  if (status.includes("approv") || status.includes("verified")) return "approved";
-  if (status.includes("reject") || status.includes("fail")) return "rejected";
-  if (status.includes("pending") || status.includes("review") || status.includes("submit")) return "pending";
-  return "not_submitted";
-}
 
 function UserHeader({ onMenuToggle, user }) {
   const navigate = useNavigate();
@@ -115,32 +111,21 @@ function UserHeader({ onMenuToggle, user }) {
 
   useEffect(() => {
     let active = true;
+
     Promise.all([getMyKycApi(), getProfileBankDetailsApi()]).then(([kycRes, bankRes]) => {
       if (!active) return;
 
-      const kycPayload = kycRes.success ? (kycRes.data?.data || kycRes.data || {}) : {};
-      const documents = Array.isArray(kycPayload)
-        ? kycPayload
-        : kycPayload.documents || kycPayload.kyc_documents || [];
-      const requiredDocuments = documents.filter((doc) =>
-        ["pan", "aadhaar", "aadhar"].includes(String(doc.document_type || "").toLowerCase())
-      );
-      const documentStatuses = requiredDocuments.map((doc) => normalizeStatus(doc.status));
-      const kyc = requiredDocuments.length === 0
-        ? "not_submitted"
-        : documentStatuses.every((status) => status === "approved")
-          ? "approved"
-          : documentStatuses.some((status) => status === "rejected")
-            ? "rejected"
-            : "pending";
+      const kyc = kycRes.success ? (kycRes.data?.data || kycRes.data || {}) : {};
+      const kycSubmitted = hasKycSubmission(kyc);
+      const kycStatus = deriveSectionStatus(kycSubmitted, kyc.status);
 
       const bankPayload = bankRes.success ? (bankRes.data?.data || bankRes.data || {}) : {};
       const bankDetails = bankPayload.bank_details || {};
       const nomineeDetails = bankPayload.nominee_details || {};
-      const bank = hasBankSubmission(bankDetails, nomineeDetails)
-        ? normalizeStatus(bankDetails.bank_status || bankDetails.status)
-        : "not_submitted";
-      setVerificationStatuses({ kyc, bank });
+      const bankSubmitted = hasBankSubmission(bankDetails, nomineeDetails);
+      const bankStatus = deriveSectionStatus(bankSubmitted, bankDetails.status);
+
+      setVerificationStatuses({ kyc: kycStatus, bank: bankStatus });
     });
 
     return () => {
@@ -330,8 +315,8 @@ function UserHeader({ onMenuToggle, user }) {
                   {String(userName || "P").charAt(0).toUpperCase()}
                 </span>
                 <div className="dropdown-user-details">
+                  <div className="dropdown-user-name">{userName}</div>
                   <div className="dropdown-user-id">{userId}</div>
-                  <div className="dropdown-user-email">{userName}</div>
                 </div>
               </div>
               <div className="dropdown-menu-list">

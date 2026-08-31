@@ -35,8 +35,47 @@ function KycTab({ profileData, setProfileData }) {
 
   const getDocument = (type) => kycDocs.find((doc) => {
     if (doc.document_type === type) return true;
-    return (type === KYC_DOC_TYPE_AADHAAR_FRONT || type === KYC_DOC_TYPE_AADHAAR_BACK) &&
-      ["aadhar", "aadhaar"].includes(String(doc.document_type).toLowerCase());
+    if (type === KYC_DOC_TYPE_AADHAAR_FRONT) {
+      return Boolean(
+        doc.aadhar_front_url ||
+        doc.aadhaar_front_url ||
+        doc.front_url ||
+        doc.front_photo ||
+        doc.front_image ||
+        doc.front_file ||
+        doc.aadhar_no ||
+        doc.aadhaar_no ||
+        ["aadhar", "aadhaar"].includes(String(doc.document_type || "").toLowerCase())
+      );
+    }
+    if (type === KYC_DOC_TYPE_AADHAAR_BACK) {
+      return Boolean(
+        doc.aadhar_back_url ||
+        doc.aadhaar_back_url ||
+        doc.back_url ||
+        doc.back_photo ||
+        doc.back_image ||
+        doc.back_file ||
+        ["aadhar", "aadhaar"].includes(String(doc.document_type || "").toLowerCase())
+      );
+    }
+    if (type === KYC_DOC_TYPE_PAN) {
+      return Boolean(
+        doc.pan_url ||
+        doc.pan_photo ||
+        doc.pan_image ||
+        doc.document_url ||
+        doc.image_url ||
+        doc.url ||
+        doc.file ||
+        doc.file_path ||
+        doc.path ||
+        doc.pan_no ||
+        doc.pan_number ||
+        doc.document_type === KYC_DOC_TYPE_PAN
+      );
+    }
+    return false;
   });
 
   const requiredKycTypes = [
@@ -71,7 +110,7 @@ function KycTab({ profileData, setProfileData }) {
     if (type === KYC_DOC_TYPE_AADHAAR_BACK) {
       return doc.back_url || doc.back_file_url || doc.aadhar_back_url || doc.aadhaar_back_url || doc.back_photo || doc.back_image || doc.back_file || doc.url || doc.file_url || doc.file_path || doc.path || "";
     }
-    return doc.front_url || doc.url || doc.file_url || doc.document_url || doc.image_url || doc.pan_photo || doc.pan_image || doc.file || doc.file_path || doc.path || "";
+    return doc.pan_url || doc.front_url || doc.url || doc.file_url || doc.document_url || doc.image_url || doc.pan_photo || doc.pan_image || doc.file || doc.file_path || doc.path || "";
   };
 
   const getDocumentStatus = (type) => normalizeStatus(getDocument(type)?.status);
@@ -90,14 +129,33 @@ function KycTab({ profileData, setProfileData }) {
       const payload = res.data?.data || res.data || [];
       const list = Array.isArray(payload)
         ? payload
-        : payload?.documents || payload?.kyc_documents || (payload?.document_type ? [payload] : []);
+        : payload?.documents || payload?.kyc_documents || (
+            payload && (
+              payload?.document_type ||
+              payload?.aadhar_front_url ||
+              payload?.aadhaar_front_url ||
+              payload?.aadhar_back_url ||
+              payload?.aadhaar_back_url ||
+              payload?.pan_url ||
+              payload?.pan_no ||
+              payload?.pan
+            )
+              ? [payload]
+              : []
+          );
       const docs = Array.isArray(list) ? list : [];
       setKycDocs(docs);
 
-      const aadhaarDoc = docs.find((doc) => ["aadhar", "aadhaar", KYC_DOC_TYPE_AADHAAR_FRONT].includes(String(doc.document_type).toLowerCase()));
-      const panDoc = docs.find((doc) => doc.document_type === KYC_DOC_TYPE_PAN);
+      const aadhaarDoc = docs.find((doc) => {
+        if (doc.document_type && ["aadhar", "aadhaar", KYC_DOC_TYPE_AADHAAR_FRONT].includes(String(doc.document_type).toLowerCase())) return true;
+        return Boolean(doc.aadhar_front_url || doc.aadhaar_front_url || doc.front_url || doc.front_photo || doc.front_image || doc.front_file);
+      });
+      const panDoc = docs.find((doc) => {
+        if (doc.document_type === KYC_DOC_TYPE_PAN) return true;
+        return Boolean(doc.pan_url || doc.pan_no || doc.pan || doc.pan_number);
+      });
       const loadedAadhaar = payload?.aadhar_no || payload?.aadhaar_no || aadhaarDoc?.aadhar_no || aadhaarDoc?.aadhar_number || aadhaarDoc?.aadhaar_number;
-      const loadedPan = payload?.pan || payload?.pan_no || panDoc?.pan || panDoc?.pan_number || panDoc?.pan_no;
+      const loadedPan = payload?.pan_no || payload?.pan || panDoc?.pan || panDoc?.pan_number || panDoc?.pan_no;
       if (loadedAadhaar) {
         setAadhaarNumber(String(loadedAadhaar));
         setProfileData((prev) => ({ ...prev, aadharNo: String(loadedAadhaar) }));
@@ -155,11 +213,13 @@ function KycTab({ profileData, setProfileData }) {
     });
     if (!uploadRes.success) {
       setUploadError(uploadRes.error || "Failed to upload KYC documents");
+      setUploadSuccess("");
       setUploading(false);
       return;
     }
 
     setUploading(false);
+    setUploadError("");
     setUploadSuccess("Aadhaar and PAN documents submitted for review!");
     setAadhaarFront(null);
     setAadhaarBack(null);
@@ -169,7 +229,6 @@ function KycTab({ profileData, setProfileData }) {
       aadharNo: aadhaarNumber.replace(/\s/g, ""),
       pan: panNumber.trim().toUpperCase(),
     }));
-    setTimeout(() => setUploadSuccess(""), 3000);
     await loadKyc();
   };
 
@@ -188,6 +247,9 @@ function KycTab({ profileData, setProfileData }) {
         {kycStatus === "rejected" && kycRejectionReason && (
           <span className="status-reason">{kycRejectionReason}</span>
         )}
+        <button type="button" className="field-refresh-btn" onClick={loadKyc}>
+          Refresh
+        </button>
       </div>
 
       <form onSubmit={handleUpload} className="doc-form kyc-upload-form">
@@ -224,8 +286,10 @@ function KycTab({ profileData, setProfileData }) {
             </label>
             {getDocumentUrl(KYC_DOC_TYPE_AADHAAR_FRONT) && (
               <div className="kyc-photo-preview">
-                <img src={getDocumentUrl(KYC_DOC_TYPE_AADHAAR_FRONT)} alt="Aadhaar front" />
-                <a href={getDocumentUrl(KYC_DOC_TYPE_AADHAAR_FRONT)} download title="Download Aadhaar front"><FiDownload /></a>
+                <a href={getDocumentUrl(KYC_DOC_TYPE_AADHAAR_FRONT)} target="_blank" rel="noreferrer" aria-label="Open Aadhaar front in full size">
+                  <img src={getDocumentUrl(KYC_DOC_TYPE_AADHAAR_FRONT)} alt="Aadhaar front" />
+                </a>
+                <a href={getDocumentUrl(KYC_DOC_TYPE_AADHAAR_FRONT)} download title="Download Aadhaar front" className="download-link"><FiDownload /></a>
               </div>
             )}
           </div>
@@ -247,8 +311,10 @@ function KycTab({ profileData, setProfileData }) {
             </label>
             {getDocumentUrl(KYC_DOC_TYPE_AADHAAR_BACK) && (
               <div className="kyc-photo-preview">
-                <img src={getDocumentUrl(KYC_DOC_TYPE_AADHAAR_BACK)} alt="Aadhaar back" />
-                <a href={getDocumentUrl(KYC_DOC_TYPE_AADHAAR_BACK)} download title="Download Aadhaar back"><FiDownload /></a>
+                <a href={getDocumentUrl(KYC_DOC_TYPE_AADHAAR_BACK)} target="_blank" rel="noreferrer" aria-label="Open Aadhaar back in full size">
+                  <img src={getDocumentUrl(KYC_DOC_TYPE_AADHAAR_BACK)} alt="Aadhaar back" />
+                </a>
+                <a href={getDocumentUrl(KYC_DOC_TYPE_AADHAAR_BACK)} download title="Download Aadhaar back" className="download-link"><FiDownload /></a>
               </div>
             )}
           </div>
@@ -284,8 +350,10 @@ function KycTab({ profileData, setProfileData }) {
             </label>
             {getDocumentUrl(KYC_DOC_TYPE_PAN) && (
               <div className="kyc-photo-preview">
-                <img src={getDocumentUrl(KYC_DOC_TYPE_PAN)} alt="PAN card" />
-                <a href={getDocumentUrl(KYC_DOC_TYPE_PAN)} download title="Download PAN card"><FiDownload /></a>
+                <a href={getDocumentUrl(KYC_DOC_TYPE_PAN)} target="_blank" rel="noreferrer" aria-label="Open PAN card in full size">
+                  <img src={getDocumentUrl(KYC_DOC_TYPE_PAN)} alt="PAN card" />
+                </a>
+                <a href={getDocumentUrl(KYC_DOC_TYPE_PAN)} download title="Download PAN card" className="download-link"><FiDownload /></a>
               </div>
             )}
           </div>

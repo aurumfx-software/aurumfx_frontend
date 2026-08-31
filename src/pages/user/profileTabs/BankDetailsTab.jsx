@@ -31,6 +31,7 @@ function BankDetailsTab({
   bankSavingMsg,
   bankError,
   handleBankSubmit,
+  onRefresh,
 }) {
   const bankLocked = bankStatus === "approved";
   const resolveDocumentUrl = (path) => {
@@ -55,8 +56,10 @@ function BankDetailsTab({
     <div className="bank-document-preview-wrap">
       {showLabel && <span className="document-preview-label">{label}</span>}
       <div className="bank-document-preview">
-        <img src={url} alt={label} />
-        <a href={url} download title={`Download ${label}`}><FiDownload /></a>
+        <a href={url} target="_blank" rel="noreferrer" aria-label={`Open ${label} in full size`}>
+          <img src={url} alt={label} />
+        </a>
+        <a href={url} download title={`Download ${label}`} className="download-link"><FiDownload /></a>
       </div>
     </div>
   );
@@ -74,12 +77,15 @@ function BankDetailsTab({
         {bankStatus === "rejected" && bankRejectionReason && (
           <span className="status-reason">{bankRejectionReason}</span>
         )}
+        <button type="button" className="field-refresh-btn" onClick={onRefresh}>
+          Refresh
+        </button>
       </div>
 
       {bankLocked ? (
         <div className="doc-section">
           <DocRow label="Bank Name" value={bankDetails.bank_name} />
-          <DocRow label="Account Number" value={maskAccount(bankDetails.bank_account)} />
+          <DocRow label="Account Number" value={bankDetails.bank_account || bankDetails.account_number || ""} />
           <DocRow label="IFSC Code" value={bankDetails.ifsc} />
           <DocRow label="Nominee Name" value={bankDetails.nominee_name} />
           <DocRow label="Nominee Relation" value={bankDetails.nominee_relation} />

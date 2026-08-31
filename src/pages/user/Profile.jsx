@@ -38,8 +38,6 @@ function Profile({ defaultTab = "profile" }) {
     country: "",
     dateOfBirth: "",
     avatar: "",
-    aadharNo: "",
-    pan: "",
   });
 
   const [savingMsg, setSavingMsg] = useState("");
@@ -101,10 +99,8 @@ function Profile({ defaultTab = "profile" }) {
     const [firstName, ...rest] = profileData.fullName.trim().split(" ");
     const lastName = rest.join(" ") || "";
 
-    // Matches the PUT /auth/profile schema exactly. Bank account number and
-    // password are never part of this payload — those live on their own
-    // dedicated tabs/endpoints. Aadhaar/PAN numbers are saved from the KYC
-    // tab, alongside their document uploads.
+    // Matches the PUT /auth/profile schema exactly. Profile image, Aadhaar,
+    // and PAN are not part of this endpoint and are managed separately.
     const payload = {
       email: profileData.email,
       first_name: firstName,
@@ -115,8 +111,6 @@ function Profile({ defaultTab = "profile" }) {
       zip_code: profileData.zipCode,
       mobile: profileData.mobile,
       gender: profileData.gender,
-      aadhar_no: profileData.aadharNo || "",
-      pan: profileData.pan || "",
     };
 
     const res = await updateProfileApi(payload);
@@ -190,10 +184,16 @@ function Profile({ defaultTab = "profile" }) {
       setProofDocumentUrl("");
       setNomineeAadharFrontUrl("");
       setNomineeAadharBackUrl("");
+      setBankError("");
       setBankSavingMsg("Bank details submitted for review!");
-      setTimeout(() => setBankSavingMsg(""), 3000);
+      setProofDocument(null);
+      setNomineeAadharFront(null);
+      setNomineeAadharBack(null);
+      setProofDocumentName("");
+      await loadBankDetails();
     } else {
       setBankError(res.error || "Failed to update bank details");
+      setBankSavingMsg("");
     }
   };
 
@@ -287,8 +287,6 @@ function Profile({ defaultTab = "profile" }) {
           city: data.city || prev.city || "",
           country: data.country || prev.country || "",
           avatar: data.avatar || data.profile_image || prev.avatar || "",
-          aadharNo: data.aadhar_no || data.aadharNo || prev.aadharNo || "",
-          pan: data.pan || prev.pan || "",
         }));
 
         const loadedFullName = `${firstName} ${lastName}`.trim() || data.full_name || data.fullName || "";
@@ -364,39 +362,39 @@ function Profile({ defaultTab = "profile" }) {
     loadProfile();
   }, []);
 
+  const loadBankDetails = async () => {
+    const res = await getProfileBankDetailsApi();
+    if (!res.success) return;
+
+    const data = res.data?.data || res.data || {};
+    const bd = data.bank_details || {};
+    const nd = data.nominee_details || {};
+    setBankDetails((prev) => ({
+      ...prev,
+      bank_name: bd.bank_name || prev.bank_name,
+      bank_account: bd.bank_account || prev.bank_account,
+      ifsc: bd.ifsc || prev.ifsc,
+      nominee_name: nd.nominee_name || prev.nominee_name,
+      nominee_relation: nd.nominee_relation || prev.nominee_relation,
+      nominee_gender: nd.nominee_gender || prev.nominee_gender,
+      nominee_dob: nd.nominee_dob || prev.nominee_dob,
+      nominee_address: nd.nominee_address || prev.nominee_address,
+      nominee_aadhar: nd.nominee_aadhar || prev.nominee_aadhar,
+      nominee_mobile: nd.nominee_mobile || prev.nominee_mobile,
+    }));
+    setBankStatus(
+      hasBankSubmission(bd, nd)
+        ? normalizeStatus(bd.bank_status || bd.status)
+        : "not_submitted"
+    );
+    setBankRejectionReason(bd.rejection_reason || "");
+    setProofDocumentName(bd.bank_proof ? "Uploaded" : "");
+    setProofDocumentUrl(bd.bank_proof || "");
+    setNomineeAadharFrontUrl(nd.nominee_aadhar_front || "");
+    setNomineeAadharBackUrl(nd.nominee_aadhar_back || "");
+  };
+
   useEffect(() => {
-    const loadBankDetails = async () => {
-      const res = await getProfileBankDetailsApi();
-      if (!res.success) return;
-
-      const data = res.data?.data || res.data || {};
-      const bd = data.bank_details || {};
-      const nd = data.nominee_details || {};
-      setBankDetails((prev) => ({
-        ...prev,
-        bank_name: bd.bank_name || prev.bank_name,
-        bank_account: bd.bank_account || prev.bank_account,
-        ifsc: bd.ifsc || prev.ifsc,
-        nominee_name: nd.nominee_name || prev.nominee_name,
-        nominee_relation: nd.nominee_relation || prev.nominee_relation,
-        nominee_gender: nd.nominee_gender || prev.nominee_gender,
-        nominee_dob: nd.nominee_dob || prev.nominee_dob,
-        nominee_address: nd.nominee_address || prev.nominee_address,
-        nominee_aadhar: nd.nominee_aadhar || prev.nominee_aadhar,
-        nominee_mobile: nd.nominee_mobile || prev.nominee_mobile,
-      }));
-      setBankStatus(
-        hasBankSubmission(bd, nd)
-          ? normalizeStatus(bd.bank_status || bd.status)
-          : "not_submitted"
-      );
-      setBankRejectionReason(bd.rejection_reason || "");
-      setProofDocumentName(bd.bank_proof ? "Uploaded" : "");
-      setProofDocumentUrl(bd.bank_proof || "");
-      setNomineeAadharFrontUrl(nd.nominee_aadhar_front || "");
-      setNomineeAadharBackUrl(nd.nominee_aadhar_back || "");
-    };
-
     loadBankDetails();
   }, []);
 
@@ -481,7 +479,9 @@ function Profile({ defaultTab = "profile" }) {
                   key={id}
                   type="button"
                   className={`identity-nav-item ${activeTab === id ? "is-active" : ""}`}
-                  onClick={() => setActiveTab(id)}
+                  onClick={() => {
+                    setActiveTab(id);
+                  }}
                 >
                   <Icon />
                   <span>{label}</span>
@@ -566,6 +566,7 @@ function Profile({ defaultTab = "profile" }) {
                 bankSavingMsg={bankSavingMsg}
                 bankError={bankError}
                 handleBankSubmit={handleBankSubmit}
+                onRefresh={loadBankDetails}
               />
             )}
 

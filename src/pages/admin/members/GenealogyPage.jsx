@@ -102,8 +102,12 @@ function AdminNodeTooltip({ anchorRect, node }) {
         <span>{formatCurrency(node.total_investment)}</span>
       </div>
       <div className="agen-tooltip-row">
-        <span>Total Lots</span>
+        <span>Personal Lots</span>
         <span>{Number(node.total_lots || 0)}</span>
+      </div>
+      <div className="agen-tooltip-row">
+        <span>Total Lots</span>
+        <span>{Number(node.total_group_lots || 0)}</span>
       </div>
       <div className="agen-tooltip-row">
         <span>Investment Status</span>

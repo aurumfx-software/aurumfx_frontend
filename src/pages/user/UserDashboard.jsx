@@ -22,7 +22,11 @@ import UserRankCard from "../../components/User/UserRankCard";
 import { getUserDashboardData } from "../../api/dashboard";
 import { getMyKycApi, getProfileBankDetailsApi } from "../../api/auth";
 import { getMyInvestmentsApi } from "../../api/investments";
-import { hasBankSubmission, normalizeStatus } from "./profileTabs/shared";
+import {
+  hasBankSubmission,
+  hasKycSubmission,
+  deriveSectionStatus,
+} from "./profileTabs/shared";
 import "./UserDashboard.css";
 
 function getInitials(name) {
@@ -143,24 +147,25 @@ function UserDashboard() {
     Promise.all([getMyKycApi(), getProfileBankDetailsApi()]).then(([kycRes, bankRes]) => {
       if (!isMounted) return;
 
-      const kycPayload = kycRes.success ? (kycRes.data?.data || kycRes.data || {}) : {};
-      const kycDocuments = Array.isArray(kycPayload)
-        ? kycPayload
-        : kycPayload.documents || kycPayload.kyc_documents || (kycPayload.document_type ? [kycPayload] : []);
+      const kyc = kycRes.success ? (kycRes.data?.data || kycRes.data || {}) : {};
+      const kycSubmitted = hasKycSubmission(kyc);
+      const kycStatus = deriveSectionStatus(kycSubmitted, kyc.status);
+
       const bankPayload = bankRes.success ? (bankRes.data?.data || bankRes.data || {}) : {};
       const bankDetails = bankPayload.bank_details || {};
       const nomineeDetails = bankPayload.nominee_details || {};
       const bankSubmitted = hasBankSubmission(bankDetails, nomineeDetails);
-      const prompts = [];
-      const kycRejected = kycDocuments.some((document) => normalizeStatus(document.status) === "rejected");
-      const bankRejected = normalizeStatus(
-        bankDetails.bank_status || bankDetails.status || bankPayload.bank_status || bankPayload.status
-      ) === "rejected";
+      const bankStatus = deriveSectionStatus(bankSubmitted, bankDetails.status);
 
-      if (!kycDocuments.length) prompts.push({ type: "kyc", status: "missing" });
-      else if (kycRejected) prompts.push({ type: "kyc", status: "rejected" });
-      if (!bankSubmitted) prompts.push({ type: "bank", status: "missing" });
-      else if (bankRejected) prompts.push({ type: "bank", status: "rejected" });
+      // Popup only for genuinely missing or rejected submissions.
+      // "pending" (submitted, awaiting review) never triggers the popup.
+      const prompts = [];
+      if (kycStatus === "not_submitted") prompts.push({ type: "kyc", status: "missing" });
+      else if (kycStatus === "rejected") prompts.push({ type: "kyc", status: "rejected" });
+
+      if (bankStatus === "not_submitted") prompts.push({ type: "bank", status: "missing" });
+      else if (bankStatus === "rejected") prompts.push({ type: "bank", status: "rejected" });
+
       setVerificationPrompt(prompts.length ? prompts : null);
     });
 
@@ -199,8 +204,7 @@ function UserDashboard() {
   const incomeValues = incomeChart.map((m) => m.totalIncome);
   const hasIncomeData = incomeValues.some((v) => v > 0);
 
-  // Always render a chart shape — real income in gold, or a muted placeholder
-  // shape that just previews the chart UI until real income comes in.
+  
   const chartSourceValues = hasIncomeData ? incomeValues : INCOME_CHART_PLACEHOLDER_VALUES;
   const { line, area, points } = buildLinePath(chartSourceValues, CHART_W, CHART_H);
   const chartMonthLabels = hasIncomeData

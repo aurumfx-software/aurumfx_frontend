@@ -48,14 +48,25 @@ export const normalizeStatus = (raw) => {
   return "not_submitted";
 };
 
+const isFilled = (value) =>
+  value !== null && value !== undefined && String(value).trim() !== "";
+
+// KYC counts as "submitted" only once all 3 mandatory docs are uploaded.
+// Never trust `status` for this — backend can send "PENDING" by default
+// even when nothing has been uploaded yet.
+export const hasKycSubmission = (kyc = {}) =>
+  isFilled(kyc.aadhar_front_url) &&
+  isFilled(kyc.aadhar_back_url) &&
+  isFilled(kyc.pan_url);
+
+// Bank counts as "submitted" only once every required bank + nominee field
+// (including bank proof and nominee Aadhaar front/back) is actually filled.
 export const hasBankSubmission = (bankDetails = {}, nomineeDetails = {}) => {
-  const submittedFields = [
+  const requiredFields = [
     bankDetails.bank_name,
     bankDetails.bank_account,
-    bankDetails.account_number,
     bankDetails.ifsc,
     bankDetails.bank_proof,
-    bankDetails.proof_document,
     nomineeDetails.nominee_name,
     nomineeDetails.nominee_relation,
     nomineeDetails.nominee_aadhar,
@@ -63,8 +74,17 @@ export const hasBankSubmission = (bankDetails = {}, nomineeDetails = {}) => {
     nomineeDetails.nominee_aadhar_front,
     nomineeDetails.nominee_aadhar_back,
   ];
+  return requiredFields.every(isFilled);
+};
 
-  return submittedFields.some((value) => String(value || "").trim() !== "");
+// Combines "is it actually submitted" with the backend status. If not
+// submitted, it's "not_submitted" no matter what status says. If submitted
+// but status is missing/unrecognized, default to "pending" (never
+// "not_submitted") since the user did upload something.
+export const deriveSectionStatus = (isSubmitted, rawStatus) => {
+  if (!isSubmitted) return "not_submitted";
+  const normalized = normalizeStatus(rawStatus);
+  return normalized === "not_submitted" ? "pending" : normalized;
 };
 
 export const formatDocType = (value) => {
@@ -89,10 +109,8 @@ export const maskAccount = (value) => {
   return `${"•".repeat(str.length - 4)}${str.slice(-4)}`;
 };
 
-// Builds the full PUT /auth/profile payload from the shared profileData
-// state, with optional field overrides (e.g. aadhar_no, pan) merged in.
-// Centralized here so EditInfoTab and KycTab never drift out of sync with
-// the backend schema.
+// Builds the full PUT /auth/profile payload from the shared profileData state.
+// The backend contract does not include profile image, Aadhaar, or PAN here.
 export const buildProfilePayload = (profileData, overrides = {}) => {
   const [firstName, ...rest] = (profileData.fullName || "").trim().split(" ");
   const lastName = rest.join(" ") || "";
@@ -107,8 +125,6 @@ export const buildProfilePayload = (profileData, overrides = {}) => {
     zip_code: profileData.zipCode,
     mobile: profileData.mobile,
     gender: profileData.gender,
-    aadhar_no: profileData.aadharNo || "",
-    pan: profileData.pan || "",
     ...overrides,
   };
 };
