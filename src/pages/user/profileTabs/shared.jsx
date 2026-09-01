@@ -73,7 +73,16 @@ export const hasBankSubmission = (bankDetails = {}, nomineeDetails = {}) => {
 };
 
 export const hasNomineeSubmission = (nomineeDetails = {}) => {
-  const requiredFields = [
+  const coreFields = [
+    nomineeDetails.nominee_name,
+    nomineeDetails.nominee_aadhar,
+    nomineeDetails.nominee_aadhar_front,
+    nomineeDetails.nominee_aadhar_back,
+  ];
+
+  if (coreFields.every(isFilled)) return true;
+
+  const fullFields = [
     nomineeDetails.nominee_name,
     nomineeDetails.nominee_relation,
     nomineeDetails.nominee_gender,
@@ -84,7 +93,8 @@ export const hasNomineeSubmission = (nomineeDetails = {}) => {
     nomineeDetails.nominee_aadhar_front,
     nomineeDetails.nominee_aadhar_back,
   ];
-  return requiredFields.every(isFilled);
+
+  return fullFields.every(isFilled);
 };
 
 // Combines "is it actually submitted" with the backend status. If not

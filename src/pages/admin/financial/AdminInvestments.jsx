@@ -62,8 +62,8 @@ function AdminInvestments() {
   const [rejectionReason, setRejectionReason] = useState("");
   const [approvingReturnId, setApprovingReturnId] = useState(null);
 
-  const [startDate, setStartDate] = useState("2026-08-01");
-  const [endDate, setEndDate] = useState("2026-08-31");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [usernameFilter, setUsernameFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
 
@@ -74,19 +74,29 @@ function AdminInvestments() {
   const [returnModalId, setReturnModalId] = useState(null);
   const [remarks, setRemarks] = useState("");
 
+  const sortByLatestApprovedDate = (items = []) => {
+    return [...items].sort((a, b) => {
+      const dateA = new Date(a.approval_status_updated_at || a.investment_date || a.date || a.created_at || 0).getTime();
+      const dateB = new Date(b.approval_status_updated_at || b.investment_date || b.date || b.created_at || 0).getTime();
+      return dateB - dateA;
+    });
+  };
+
   const filterInvestments = (items, filterValues = {}) => {
     const activeUserFilter = filterValues.usernameFilter ?? usernameFilter;
     const activeStartDate = filterValues.startDate ?? startDate;
     const activeEndDate = filterValues.endDate ?? endDate;
     const userSearch = activeUserFilter.trim().toLowerCase();
-    return items.filter((item) => {
+    return sortByLatestApprovedDate(items.filter((item) => {
       const itemUserId = String(item.user_id ?? item.userId ?? "").toLowerCase();
-      const itemDate = String(item.approval_status_updated_at ?? item.investment_date ?? item.date ?? item.created_at ?? "").slice(0, 10);
+      const itemDate = String(
+        item.investment_date ?? item.approval_status_updated_at ?? item.date ?? item.created_at ?? ""
+      ).slice(0, 10);
       const matchesUser = !userSearch || itemUserId.includes(userSearch);
       const matchesStartDate = !activeStartDate || itemDate >= activeStartDate;
       const matchesEndDate = !activeEndDate || itemDate <= activeEndDate;
       return matchesUser && matchesStartDate && matchesEndDate;
-    });
+    }));
   };
 
   const loadTabData = async (filterValues = {}) => {
