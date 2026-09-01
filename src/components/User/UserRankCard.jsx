@@ -13,7 +13,7 @@ function UserRankCard({ user }) {
   const nextRank = user?.nextRank || "FX Legend";
   const totalLots = user?.totalLots || 1;
   const referralLink =
-    user?.referralLink || `https://app.aurumfx.net/auth/register?ref=${userId}`;
+    user?.referralLink || `http://localhost:5173/user/register?ref=${userId}`;
 
   const handleCopy = () => {
     if (navigator.clipboard?.writeText) {

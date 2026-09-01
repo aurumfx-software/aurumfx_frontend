@@ -50,6 +50,16 @@ const Register = () => {
   const enrollerTimer = useRef(null);
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const refId = params.get("ref") || params.get("enroller_id") || "";
+
+    if (refId) {
+      setFormData((prev) => ({ ...prev, enroller_id: refId }));
+      setTimeout(() => {
+        verifyEnroller(refId.trim());
+      }, 200);
+    }
+
     return () => {
       if (enrollerTimer.current) clearTimeout(enrollerTimer.current);
     };
