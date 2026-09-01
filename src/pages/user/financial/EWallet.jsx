@@ -81,6 +81,12 @@ function EWallet() {
       })
     : transactions;
 
+  const getFromUserLabel = (tx) => {
+    const userId = tx.from_user?.user_id || tx.from_user_id || tx.user_id || "-";
+    const userName = tx.from_user?.name || tx.from_user?.fullname || tx.user_name || "";
+    return userName ? `${userId} (${userName})` : userId;
+  };
+
   return (
     <UserLayout user={{ name: userName, userId }}>
       <div className="ewallet-page">
@@ -201,6 +207,7 @@ function EWallet() {
                 <tr>
                   <th>No</th>
                   <th>Date</th>
+                  <th>From User</th>
                   <th>Amount</th>
                   <th>Transaction Type</th>
                   <th>Status</th>
@@ -209,19 +216,19 @@ function EWallet() {
               <tbody>
                 {txLoading ? (
                   <tr>
-                    <td colSpan="5" className="empty-cell">
+                    <td colSpan="6" className="empty-cell">
                       Loading...
                     </td>
                   </tr>
                 ) : txError ? (
                   <tr>
-                    <td colSpan="5" className="empty-cell">
+                    <td colSpan="6" className="empty-cell">
                       {txError}
                     </td>
                   </tr>
                 ) : filteredTransactions.length === 0 ? (
                   <tr>
-                    <td colSpan="5" className="empty-cell">
+                    <td colSpan="6" className="empty-cell">
                       {activeSearch
                         ? `No users found for “${searchInput.trim()}”.`
                         : "No wallet transactions found."}
@@ -244,6 +251,7 @@ function EWallet() {
                       >
                         <td data-label="No">{idx + 1}</td>
                         <td data-label="Date">{formatDate(tx.date || tx.created_at || tx.transaction_date)}</td>
+                        <td data-label="From User">{getFromUserLabel(tx)}</td>
                         <td className="cell-amount" data-label="Amount">{money(tx.amount)}</td>
                         <td data-label="Transaction Type">{tx.transaction_type || "-"}</td>
                         <td data-label="Status">
