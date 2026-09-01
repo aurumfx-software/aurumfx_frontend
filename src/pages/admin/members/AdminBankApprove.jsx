@@ -26,8 +26,6 @@ const nomineeDetailFields = [
 const pendingDetailFields = [
   ["Bank Name", "bank_name"], ["Account Number", "bank_account"], ["IFSC Code", "ifsc"], ["Status", "status"], ["Rejection Reason", "rejection_reason"],
 ];
-const rankOptions = ["No Rank", "Investor", "Associate", "Manager"];
-
 const isNoDataMessage = (message = "") => {
   const value = String(message || "").trim().toLowerCase();
   return /^(no\s+)?(bank\s+details|records|data|members|results)\s+found\.?$/.test(value)
@@ -95,7 +93,6 @@ function AdminBankApprove() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [filterUserId, setFilterUserId] = useState("");
-  const [rank, setRank] = useState("");
 
   const loadPendingMembers = async () => {
     const result = await getPendingAdminMembersBankDetailsApi();
@@ -141,13 +138,11 @@ function AdminBankApprove() {
   const filteredMembers = useMemo(() => currentMembers.filter((member) => {
     const bank = member.bank_details || {};
     const memberDate = member.date_of_joining || member.date_of_join || member.created_at || "";
-    const memberRank = member.rank || member.rank_name || "";
     return (!filterUserId || String(member.user_id || "").toLowerCase().includes(filterUserId.toLowerCase()))
-      && (!rank || memberRank === rank)
       && (!startDate || !memberDate || String(memberDate).slice(0, 10) >= startDate)
       && (!endDate || !memberDate || String(memberDate).slice(0, 10) <= endDate)
       && (activeTab === "pending" ? String(bank.status || "PENDING").toUpperCase() === "PENDING" : true);
-  }), [currentMembers, filterUserId, rank, startDate, endDate, activeTab]);
+  }), [currentMembers, filterUserId, startDate, endDate, activeTab]);
 
   const shouldShowEmptyState = !loading && !error && filteredMembers.length === 0;
   const displayError = error && !isNoDataMessage(error) ? error : "";
@@ -238,7 +233,7 @@ function AdminBankApprove() {
 
         <div className="bank-tab-strip">
           <button type="button" className={`bank-tab-btn ${activeTab === "pending" ? "active" : ""}`} onClick={() => setActiveTab("pending")}>Pending Bank Details</button>
-          <button type="button" className={`bank-tab-btn ${activeTab === "history" ? "active" : ""}`} onClick={() => setActiveTab("history")}>Bank Details History</button>
+          <button type="button" className={`bank-tab-btn ${activeTab === "history" ? "active" : ""}`} onClick={() => setActiveTab("history")}>Nominee & Bank Details History</button>
         </div>
 
         <form className="bank-filters-card" onSubmit={handleReport}>
@@ -246,13 +241,12 @@ function AdminBankApprove() {
             <div className="filter-input-wrap"><input type="date" value={startDate} onChange={(event) => setStartDate(event.target.value)} className="filter-date-field" aria-label="Start date" /></div>
             <div className="filter-input-wrap"><input type="date" value={endDate} onChange={(event) => setEndDate(event.target.value)} className="filter-date-field" aria-label="End date" /></div>
             <div className="filter-select-wrap"><select value={filterUserId} onChange={(event) => setFilterUserId(event.target.value)} className="filter-select-field" aria-label="Select member"><option value="">All members</option>{currentMembers.map((member) => <option key={member.user_id} value={member.user_id}>{member.user_id} - {member.fullname}</option>)}</select></div>
-            <div className="filter-select-wrap"><select value={rank} onChange={(event) => setRank(event.target.value)} className="filter-select-field" aria-label="Filter by rank"><option value="">All ranks</option>{rankOptions.map((option) => <option key={option} value={option}>{option}</option>)}</select></div>
             <button type="submit" className="yellow-report-btn">Get Report</button>
           </div>
         </form>
 
         <section className="bank-details-card admin-bank-list-card">
-          <div className="admin-bank-list-heading"><div><h2>{activeTab === "pending" ? "Pending Requests" : "Bank Details History"}</h2><p>{activeTab === "pending" ? "Review bank proofs awaiting approval." : "View previously verified bank details."}</p></div><span>{filteredMembers.length} {activeTab === "pending" ? "pending" : "records"}</span></div>
+          <div className="admin-bank-list-heading"><div><h2>{activeTab === "pending" ? "Pending Requests" : "Nominee & Bank Details History"}</h2><p>{activeTab === "pending" ? "Review bank proofs awaiting approval." : "View previously verified nominee and bank details."}</p></div><span>{filteredMembers.length} {activeTab === "pending" ? "pending" : "records"}</span></div>
           <div className="admin-bank-list-table-wrap">
             <table className="admin-bank-list-table">
               <thead>
