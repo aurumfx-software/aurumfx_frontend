@@ -149,6 +149,7 @@ function UserSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse, user }) {
   const userName = suppliedName && suppliedName.toUpperCase() !== userId.toUpperCase()
     ? suppliedName
     : "Your Profile";
+  const avatarUrl = typeof user?.avatar === "string" ? user.avatar.trim() : "";
 
   return (
     <>
@@ -183,10 +184,10 @@ function UserSidebar({ isOpen, isCollapsed, onClose, onToggleCollapse, user }) {
         {/* User Card */}
         <div className="user-sidebar-profile">
           <div className="profile-avatar">
-            {user?.avatar ? (
-              <img src={user.avatar} alt={userName} />
+            {avatarUrl ? (
+              <img src={avatarUrl} alt={userName} />
             ) : (
-              <div className="avatar-placeholder">{String(userName || "P").charAt(0)}</div>
+              <div className="avatar-placeholder">{String(userName || "P").charAt(0).toUpperCase()}</div>
             )}
           </div>
           {!isCollapsed && (

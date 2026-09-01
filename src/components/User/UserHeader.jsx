@@ -48,6 +48,7 @@ function UserHeader({ onMenuToggle, user }) {
 
   const userName = user?.name || user?.fullName || "PRAVEEN";
   const userId = user?.userId || localStorage.getItem("userId") || "FX259";
+  const avatarUrl = typeof user?.avatar === "string" ? user.avatar.trim() : "";
   const hasAdminSession = Boolean(sessionStorage.getItem("adminImpersonationSession"));
 
   const [notifications, setNotifications] = useState([]);
@@ -301,10 +302,10 @@ function UserHeader({ onMenuToggle, user }) {
             aria-label="User menu"
             aria-expanded={dropdownOpen}
           >
-            {user?.avatar ? (
-              <img src={user.avatar} alt={userName} />
+            {avatarUrl ? (
+              <img src={avatarUrl} alt={userName} />
             ) : (
-              <span>{String(userName || "P").charAt(0)}</span>
+              <span>{String(userName || "P").charAt(0).toUpperCase()}</span>
             )}
           </button>
 

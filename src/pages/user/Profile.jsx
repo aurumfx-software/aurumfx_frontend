@@ -402,9 +402,18 @@ function Profile({ defaultTab = "profile" }) {
     let active = true;
 
     getProfileImageApi().then((res) => {
-      if (active && res.success && res.data) {
-        setProfileData((prev) => ({ ...prev, avatar: res.data }));
+      if (!active) return;
+
+      const avatarUrl = typeof res?.data === "string" ? res.data.trim() : "";
+
+      if (res.success && avatarUrl) {
+        setProfileData((prev) => ({ ...prev, avatar: avatarUrl }));
+        localStorage.setItem("userProfileImage", avatarUrl);
+        return;
       }
+
+      setProfileData((prev) => ({ ...prev, avatar: "" }));
+      localStorage.removeItem("userProfileImage");
     });
 
     return () => {
@@ -430,7 +439,7 @@ function Profile({ defaultTab = "profile" }) {
                 {profileData.avatar ? (
                   <img src={profileData.avatar} alt={profileData.userName} />
                 ) : (
-                  <span>{profileData.userName.charAt(0)}</span>
+                  <span>{String(profileData.userName || "U").charAt(0).toUpperCase()}</span>
                 )}
               </div>
               <label

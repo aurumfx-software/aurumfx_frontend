@@ -8,7 +8,7 @@ function UserLayout({ children, user }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [profileImage, setProfileImage] = useState(
-    user?.avatar || localStorage.getItem("userProfileImage") || ""
+    user?.avatar && String(user.avatar).trim() ? String(user.avatar).trim() : ""
   );
   const [profileName, setProfileName] = useState(
     user?.fullName || localStorage.getItem("userFullName") || ""
@@ -17,19 +17,28 @@ function UserLayout({ children, user }) {
   useEffect(() => {
     let active = true;
 
-    if (user?.avatar) {
-      setProfileImage(user.avatar);
-      localStorage.setItem("userProfileImage", user.avatar);
+    const nextAvatar = typeof user?.avatar === "string" ? user.avatar.trim() : "";
+    if (nextAvatar) {
+      setProfileImage(nextAvatar);
+      localStorage.setItem("userProfileImage", nextAvatar);
       return () => {
         active = false;
       };
     }
 
     getProfileImageApi().then((result) => {
-      if (active && result.success && result.data) {
-        setProfileImage(result.data);
-        localStorage.setItem("userProfileImage", result.data);
+      if (!active) return;
+
+      const avatarUrl = typeof result?.data === "string" ? result.data.trim() : "";
+
+      if (result.success && avatarUrl) {
+        setProfileImage(avatarUrl);
+        localStorage.setItem("userProfileImage", avatarUrl);
+        return;
       }
+
+      setProfileImage("");
+      localStorage.removeItem("userProfileImage");
     });
 
     return () => {
