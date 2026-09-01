@@ -11,6 +11,7 @@ import PlanInvestments from "./pages/admin/financial/PlanInvestments";
 import TypeInvestments from "./pages/admin/financial/TypeInvestments";
 import AdminLotSettings from "./pages/admin/financial/AdminLotSettings";
 import AdminPayout from "./pages/admin/financial/AdminPayout";
+import MonthlyReturnPage from "./pages/admin/financial/MonthlyReturnPage";
 import AdminWallet from "./pages/admin/wallet/AdminWallet";
 import AdminNetworkMembers from "./pages/admin/members/AdminNetworkMembers";
 import AdminBankApprove from "./pages/admin/members/AdminBankApprove";
@@ -141,6 +142,14 @@ function App() {
           element={
             <ProtectedRoute requiredRole="user">
               <Profile defaultTab="bank" />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/account/nominee-details"
+          element={
+            <ProtectedRoute requiredRole="user">
+              <Profile defaultTab="nominee" />
             </ProtectedRoute>
           }
         />
@@ -376,6 +385,14 @@ function App() {
           element={
             <ProtectedRoute requiredRole="admin">
               <AdminLotSettings />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/financial/monthly-return"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <MonthlyReturnPage />
             </ProtectedRoute>
           }
         />

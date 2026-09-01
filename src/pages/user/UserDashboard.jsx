@@ -20,11 +20,12 @@ import {
 import UserLayout from "../../components/User/UserLayout";
 import UserRankCard from "../../components/User/UserRankCard";
 import { getUserDashboardData } from "../../api/dashboard";
-import { getMyKycApi, getProfileBankDetailsApi } from "../../api/auth";
+import { getMyKycApi, getProfileBankDetailsApi, getProfileNomineeDetailsApi } from "../../api/auth";
 import { getMyInvestmentsApi } from "../../api/investments";
 import {
   hasBankSubmission,
   hasKycSubmission,
+  hasNomineeSubmission,
   deriveSectionStatus,
 } from "./profileTabs/shared";
 import "./UserDashboard.css";
@@ -144,7 +145,11 @@ function UserDashboard() {
   useEffect(() => {
     let isMounted = true;
 
-    Promise.all([getMyKycApi(), getProfileBankDetailsApi()]).then(([kycRes, bankRes]) => {
+    Promise.all([
+      getMyKycApi(),
+      getProfileBankDetailsApi(),
+      getProfileNomineeDetailsApi(),
+    ]).then(([kycRes, bankRes, nomineeRes]) => {
       if (!isMounted) return;
 
       const kyc = kycRes.success ? (kycRes.data?.data || kycRes.data || {}) : {};
@@ -153,18 +158,31 @@ function UserDashboard() {
 
       const bankPayload = bankRes.success ? (bankRes.data?.data || bankRes.data || {}) : {};
       const bankDetails = bankPayload.bank_details || {};
-      const nomineeDetails = bankPayload.nominee_details || {};
-      const bankSubmitted = hasBankSubmission(bankDetails, nomineeDetails);
+      const bankNomineeDetails = bankPayload.nominee_details || {};
+      const bankSubmitted = hasBankSubmission(bankDetails, bankNomineeDetails);
       const bankStatus = deriveSectionStatus(bankSubmitted, bankDetails.status);
 
+      const nomineePayload = nomineeRes.success ? (nomineeRes.data?.data || nomineeRes.data || {}) : {};
+      const nomineeDetails = nomineePayload.nominee_details || nomineePayload.nomineeData || nomineePayload || bankNomineeDetails || {};
+      const nomineeSubmitted = hasNomineeSubmission(nomineeDetails);
+      const nomineeStatus = nomineeSubmitted ? deriveSectionStatus(true, nomineeDetails.status) : "not_submitted";
+
       // Popup only for genuinely missing or rejected submissions.
-      // "pending" (submitted, awaiting review) never triggers the popup.
+      // If a user already submitted bank details and the nominee is just pending,
+      // we do not show the reminder. Only show the nominee reminder when it is
+      // actually not submitted after the bank step is already complete.
       const prompts = [];
       if (kycStatus === "not_submitted") prompts.push({ type: "kyc", status: "missing" });
       else if (kycStatus === "rejected") prompts.push({ type: "kyc", status: "rejected" });
 
       if (bankStatus === "not_submitted") prompts.push({ type: "bank", status: "missing" });
       else if (bankStatus === "rejected") prompts.push({ type: "bank", status: "rejected" });
+
+      if (bankStatus !== "not_submitted" && nomineeStatus === "not_submitted") {
+        prompts.push({ type: "nominee", status: "missing" });
+      } else if (bankStatus !== "not_submitted" && nomineeStatus === "rejected") {
+        prompts.push({ type: "nominee", status: "rejected" });
+      }
 
       setVerificationPrompt(prompts.length ? prompts : null);
     });
@@ -683,7 +701,19 @@ function UserDashboard() {
                     </span>
                     <span className="udb-verification-action-text">
                       <strong>{verificationPrompt.find((item) => item.type === "bank")?.status === "rejected" ? "Bank details rejected - submit again" : "Submit bank details"}</strong>
-                      <small>Bank and nominee information</small>
+                      <small>Bank account information</small>
+                    </span>
+                    <span className="udb-verification-action-arrow" aria-hidden="true">→</span>
+                  </button>
+                )}
+                {verificationPrompt.some((item) => item.type === "nominee") && (
+                  <button type="button" className="udb-verification-action" onClick={() => navigate("/user/account/nominee-details")}>
+                    <span className="udb-verification-action-icon">
+                      <FiUsers />
+                    </span>
+                    <span className="udb-verification-action-text">
+                      <strong>{verificationPrompt.find((item) => item.type === "nominee")?.status === "rejected" ? "Nominee details rejected - submit again" : "Submit nominee details"}</strong>
+                      <small>Nominee information required</small>
                     </span>
                     <span className="udb-verification-action-arrow" aria-hidden="true">→</span>
                   </button>

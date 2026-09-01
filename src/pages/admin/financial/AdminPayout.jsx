@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { FiRefreshCw, FiX } from "react-icons/fi";
+import { FiPrinter, FiRefreshCw, FiX } from "react-icons/fi";
 import AdminLayout from "../../../components/Admin/AdminLayout";
 import {
   getPendingPayoutsApi,
   getPaidPayoutsApi,
   getPayoutHistoryApi,
   payUserPayoutApi,
+  printPendingPayoutsApi,
   rejectUserPayoutApi,
 } from "../../../api/admin-payout";
 import "../reports/AdminReports.css";
@@ -28,6 +29,7 @@ function AdminPayout() {
   const [rows, setRows] = useState([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [printing, setPrinting] = useState(false);
   const [error, setError] = useState("");
   const [payingUserId, setPayingUserId] = useState(null);
   const [rejectingUserId, setRejectingUserId] = useState(null);
@@ -68,6 +70,26 @@ function AdminPayout() {
     loadPayouts();
   };
 
+  const handlePrintPending = async () => {
+    setPrinting(true);
+    setError("");
+    const result = await printPendingPayoutsApi();
+    if (result.success) {
+      const printWindow = window.open("", "_blank");
+      if (printWindow) {
+        printWindow.document.open();
+        printWindow.document.write(result.data);
+        printWindow.document.close();
+        printWindow.focus();
+      } else {
+        setError("Allow pop-ups to print the pending payout report.");
+      }
+    } else {
+      setError(result.error || "Unable to print pending payout report.");
+    }
+    setPrinting(false);
+  };
+
   const handlePayUser = async (userId) => {
     if (!window.confirm("Pay all pending income for this user?")) return;
     setPayingUserId(userId);
@@ -103,7 +125,7 @@ function AdminPayout() {
     : rows;
   const visibleRows = filteredRows.slice((page - 1) * pageSize, page * pageSize);
   const totalPages = Math.ceil(filteredRows.length / pageSize) || 1;
-  const columnCount = activeTab === "pending" ? 11 : activeTab === "paid" || activeTab === "history" ? 18 : 13;
+  const columnCount = activeTab === "pending" ? 8 : activeTab === "paid" || activeTab === "history" ? 18 : 13;
 
   return (
     <AdminLayout>
@@ -136,11 +158,16 @@ function AdminPayout() {
           <input className="reports-user-select" placeholder="Search User ID" value={searchUser} onChange={(event) => setSearchUser(event.target.value)} />
           <button type="submit" className="reports-search-btn">Search</button>
           <button type="button" className="reports-reset-btn" onClick={handleReset}>Reset <FiRefreshCw size={13} /></button>
+          {activeTab === "pending" && (
+            <button type="button" className="reports-search-btn" onClick={handlePrintPending} disabled={printing}>
+              <FiPrinter size={13} /> {printing ? "Preparing..." : "Print"}
+            </button>
+          )}
           <div className="reports-total-badge"><div className="reports-total-amount" style={{ color: "#16a34a" }}>{total}</div><div className="reports-total-label">{activeTab === "pending" ? "Pending Users" : activeTab === "paid" ? "Paid Users" : "History Records"}</div></div>
         </form>
 
-        <div className="reports-table-card"><div className="ft-table-wrapper"><table className="reports-table"><thead><tr>{activeTab === "paid" || activeTab === "history" ? <><th>No</th><th>User ID</th><th>User Name</th><th>Referral Income</th><th>Level Income</th><th>Rank Income</th><th>Total Income</th><th>Admin Fee %</th><th>Admin Fee</th><th>Net Payable</th><th>Bank Details</th><th>Bank Status</th><th>Payout Method</th><th>Payout Information</th><th>Status</th><th>Paid At</th><th>Created At</th></> : <><th>No</th><th>User ID</th><th>User Name</th><th>Referral Income</th><th>Level Income</th><th>Rank Income</th><th>Gross Income</th><th>Admin Fee</th><th>Net Payable</th><th>Bank Details</th>{activeTab === "pending" && <th>Action</th>}</>}</tr></thead><tbody>
-          {loading ? <tr><td colSpan={columnCount}>Loading {activeTab} payouts...</td></tr> : error ? <tr><td colSpan={columnCount}>{error}</td></tr> : visibleRows.length > 0 ? visibleRows.map((row, index) => { const bankDetails = getBankDetails(row); return activeTab === "paid" || activeTab === "history" ? <tr key={row.payout_history_id || getUserId(row)}><td>{(page - 1) * pageSize + index + 1}</td><td>{row.user_code || "-"}</td><td>{row.user_name || "-"}</td><td>{money(row.referral_income)}</td><td>{money(row.level_income)}</td><td>{money(row.rank_income)}</td><td>{money(row.total_income)}</td><td>{row.admin_fee_percentage != null ? `${row.admin_fee_percentage}%` : "-"}</td><td>{money(row.admin_fee)}</td><td>{money(row.net_payable)}</td><td>{bankDetails.bank_name || "-"}<br />Account: {bankDetails.bank_account || "-"}<br />IFSC: {bankDetails.ifsc || "-"}</td><td>{bankDetails.status || "-"}</td><td>{row.payout_method || "-"}</td><td>{row.payout_information || "-"}</td><td><span className="payout-status-paid">{row.status || "-"}</span></td><td>{formatDate(row.paid_at)}</td><td>{formatDate(row.created_at)}</td></tr> : <tr key={getUserId(row)}><td>{(page - 1) * pageSize + index + 1}</td><td>{row.user_code ?? row.userCode ?? "-"}</td><td>{getUserName(row)}</td><td>{money(getIncome(row, "referral_income"))}</td><td>{money(getIncome(row, "level_income"))}</td><td>{money(getIncome(row, "rank_income"))}</td><td>{money(getGrossIncome(row))}</td><td>{money(getAdminFee(row))}</td><td>{money(getNetPayable(row))}</td><td>{bankDetails.bank_name || "-"}<br />Account: {bankDetails.bank_account || "-"}<br />IFSC: {bankDetails.ifsc || "-"}</td>{activeTab === "pending" && <td><div className="payout-action-buttons"><button type="button" className="reports-search-btn" disabled={payingUserId === getUserId(row)} onClick={() => handlePayUser(getUserId(row))}>{payingUserId === getUserId(row) ? "Paying..." : "Pay User"}</button><button type="button" className="payout-reject-btn" disabled={payingUserId === getUserId(row)} onClick={() => handleRejectUser(getUserId(row))}>Reject</button></div></td>}</tr>; }) : <tr><td colSpan={columnCount} className="reports-empty-cell">No {activeTab} payout records found.</td></tr>}
+        <div className="reports-table-card"><div className="ft-table-wrapper"><table className="reports-table"><thead><tr>{activeTab === "paid" || activeTab === "history" ? <><th>No</th><th>User ID</th><th>User Name</th><th>Referral Income</th><th>Level Income</th><th>Rank Income</th><th>Total Income</th><th>Admin Fee %</th><th>Admin Fee</th><th>Net Payable</th><th>Bank Details</th><th>Bank Status</th><th>Payout Method</th><th>Payout Information</th><th>Status</th><th>Paid At</th><th>Created At</th></> : <><th>No</th><th>User ID</th><th>User Name</th><th>Gross Income</th><th>Admin Fee</th><th>Net Payable</th><th>Bank Details</th>{activeTab === "pending" && <th>Action</th>}</>}</tr></thead><tbody>
+          {loading ? <tr><td colSpan={columnCount}>Loading {activeTab} payouts...</td></tr> : error ? <tr><td colSpan={columnCount}>{error}</td></tr> : visibleRows.length > 0 ? visibleRows.map((row, index) => { const bankDetails = getBankDetails(row); return activeTab === "paid" || activeTab === "history" ? <tr key={row.payout_history_id || getUserId(row)}><td>{(page - 1) * pageSize + index + 1}</td><td>{row.user_code || "-"}</td><td>{row.user_name || "-"}</td><td>{money(row.referral_income)}</td><td>{money(row.level_income)}</td><td>{money(row.rank_income)}</td><td>{money(row.total_income)}</td><td>{row.admin_fee_percentage != null ? `${row.admin_fee_percentage}%` : "-"}</td><td>{money(row.admin_fee)}</td><td>{money(row.net_payable)}</td><td>{bankDetails.bank_name || "-"}<br />Account: {bankDetails.bank_account || "-"}<br />IFSC: {bankDetails.ifsc || "-"}</td><td>{bankDetails.status || "-"}</td><td>{row.payout_method || "-"}</td><td>{row.payout_information || "-"}</td><td><span className="payout-status-paid">{row.status || "-"}</span></td><td>{formatDate(row.paid_at)}</td><td>{formatDate(row.created_at)}</td></tr> : <tr key={getUserId(row)}><td>{(page - 1) * pageSize + index + 1}</td><td>{row.user_code ?? row.userCode ?? "-"}</td><td>{getUserName(row)}</td><td>{money(getGrossIncome(row))}</td><td>{money(getAdminFee(row))}</td><td>{money(getNetPayable(row))}</td><td>{bankDetails.bank_name || "-"}<br />Account: {bankDetails.bank_account || "-"}<br />IFSC: {bankDetails.ifsc || "-"}</td>{activeTab === "pending" && <td><div className="payout-action-buttons"><button type="button" className="reports-search-btn" disabled={payingUserId === getUserId(row)} onClick={() => handlePayUser(getUserId(row))}>{payingUserId === getUserId(row) ? "Paying..." : "Pay User"}</button><button type="button" className="payout-reject-btn" disabled={payingUserId === getUserId(row)} onClick={() => handleRejectUser(getUserId(row))}>Reject</button></div></td>}</tr>; }) : <tr><td colSpan={columnCount} className="reports-empty-cell">No {activeTab} payout records found.</td></tr>}
         </tbody></table></div><div className="reports-pagination"><button className="reports-page-btn" disabled={page === 1} onClick={() => setPage((current) => current - 1)}>‹</button>{Array.from({ length: totalPages }, (_, index) => <button key={index + 1} className={`reports-page-btn ${page === index + 1 ? "reports-page-btn--active" : ""}`} onClick={() => setPage(index + 1)}>{index + 1}</button>)}<button className="reports-page-btn" disabled={page === totalPages} onClick={() => setPage((current) => current + 1)}>›</button></div></div>
       </div>
       {rejectingUserId && <div className="payout-modal-backdrop" onClick={() => setRejectingUserId(null)}><div className="payout-modal-container" onClick={(event) => event.stopPropagation()}><div className="payout-modal-header"><h3>Reject Payout</h3><button type="button" className="payout-modal-close" onClick={() => setRejectingUserId(null)} aria-label="Close rejection dialog"><FiX size={18} /></button></div><div className="payout-modal-body"><label className="payout-modal-label" htmlFor="payout-rejection-reason">Rejection reason</label><textarea id="payout-rejection-reason" value={rejectionReason} onChange={(event) => setRejectionReason(event.target.value)} rows={4} className="payout-modal-input" placeholder="Enter the reason for rejecting this payout" /><div className="payout-modal-actions"><button type="button" className="payout-cancel-btn" onClick={() => setRejectingUserId(null)}>Cancel</button><button type="button" className="payout-confirm-reject-btn" onClick={submitReject} disabled={payingUserId === rejectingUserId || !rejectionReason.trim()}>{payingUserId === rejectingUserId ? "Rejecting..." : "Confirm Reject"}</button></div></div></div></div>}

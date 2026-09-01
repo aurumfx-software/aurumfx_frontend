@@ -6,7 +6,18 @@ const getErrorMessage = (error, fallback) =>
   error.response?.data?.detail?.[0]?.msg ||
   fallback;
 
-/** GET /api/admin/members/{user_id}/kyc */
+/** GET /api/admin/members/kyc/pending */
+export const getPendingAdminMembersKycApi = async () => {
+  try {
+    const response = await api.get("/api/admin/members/kyc/pending");
+    const data = response.data?.data || response.data || [];
+    return { success: true, data: Array.isArray(data) ? data : [] };
+  } catch (error) {
+    return { success: false, error: getErrorMessage(error, "Unable to load pending KYC details.") };
+  }
+};
+
+/** GET /api/admin/members/kyc */
 export const getAllAdminMembersKycApi = async () => {
   try {
     const response = await api.get("/api/admin/members/kyc");

@@ -63,6 +63,11 @@ const navItems = [
         path: "/admin/financial/payout",
       },
       {
+        id: "monthly-return",
+        label: "Monthly Return",
+        path: "/admin/financial/monthly-return",
+      },
+      {
         id: "investments",
         label: "Investments",
         path: "/admin/financial/investments/request",

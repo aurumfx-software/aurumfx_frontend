@@ -5,16 +5,19 @@ import {
   updateProfileApi,
   updateProfileBankDetailsApi,
   getProfileBankDetailsApi,
+  updateProfileNomineeDetailsApi,
+  getProfileNomineeDetailsApi,
   changePasswordApi,
   uploadProfileImageApi,
   getProfileImageApi,
 } from "../../api/auth";
 import UserLayout from "../../components/User/UserLayout";
-import { NAV_ITEMS, hasBankSubmission, normalizeStatus } from "./profileTabs/shared";
+import { NAV_ITEMS, hasBankSubmission, hasNomineeSubmission, normalizeStatus } from "./profileTabs/shared";
 import OverviewTab from "./profileTabs/OverviewTab";
 import EditInfoTab from "./profileTabs/EditInfoTab";
 import SettingsTab from "./profileTabs/SettingsTab";
 import BankDetailsTab from "./profileTabs/BankDetailsTab";
+import NomineeDetailsTab from "./profileTabs/NomineeDetailsTab";
 import KycTab from "./profileTabs/KycTab";
 import "./Profile.css";
 
@@ -79,6 +82,22 @@ function Profile({ defaultTab = "profile" }) {
   const [bankSavingMsg, setBankSavingMsg] = useState("");
   const [bankError, setBankError] = useState("");
 
+  const [nomineeDetails, setNomineeDetails] = useState({
+    nominee_name: "",
+    nominee_relation: "",
+    nominee_relation_other: "",
+    nominee_gender: "",
+    nominee_dob: "",
+    nominee_address: "",
+    nominee_aadhar: "",
+    nominee_mobile: "",
+  });
+  const [nomineeStatus, setNomineeStatus] = useState("not_submitted");
+  const [nomineeRejectionReason, setNomineeRejectionReason] = useState("");
+  const [nomineeSaving, setNomineeSaving] = useState(false);
+  const [nomineeSavingMsg, setNomineeSavingMsg] = useState("");
+  const [nomineeError, setNomineeError] = useState("");
+
   const calculateAge = (dateString) => {
     if (!dateString) return null;
     const date = new Date(dateString);
@@ -127,53 +146,22 @@ function Profile({ defaultTab = "profile" }) {
     setBankSavingMsg("");
     setBankError("");
 
-    // Mandatory fields per backend schema.
     const missing = [];
     if (!bankDetails.bank_name) missing.push("Bank Name");
     if (!bankDetails.bank_account) missing.push("Account Number");
     if (!bankDetails.ifsc) missing.push("IFSC Code");
-    if (!bankDetails.nominee_name) missing.push("Nominee Name");
-    if (!bankDetails.nominee_relation) missing.push("Nominee Relation");
-    if (
-      bankDetails.nominee_relation === "Other" &&
-      !bankDetails.nominee_relation_other.trim()
-    ) {
-      missing.push("Please specify Nominee Relation");
-    }
-    if (!bankDetails.nominee_dob) missing.push("Nominee Date of Birth");
-    if (!bankDetails.nominee_aadhar) missing.push("Nominee Aadhaar");
-    if (!bankDetails.nominee_mobile) missing.push("Nominee Mobile");
     if (!proofDocument && !proofDocumentUrl) missing.push("Passbook Photo");
-    if (!nomineeAadharFront && !nomineeAadharFrontUrl) missing.push("Nominee Aadhaar Front Photo");
-    if (!nomineeAadharBack && !nomineeAadharBackUrl) missing.push("Nominee Aadhaar Back Photo");
 
     if (missing.length > 0) {
       setBankError(`Please fill required fields: ${missing.join(", ")}`);
       return;
     }
 
-    const nomineeAge = calculateAge(bankDetails.nominee_dob);
-    if (nomineeAge === null) {
-      setBankError("Please enter a valid Nominee Date of Birth.");
-      return;
-    }
-    if (nomineeAge < 18) {
-      setBankError("Nominee must be at least 18 years old.");
-      return;
-    }
-
     setBankSaving(true);
     const bankPayload = {
       ...bankDetails,
-      nominee_relation:
-        bankDetails.nominee_relation === "Other"
-          ? bankDetails.nominee_relation_other.trim()
-          : bankDetails.nominee_relation,
       proof_document: proofDocument,
-      nominee_aadhar_front: nomineeAadharFront,
-      nominee_aadhar_back: nomineeAadharBack,
     };
-    delete bankPayload.nominee_relation_other;
 
     const res = await updateProfileBankDetailsApi(bankPayload);
     setBankSaving(false);
@@ -181,19 +169,78 @@ function Profile({ defaultTab = "profile" }) {
     if (res.success) {
       setBankStatus("pending");
       setBankRejectionReason("");
-      setProofDocumentUrl("");
-      setNomineeAadharFrontUrl("");
-      setNomineeAadharBackUrl("");
+      setProofDocumentUrl(proofDocumentUrl || "");
       setBankError("");
       setBankSavingMsg("Bank details submitted for review!");
       setProofDocument(null);
-      setNomineeAadharFront(null);
-      setNomineeAadharBack(null);
       setProofDocumentName("");
       await loadBankDetails();
     } else {
       setBankError(res.error || "Failed to update bank details");
       setBankSavingMsg("");
+    }
+  };
+
+  const handleNomineeSubmit = async (e) => {
+    e.preventDefault();
+    setNomineeSavingMsg("");
+    setNomineeError("");
+
+    const missing = [];
+    if (!nomineeDetails.nominee_name) missing.push("Nominee Name");
+    if (!nomineeDetails.nominee_relation) missing.push("Nominee Relation");
+    if (!nomineeDetails.nominee_gender) missing.push("Nominee Gender");
+    if (!nomineeDetails.nominee_dob) missing.push("Nominee Date of Birth");
+    if (!nomineeDetails.nominee_address) missing.push("Nominee Address");
+    if (!nomineeDetails.nominee_aadhar) missing.push("Nominee Aadhaar");
+    if (!nomineeDetails.nominee_mobile) missing.push("Nominee Mobile");
+    if (!nomineeAadharFront && !nomineeAadharFrontUrl) missing.push("Aadhaar Front Photo");
+    if (!nomineeAadharBack && !nomineeAadharBackUrl) missing.push("Aadhaar Back Photo");
+
+    if (missing.length > 0) {
+      setNomineeError(`Please fill required fields: ${missing.join(", ")}`);
+      return;
+    }
+
+    const dob = nomineeDetails.nominee_dob;
+    if (dob) {
+      const nomineeAge = calculateAge(dob);
+      if (nomineeAge === null) {
+        setNomineeError("Please enter a valid Nominee Date of Birth.");
+        return;
+      }
+      if (nomineeAge < 18) {
+        setNomineeError("Nominee must be at least 18 years old.");
+        return;
+      }
+    }
+
+    setNomineeSaving(true);
+    const payload = {
+      ...nomineeDetails,
+      nominee_relation:
+        nomineeDetails.nominee_relation === "Other"
+          ? (nomineeDetails.nominee_relation_other || "").trim()
+          : nomineeDetails.nominee_relation,
+      nominee_aadhar_front: nomineeAadharFront,
+      nominee_aadhar_back: nomineeAadharBack,
+    };
+    delete payload.nominee_relation_other;
+
+    const res = await updateProfileNomineeDetailsApi(payload);
+    setNomineeSaving(false);
+
+    if (res.success) {
+      setNomineeStatus("pending");
+      setNomineeRejectionReason("");
+      setNomineeError("");
+      setNomineeSavingMsg("Nominee details submitted for review!");
+      setNomineeAadharFront(null);
+      setNomineeAadharBack(null);
+      await loadNomineeDetails();
+    } else {
+      setNomineeError(res.error || "Failed to update nominee details");
+      setNomineeSavingMsg("");
     }
   };
 
@@ -302,6 +349,27 @@ function Profile({ defaultTab = "profile" }) {
             bank_name: bd?.bank_name || "",
             bank_account: bd?.bank_account || bd?.account_number || "",
             ifsc: bd?.ifsc || "",
+            nominee_name: "",
+            nominee_relation: "",
+            nominee_relation_other: "",
+            nominee_gender: "",
+            nominee_dob: "",
+            nominee_address: "",
+            nominee_aadhar: "",
+            nominee_mobile: "",
+          });
+          setBankStatus(
+            hasBankSubmission(bd, nd)
+              ? normalizeStatus(bd?.bank_status || bd?.status)
+              : "not_submitted"
+          );
+          setBankRejectionReason(bd?.rejection_reason || "");
+          setProofDocumentName(bd?.proof_document_name || (bd?.bank_proof ? "Uploaded" : ""));
+          setProofDocumentUrl(bd?.bank_proof || bd?.proof_document || "");
+        }
+
+        if (Object.keys(nd).length > 0) {
+          setNomineeDetails({
             nominee_name: nd.nominee_name || "",
             nominee_relation: [
               "Mother",
@@ -314,7 +382,7 @@ function Profile({ defaultTab = "profile" }) {
               "Sister",
               "Friend",
               "Other",
-            ].includes(bd.nominee_relation)
+            ].includes(nd.nominee_relation)
               ? nd.nominee_relation || ""
               : nd.nominee_relation
                 ? "Other"
@@ -341,14 +409,8 @@ function Profile({ defaultTab = "profile" }) {
             nominee_aadhar: nd.nominee_aadhar || "",
             nominee_mobile: nd.nominee_mobile || "",
           });
-          setBankStatus(
-            hasBankSubmission(bd, nd)
-              ? normalizeStatus(bd?.bank_status || bd?.status)
-              : "not_submitted"
-          );
-          setBankRejectionReason(bd?.rejection_reason || "");
-          setProofDocumentName(bd?.proof_document_name || (bd?.bank_proof ? "Uploaded" : ""));
-          setProofDocumentUrl(bd?.bank_proof || bd?.proof_document || "");
+          setNomineeStatus(normalizeStatus(nd.status || "pending"));
+          setNomineeRejectionReason(nd.rejection_reason || "");
           setNomineeAadharFrontUrl(nd.nominee_aadhar_front || "");
           setNomineeAadharBackUrl(nd.nominee_aadhar_back || "");
         }
@@ -368,12 +430,37 @@ function Profile({ defaultTab = "profile" }) {
 
     const data = res.data?.data || res.data || {};
     const bd = data.bank_details || {};
-    const nd = data.nominee_details || {};
     setBankDetails((prev) => ({
       ...prev,
       bank_name: bd.bank_name || prev.bank_name,
       bank_account: bd.bank_account || prev.bank_account,
       ifsc: bd.ifsc || prev.ifsc,
+    }));
+    setBankStatus(
+      hasBankSubmission(bd, {})
+        ? normalizeStatus(bd.bank_status || bd.status)
+        : "not_submitted"
+    );
+    setBankRejectionReason(bd.rejection_reason || "");
+    setProofDocumentName(bd.bank_proof ? "Uploaded" : "");
+    setProofDocumentUrl(bd.bank_proof || "");
+  };
+
+  const loadNomineeDetails = async () => {
+    const res = await getProfileNomineeDetailsApi();
+    if (!res.success) {
+      setNomineeStatus("not_submitted");
+      setNomineeRejectionReason("");
+      setNomineeAadharFrontUrl("");
+      setNomineeAadharBackUrl("");
+      return;
+    }
+
+    const data = res.data?.data || res.data || {};
+    const nd = data.nominee_details || {};
+    const hasData = Object.keys(nd).length > 0;
+    setNomineeDetails((prev) => ({
+      ...prev,
       nominee_name: nd.nominee_name || prev.nominee_name,
       nominee_relation: nd.nominee_relation || prev.nominee_relation,
       nominee_gender: nd.nominee_gender || prev.nominee_gender,
@@ -382,20 +469,15 @@ function Profile({ defaultTab = "profile" }) {
       nominee_aadhar: nd.nominee_aadhar || prev.nominee_aadhar,
       nominee_mobile: nd.nominee_mobile || prev.nominee_mobile,
     }));
-    setBankStatus(
-      hasBankSubmission(bd, nd)
-        ? normalizeStatus(bd.bank_status || bd.status)
-        : "not_submitted"
-    );
-    setBankRejectionReason(bd.rejection_reason || "");
-    setProofDocumentName(bd.bank_proof ? "Uploaded" : "");
-    setProofDocumentUrl(bd.bank_proof || "");
+    setNomineeStatus(hasData ? (hasNomineeSubmission(nd) ? normalizeStatus(nd.status || "pending") : "pending") : "not_submitted");
+    setNomineeRejectionReason(nd.rejection_reason || "");
     setNomineeAadharFrontUrl(nd.nominee_aadhar_front || "");
     setNomineeAadharBackUrl(nd.nominee_aadhar_back || "");
   };
 
   useEffect(() => {
     loadBankDetails();
+    loadNomineeDetails();
   }, []);
 
   useEffect(() => {
@@ -576,6 +658,26 @@ function Profile({ defaultTab = "profile" }) {
                 bankError={bankError}
                 handleBankSubmit={handleBankSubmit}
                 onRefresh={loadBankDetails}
+              />
+            )}
+
+            {activeTab === "nominee" && (
+              <NomineeDetailsTab
+                nomineeDetails={nomineeDetails}
+                setNomineeDetails={setNomineeDetails}
+                nomineeStatus={nomineeStatus}
+                nomineeRejectionReason={nomineeRejectionReason}
+                nomineeAadharFront={nomineeAadharFront}
+                setNomineeAadharFront={setNomineeAadharFront}
+                nomineeAadharBack={nomineeAadharBack}
+                setNomineeAadharBack={setNomineeAadharBack}
+                nomineeAadharFrontUrl={nomineeAadharFrontUrl}
+                nomineeAadharBackUrl={nomineeAadharBackUrl}
+                saving={nomineeSaving}
+                savingMsg={nomineeSavingMsg}
+                error={nomineeError}
+                handleNomineeSubmit={handleNomineeSubmit}
+                onRefresh={loadNomineeDetails}
               />
             )}
 

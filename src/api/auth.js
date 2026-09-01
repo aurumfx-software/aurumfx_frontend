@@ -282,15 +282,8 @@ export const getProfileActivityHistoryApi = async () => {
 
 /**
  * Update user bank details via PUT /auth/profile/bank-details
- * multipart/form-data. Nominee name, aadhar and mobile are mandatory on the
- * backend, as is the passbook/proof document upload.
- *
- * payload: {
- *   bank_account, bank_name, ifsc,
- *   nominee_name, nominee_relation, nominee_gender, nominee_dob,
- *   nominee_address, nominee_aadhar, nominee_mobile,
- *   proof_document, nominee_aadhar_front, nominee_aadhar_back // File
- * }
+ * multipart/form-data. This endpoint handles only the bank account fields and
+ * passbook proof document; nominee data is managed separately.
  */
 export const updateProfileBankDetailsApi = async (payload) => {
   try {
@@ -298,21 +291,8 @@ export const updateProfileBankDetailsApi = async (payload) => {
     formData.append("bank_account", payload.bank_account || "");
     formData.append("bank_name", payload.bank_name || "");
     formData.append("ifsc", payload.ifsc || "");
-    formData.append("nominee_name", payload.nominee_name || "");
-    formData.append("nominee_relation", payload.nominee_relation || "");
-    formData.append("nominee_gender", payload.nominee_gender || "");
-    formData.append("nominee_dob", payload.nominee_dob || "");
-    formData.append("nominee_address", payload.nominee_address || "");
-    formData.append("nominee_aadhar", payload.nominee_aadhar || "");
-    formData.append("nominee_mobile", payload.nominee_mobile || "");
     if (payload.proof_document) {
       formData.append("proof_document", payload.proof_document);
-    }
-    if (payload.nominee_aadhar_front) {
-      formData.append("nominee_aadhar_front", payload.nominee_aadhar_front);
-    }
-    if (payload.nominee_aadhar_back) {
-      formData.append("nominee_aadhar_back", payload.nominee_aadhar_back);
     }
 
     const response = await api.put("/auth/profile/bank-details", formData, {
@@ -341,7 +321,7 @@ export const updateProfileBankDetailsApi = async (payload) => {
 };
 
 /**
- * Get the authenticated user's bank and nominee details.
+ * Get the authenticated user's bank details.
  */
 export const getProfileBankDetailsApi = async () => {
   try {
@@ -354,6 +334,69 @@ export const getProfileBankDetailsApi = async () => {
         error.response?.data?.message ||
         error.response?.data?.error ||
         "Unable to load bank details",
+    };
+  }
+};
+
+/**
+ * Update user nominee details via PUT /auth/profile/nominee-details
+ */
+export const updateProfileNomineeDetailsApi = async (payload) => {
+  try {
+    const formData = new FormData();
+    formData.append("nominee_name", payload.nominee_name || "");
+    formData.append("nominee_relation", payload.nominee_relation || "");
+    formData.append("nominee_gender", payload.nominee_gender || "");
+    formData.append("nominee_dob", payload.nominee_dob || "");
+    formData.append("nominee_address", payload.nominee_address || "");
+    formData.append("nominee_aadhar", payload.nominee_aadhar || "");
+    formData.append("nominee_mobile", payload.nominee_mobile || "");
+    if (payload.nominee_aadhar_front) {
+      formData.append("nominee_aadhar_front", payload.nominee_aadhar_front);
+    }
+    if (payload.nominee_aadhar_back) {
+      formData.append("nominee_aadhar_back", payload.nominee_aadhar_back);
+    }
+
+    const response = await api.put("/auth/profile/nominee-details", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return { success: true, data: response.data };
+  } catch (error) {
+    const responseData = error.response?.data || {};
+    const detail = Array.isArray(responseData.detail)
+      ? responseData.detail.map((item) => item.msg).filter(Boolean).join(", ")
+      : typeof responseData.detail === "string"
+        ? responseData.detail
+        : responseData.detail?.msg || "";
+
+    const errorMessage =
+      responseData.message ||
+      responseData.error ||
+      detail ||
+      "Unable to update nominee details";
+
+    return { success: false, error: errorMessage };
+  }
+};
+
+/**
+ * Get the authenticated user's nominee details.
+ */
+export const getProfileNomineeDetailsApi = async () => {
+  try {
+    const response = await api.get("/auth/profile/nominee-details");
+    return { success: true, data: response.data };
+  } catch (error) {
+    return {
+      success: false,
+      error:
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        "Unable to load nominee details",
     };
   }
 };

@@ -62,6 +62,18 @@ export const getPaidPayoutsApi = async () => {
   }
 };
 
+export const printPendingPayoutsApi = async () => {
+  try {
+    const response = await api.get("/admin/payout/pending/print", {
+      responseType: "text",
+      headers: { Accept: "text/html" },
+    });
+    return { success: true, data: response.data };
+  } catch (error) {
+    return { success: false, error: getErrorMessage(error, "Unable to print pending payouts") };
+  }
+};
+
 export const getPayoutHistoryApi = async (filters = {}) => {
   try {
     const params = Object.fromEntries(

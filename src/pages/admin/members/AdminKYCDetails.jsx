@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { FiCheck, FiEye, FiRefreshCw, FiX } from "react-icons/fi";
 import AdminLayout from "../../../components/Admin/AdminLayout";
 import {
   getAllAdminMembersKycApi,
   getAdminMemberKycApi,
+  getPendingAdminMembersKycApi,
   updateAdminMemberKycStatusApi,
 } from "../../../api/admin-kyc";
 import "./AdminKYCDetails.css";
@@ -15,7 +16,9 @@ const fields = [["Aadhaar Number", "aadhar_no"], ["PAN Number", "pan_no"], ["Upl
 const formatDate = (value) => value ? new Date(value).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) : "-";
 
 function AdminKYCDetails() {
-  const [members, setMembers] = useState([]);
+  const [activeTab, setActiveTab] = useState("pending");
+  const [pendingMembers, setPendingMembers] = useState([]);
+  const [historyMembers, setHistoryMembers] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState("");
   const [details, setDetails] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -25,16 +28,46 @@ function AdminKYCDetails() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
+  const loadPendingMembers = async () => {
+    const result = await getPendingAdminMembersKycApi();
+    if (result.success) {
+      setPendingMembers((result.data || []).map((member) => ({
+        ...member,
+        kyc: member.kyc || {},
+      })));
+    } else {
+      setError(result.error || "Unable to load pending KYC details.");
+    }
+  };
+
+  const loadHistoryMembers = async () => {
+    const result = await getAllAdminMembersKycApi();
+    if (result.success) {
+      setHistoryMembers((result.data || []).map((member) => ({
+        ...member,
+        kyc: member.kyc || {},
+      })));
+    } else {
+      setError(result.error || "Unable to load KYC history.");
+    }
+  };
+
   const loadMembers = async () => {
     setLoading(true);
     setError("");
-    const result = await getAllAdminMembersKycApi();
-    if (result.success) setMembers(result.data);
-    else setError(result.error || "Unable to load KYC details.");
+    setMessage("");
+    await Promise.all([loadPendingMembers(), loadHistoryMembers()]);
     setLoading(false);
   };
 
   useEffect(() => { loadMembers(); }, []);
+
+  const currentMembers = activeTab === "pending" ? pendingMembers : historyMembers;
+  const filteredMembers = useMemo(() => currentMembers.filter((member) => {
+    const kycRecord = member.kyc || {};
+    if (activeTab === "pending") return String(kycRecord.status || "PENDING").toUpperCase() === "PENDING";
+    return true;
+  }), [currentMembers, activeTab]);
 
   const openDetails = async (member) => {
     setSelectedUserId(member.user_id);
@@ -43,7 +76,13 @@ function AdminKYCDetails() {
     setError("");
     setLoadingDetails(true);
     const result = await getAdminMemberKycApi(member.user_id);
-    setDetails(result.success ? { ...member, ...result.data, kyc: { ...member.kyc, ...result.data?.kyc, ...result.data } } : member);
+    if (result.success) {
+      const payload = result.data || {};
+      const mergedKyc = { ...member.kyc, ...payload.kyc, ...payload };
+      setDetails({ ...member, ...payload, kyc: mergedKyc });
+    } else {
+      setDetails(member);
+    }
     setLoadingDetails(false);
   };
 
@@ -67,10 +106,13 @@ function AdminKYCDetails() {
     const result = await updateAdminMemberKycStatusApi(selectedUserId, status, rejectionReason.trim());
     if (result.success) {
       const updated = result.data || {};
-      setMembers((current) => current.map((member) => member.user_id === selectedUserId ? { ...member, kyc: { ...member.kyc, ...updated, status } } : member));
-      setDetails((current) => ({ ...current, kyc: { ...current.kyc, ...updated, status } }));
+      setPendingMembers((current) => current.filter((member) => member.user_id !== selectedUserId));
+      setHistoryMembers((current) => current.map((member) => member.user_id === selectedUserId ? { ...member, kyc: { ...member.kyc, ...updated, status } } : member));
+      setDetails((current) => current ? { ...current, kyc: { ...current.kyc, ...updated, status } } : current);
       setMessage(updated.message || `KYC ${status.toLowerCase()} successfully.`);
-    } else setError(result.error || "Unable to update KYC status.");
+    } else {
+      setError(result.error || "Unable to update KYC status.");
+    }
     setSaving(false);
   };
 
@@ -93,10 +135,16 @@ function AdminKYCDetails() {
             <span>Dashboard</span><span className="agen-crumb-sep">•</span><span className="agen-crumb-active">KYC Details</span>
           </div>
         </div>
+
+        <div className="bank-tab-strip">
+          <button type="button" className={`bank-tab-btn ${activeTab === "pending" ? "active" : ""}`} onClick={() => setActiveTab("pending")}>Pending KYC</button>
+          <button type="button" className={`bank-tab-btn ${activeTab === "history" ? "active" : ""}`} onClick={() => setActiveTab("history")}>KYC History</button>
+        </div>
+
         <section className="bank-details-card admin-bank-list-card">
-          <div className="admin-bank-list-heading"><div><h2>Member KYC Details</h2><p>Review submitted identity documents and verification status.</p></div><span>{members.length} members</span></div>
+          <div className="admin-bank-list-heading"><div><h2>{activeTab === "pending" ? "Pending Requests" : "KYC History"}</h2><p>{activeTab === "pending" ? "Review submitted KYC documents awaiting approval." : "View KYC records from previous verification cycles."}</p></div><span>{filteredMembers.length} {activeTab === "pending" ? "pending" : "records"}</span></div>
           <div className="admin-bank-list-table-wrap"><table className="admin-bank-list-table"><thead><tr><th>No</th><th>User ID</th><th>Name</th><th>Aadhaar Number</th><th>PAN Number</th><th>Status</th><th>Action</th></tr></thead><tbody>
-            {loading ? <tr><td colSpan="7" className="bank-state">Loading KYC details...</td></tr> : error ? <tr><td colSpan="7" className="bank-state">{error}</td></tr> : members.length === 0 ? <tr><td colSpan="7" className="bank-state">No KYC details submitted.</td></tr> : members.map((member, index) => <tr key={member.user_id}><td>{index + 1}</td><td className="bank-member-id">{member.user_id || "-"}</td><td>{member.fullname || "-"}</td><td>{member.kyc?.aadhar_no || "-"}</td><td>{member.kyc?.pan_no || "-"}</td><td><span className={`bank-status bank-status--${String(member.kyc?.status || "not-submitted").toLowerCase()}`}>{statusLabel(member.kyc?.status)}</span></td><td><button type="button" className="bank-view-btn" onClick={() => openDetails(member)}><FiEye /> View</button></td></tr>)}
+            {loading ? <tr><td colSpan="7" className="bank-state">Loading KYC details...</td></tr> : error ? <tr><td colSpan="7" className="bank-state">{error}</td></tr> : filteredMembers.length === 0 ? <tr><td colSpan="7" className="bank-state">No KYC details found.</td></tr> : filteredMembers.map((member, index) => <tr key={`${activeTab}-${member.user_id}`}><td>{index + 1}</td><td className="bank-member-id">{member.user_id || "-"}</td><td>{member.fullname || "-"}</td><td>{member.kyc?.aadhar_no || "-"}</td><td>{member.kyc?.pan_no || "-"}</td><td><span className={`bank-status bank-status--${String(member.kyc?.status || "not-submitted").toLowerCase()}`}>{statusLabel(member.kyc?.status)}</span></td><td><button type="button" className="bank-view-btn" onClick={() => openDetails(member)}><FiEye /> View</button></td></tr>)}
           </tbody></table></div>
         </section>
 

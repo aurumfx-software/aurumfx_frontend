@@ -6,6 +6,7 @@ import { FiUser, FiEdit, FiSettings, FiCreditCard, FiFileText, FiCheckCircle, Fi
 export const NAV_ITEMS = [
   { id: "profile", label: "Overview", icon: FiUser },
   { id: "bank", label: "Bank Details", icon: FiCreditCard },
+  { id: "nominee", label: "Nominee Details", icon: FiUser },
   { id: "kyc", label: "KYC", icon: FiFileText },
   { id: "edit", label: "Edit Info", icon: FiEdit },
   { id: "settings", label: "Settings", icon: FiSettings },
@@ -16,7 +17,7 @@ export const NAV_ITEMS = [
 // ---------------------------------------------------------------------------
 export const STATUS_META = {
   approved: { label: "Approved", Icon: FiCheckCircle, tone: "approved" },
-  pending: { label: "Pending Review", Icon: FiClock, tone: "pending" },
+  pending: { label: "Pending", Icon: FiClock, tone: "pending" },
   rejected: { label: "Rejected", Icon: FiXCircle, tone: "rejected" },
   not_submitted: { label: "Not Submitted", Icon: FiAlertCircle, tone: "muted" },
 };
@@ -67,8 +68,17 @@ export const hasBankSubmission = (bankDetails = {}, nomineeDetails = {}) => {
     bankDetails.bank_account,
     bankDetails.ifsc,
     bankDetails.bank_proof,
+  ];
+  return requiredFields.every(isFilled);
+};
+
+export const hasNomineeSubmission = (nomineeDetails = {}) => {
+  const requiredFields = [
     nomineeDetails.nominee_name,
     nomineeDetails.nominee_relation,
+    nomineeDetails.nominee_gender,
+    nomineeDetails.nominee_dob,
+    nomineeDetails.nominee_address,
     nomineeDetails.nominee_aadhar,
     nomineeDetails.nominee_mobile,
     nomineeDetails.nominee_aadhar_front,

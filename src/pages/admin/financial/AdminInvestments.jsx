@@ -15,10 +15,25 @@ import {
 import "./AdminInvestments.css";
 
 const formatDate = (value) => {
-  if (!value) return "-";
-  const [datePart] = String(value).split("T");
-  const [year, month, day] = datePart.split("-");
-  return year && month && day ? `${day}-${month}-${year}` : datePart;
+  if (!value && value !== 0) return "-";
+
+  const raw = String(value).trim();
+  const match = raw.match(/(\d{4})[-/](\d{2})[-/](\d{2})/);
+
+  if (match) {
+    const [, year, month, day] = match;
+    return `${day}-${month}-${year}`;
+  }
+
+  const parsed = new Date(raw);
+  if (!Number.isNaN(parsed.getTime())) {
+    const day = String(parsed.getDate()).padStart(2, "0");
+    const month = String(parsed.getMonth() + 1).padStart(2, "0");
+    const year = String(parsed.getFullYear());
+    return `${day}-${month}-${year}`;
+  }
+
+  return raw;
 };
 
 function AdminInvestments() {
@@ -66,7 +81,7 @@ function AdminInvestments() {
     const userSearch = activeUserFilter.trim().toLowerCase();
     return items.filter((item) => {
       const itemUserId = String(item.user_id ?? item.userId ?? "").toLowerCase();
-      const itemDate = String(item.investment_date ?? item.date ?? item.created_at ?? "").slice(0, 10);
+      const itemDate = String(item.approval_status_updated_at ?? item.investment_date ?? item.date ?? item.created_at ?? "").slice(0, 10);
       const matchesUser = !userSearch || itemUserId.includes(userSearch);
       const matchesStartDate = !activeStartDate || itemDate >= activeStartDate;
       const matchesEndDate = !activeEndDate || itemDate <= activeEndDate;
@@ -183,83 +198,93 @@ function AdminInvestments() {
     setApprovingReturnId(null);
   };
 
-  const renderStandardTable = (dataList, showActions) => (
-    <table className="admin-investments-table">
-      <thead>
-        <tr>
-          <th>No</th>
-          <th>User ID</th>
-          <th>User Name</th>
-          <th>Plan</th>
-          <th>Amount</th>
-          <th>Approval Status</th>
-          <th>Date</th>
-          {showActions && <th>Action</th>}
-        </tr>
-      </thead>
-      <tbody>
-        {loading ? (
-          <tr><td colSpan={showActions ? 9 : 8}>Loading...</td></tr>
-        ) : errorMsg ? (
-          <tr><td colSpan={showActions ? 9 : 8}>{errorMsg}</td></tr>
-        ) : dataList.length === 0 ? (
+  const renderStandardTable = (dataList, showActions) => {
+    const isHistoryTab = activeTab === "history";
+    const isRequestTab = activeTab === "requests";
+    const dateLabel = isRequestTab ? "Date" : "Approved Date";
+    const approvedDateValue = (item) => formatDate(item.approval_status_updated_at);
+    const investmentDateValue = (item) => formatDate(item.investment_date);
+
+    return (
+      <table className="admin-investments-table">
+        <thead>
           <tr>
-            <td colSpan={showActions ? 9 : 8} style={{ padding: 0 }}>
-              <div className="docs-empty-state">
-                <div className="empty-magnifier-box">
-                  <div className="magnifier-art">
-                    <FiFolder className="folder-back-art" />
-                    <div className="glass-lens-art">
-                      <span className="glass-quest">?</span>
+            <th>No</th>
+            <th>User ID</th>
+            <th>User Name</th>
+            <th>Plan</th>
+            <th>Amount</th>
+            <th>Approval Status</th>
+            <th>{dateLabel}</th>
+            {isHistoryTab && <th>Investment Date</th>}
+            {showActions && <th>Action</th>}
+          </tr>
+        </thead>
+        <tbody>
+          {loading ? (
+            <tr><td colSpan={showActions ? 9 : isHistoryTab ? 9 : 8}>Loading...</td></tr>
+          ) : errorMsg ? (
+            <tr><td colSpan={showActions ? 9 : isHistoryTab ? 9 : 8}>{errorMsg}</td></tr>
+          ) : dataList.length === 0 ? (
+            <tr>
+              <td colSpan={showActions ? 9 : isHistoryTab ? 9 : 8} style={{ padding: 0 }}>
+                <div className="docs-empty-state">
+                  <div className="empty-magnifier-box">
+                    <div className="magnifier-art">
+                      <FiFolder className="folder-back-art" />
+                      <div className="glass-lens-art">
+                        <span className="glass-quest">?</span>
+                      </div>
                     </div>
                   </div>
+                  <h4 className="empty-state-label">No Data Available</h4>
                 </div>
-                <h4 className="empty-state-label">No Data Available</h4>
-              </div>
-            </td>
-          </tr>
-        ) : (
-          dataList.map((item, idx) => (
-            <tr key={item.id}>
-              <td>{idx + 1}</td>
-              <td style={{ cursor: "pointer" }} onClick={() => handleRowClick(item.id)}>
-                {item.user_id || "-"}
               </td>
-              <td style={{ cursor: "pointer" }} onClick={() => handleRowClick(item.id)}>
-                {item.user_name || "-"}
-              </td>
-              <td>{item.plan_name}</td>
-              <td>₹{Number(item.amount).toLocaleString()}</td>
-              <td><span className="invest-status-green">{item.approval_status}</span></td>
-              <td>{formatDate(item.investment_date)}</td>
-              {showActions && (
-                <td>
-                  <div style={{ display: "flex", gap: "8px" }}>
-                    <button
-                      type="button"
-                      className="action-confirm-btn"
-                      onClick={() => handleConfirm(item.id)}
-                      disabled={confirmingId === item.id}
-                    >
-                      {confirmingId === item.id ? "..." : "Confirm"}
-                    </button>
-                    <button
-                      type="button"
-                      className="action-confirm-btn action-reject-btn"
-                      onClick={() => handleReject(item.id)}
-                      disabled={confirmingId === item.id}
-                    >
-                      Reject
-                    </button>
-                  </div>
-                </td>
-              )}
             </tr>
-          ))
-        )}
-      </tbody>
-    </table>
-  );
+          ) : (
+            dataList.map((item, idx) => (
+              <tr key={item.id}>
+                <td>{idx + 1}</td>
+                <td style={{ cursor: "pointer" }} onClick={() => handleRowClick(item.id)}>
+                  {item.user_id || "-"}
+                </td>
+                <td style={{ cursor: "pointer" }} onClick={() => handleRowClick(item.id)}>
+                  {item.user_name || "-"}
+                </td>
+                <td>{item.plan_name}</td>
+                <td>₹{Number(item.amount).toLocaleString()}</td>
+                <td><span className="invest-status-green">{item.approval_status}</span></td>
+                <td>{isRequestTab ? investmentDateValue(item) : approvedDateValue(item)}</td>
+                {isHistoryTab && <td>{investmentDateValue(item)}</td>}
+                {showActions && (
+                  <td>
+                    <div style={{ display: "flex", gap: "8px" }}>
+                      <button
+                        type="button"
+                        className="action-confirm-btn"
+                        onClick={() => handleConfirm(item.id)}
+                        disabled={confirmingId === item.id}
+                      >
+                        {confirmingId === item.id ? "..." : "Confirm"}
+                      </button>
+                      <button
+                        type="button"
+                        className="action-confirm-btn action-reject-btn"
+                        onClick={() => handleReject(item.id)}
+                        disabled={confirmingId === item.id}
+                      >
+                        Reject
+                      </button>
+                    </div>
+                  </td>
+                )}
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
+    );
+  };
 
   return (
     <AdminLayout>
@@ -345,20 +370,6 @@ function AdminInvestments() {
                     className="filter-input-field"
                   />
                 </div>
-                {activeTab === "active" && (
-                  <div className="filter-field-wrap select-field-wrap">
-                    <select
-                      value={statusFilter}
-                      onChange={(e) => setStatusFilter(e.target.value)}
-                      className="filter-select-field"
-                    >
-                      <option value="">Status</option>
-                      <option value="Active">Active</option>
-                      <option value="Completed">Completed</option>
-                    </select>
-                    <FiChevronDown className="field-right-icon text-muted" />
-                  </div>
-                )}
                 <button type="submit" className="yellow-get-btn">Get Report</button>
                 <button type="button" className="investments-refresh-btn" onClick={handleRefresh}><FiRefreshCw size={14} /> Refresh</button>
               </form>

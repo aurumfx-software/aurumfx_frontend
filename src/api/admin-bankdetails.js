@@ -6,7 +6,18 @@ const getErrorMessage = (error, fallback) =>
   error.response?.data?.detail?.[0]?.msg ||
   fallback;
 
-/** GET /api/admin/members/{user_id}/bank-details */
+/** GET /api/admin/members/bank-details/pending */
+export const getPendingAdminMembersBankDetailsApi = async () => {
+  try {
+    const response = await api.get("/api/admin/members/bank-details/pending");
+    const data = response.data?.data || response.data || [];
+    return { success: true, data: Array.isArray(data) ? data : [] };
+  } catch (error) {
+    return { success: false, error: getErrorMessage(error, "Unable to load pending bank details.") };
+  }
+};
+
+/** GET /api/admin/members/bank-details */
 export const getAllAdminMembersBankDetailsApi = async () => {
   try {
     const response = await api.get("/api/admin/members/bank-details");

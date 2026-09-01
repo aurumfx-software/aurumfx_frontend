@@ -4,6 +4,28 @@ import AdminLayout from "../../../components/Admin/AdminLayout";
 import { getAdminEnrollersApi } from "../../../api/admin-genealogy";
 import "./GenealogyPage.css";
 
+const formatDate = (value) => {
+  if (!value && value !== 0) return "-";
+
+  const raw = String(value).trim();
+  const match = raw.match(/(\d{4})[-/](\d{2})[-/](\d{2})/);
+
+  if (match) {
+    const [, year, month, day] = match;
+    return `${day}-${month}-${year}`;
+  }
+
+  const parsed = new Date(raw);
+  if (!Number.isNaN(parsed.getTime())) {
+    const day = String(parsed.getDate()).padStart(2, "0");
+    const month = String(parsed.getMonth() + 1).padStart(2, "0");
+    const year = String(parsed.getFullYear());
+    return `${day}-${month}-${year}`;
+  }
+
+  return raw;
+};
+
 function AdminEnrollersPage() {
   const [enrollers, setEnrollers] = useState([]);
   const [query, setQuery] = useState("");
@@ -73,7 +95,7 @@ function AdminEnrollersPage() {
                     <tr key={item.user_id}>
                       <td className="agen-user-id">{item.user_id || "-"}</td>
                       <td>{item.fullname || item.full_name || "-"}</td>
-                      <td>{item.date_of_joining || "-"}</td>
+                      <td>{formatDate(item.date_of_joining)}</td>
                       <td>{item.rank || "-"}</td>
                       <td>₹{Number(item.total_investment_amount || 0).toLocaleString("en-IN")}</td>
                       <td>{Number(item.total_lots || 0)}</td>

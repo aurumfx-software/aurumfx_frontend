@@ -29,6 +29,7 @@ const userNavItems = [
     children: [
       { id: "profile", label: "Profile", path: "/user/account/profile" },
       { id: "bank-details", label: "Bank Details", path: "/user/account/bank-details" },
+      { id: "nominee-details", label: "Nominee Details", path: "/user/account/nominee-details" },
       { id: "kyc", label: "KYC", path: "/user/account/kyc" },
       { id: "edit-info", label: "Edit info", path: "/user/account/edit-info" },
       { id: "settings", label: "Settings", path: "/user/account/settings" },
