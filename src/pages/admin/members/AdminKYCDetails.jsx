@@ -110,6 +110,12 @@ function AdminKYCDetails() {
       setHistoryMembers((current) => current.map((member) => member.user_id === selectedUserId ? { ...member, kyc: { ...member.kyc, ...updated, status } } : member));
       setDetails((current) => current ? { ...current, kyc: { ...current.kyc, ...updated, status } } : current);
       setMessage(updated.message || `KYC ${status.toLowerCase()} successfully.`);
+      setTimeout(() => {
+        setDetails(null);
+        setSelectedUserId("");
+        setError("");
+        setMessage("");
+      }, 1200);
     } else {
       setError(result.error || "Unable to update KYC status.");
     }

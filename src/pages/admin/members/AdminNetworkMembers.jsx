@@ -7,6 +7,19 @@ import "./AdminNetworkMembers.css";
 
 const RANK_OPTIONS = ["No Rank", "Investor", "Associate", "Manager"];
 
+const getUserIdSortValue = (value) => {
+  const rawValue = String(value || "");
+  const match = rawValue.match(/(\D*)(\d+)/i);
+  if (!match) return rawValue.toLowerCase();
+  return `${match[1].toLowerCase()}${String(Number(match[2])).padStart(12, "0")}`;
+};
+
+const sortMembersByUserId = (items = []) => [...items].sort((a, b) => {
+  const left = getUserIdSortValue(a.user_id ?? a.userId ?? "");
+  const right = getUserIdSortValue(b.user_id ?? b.userId ?? "");
+  return left.localeCompare(right, undefined, { numeric: true, sensitivity: "base" });
+});
+
 const formatDate = (value) => {
   if (!value) return "-";
   const date = new Date(value);
@@ -31,7 +44,7 @@ function AdminNetworkMembers() {
     setLoading(true);
     setError("");
     const result = await getAdminMembersApi(filters);
-    if (result.success) setMembers(result.data);
+    if (result.success) setMembers(sortMembersByUserId(result.data));
     else setError(result.error);
     setLoading(false);
   };

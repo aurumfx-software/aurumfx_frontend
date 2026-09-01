@@ -47,14 +47,24 @@ function AdminEnrollersPage() {
 
   const filteredEnrollers = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
-    if (!normalizedQuery) return enrollers;
-    return enrollers.filter((item) => [
-      item.user_id,
-      item.fullname,
-      item.full_name,
-      item.enroller_id,
-      item.enroller_name,
-    ].some((value) => String(value || "").toLowerCase().includes(normalizedQuery)));
+    const baseList = normalizedQuery
+      ? enrollers.filter((item) => [
+          item.user_id,
+          item.fullname,
+          item.full_name,
+          item.enroller_id,
+          item.enroller_name,
+        ].some((value) => String(value || "").toLowerCase().includes(normalizedQuery)))
+      : [...enrollers];
+
+    return baseList.sort((a, b) => {
+      const getUserOrderValue = (value) => {
+        const parsed = Number(String(value || "").replace(/[^0-9]/g, ""));
+        return Number.isFinite(parsed) ? parsed : Number.MAX_SAFE_INTEGER;
+      };
+
+      return getUserOrderValue(a.user_id) - getUserOrderValue(b.user_id);
+    });
   }, [enrollers, query]);
 
   return (
@@ -92,7 +102,7 @@ function AdminEnrollersPage() {
                 <thead><tr><th>User ID</th><th>Full Name</th><th>Date of Joining</th><th>Rank</th><th>Total Investment</th><th>Total Lots</th><th>Enroller ID</th><th>Enroller Name</th></tr></thead>
                 <tbody>
                   {filteredEnrollers.length === 0 ? <tr><td colSpan="8" className="agen-empty-cell">No enrollers found.</td></tr> : filteredEnrollers.map((item) => (
-                    <tr key={item.user_id}>
+                    <tr key={item.user_id || item.fullname || "enroller-row"}>
                       <td className="agen-user-id">{item.user_id || "-"}</td>
                       <td>{item.fullname || item.full_name || "-"}</td>
                       <td>{formatDate(item.date_of_joining)}</td>

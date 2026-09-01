@@ -209,8 +209,11 @@ function AdminBankApprove() {
       setDetails((current) => current ? { ...current, bank_details: { ...current.bank_details, ...result.data, status } } : current);
       setMessage(result.data.message || `Bank details ${status.toLowerCase()} successfully.`);
       setTimeout(() => {
+        setDetails(null);
+        setSelectedUserId("");
+        setError("");
         setMessage("");
-      }, 2200);
+      }, 1200);
     } else {
       setError(result.error || "Unable to update bank status.");
     }
