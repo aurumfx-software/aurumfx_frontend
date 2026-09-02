@@ -1,55 +1,21 @@
 .rank-holders-page{display:flex;flex-direction:column;gap:20px;padding-bottom:40px}
-.rank-holders-header,.rank-holders-card-heading{display:flex;align-items:center;justify-content:space-between;gap:16px}
-.rank-holders-header h1{margin:0;color:#f8fafc;font-size:24px}
-.rank-holders-breadcrumb{display:flex;gap:8px;margin-top:5px;color:#94a3b8;font-size:13px}
-.rank-holders-breadcrumb strong{color:#f5d061}
-.rank-holders-card{overflow:hidden;border:1px solid rgba(212,175,55,.18);border-radius:14px;background:#111;box-shadow:0 4px 16px rgba(0,0,0,.2)}
-.rank-holders-card-heading{padding:22px 24px;border-bottom:1px solid rgba(255,255,255,.08)}
+
+.rank-holders-card{overflow:hidden;border:1px solid rgba(212,175,55,.18);border-radius:14px;background:#111;box-shadow:0 4px 16px rgba(0,0,0,.2);padding:22px 24px 26px}
+.rank-holders-card-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px}
 .rank-holders-card-heading h2{margin:0;color:#f8fafc;font-size:17px}
 .rank-holders-card-heading p{margin:5px 0 0;color:#94a3b8;font-size:13px}
-.rank-holders-card-heading select{height:40px;min-width:220px;padding:0 12px;border:1px solid rgba(212,175,55,.25);border-radius:8px;background:#0a0a0a;color:#f8fafc;outline:none}
-.rank-holders-summary{display:flex;align-items:center;gap:20px;padding:16px 24px;border-bottom:1px solid rgba(255,255,255,.06);color:#94a3b8}
-.rank-holders-summary strong{color:#f5d061}
-.rank-holders-summary span{flex:1}
-.rank-holders-summary b{color:#e2e8f0}
-.rank-holders-table-wrap{overflow-x:auto}
-.rank-holders-table{width:100%;min-width:720px;border-collapse:collapse;text-align:left}
-.rank-holders-table th{padding:13px 18px;background:#141414;color:#94a3b8;font-size:11px;text-transform:uppercase}
-.rank-holders-table td{padding:14px 18px;border-top:1px solid rgba(255,255,255,.06);color:#e2e8f0;font-size:13px}
-.rank-holders-table tbody tr:hover{background:rgba(255,255,255,.03)}
-.rank-holder-id{color:#f5d061!important;font-weight:700}
-.rank-holders-table img{width:32px;height:32px;border-radius:50%;object-fit:cover}
-.rank-holders-empty{text-align:center!important;padding:32px!important;color:#94a3b8!important}
-.rank-holders-error{padding:12px 24px;color:#f87171;border-bottom:1px solid rgba(255,255,255,.06)}
-
-[data-theme="light"] .rank-holders-header h1{color:#171717}
-[data-theme="light"] .rank-holders-breadcrumb{color:#6b7280}
-[data-theme="light"] .rank-holders-breadcrumb strong{color:#a67c1f}
-[data-theme="light"] .rank-holders-card{background:#fff;border-color:rgba(197,155,39,.22);box-shadow:0 4px 16px rgba(45,35,20,.06)}
-[data-theme="light"] .rank-holders-card-heading{border-bottom-color:#e5e7eb}
-[data-theme="light"] .rank-holders-card-heading h2{color:#1f2937}
-[data-theme="light"] .rank-holders-card-heading p,[data-theme="light"] .rank-holders-empty{color:#64748b!important}
-[data-theme="light"] .rank-holders-card-heading select{background:#fff;color:#141414;border-color:rgba(197,155,39,.25)}
-[data-theme="light"] .rank-holders-summary{border-bottom-color:#e5e7eb}
-[data-theme="light"] .rank-holders-summary b{color:#374151}
-[data-theme="light"] .rank-holders-table th{background:linear-gradient(90deg,rgba(197,155,39,.06),rgba(197,155,39,.18));color:#a67c1f}
-[data-theme="light"] .rank-holders-table td{color:#141414;border-top-color:rgba(197,155,39,.14)}
-
-@media(max-width:640px){
-  .rank-holders-card-heading{align-items:stretch;flex-direction:column}
-  .rank-holders-card-heading select{width:100%}
-  .rank-holders-summary{align-items:flex-start;flex-direction:column;gap:6px}
-  .rank-holders-summary span{flex:none}
-}
-
-.rank-list-table{min-width:560px}
+.rank-holders-empty{text-align:center;padding:32px;color:#94a3b8;font-size:13px}
+.rank-holders-error{padding:12px 16px;margin-bottom:14px;border-radius:8px;color:#f87171;background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.25)}
 .rank-holder-count{color:#f5d061}
-[data-theme="light"] .rank-name-button{color:#a67c1f}
+
+[data-theme="light"] .rank-holders-card{background:#fff;border-color:rgba(197,155,39,.22);box-shadow:0 4px 16px rgba(45,35,20,.06)}
+[data-theme="light"] .rank-holders-card-heading h2{color:#1f2937}
+[data-theme="light"] .rank-holders-card-heading p,[data-theme="light"] .rank-holders-empty{color:#64748b}
 
 /* ---------- Hint bar ---------- */
 .rank-holders-hint{
   display:flex;align-items:center;gap:9px;
-  margin:16px 24px 16px;padding:11px 16px;
+  margin:0 0 18px;padding:11px 16px;
   border:1px solid rgba(212,175,55,.22);
   border-radius:10px;
   background:linear-gradient(90deg,rgba(245,208,97,.09),rgba(245,208,97,.02));
@@ -64,71 +30,143 @@
 }
 [data-theme="light"] .rank-holders-hint svg{color:#a67c1f}
 
-/* ---------- Rank pill button ---------- */
-.rank-pill-btn{
-  display:inline-flex;align-items:center;gap:9px;
-  padding:8px 16px 8px 10px;
-  border:1px solid rgba(212,175,55,.35);
+/* ---------- Criteria as tag chips ---------- */
+.rank-criteria-tags{display:flex;flex-wrap:wrap;gap:6px}
+.rank-criteria-tag{
+  display:inline-flex;align-items:center;
+  padding:3px 9px;
   border-radius:999px;
-  background:linear-gradient(135deg,rgba(245,208,97,.14),rgba(245,208,97,.03));
-  color:#f5d061;
-  font:inherit;font-weight:700;font-size:13px;
-  cursor:pointer;
-  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease,background .18s ease;
+  font-size:10.5px;font-weight:600;line-height:1.5;
+  white-space:normal;overflow-wrap:anywhere;
+  border:1px solid color-mix(in srgb, var(--rank-from) 40%, #e5e7eb);
+  background:color-mix(in srgb, var(--rank-from) 10%, rgba(255,255,255,.05));
+  color:#f0d9a8;
 }
-.rank-pill-btn:hover{
-  transform:translateY(-1px);
-  border-color:#f5d061;
-  background:linear-gradient(135deg,rgba(245,208,97,.24),rgba(245,208,97,.06));
-  box-shadow:0 6px 18px rgba(245,208,97,.16);
+.rank-criteria-tags--modal .rank-criteria-tag{
+  border-color:rgba(255,255,255,.16);
+  background:rgba(255,255,255,.06);
+  color:#cbd5e1;
+  font-size:11.5px;
 }
-.rank-pill-btn:active{transform:translateY(0)}
-.rank-pill-btn:focus-visible{outline:2px solid #f5d061;outline-offset:2px}
-.rank-pill-icon{
-  display:inline-flex;align-items:center;justify-content:center;
-  width:24px;height:24px;border-radius:50%;
-  background:rgba(245,208,97,.16);
-  color:#f5d061;font-size:13px;flex-shrink:0;
-}
-.rank-pill-arrow{
-  font-size:14px;color:rgba(245,208,97,.65);
-  transition:transform .18s ease;
-}
-.rank-pill-btn:hover .rank-pill-arrow{transform:translateX(3px);color:#f5d061}
 
-[data-theme="light"] .rank-pill-btn{
-  color:#8b6914;
-  border-color:rgba(197,155,39,.4);
-  background:linear-gradient(135deg,rgba(197,155,39,.12),rgba(197,155,39,.02));
+[data-theme="light"] .rank-criteria-tag{color:#78350f;background:color-mix(in srgb, var(--rank-from) 8%, #fafafa)}
+
+/* ---------- Rank card grid ---------- */
+.ranks-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:20px;
 }
-[data-theme="light"] .rank-pill-btn:hover{
-  border-color:#a67c1f;
-  background:linear-gradient(135deg,rgba(197,155,39,.2),rgba(197,155,39,.05));
-  box-shadow:0 6px 18px rgba(197,155,39,.14);
+
+.rank-card{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  display:flex;flex-direction:column;
+  gap:16px;
+  padding:22px;
+  border-radius:16px;
+  cursor:pointer;
+  border:1.5px solid color-mix(in srgb, var(--rank-border) 45%, transparent);
+  background:
+    radial-gradient(120% 120% at 50% -10%, color-mix(in srgb, var(--rank-border) 14%, transparent), transparent 55%),
+    linear-gradient(165deg, rgba(26,20,8,.96), rgba(9,7,3,.98));
+  box-shadow:0 10px 24px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.04);
+  opacity:0;
+  transform:translateY(16px) scale(.96);
+  animation:rank-card-in .5s cubic-bezier(.22,.9,.32,1) forwards;
+  animation-delay:inherit;
+  transition:transform .22s cubic-bezier(.22,.9,.32,1), box-shadow .22s ease, border-color .22s ease;
 }
-[data-theme="light"] .rank-pill-icon{background:rgba(197,155,39,.14);color:#a67c1f}
-[data-theme="light"] .rank-pill-arrow{color:rgba(166,124,31,.6)}
+
+.rank-card:hover{
+  transform:translateY(-3px);
+  border-color:var(--rank-border);
+  box-shadow:0 18px 34px rgba(0,0,0,.5), 0 0 0 1px var(--rank-border), 0 0 26px color-mix(in srgb, var(--rank-border) 30%, transparent);
+}
+
+@keyframes rank-card-in{to{opacity:1;transform:translateY(0) scale(1)}}
+
+.rank-card-header{display:flex;align-items:center;gap:12px}
+.rank-card-icon{
+  width:46px;height:46px;border-radius:13px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg, var(--rank-from), var(--rank-to));
+  color:#1a1408;font-size:21px;
+  box-shadow:0 4px 10px color-mix(in srgb, var(--rank-from) 35%, transparent);
+}
+.rank-card-title{display:flex;flex-direction:column;gap:2px;min-width:0}
+.rank-card-no{font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--rank-border);opacity:.9}
+.rank-card-name{font-size:15px;font-weight:800;color:#fdf3d8;line-height:1.25;overflow-wrap:anywhere}
+
+.rank-card-footer{margin-top:auto;padding-top:12px;border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;gap:10px}
+.rank-card-holders{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#a89a78;white-space:nowrap}
+.rank-card-holders svg{color:var(--rank-border);font-size:14px}
+.rank-card-arrow-btn{
+  width:36px;height:36px;border-radius:50%;
+  border:2px solid color-mix(in srgb, var(--rank-border) 70%, #0d0a05);
+  cursor:pointer;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.04);color:#e2e8f0;font-size:15px;
+  transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.rank-card:hover .rank-card-arrow-btn{transform:translateX(4px);box-shadow:0 6px 14px color-mix(in srgb, var(--rank-border) 45%, transparent)}
+
+[data-theme="light"] .rank-card{
+  background:
+    radial-gradient(120% 100% at 50% -10%, color-mix(in srgb, var(--rank-border) 12%, transparent), transparent 60%),
+    #ffffff;
+  border-color:color-mix(in srgb, var(--rank-border) 55%, transparent);
+  box-shadow:0 4px 14px rgba(0,0,0,.06);
+}
+[data-theme="light"] .rank-card:hover{
+  box-shadow:0 14px 28px rgba(0,0,0,.1), 0 0 0 1px color-mix(in srgb, var(--rank-border) 35%, transparent);
+}
+[data-theme="light"] .rank-card-no{color:color-mix(in srgb, var(--rank-from) 70%, #92400e)}
+[data-theme="light"] .rank-card-name{color:#1f2937}
+[data-theme="light"] .rank-card-footer{border-top-color:#f1f1f1}
+[data-theme="light"] .rank-card-holders{color:#6b7280}
+[data-theme="light"] .rank-card-arrow-btn{background:#fff;border-color:color-mix(in srgb, var(--rank-border) 70%, #fff);color:#111827}
+
+@media(max-width:640px){
+  .ranks-grid{grid-template-columns:1fr;gap:12px}
+  .rank-card{padding:18px}
+}
 
 /* ---------- Modal shell ---------- */
 .rank-holders-modal-backdrop{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;overflow-y:auto;padding:24px;background:rgba(15,23,42,.5);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
 .rank-holders-modal{width:min(100%,940px);max-height:calc(100vh - 48px);margin:auto;overflow:hidden;border:1px solid rgba(212,175,55,.28);border-radius:16px;background:#111;box-shadow:0 24px 70px rgba(0,0,0,.5);display:flex;flex-direction:column}
-.rank-holders-modal-heading-actions{display:flex;align-items:center;gap:18px}
+
+.rank-holders-modal-header{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding:22px 28px;border-bottom:1px solid rgba(255,255,255,.08)}
+.rank-holders-modal-heading-main{display:flex;align-items:flex-start;gap:14px;min-width:0}
+.rank-holders-modal-icon{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:42px;height:42px;border-radius:12px;flex-shrink:0;
+  background:linear-gradient(135deg, var(--rank-from), var(--rank-to));
+  color:#1a1408;font-size:21px;
+  box-shadow:0 6px 16px rgba(0,0,0,.3);
+}
+.rank-holders-modal-header h2{margin:0;color:#f8fafc;font-size:20px}
+.rank-criteria-tags--modal{margin-top:8px}
+.rank-holders-modal-heading-actions{display:flex;align-items:center;gap:18px;flex-shrink:0}
 .rank-holders-close{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1px solid rgba(255,255,255,.14);border-radius:8px;background:transparent;color:#cbd5e1;cursor:pointer}
 .rank-holders-close:hover{border-color:#f5d061;color:#f5d061}
 
 [data-theme="light"] .rank-holders-modal{background:#fff;border-color:rgba(197,155,39,.28);box-shadow:0 24px 70px rgba(45,35,20,.24)}
+[data-theme="light"] .rank-holders-modal-header{border-bottom-color:#e5e7eb}
+[data-theme="light"] .rank-holders-modal-header h2{color:#1f2937}
 [data-theme="light"] .rank-holders-close{border-color:#e5e7eb;color:#64748b}
 
 @media(max-width:640px){
   .rank-holders-modal-backdrop{padding:12px}
   .rank-holders-modal{max-height:calc(100vh - 24px)}
+  .rank-holders-modal-header{padding:18px}
   .rank-holders-modal-heading-actions{gap:10px}
-  .rank-holders-modal .rank-holders-card-heading{align-items:flex-start;flex-direction:row}
 }
 
 /* ---------- Holder card grid ---------- */
-.rank-holders-grid-wrap{overflow-y:auto;padding:22px 24px 26px;max-height:calc(100vh - 210px)}
-.rank-holders-empty-grid{padding:48px 12px!important}
+.rank-holders-grid-wrap{overflow-y:auto;padding:22px 28px 26px;max-height:calc(100vh - 210px)}
+.rank-holders-empty-grid{padding:48px 12px}
 
 .holders-grid{
   display:grid;
@@ -136,7 +174,7 @@
   gap:16px;
 }
 
-/* ---------- Holder card — modern gold-medal treatment ---------- */
+/* ---------- Holder card — theme-aware, gold-medal treatment ---------- */
 .holder-card{
   position:relative;
   isolation:isolate;
@@ -156,18 +194,12 @@
   transition:transform .25s cubic-bezier(.22,.9,.32,1), box-shadow .25s ease, border-color .25s ease;
 }
 
-/* Small gold spark accent, top-right corner */
-.holder-card::after{
-  content:"\2726";
-  position:absolute;
-  top:10px;right:14px;
-  font-size:11px;line-height:1;
-  color:rgba(245,208,97,.55);
-  z-index:1;
-  pointer-events:none;
+.holder-card:hover{
+  transform:translateY(-4px);
+  border-color:rgba(245,208,97,.5);
+  box-shadow:0 18px 34px rgba(0,0,0,.45), 0 0 0 1px rgba(245,208,97,.18), 0 0 26px rgba(245,208,97,.16);
 }
 
-/* Gradient shimmer ring, revealed on hover, drawn with a masked border */
 .holder-card::before{
   content:"";
   position:absolute;
@@ -192,39 +224,68 @@
   pointer-events:none;
   z-index:0;
 }
+.holder-card:hover::before{opacity:1;background-position:100% 100%}
 
-.holder-card:hover{
-  transform:translateY(-4px);
-  border-color:rgba(245,208,97,.5);
-  box-shadow:0 18px 34px rgba(0,0,0,.45), 0 0 0 1px rgba(245,208,97,.18), 0 0 26px rgba(245,208,97,.16);
+[data-theme="light"] .holder-card{
+  border:1px solid rgba(197,155,39,.28);
+  background:
+    radial-gradient(120% 120% at 50% -10%, rgba(197,155,39,.14), transparent 55%),
+    #ffffff;
+  box-shadow:0 4px 14px rgba(0,0,0,.06);
+}
+[data-theme="light"] .holder-card:hover{
+  border-color:rgba(197,155,39,.55);
+  box-shadow:0 14px 28px rgba(0,0,0,.1), 0 0 0 1px rgba(197,155,39,.2);
+}
+[data-theme="light"] .holder-name{color:#1f2937}
+[data-theme="light"] .holder-date{color:#6b7280}
+[data-theme="light"] .holder-userid{background:linear-gradient(135deg,rgba(197,155,39,.16),rgba(197,155,39,.06));border-color:rgba(197,155,39,.32);color:#92400e}
+
+/* Small rank-themed badge, top-right corner — replaces the generic gold accent */
+.holder-rank-badge{
+  position:absolute;top:10px;right:12px;z-index:2;
+  display:inline-flex;align-items:center;justify-content:center;
+  width:22px;height:22px;border-radius:50%;
+  background:linear-gradient(135deg, var(--rank-from), var(--rank-to));
+  color:#1a1408;font-size:12px;
+  box-shadow:0 2px 8px rgba(0,0,0,.35);
 }
 
-.holder-card:hover::before{
-  opacity:1;
-  background-position:100% 100%;
-}
-
-@keyframes holder-card-in{
-  to{opacity:1;transform:translateY(0) scale(1)}
-}
+@keyframes holder-card-in{to{opacity:1;transform:translateY(0) scale(1)}}
 
 @media(prefers-reduced-motion:reduce){
-  .holder-card{animation:none;opacity:1;transform:none}
-  .rank-pill-btn,.holder-card{transition:none}
+  .holder-card,.rank-card{animation:none;opacity:1;transform:none}
+  .rank-card,.rank-card-arrow-btn,.holder-card{transition:none}
   .holder-card::before{transition:none;opacity:0!important}
+  .holder-avatar-wrap::before{animation:none}
 }
 
-/* Medal-style avatar ring */
+/* Medal-style avatar ring, colored per rank and spinning slowly */
 .holder-avatar-wrap{
   position:relative;
   z-index:1;
   width:68px;height:68px;
   border-radius:50%;
   padding:3px;
-  background:conic-gradient(from 180deg, #f5d061, #fff6d8, #d4af37, #f7da7d, #f5d061);
+  overflow:hidden;
+  isolation:isolate;
   box-shadow:0 6px 16px rgba(245,208,97,.3);
   display:flex;align-items:center;justify-content:center;
   flex-shrink:0;
+}
+.holder-avatar-wrap::before{
+  content:"";
+  position:absolute;
+  inset:-25%;
+  background:conic-gradient(
+    from 0deg,
+    var(--ring-a, #f5d061),
+    var(--ring-b, #d4af37),
+    var(--ring-c, #f7da7d),
+    var(--ring-a, #f5d061)
+  );
+  animation:holder-ring-spin 5s linear infinite;
+  z-index:0;
 }
 .holder-avatar-wrap::after{
   content:"";
@@ -233,12 +294,16 @@
   border-radius:50%;
   border:1px dashed rgba(245,208,97,.32);
   pointer-events:none;
+  z-index:2;
 }
+@keyframes holder-ring-spin{to{transform:rotate(360deg)}}
+
 .holder-avatar-img{
   width:100%;height:100%;border-radius:50%;
   object-fit:cover;
   border:2px solid #0d0a05;
   display:block;
+  position:relative;z-index:1;
 }
 .holder-avatar-initials{
   width:100%;height:100%;border-radius:50%;
@@ -246,6 +311,7 @@
   border:2px solid #0d0a05;
   color:#171308;
   font-weight:800;font-size:19px;letter-spacing:.02em;
+  position:relative;z-index:1;
 }
 
 .holder-card-body{
@@ -273,9 +339,6 @@
   color:#a89a78;
   font-size:11.5px;margin-top:2px;
 }
-
-/* Card intentionally stays the same black/gold look in both themes — no
-   [data-theme="light"] overrides here on purpose. */
 
 @media(max-width:640px){
   .rank-holders-grid-wrap{max-height:calc(100vh - 180px);padding:18px 16px 20px}

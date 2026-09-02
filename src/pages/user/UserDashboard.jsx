@@ -339,28 +339,45 @@ function UserDashboard() {
                                 <th>Date</th>
                                 <th>Plan</th>
                                 <th>Amount</th>
+                                <th>Monthly Return</th>
+                                <th>Return Paid</th>
+                                <th>Return Remaining</th>
                                 <th>Status</th>
                               </tr>
                             </thead>
                             <tbody>
-                              {investmentHistory.slice(0, 6).map((inv) => (
-                                <tr key={inv.id ?? `${inv.investment_date}-${inv.amount}`}>
-                                  <td>{formatDate(inv.investment_date)}</td>
-                                  <td>
-                                    <span className="investment-plan-pill">
-                                      {inv.plan_name || inv.plan || "-"}
-                                    </span>
-                                  </td>
-                                  <td className="investment-history-amount">
-                                    {fmt(inv.amount)}
-                                  </td>
-                                  <td>
-                                    <span className={`status-pill ${String(inv.investment_status || inv.approval_status || "Pending").toLowerCase()}`}>
-                                      {inv.investment_status || inv.approval_status || "Pending"}
-                                    </span>
-                                  </td>
-                                </tr>
-                              ))}
+                              {investmentHistory.slice(0, 6).map((inv) => {
+                                const returnPaid = inv.return_paid ?? inv.return_which ?? 0;
+                                const returnRemaining = inv.return_remaining ?? inv.return_balance ?? 0;
+
+                                return (
+                                  <tr key={inv.id ?? `${inv.investment_date}-${inv.amount}`}>
+                                    <td>{formatDate(inv.investment_date)}</td>
+                                    <td>
+                                      <span className="investment-plan-pill">
+                                        {inv.plan_name || inv.plan || "-"}
+                                      </span>
+                                    </td>
+                                    <td className="investment-history-amount">
+                                      {fmt(inv.amount)}
+                                    </td>
+                                    <td className="investment-history-amount">
+                                      {fmt(inv.monthly_return_amount ?? 0)}
+                                    </td>
+                                    <td className="investment-history-amount">
+                                      {fmt(returnPaid)}
+                                    </td>
+                                    <td className="investment-history-amount">
+                                      {fmt(returnRemaining)}
+                                    </td>
+                                    <td>
+                                      <span className={`status-pill ${String(inv.investment_status || inv.approval_status || "Pending").toLowerCase()}`}>
+                                        {inv.investment_status || inv.approval_status || "Pending"}
+                                      </span>
+                                    </td>
+                                  </tr>
+                                );
+                              })}
                             </tbody>
                           </table>
                         </div>

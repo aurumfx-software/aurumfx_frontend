@@ -1,6 +1,19 @@
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
-import { FiX, FiAward, FiChevronRight, FiInfo } from "react-icons/fi";
+import {
+  FiX,
+  FiChevronRight,
+  FiInfo,
+  FiUsers,
+} from "react-icons/fi";
+import {
+  GiLaurelsTrophy,
+  GiMedal,
+  GiAchievement,
+  GiStarMedal,
+  GiDiamondTrophy,
+  GiCrown,
+} from "react-icons/gi";
 import UserLayout from "../../components/User/UserLayout";
 import { getAllUserRankSettingsApi, getRankHoldersApi } from "../../api/user-rank";
 import "./financial/EWallet.css";
@@ -24,136 +37,62 @@ const formatAchievedDate = (value) => {
     : date.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
 };
 
-const getRankCriteria = (rank) => {
-  const criteriaList = [];
-
-  if (rank?.criteria && typeof rank.criteria === "string") {
-    criteriaList.push(rank.criteria);
-  }
-
-  if (rank?.description && typeof rank.description === "string") {
-    criteriaList.push(rank.description);
-  }
+// Returns an array of short, chip-ready criteria strings instead of one
+// run-on sentence, so the table (and modal subtitle) can render tags.
+const getRankCriteriaTags = (rank) => {
+  const tags = [];
 
   if (rank?.minimum_total_lots != null || rank?.minimum_lots != null || rank?.min_lots != null) {
     const minLots = rank?.minimum_total_lots ?? rank?.minimum_lots ?? rank?.min_lots;
-    criteriaList.push(`Minimum total lots: ${formatNumber(minLots)}`);
+    tags.push(`Team Lots ${formatNumber(minLots)}`);
   }
 
   if (rank?.required_lots != null || rank?.requiredLots != null) {
-    const requiredLots = rank?.required_lots ?? rank?.requiredLots;
-    criteriaList.push(`Required lots: ${formatNumber(requiredLots)}`);
+    tags.push(`Required Lots ${formatNumber(rank?.required_lots ?? rank?.requiredLots)}`);
+  }
+
+  if (rank?.criteria && typeof rank.criteria === "string") {
+    rank.criteria.split(/,(?![^(]*\))/).forEach((part) => {
+      const clean = part.trim();
+      if (clean) tags.push(clean);
+    });
   }
 
   if (rank?.criteria && typeof rank.criteria === "object") {
     Object.entries(rank.criteria).forEach(([key, value]) => {
       if (value !== null && value !== undefined && value !== "") {
-        criteriaList.push(`${key.replace(/_/g, " ")}: ${String(value)}`);
+        tags.push(`${key.replace(/_/g, " ")}: ${String(value)}`);
       }
     });
   }
 
-  return criteriaList.length ? criteriaList.join(" • ") : "No criteria provided.";
+  if (rank?.description && typeof rank.description === "string") {
+    tags.push(rank.description);
+  }
+
+  return tags.length ? tags : ["No criteria provided"];
 };
+
+// One visual identity per rank tier — a distinct icon and a distinct warm
+// color pair, so ranks read as genuinely different rather than the same
+// gold pill six times over. Cycles automatically if there are more ranks
+// than themes defined here.
+const RANK_THEMES = [
+  { icon: GiLaurelsTrophy, from: "#c98a4b", to: "#8a5a2b", ring: ["#e0a868", "#8a5a2b", "#c98a4b"], border: "#22c55e" }, // green
+  { icon: GiMedal, from: "#e2a53d", to: "#a9691a", ring: ["#f0b95a", "#a9691a", "#e2a53d"], border: "#6366f1" }, // indigo
+  { icon: GiAchievement, from: "#f0c34d", to: "#c99a1e", ring: ["#f5d061", "#c99a1e", "#f0c34d"], border: "#f97316" }, // orange
+  { icon: GiStarMedal, from: "#e3ab97", to: "#b5651d", ring: ["#eec2ab", "#b5651d", "#e3ab97"], border: "#ec4899" }, // pink
+  { icon: GiDiamondTrophy, from: "#e6b325", to: "#8a3b1b", ring: ["#f2c94c", "#8a3b1b", "#e6b325"], border: "#06b6d4" }, // cyan
+  { icon: GiCrown, from: "#fff3d0", to: "#d4af37", ring: ["#fff6d8", "#d4af37", "#f7da7d"], border: "#a855f7" }, // purple
+];
+
+const getRankTheme = (index) => RANK_THEMES[index % RANK_THEMES.length];
 
 const getInitials = (first, last) => {
   const a = (first || "").trim().charAt(0);
   const b = (last || "").trim().charAt(0);
   const initials = `${a}${b}`.toUpperCase();
   return initials || "?";
-};
-
-// ---------------------------------------------------------------------------
-// Premium per-rank color themes. Each theme is self-contained (accent RGB,
-// gradient hex pair, avatar ring gradient) so a rank's whole card look —
-// border glow, shimmer sweep, badge, avatar ring — flows from one palette.
-//
-// Theming is STABLE PER RANK ID (hashed), not by array position. This means:
-//   - A rank always renders the same color, no matter what order the API
-//     returns ranks in, and no matter how many ranks exist before/after it.
-//   - Adding a brand-new rank anywhere (start, middle, end) never reshuffles
-//     colors on existing ranks — each keeps its own theme permanently.
-//   - Two ranks *can* land on the same theme if their ids collide modulo the
-//     palette size (harmless — they just share a look). If you ever need
-//     guaranteed-unique colors per rank, store an explicit theme key in the
-//     rank record on the backend instead of hashing the id.
-// ---------------------------------------------------------------------------
-const RANK_THEMES = [
-  {
-    name: "gold",
-    accent: "245,208,97",
-    bgFrom: "26,20,8",
-    bgTo: "9,7,3",
-    hexA: "#f5d061",
-    hexB: "#d4af37",
-    ring: "conic-gradient(from 180deg, #f5d061, #fff6d8, #d4af37, #f7da7d, #f5d061)",
-  },
-  {
-    name: "platinum",
-    accent: "224,229,238",
-    bgFrom: "22,25,31",
-    bgTo: "8,9,12",
-    hexA: "#e5e9f0",
-    hexB: "#9aa7ba",
-    ring: "conic-gradient(from 180deg, #e5e9f0, #ffffff, #9aa7ba, #c7d0dc, #e5e9f0)",
-  },
-  {
-    name: "rose",
-    accent: "240,168,160",
-    bgFrom: "28,14,14",
-    bgTo: "10,4,4",
-    hexA: "#f0a8a0",
-    hexB: "#c96a5f",
-    ring: "conic-gradient(from 180deg, #f0a8a0, #ffe3df, #c96a5f, #e8968a, #f0a8a0)",
-  },
-  {
-    name: "emerald",
-    accent: "111,214,168",
-    bgFrom: "8,22,16",
-    bgTo: "3,9,6",
-    hexA: "#6fd6a8",
-    hexB: "#2e9e6f",
-    ring: "conic-gradient(from 180deg, #6fd6a8, #d7fbe8, #2e9e6f, #4fc496, #6fd6a8)",
-  },
-  {
-    name: "sapphire",
-    accent: "127,178,240",
-    bgFrom: "8,16,28",
-    bgTo: "3,6,10",
-    hexA: "#7fb2f0",
-    hexB: "#3a72c4",
-    ring: "conic-gradient(from 180deg, #7fb2f0, #dcecff, #3a72c4, #5f96e0, #7fb2f0)",
-  },
-  {
-    name: "amethyst",
-    accent: "199,157,240",
-    bgFrom: "18,10,28",
-    bgTo: "7,3,10",
-    hexA: "#c79df0",
-    hexB: "#8a4fc4",
-    ring: "conic-gradient(from 180deg, #c79df0, #f2e3ff, #8a4fc4, #ad72d8, #c79df0)",
-  },
-  {
-    name: "bronze",
-    accent: "217,154,99",
-    bgFrom: "24,15,7",
-    bgTo: "9,5,2",
-    hexA: "#d99a63",
-    hexB: "#a85f2e",
-    ring: "conic-gradient(from 180deg, #d99a63, #ffe3c2, #a85f2e, #c17a44, #d99a63)",
-  },
-];
-
-const getRankTheme = (rank) => {
-  const rawId = getRankId(rank) ?? getRankName(rank) ?? "0";
-  // Simple deterministic string hash so it works whether id is numeric or a string.
-  let hash = 0;
-  const str = String(rawId);
-  for (let i = 0; i < str.length; i += 1) {
-    hash = (hash * 31 + str.charCodeAt(i)) | 0;
-  }
-  const idx = Math.abs(hash) % RANK_THEMES.length;
-  return RANK_THEMES[idx];
 };
 
 function RanksPage() {
@@ -167,8 +106,9 @@ function RanksPage() {
   const userId = useMemo(() => localStorage.getItem("userId") || "FX001", []);
   const userName = useMemo(() => localStorage.getItem("userName") || "User", []);
 
-  const selectedRank = ranks.find((rank) => getRankId(rank) === selectedRankId) ?? null;
-  const selectedTheme = selectedRank ? getRankTheme(selectedRank) : null;
+  const selectedRankIndex = ranks.findIndex((rank) => getRankId(rank) === selectedRankId);
+  const selectedRank = selectedRankIndex >= 0 ? ranks[selectedRankIndex] : null;
+  const selectedTheme = selectedRankIndex >= 0 ? getRankTheme(selectedRankIndex) : null;
 
   useEffect(() => {
     const loadRanks = async () => {
@@ -239,22 +179,7 @@ function RanksPage() {
         ) : ranks.length === 0 ? (
           <div className="ewallet-table-card">
             <h2 className="section-title" style={{ marginBottom: "14px" }}>Ranks</h2>
-            <div className="table-responsive">
-              <table className="ewallet-table ewallet-table--clean">
-                <thead>
-                  <tr>
-                    <th>Rank No</th>
-                    <th>Name</th>
-                    <th>Criteria</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td colSpan="3" className="empty-cell">No rank settings</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+            <div className="user-rank-empty">No rank settings available.</div>
           </div>
         ) : (
           <div className="ewallet-table-card">
@@ -262,93 +187,105 @@ function RanksPage() {
 
             <div className="user-rank-hint">
               <FiInfo aria-hidden="true" />
-              <span>Tap any rank button below to open its list of current holders.</span>
+              <span>Click the arrow on any rank card to see its current holders.</span>
             </div>
 
-            <div className="table-responsive">
-              <table className="ewallet-table ewallet-table--clean">
-                <thead>
-                  <tr>
-                    <th>Rank No</th>
-                    <th>Name</th>
-                    <th>Criteria</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {ranks.map((rank) => {
-                    const rankId = getRankId(rank);
-                    const name = getRankName(rank);
-                    const theme = getRankTheme(rank);
+            <div className="user-ranks-grid">
+              {ranks.map((rank, index) => {
+                const rankId = getRankId(rank);
+                const name = getRankName(rank);
+                const theme = getRankTheme(index);
+                const RankIcon = theme.icon;
+                const criteriaTags = getRankCriteriaTags(rank);
+                const holderCount =
+                  rank?.holders_count ?? rank?.holder_count ?? rank?.holders ?? null;
 
-                    return (
-                      <tr key={rankId ?? `${name}-${rank?.rank_no ?? "rank"}`}>
-                        <td>{rank?.rank_no ?? "-"}</td>
-                        <td>
-                          <button
-                            type="button"
-                            className="user-rank-pill-btn"
-                            style={{
-                              "--rank-accent": theme.accent,
-                              background: `linear-gradient(135deg, rgba(${theme.accent}, 0.14), rgba(${theme.accent}, 0.05))`,
-                              borderColor: `rgba(${theme.accent}, 0.35)`,
-                            }}
-                            onClick={() => setSelectedRankId(rankId)}
-                          >
-                            <span
-                              className="user-rank-pill-icon"
-                              style={{ background: `linear-gradient(135deg, ${theme.hexA}, ${theme.hexB})` }}
-                            >
-                              <FiAward aria-hidden="true" />
-                            </span>
-                            <span className="user-rank-pill-label" style={{ color: theme.hexB }}>
-                              {name}
-                            </span>
-                            <FiChevronRight
-                              className="user-rank-pill-arrow"
-                              style={{ color: theme.hexB }}
-                              aria-hidden="true"
-                            />
-                          </button>
-                        </td>
-                        <td>{getRankCriteria(rank)}</td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+                return (
+                  <div
+                    key={rankId ?? `${name}-${rank?.rank_no ?? "rank"}`}
+                    className="user-rank-card"
+                    style={{
+                      "--rank-from": theme.from,
+                      "--rank-to": theme.to,
+                      "--rank-border": theme.border,
+                      animationDelay: `${index * 90}ms`,
+                    }}
+                    onClick={() => setSelectedRankId(rankId)}
+                  >
+                    <div className="user-rank-card-header">
+                      <span className="user-rank-card-icon">
+                        <RankIcon aria-hidden="true" />
+                      </span>
+                      <div className="user-rank-card-title">
+                        <span className="user-rank-card-no">
+                          Rank {rank?.rank_no ?? index + 1}
+                        </span>
+                        <span className="user-rank-card-name">{name}</span>
+                      </div>
+                    </div>
+
+                    <div className="user-rank-criteria-tags user-rank-criteria-tags--modal user-rank-criteria-tags--card">
+                      {criteriaTags.map((tag, tagIndex) => (
+                        <span
+                          className="user-rank-criteria-tag"
+                          key={`${rankId}-${tagIndex}`}
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+
+                    <div className="user-rank-card-footer">
+                      <span className="user-rank-card-holders">
+                        <FiUsers aria-hidden="true" />
+                        {holderCount != null
+                          ? `${formatNumber(holderCount)} holder${holderCount === 1 ? "" : "s"}`
+                          : "View holders"}
+                      </span>
+                      <button
+                        type="button"
+                        className="user-rank-card-arrow-btn"
+                        aria-label={`View ${name} holders`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedRankId(rankId);
+                        }}
+                      >
+                        <FiChevronRight aria-hidden="true" />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
 
         {selectedRank && selectedTheme && createPortal(
           <div className="user-rank-modal-backdrop" onClick={() => setSelectedRankId(null)}>
-            <div
-              className="user-rank-modal"
-              onClick={(event) => event.stopPropagation()}
-              style={{
-                "--rank-accent": selectedTheme.accent,
-                "--rank-bg-from": selectedTheme.bgFrom,
-                "--rank-bg-to": selectedTheme.bgTo,
-                "--rank-ring": selectedTheme.ring,
-              }}
-            >
-              <div
-                className="user-rank-modal-header"
-                style={{
-                  background: `linear-gradient(135deg, rgba(${selectedTheme.accent}, 0.10), rgba(${selectedTheme.accent}, 0.02))`,
-                }}
-              >
-                <div>
-                  <h2>{getRankName(selectedRank)} Holders</h2>
-                  <p>{getRankCriteria(selectedRank)}</p>
+            <div className="user-rank-modal" onClick={(event) => event.stopPropagation()}>
+              <div className="user-rank-modal-header">
+                <div className="user-rank-modal-heading-main">
+                  <span
+                    className="user-rank-modal-icon"
+                    style={{ "--rank-from": selectedTheme.from, "--rank-to": selectedTheme.to }}
+                  >
+                    <selectedTheme.icon aria-hidden="true" />
+                  </span>
+                  <div>
+                    <h2>{getRankName(selectedRank)} Holders</h2>
+                    <div className="user-rank-criteria-tags user-rank-criteria-tags--modal">
+                      {getRankCriteriaTags(selectedRank).map((tag, tagIndex) => (
+                        <span className="user-rank-criteria-tag" key={`modal-${tagIndex}`}>
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
                 </div>
                 <div className="user-rank-modal-heading-actions">
-                  <strong style={{ color: selectedTheme.hexA }}>
-                    {holders.length} holder{holders.length === 1 ? "" : "s"}
-                  </strong>
-                  <button type="button" onClick={() => setSelectedRankId(null)} aria-label="Close holders">
-                    <FiX />
-                  </button>
+                  <strong>{holders.length} holder{holders.length === 1 ? "" : "s"}</strong>
+                  <button type="button" onClick={() => setSelectedRankId(null)} aria-label="Close holders"><FiX /></button>
                 </div>
               </div>
 
@@ -361,13 +298,24 @@ function RanksPage() {
                   <div className="user-holders-grid">
                     {holders.map((holder, index) => {
                       const name = `${holder?.first_name || ""} ${holder?.last_name || ""}`.trim() || "-";
+                      const [ringA, ringB, ringC] = selectedTheme.ring;
                       return (
                         <div
                           key={holder?.id ?? holder?.user_id ?? index}
                           className="user-holder-card"
-                          style={{ animationDelay: `${Math.min(index, 12) * 45}ms` }}
+                          style={{
+                            animationDelay: `${Math.min(index, 12) * 45}ms`,
+                            "--rank-from": selectedTheme.from,
+                            "--rank-to": selectedTheme.to,
+                          }}
                         >
-                          <div className="user-holder-avatar-wrap">
+                          <span className="user-holder-rank-badge" aria-hidden="true">
+                            <selectedTheme.icon />
+                          </span>
+                          <div
+                            className="user-holder-avatar-wrap"
+                            style={{ "--ring-a": ringA, "--ring-b": ringB, "--ring-c": ringC }}
+                          >
                             {holder?.image ? (
                               <img
                                 className="user-holder-avatar-img"
@@ -377,7 +325,7 @@ function RanksPage() {
                             ) : (
                               <div
                                 className="user-holder-avatar-initials"
-                                style={{ background: `linear-gradient(135deg, ${selectedTheme.hexA}, ${selectedTheme.hexB})` }}
+                                style={{ background: `linear-gradient(135deg, ${selectedTheme.from}, ${selectedTheme.to})` }}
                               >
                                 {getInitials(holder?.first_name, holder?.last_name)}
                               </div>

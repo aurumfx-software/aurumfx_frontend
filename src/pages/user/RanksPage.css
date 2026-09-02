@@ -34,7 +34,7 @@
   font-size: 15px;
 }
 
-/* ---------- Rank pill button (colors set inline per-rank from JS) ---------- */
+/* ---------- Rank pill button ---------- */
 .user-rank-pill-btn {
   display: inline-flex;
   align-items: center;
@@ -42,16 +42,23 @@
   padding: 8px 16px 8px 10px;
   border: 1px solid var(--ew-accent-line);
   border-radius: 999px;
+  background: var(--ew-nav-gradient-soft);
+  color: var(--ew-accent-strong);
   font: inherit;
   font-weight: 700;
   font-size: 13px;
   cursor: pointer;
+  min-width: 220px;
+  justify-content: flex-start;
+  white-space: nowrap;
   transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
 }
 
 .user-rank-pill-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(var(--rank-accent, 197, 155, 39), 0.22);
+  border-color: var(--ew-accent);
+  background: var(--ew-nav-gradient);
+  box-shadow: 0 6px 18px rgba(197, 155, 39, 0.18);
 }
 
 .user-rank-pill-btn:active {
@@ -59,10 +66,17 @@
 }
 
 .user-rank-pill-btn:focus-visible {
-  outline: 2px solid rgb(var(--rank-accent, 197, 155, 39));
+  outline: 2px solid var(--ew-accent);
   outline-offset: 2px;
 }
 
+.user-rank-pill-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Icon now takes its color from the per-rank theme (--rank-from / --rank-to)
+   passed inline from RanksPage.jsx, so every rank reads as visually distinct. */
 .user-rank-pill-icon {
   display: inline-flex;
   align-items: center;
@@ -70,14 +84,15 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  color: #171308;
+  background: linear-gradient(135deg, var(--rank-from, var(--ew-accent)), var(--rank-to, var(--ew-accent-strong)));
+  color: #1a1408;
   font-size: 13px;
   flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
 }
 
 .user-rank-pill-arrow {
   font-size: 14px;
+  color: var(--ew-accent-strong);
   opacity: 0.65;
   transition: transform 0.18s ease, opacity 0.18s ease;
 }
@@ -85,6 +100,240 @@
 .user-rank-pill-btn:hover .user-rank-pill-arrow {
   transform: translateX(3px);
   opacity: 1;
+}
+
+/* ---------- Criteria as tag chips ---------- */
+.user-rank-criteria-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.user-rank-criteria-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--ew-accent-line);
+  background: var(--ew-nav-gradient-soft);
+  color: var(--ew-accent-strong);
+  font-size: 11.5px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.user-rank-criteria-tags--modal .user-rank-criteria-tag {
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  color: #cbd5e1;
+}
+
+[data-theme="light"] .user-rank-criteria-tag {
+  color: var(--ew-accent-strong);
+}
+
+/* ---------- Rank cards (white, warm-bordered) ---------- */
+.user-ranks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.user-rank-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 22px;
+  border-radius: 16px;
+  cursor: pointer;
+  border: 1.5px solid color-mix(in srgb, var(--rank-border) 55%, transparent);
+  background:
+    radial-gradient(120% 100% at 50% -10%, color-mix(in srgb, var(--rank-border) 12%, transparent), transparent 60%),
+    #ffffff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  opacity: 0;
+  transform: translateY(16px) scale(0.96);
+  animation: user-holder-card-in 0.5s cubic-bezier(0.22, 0.9, 0.32, 1) forwards;
+  animation-delay: inherit;
+  transition: transform 0.22s cubic-bezier(0.22, 0.9, 0.32, 1), box-shadow 0.22s ease, border-color 0.22s ease;
+}
+
+.user-rank-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--rank-border);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.1), 0 0 0 1px color-mix(in srgb, var(--rank-border) 35%, transparent);
+}
+
+.user-rank-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-rank-card-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 13px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--rank-from), var(--rank-to));
+  color: #1a1408;
+  font-size: 21px;
+  box-shadow: 0 4px 10px color-mix(in srgb, var(--rank-from) 35%, transparent);
+}
+
+.user-rank-card-title {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.user-rank-card-no {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--rank-from) 70%, #92400e);
+  opacity: 0.9;
+}
+
+.user-rank-card-name {
+  font-size: 15px;
+  font-weight: 800;
+  color: #1f2937;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.user-rank-criteria-tags--modal.user-rank-criteria-tags--card {
+  margin-top: 0;
+}
+
+.user-rank-card .user-rank-criteria-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.user-rank-card .user-rank-criteria-tag {
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 3px 9px;
+  line-height: 1.5;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--rank-from) 40%, #e5e7eb);
+  background: color-mix(in srgb, var(--rank-from) 8%, #fafafa);
+  color: #78350f;
+}
+
+.user-rank-card-footer {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid #f1f1f1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.user-rank-card-holders {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #6b7280;
+  white-space: nowrap;
+}
+
+.user-rank-card-holders svg {
+  color: var(--rank-border);
+  font-size: 14px;
+}
+
+.user-rank-card-arrow-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid color-mix(in srgb, var(--rank-border) 70%, #ffffff);
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  color: #111827;
+  font-size: 15px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.user-rank-card-arrow-btn svg {
+  color: #111827;
+}
+
+.user-rank-card:hover .user-rank-card-arrow-btn {
+  transform: translateX(4px);
+  box-shadow: 0 6px 14px color-mix(in srgb, var(--rank-border) 45%, transparent);
+}
+
+[data-theme="light"] .user-rank-card-name {
+  color: #1f2937;
+}
+
+/* ---------- Rank cards — dark theme ---------- */
+[data-theme="dark"] .user-rank-card {
+  background:
+    radial-gradient(120% 120% at 50% -10%, color-mix(in srgb, var(--rank-border) 14%, transparent), transparent 55%),
+    linear-gradient(165deg, rgba(26, 20, 8, 0.96), rgba(9, 7, 3, 0.98));
+  border-color: color-mix(in srgb, var(--rank-border) 45%, transparent);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+[data-theme="dark"] .user-rank-card:hover {
+  border-color: var(--rank-border);
+  box-shadow: 0 18px 34px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--rank-border),
+    0 0 26px color-mix(in srgb, var(--rank-border) 30%, transparent);
+}
+
+[data-theme="dark"] .user-rank-card-no {
+  color: var(--rank-border);
+}
+
+[data-theme="dark"] .user-rank-card-name {
+  color: #fdf3d8;
+}
+
+[data-theme="dark"] .user-rank-card .user-rank-criteria-tag {
+  border-color: color-mix(in srgb, var(--rank-border) 40%, rgba(255, 255, 255, 0.14));
+  background: color-mix(in srgb, var(--rank-border) 10%, rgba(255, 255, 255, 0.05));
+  color: #f0d9a8;
+}
+
+[data-theme="dark"] .user-rank-card-footer {
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .user-rank-card-holders {
+  color: #a89a78;
+}
+
+@media (max-width: 640px) {
+  .user-ranks-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .user-rank-card {
+    padding: 18px;
+  }
 }
 
 /* ---------- Modal shell ---------- */
@@ -97,23 +346,20 @@
   justify-content: center;
   overflow-y: auto;
   padding: 24px;
-  background: rgba(8, 9, 12, 0.6);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .user-rank-modal {
-  width: min(100%, 960px);
+  width: min(100%, 940px);
   max-height: calc(100vh - 48px);
   margin: auto;
   overflow: hidden;
-  border: 1px solid rgba(var(--rank-accent, 212, 175, 55), 0.3);
-  border-radius: 18px;
-  background: #0e0e10;
-  box-shadow:
-    0 30px 80px rgba(0, 0, 0, 0.55),
-    0 0 0 1px rgba(var(--rank-accent, 212, 175, 55), 0.06),
-    0 0 60px rgba(var(--rank-accent, 212, 175, 55), 0.08);
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  border-radius: 16px;
+  background: #111;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.5);
   display: flex;
   flex-direction: column;
 }
@@ -123,32 +369,57 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 18px;
-  padding: 24px 28px;
+  padding: 22px 28px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.user-rank-modal-heading-main {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  min-width: 0;
+}
+
+.user-rank-modal-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, var(--rank-from), var(--rank-to));
+  color: #1a1408;
+  font-size: 21px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
 }
 
 .user-rank-modal-header h2 {
   margin: 0;
   color: #f8fafc;
-  font-size: 21px;
-  letter-spacing: 0.01em;
+  font-size: 20px;
 }
 
 .user-rank-modal-header p {
-  margin: 6px 0 0;
-  color: #9aa3af;
+  margin: 5px 0 0;
+  color: #94a3b8;
   font-size: 13px;
+}
+
+.user-rank-criteria-tags--modal {
+  margin-top: 8px;
 }
 
 .user-rank-modal-heading-actions {
   display: flex;
   align-items: center;
   gap: 18px;
+  flex-shrink: 0;
 }
 
 .user-rank-modal-heading-actions strong {
+  color: #f5d061;
   white-space: nowrap;
-  font-size: 14px;
 }
 
 .user-rank-modal-heading-actions button {
@@ -162,19 +433,17 @@
   background: transparent;
   color: #cbd5e1;
   cursor: pointer;
-  transition: border-color 0.18s ease, color 0.18s ease;
 }
 
 .user-rank-modal-heading-actions button:hover {
-  border-color: rgb(var(--rank-accent, 245, 208, 97));
-  color: rgb(var(--rank-accent, 245, 208, 97));
+  border-color: #f5d061;
+  color: #f5d061;
 }
 
 [data-theme="light"] .user-rank-modal {
   background: #fff;
-  box-shadow:
-    0 30px 80px rgba(45, 35, 20, 0.2),
-    0 0 0 1px rgba(var(--rank-accent, 197, 155, 39), 0.1);
+  border-color: rgba(197, 155, 39, 0.28);
+  box-shadow: 0 24px 70px rgba(45, 35, 20, 0.24);
 }
 
 [data-theme="light"] .user-rank-modal-header {
@@ -216,7 +485,7 @@
 /* ---------- Holder card grid ---------- */
 .user-rank-grid-wrap {
   overflow-y: auto;
-  padding: 24px 28px 28px;
+  padding: 22px 28px 26px;
   max-height: calc(100vh - 210px);
 }
 
@@ -232,11 +501,11 @@
 
 .user-holders-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 16px;
 }
 
-/* ---------- Holder card — themed per rank via CSS vars from parent modal ---------- */
+/* ---------- Holder card — theme-aware, gold-medal treatment ---------- */
 .user-holder-card {
   position: relative;
   isolation: isolate;
@@ -245,34 +514,76 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 11px;
-  padding: 28px 16px 20px;
-  border: 1px solid rgba(var(--rank-accent, 245, 208, 97), 0.22);
-  border-radius: 18px;
-  background:
-    radial-gradient(120% 120% at 50% -10%, rgba(var(--rank-accent, 245, 208, 97), 0.18), transparent 55%),
-    linear-gradient(165deg, rgba(var(--rank-bg-from, 26, 20, 8), 0.95), rgba(var(--rank-bg-to, 9, 7, 3), 0.98));
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  gap: 10px;
+  padding: 24px 16px 18px;
+  border-radius: 16px;
   opacity: 0;
   transform: translateY(10px) scale(0.97);
   animation: user-holder-card-in 0.42s cubic-bezier(0.22, 0.9, 0.32, 1) forwards;
   transition: transform 0.25s cubic-bezier(0.22, 0.9, 0.32, 1), box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
-/* Small spark accent, top-right corner, colored per rank */
-.user-holder-card::after {
-  content: "\2726";
-  position: absolute;
-  top: 12px;
-  right: 15px;
-  font-size: 12px;
-  line-height: 1;
-  color: rgba(var(--rank-accent, 245, 208, 97), 0.65);
-  z-index: 1;
-  pointer-events: none;
+.user-holder-card,
+[data-theme="dark"] .user-holder-card {
+  border: 1px solid rgba(245, 208, 97, 0.22);
+  background:
+    radial-gradient(120% 120% at 50% -10%, rgba(245, 208, 97, 0.16), transparent 55%),
+    linear-gradient(165deg, rgba(26, 20, 8, 0.94), rgba(9, 7, 3, 0.98));
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
-/* Gradient shimmer ring, revealed on hover */
+.user-holder-card:hover,
+[data-theme="dark"] .user-holder-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(245, 208, 97, 0.5);
+  box-shadow: 0 18px 34px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(245, 208, 97, 0.18), 0 0 26px rgba(245, 208, 97, 0.16);
+}
+
+[data-theme="light"] .user-holder-card {
+  border: 1px solid rgba(197, 155, 39, 0.28);
+  background:
+    radial-gradient(120% 120% at 50% -10%, rgba(197, 155, 39, 0.14), transparent 55%),
+    #ffffff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .user-holder-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(197, 155, 39, 0.55);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(197, 155, 39, 0.2);
+}
+
+[data-theme="light"] .user-holder-name {
+  color: #1f2937;
+}
+
+[data-theme="light"] .user-holder-date {
+  color: #6b7280;
+}
+
+[data-theme="light"] .user-holder-userid {
+  background: linear-gradient(135deg, rgba(197, 155, 39, 0.16), rgba(197, 155, 39, 0.06));
+  border-color: rgba(197, 155, 39, 0.32);
+  color: #92400e;
+}
+
+.user-holder-rank-badge {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--rank-from), var(--rank-to));
+  color: #1a1408;
+  font-size: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
 .user-holder-card::before {
   content: "";
   position: absolute;
@@ -281,11 +592,11 @@
   padding: 1.5px;
   background: linear-gradient(
     135deg,
-    rgba(var(--rank-accent, 245, 208, 97), 0) 0%,
-    rgba(var(--rank-accent, 245, 208, 97), 0.65) 45%,
-    rgba(255, 255, 255, 0.95) 50%,
-    rgba(var(--rank-accent, 245, 208, 97), 0.65) 55%,
-    rgba(var(--rank-accent, 245, 208, 97), 0) 100%
+    rgba(245, 208, 97, 0) 0%,
+    rgba(245, 208, 97, 0.6) 45%,
+    rgba(255, 250, 230, 0.95) 50%,
+    rgba(245, 208, 97, 0.6) 55%,
+    rgba(245, 208, 97, 0) 100%
   );
   background-size: 240% 240%;
   background-position: 0% 0%;
@@ -296,15 +607,6 @@
   transition: opacity 0.3s ease, background-position 0.9s ease;
   pointer-events: none;
   z-index: 0;
-}
-
-.user-holder-card:hover {
-  transform: translateY(-5px);
-  border-color: rgba(var(--rank-accent, 245, 208, 97), 0.55);
-  box-shadow:
-    0 20px 38px rgba(0, 0, 0, 0.5),
-    0 0 0 1px rgba(var(--rank-accent, 245, 208, 97), 0.2),
-    0 0 30px rgba(var(--rank-accent, 245, 208, 97), 0.22);
 }
 
 .user-holder-card:hover::before {
@@ -335,22 +637,41 @@
     transition: none;
     opacity: 0 !important;
   }
+
+  .user-holder-avatar-wrap::before {
+    animation: none;
+  }
 }
 
-/* Medal-style avatar ring — medium size, colored per rank */
 .user-holder-avatar-wrap {
   position: relative;
   z-index: 1;
-  width: 92px;
-  height: 92px;
+  width: 68px;
+  height: 68px;
   border-radius: 50%;
   padding: 3px;
-  background: var(--rank-ring, conic-gradient(from 180deg, #f5d061, #fff6d8, #d4af37, #f7da7d, #f5d061));
-  box-shadow: 0 8px 20px rgba(var(--rank-accent, 245, 208, 97), 0.35);
+  overflow: hidden;
+  isolation: isolate;
+  box-shadow: 0 6px 16px rgba(245, 208, 97, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+}
+
+.user-holder-avatar-wrap::before {
+  content: "";
+  position: absolute;
+  inset: -25%;
+  background: conic-gradient(
+    from 0deg,
+    var(--ring-a, #f5d061),
+    var(--ring-b, #d4af37),
+    var(--ring-c, #f7da7d),
+    var(--ring-a, #f5d061)
+  );
+  animation: user-holder-ring-spin 5s linear infinite;
+  z-index: 0;
 }
 
 .user-holder-avatar-wrap::after {
@@ -358,8 +679,15 @@
   position: absolute;
   inset: -4px;
   border-radius: 50%;
-  border: 1px dashed rgba(var(--rank-accent, 245, 208, 97), 0.35);
+  border: 1px dashed rgba(245, 208, 97, 0.32);
   pointer-events: none;
+  z-index: 2;
+}
+
+@keyframes user-holder-ring-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .user-holder-avatar-img {
@@ -369,6 +697,8 @@
   object-fit: cover;
   border: 2px solid #0d0a05;
   display: block;
+  position: relative;
+  z-index: 1;
 }
 
 .user-holder-avatar-initials {
@@ -381,8 +711,10 @@
   border: 2px solid #0d0a05;
   color: #171308;
   font-weight: 800;
-  font-size: 25px;
+  font-size: 19px;
   letter-spacing: 0.02em;
+  position: relative;
+  z-index: 1;
 }
 
 .user-holder-card-body {
@@ -397,7 +729,7 @@
 .user-holder-name {
   color: #fdf3d8;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 13.5px;
   line-height: 1.3;
   letter-spacing: 0.01em;
   overflow-wrap: anywhere;
@@ -407,19 +739,19 @@
   display: inline-flex;
   align-self: center;
   margin-top: 3px;
-  padding: 3px 12px;
+  padding: 3px 11px;
   border-radius: 999px;
-  background: linear-gradient(135deg, rgba(var(--rank-accent, 245, 208, 97), 0.24), rgba(var(--rank-accent, 245, 208, 97), 0.1));
-  border: 1px solid rgba(var(--rank-accent, 245, 208, 97), 0.35);
+  background: linear-gradient(135deg, rgba(245, 208, 97, 0.22), rgba(245, 208, 97, 0.08));
+  border: 1px solid rgba(245, 208, 97, 0.32);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
-  color: rgb(var(--rank-accent, 245, 208, 97));
+  color: #f5d061;
   font-weight: 700;
   font-size: 11px;
   letter-spacing: 0.02em;
 }
 
 .user-holder-date {
-  color: #a3a89a;
+  color: #a89a78;
   font-size: 11.5px;
   margin-top: 2px;
 }
@@ -431,20 +763,20 @@
   }
 
   .user-holders-grid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
   }
 
   .user-holder-card {
-    padding: 20px 10px 16px;
+    padding: 18px 10px 14px;
   }
 
   .user-holder-avatar-wrap {
-    width: 74px;
-    height: 74px;
+    width: 58px;
+    height: 58px;
   }
 
-  .user-holder-avatar-initials {
-    font-size: 21px;
+  .user-rank-pill-btn {
+    min-width: 0;
   }
 }
