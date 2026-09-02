@@ -7,6 +7,7 @@ import "./Login.css";
 
 function Login() {
   const navigate = useNavigate();
+  const isAdminSession = localStorage.getItem("role") === "admin";
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -161,6 +162,12 @@ function Login() {
             Register
           </Link>
         </div>
+
+        {isAdminSession && (
+          <Link to="/admin/dashboard" className="login-admin-link">
+            Back to Admin
+          </Link>
+        )}
       </div>
     </div>
   );

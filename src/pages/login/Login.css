@@ -145,6 +145,21 @@
   line-height: 1.4;
 }
 
+.login-admin-link {
+  display: block;
+  width: fit-content;
+  margin: 18px auto 0;
+  color: var(--gold-dark, var(--gold));
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.login-admin-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .login-card {
   position: relative;
   z-index: 1;

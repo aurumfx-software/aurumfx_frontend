@@ -143,6 +143,10 @@ function UserNodeTooltip({ anchorRect, node }) {
         <span>{node.name || node.full_name || node.fullname || "User"}</span>
       </div>
       <div className="fam-tooltip-row">
+        <span>Sponsor</span>
+        <span>{node.sponsor || node.sponsor_id || "-"}</span>
+      </div>
+      <div className="fam-tooltip-row">
         <span>Date of Join</span>
         <span>{formatJoinDate(node.date_of_joining || node.date_of_join)}</span>
       </div>
