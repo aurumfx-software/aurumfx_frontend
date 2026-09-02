@@ -474,11 +474,56 @@
   }
 
   .user-rank-modal-header {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
     padding: 18px;
   }
 
-  .user-rank-modal-heading-actions {
+  .user-rank-modal-heading-main {
+    display: flex;
+    align-items: flex-start;
     gap: 10px;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .user-rank-modal-heading-main > div {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  .user-rank-modal-header h2 {
+    font-size: 18px;
+    line-height: 1.25;
+    word-break: break-word;
+  }
+
+  .user-rank-modal-heading-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .user-rank-modal-heading-actions strong {
+    white-space: normal;
+  }
+
+  .user-rank-criteria-tags--modal {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    row-gap: 6px;
+  }
+
+  .user-rank-criteria-tags--modal .user-rank-criteria-tag {
+    white-space: normal;
+    line-height: 1.3;
+    word-break: break-word;
+    max-width: 100%;
   }
 }
 

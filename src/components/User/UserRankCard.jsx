@@ -108,7 +108,7 @@ function UserRankCard({ user }) {
           <div className="rank-badge-item">
             <span className="badge-lbl">Current Rank</span>
             <span className="badge-val">
-              <span className="rank-icon">🪵</span> {rank}
+              <span className="rank-icon">🏆</span> {rank}
             </span>
           </div>
 

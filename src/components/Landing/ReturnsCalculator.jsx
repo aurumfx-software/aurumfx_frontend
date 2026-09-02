@@ -143,7 +143,7 @@ function ReturnsCalculator() {
               <div className="total-box">
                 <div>
                   <span className="tot-label">
-                    Total Profit ({plan.months} Months)
+                    Total Returns ({plan.months} Months)
                   </span>
                   <h3 className="tot-value">
                     ₹{totalReturns.toLocaleString()}

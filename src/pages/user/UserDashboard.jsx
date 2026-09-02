@@ -399,7 +399,7 @@ function UserDashboard() {
                 <div className="metric-card-info">
                   <span className="metric-label">Wallet Balance</span>
                   <h3 className="metric-value">
-                    {loading ? "…" : fmt(s.walletBalance)}
+                    {loading ? "…" : fmt(s.pendingBalance)}
                   </h3>
                 </div>
                 <button type="button" className="metric-corner-btn" title="Wallet">
