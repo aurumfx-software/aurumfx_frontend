@@ -9,6 +9,7 @@ import {
   FiAlertCircle,
   FiImage,
   FiFileText,
+  FiRefreshCw,
 } from "react-icons/fi";
 import UserLayout from "../../../components/User/UserLayout";
 import {
@@ -61,7 +62,6 @@ function Investments() {
 
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [statusFilter, setStatusFilter] = useState("All");
 
   const [loading, setLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
@@ -225,7 +225,13 @@ function Investments() {
     await loadInvestments({
       start_date: startDate,
       end_date: endDate,
-      status: statusFilter,
+    });
+  };
+
+  const handleRefresh = async () => {
+    await loadInvestments({
+      start_date: startDate,
+      end_date: endDate,
     });
   };
 
@@ -417,18 +423,11 @@ function Investments() {
               </div>
             </div>
 
-            <div className="filter-input-group select-group">
-              <div className="select-control">
-                <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="filter-select">
-                  <option value="All">Status</option>
-                  <option value="Approved">Approved</option>
-                  <option value="Pending">Pending</option>
-                  <option value="Rejected">Rejected</option>
-                </select>
-                <FiChevronDown className="select-arrow" aria-hidden="true" />
-              </div>
-            </div>
-            <button type="submit" className="get-filter-btn">Get</button>
+            <button type="submit" className="filter-action-btn get-filter-btn">Get</button>
+            <button type="button" className="filter-action-btn refresh-filter-btn" onClick={handleRefresh}>
+              <FiRefreshCw size={14} />
+              Refresh
+            </button>
           </form>
         </div>
 

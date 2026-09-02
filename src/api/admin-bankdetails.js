@@ -42,10 +42,15 @@ export const getAdminMemberBankDetailsApi = async (userId) => {
 export const updateAdminMemberBankStatusApi = async (userId, status, rejectionReason = "") => {
   try {
     const response = await api.patch(`/api/admin/members/${encodeURIComponent(userId)}/bank-status`, {
-      status,
-      rejection_reason: rejectionReason || null,
+      bank_status: status,
+      bank_rejection_reason: rejectionReason || null,
     });
-    return { success: true, data: response.data?.data || response.data || {} };
+
+    const payload = response.data?.data || response.data || {};
+    return {
+      success: true,
+      data: typeof payload === "string" ? { message: payload } : payload,
+    };
   } catch (error) {
     return { success: false, error: getErrorMessage(error, "Unable to update bank status.") };
   }

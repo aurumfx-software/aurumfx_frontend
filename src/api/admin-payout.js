@@ -34,6 +34,17 @@ export const payUserPayoutApi = async (userId) => {
   }
 };
 
+export const bulkPayUsersApi = async (userIds) => {
+  try {
+    const response = await api.post("/admin/payout/bulk-pay", {
+      user_ids: userIds,
+    });
+    return { success: true, data: response.data };
+  } catch (error) {
+    return { success: false, error: getErrorMessage(error, "Unable to bulk pay users") };
+  }
+};
+
 export const rejectUserPayoutApi = async (userId, rejectionReason) => {
   try {
     const response = await api.post(`/admin/payout/${userId}/reject`, {

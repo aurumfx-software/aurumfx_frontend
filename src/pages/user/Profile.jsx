@@ -38,7 +38,10 @@ function Profile({ defaultTab = "profile" }) {
     dateJoined: "",
     zipCode: "",
     city: "",
+    state: "",
     country: "",
+    buildingNo: "",
+    street: "",
     dateOfBirth: "",
     avatar: "",
   });
@@ -126,8 +129,11 @@ function Profile({ defaultTab = "profile" }) {
       last_name: lastName,
       date_of_birth: profileData.dateOfBirth,
       country: profileData.country,
+      state: profileData.state,
       city: profileData.city,
       zip_code: profileData.zipCode,
+      building_no: profileData.buildingNo,
+      street: profileData.street,
       mobile: profileData.mobile,
       gender: profileData.gender,
     };
@@ -189,9 +195,11 @@ function Profile({ defaultTab = "profile" }) {
     const missing = [];
     if (!nomineeDetails.nominee_name) missing.push("Nominee Name");
     if (!nomineeDetails.nominee_relation) missing.push("Nominee Relation");
+    if (nomineeDetails.nominee_relation === "Other" && (!nomineeDetails.nominee_relation_other || !String(nomineeDetails.nominee_relation_other).trim())) {
+      missing.push("Nominee Relationship Detail");
+    }
     if (!nomineeDetails.nominee_gender) missing.push("Nominee Gender");
     if (!nomineeDetails.nominee_dob) missing.push("Nominee Date of Birth");
-    if (!nomineeDetails.nominee_address) missing.push("Nominee Address");
     if (!nomineeDetails.nominee_aadhar) missing.push("Nominee Aadhaar");
     if (!nomineeDetails.nominee_mobile) missing.push("Nominee Mobile");
     if (!nomineeAadharFront && !nomineeAadharFrontUrl) missing.push("Aadhaar Front Photo");
@@ -332,7 +340,10 @@ function Profile({ defaultTab = "profile" }) {
           dateOfBirth: data.date_of_birth || data.dateOfBirth || prev.dateOfBirth || "",
           zipCode: data.zip_code || prev.zipCode || "",
           city: data.city || prev.city || "",
+          state: data.state || prev.state || "",
           country: data.country || prev.country || "",
+          buildingNo: data.building_no || data.buildingNo || prev.buildingNo || "",
+          street: data.street || prev.street || "",
           avatar: data.avatar || data.profile_image || prev.avatar || "",
         }));
 
@@ -409,8 +420,8 @@ function Profile({ defaultTab = "profile" }) {
             nominee_aadhar: nd.nominee_aadhar || "",
             nominee_mobile: nd.nominee_mobile || "",
           });
-          setNomineeStatus(normalizeStatus(nd.status || "pending"));
-          setNomineeRejectionReason(nd.rejection_reason || "");
+          setNomineeStatus(normalizeStatus(nd.nominee_status ?? nd.status ?? "pending"));
+          setNomineeRejectionReason(nd.nominee_rejection_reason ?? nd.rejection_reason ?? "");
           setNomineeAadharFrontUrl(nd.nominee_aadhar_front || "");
           setNomineeAadharBackUrl(nd.nominee_aadhar_back || "");
         }
@@ -438,10 +449,10 @@ function Profile({ defaultTab = "profile" }) {
     }));
     setBankStatus(
       hasBankSubmission(bd, {})
-        ? normalizeStatus(bd.bank_status || bd.status)
+        ? normalizeStatus(bd.bank_status ?? bd.status ?? "pending")
         : "not_submitted"
     );
-    setBankRejectionReason(bd.rejection_reason || "");
+    setBankRejectionReason(bd.bank_rejection_reason ?? bd.rejection_reason ?? "");
     setProofDocumentName(bd.bank_proof ? "Uploaded" : "");
     setProofDocumentUrl(bd.bank_proof || "");
   };
@@ -469,8 +480,8 @@ function Profile({ defaultTab = "profile" }) {
       nominee_aadhar: nd.nominee_aadhar || prev.nominee_aadhar,
       nominee_mobile: nd.nominee_mobile || prev.nominee_mobile,
     }));
-    setNomineeStatus(hasData ? (hasNomineeSubmission(nd) ? normalizeStatus(nd.status || "pending") : "pending") : "not_submitted");
-    setNomineeRejectionReason(nd.rejection_reason || "");
+    setNomineeStatus(hasData ? (hasNomineeSubmission(nd) ? normalizeStatus(nd.nominee_status ?? nd.status ?? "pending") : "pending") : "not_submitted");
+    setNomineeRejectionReason(nd.nominee_rejection_reason ?? nd.rejection_reason ?? "");
     setNomineeAadharFrontUrl(nd.nominee_aadhar_front || "");
     setNomineeAadharBackUrl(nd.nominee_aadhar_back || "");
   };

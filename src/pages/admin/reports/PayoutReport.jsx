@@ -25,7 +25,7 @@ const formatDateTime = (value) => {
 };
 
 function PayoutReport() {
-  const [filters, setFilters] = useState({ start_date: "", end_date: "", status: "", user_id: "" });
+  const [filters, setFilters] = useState({ start_date: "", end_date: "", user_id: "" });
   const [report, setReport] = useState({ total_records: 0, total_income: 0, total_admin_fee: 0, total_net_payable: 0, items: [] });
   const [loading, setLoading] = useState(true);
   const [printing, setPrinting] = useState(false);
@@ -50,7 +50,7 @@ function PayoutReport() {
   };
 
   const handleReset = () => {
-    const emptyFilters = { start_date: "", end_date: "", status: "", user_id: "" };
+    const emptyFilters = { start_date: "", end_date: "", user_id: "" };
     setFilters(emptyFilters);
     loadReport(emptyFilters);
   };
@@ -87,7 +87,6 @@ function PayoutReport() {
           <div className="reports-date-field"><span className="reports-date-label">Pick Start Date</span><div className="reports-date-row"><input type="date" className="reports-date-input" value={filters.start_date} onChange={(event) => setFilter("start_date", event.target.value)} /><FiCalendar className="reports-date-icon" /></div></div>
           <div className="reports-date-field"><span className="reports-date-label">Pick End Date</span><div className="reports-date-row"><input type="date" className="reports-date-input" value={filters.end_date} onChange={(event) => setFilter("end_date", event.target.value)} /><FiCalendar className="reports-date-icon" /></div></div>
           <input className="reports-user-select" placeholder="User ID" value={filters.user_id} onChange={(event) => setFilter("user_id", event.target.value)} />
-          <select className="reports-user-select" value={filters.status} onChange={(event) => setFilter("status", event.target.value)}><option value="">All Status</option><option value="Pending">Pending</option><option value="Approved">Approved</option><option value="Paid">Paid</option><option value="Rejected">Rejected</option></select>
           <button type="submit" className="reports-search-btn">Search</button>
           <button type="button" className="reports-reset-btn" onClick={handleReset}>Reset <FiRefreshCw size={13} /></button>
         </form>

@@ -36,6 +36,9 @@ const isNoDataMessage = (message = "") => {
 
 const normalizePendingRow = (row = {}) => {
   const bank = row.bank_details || row.bankDetails || {};
+  const bankStatus = bank.bank_status ?? bank.status ?? row.bank_status ?? row.status ?? "PENDING";
+  const rejectionReason = bank.bank_rejection_reason ?? bank.rejection_reason ?? row.bank_rejection_reason ?? row.rejection_reason ?? null;
+
   return {
     ...row,
     user_id: row.user_id || row.userId || "-",
@@ -45,35 +48,50 @@ const normalizePendingRow = (row = {}) => {
       bank_account: bank.bank_account || row.bank_account || "-",
       ifsc: bank.ifsc || row.ifsc || "-",
       bank_proof: bank.bank_proof || row.bank_proof || "",
-      status: bank.status || row.status || "PENDING",
-      rejection_reason: bank.rejection_reason || row.rejection_reason || null,
+      bank_status: bankStatus,
+      status: bankStatus,
+      bank_rejection_reason: rejectionReason,
+      rejection_reason: rejectionReason,
     },
   };
 };
 
 const normalizeHistoryRow = (row = {}) => {
   const bank = row.bank_details || row.bankDetails || {};
-  const nominee = row.nominee_details || row.nomineeDetails || {};
+  const nominee = row.nominee_details || row.nomineeDetails || bank.nominee_details || {};
+  const bankStatus = bank.bank_status ?? bank.status ?? row.bank_status ?? row.status ?? "NOT SUBMITTED";
+  const rejectionReason = bank.bank_rejection_reason ?? bank.rejection_reason ?? row.bank_rejection_reason ?? row.rejection_reason ?? null;
 
   return {
     ...row,
     user_id: row.user_id || row.userId || "-",
     fullname: row.fullname || row.full_name || row.name || "-",
     bank_details: {
+      ...bank,
       bank_name: bank.bank_name || row.bank_name || "-",
       bank_account: bank.bank_account || row.bank_account || "-",
       ifsc: bank.ifsc || row.ifsc || "-",
       bank_proof: bank.bank_proof || row.bank_proof || "",
-      status: bank.status || row.status || "NOT SUBMITTED",
-      rejection_reason: bank.rejection_reason || row.rejection_reason || null,
+      bank_status: bankStatus,
+      status: bankStatus,
+      bank_rejection_reason: rejectionReason,
+      rejection_reason: rejectionReason,
+      nominee_name: bank.nominee_name ?? nominee.nominee_name ?? row.nominee_name ?? "-",
+      nominee_relation: bank.nominee_relation ?? nominee.nominee_relation ?? row.nominee_relation ?? "-",
+      nominee_gender: bank.nominee_gender ?? nominee.nominee_gender ?? row.nominee_gender ?? "-",
+      nominee_dob: bank.nominee_dob ?? nominee.nominee_dob ?? row.nominee_dob ?? "-",
+      nominee_address: bank.nominee_address ?? nominee.nominee_address ?? row.nominee_address ?? "-",
+      nominee_aadhar: bank.nominee_aadhar ?? nominee.nominee_aadhar ?? row.nominee_aadhar ?? "-",
+      nominee_mobile: bank.nominee_mobile ?? nominee.nominee_mobile ?? row.nominee_mobile ?? "-",
     },
     nominee_details: {
-      nominee_name: nominee.nominee_name || row.nominee_name || "-",
-      nominee_relation: nominee.nominee_relation || row.nominee_relation || "-",
-      nominee_aadhar: nominee.nominee_aadhar || row.nominee_aadhar || "-",
-      nominee_mobile: nominee.nominee_mobile || row.nominee_mobile || "-",
-      nominee_aadhar_front: nominee.nominee_aadhar_front || row.nominee_aadhar_front || "",
-      nominee_aadhar_back: nominee.nominee_aadhar_back || row.nominee_aadhar_back || "",
+      nominee_name: bank.nominee_name ?? nominee.nominee_name ?? row.nominee_name ?? "-",
+      nominee_relation: bank.nominee_relation ?? nominee.nominee_relation ?? row.nominee_relation ?? "-",
+      nominee_gender: bank.nominee_gender ?? nominee.nominee_gender ?? row.nominee_gender ?? "-",
+      nominee_dob: bank.nominee_dob ?? nominee.nominee_dob ?? row.nominee_dob ?? "-",
+      nominee_address: bank.nominee_address ?? nominee.nominee_address ?? row.nominee_address ?? "-",
+      nominee_aadhar: bank.nominee_aadhar ?? nominee.nominee_aadhar ?? row.nominee_aadhar ?? "-",
+      nominee_mobile: bank.nominee_mobile ?? nominee.nominee_mobile ?? row.nominee_mobile ?? "-",
     },
   };
 };
@@ -135,6 +153,14 @@ function AdminBankApprove() {
 
   const currentMembers = activeTab === "pending" ? pendingMembers : historyMembers;
 
+  const hasNomineeData = (member) => {
+    const nominee = member?.nominee_details || member?.bank_details || {};
+    return nomineeDetailFields.some(([_, key]) => {
+      const value = nominee[key];
+      return value !== undefined && value !== null && String(value).trim() !== "" && String(value).trim() !== "-";
+    });
+  };
+
   const filteredMembers = useMemo(() => currentMembers.filter((member) => {
     const bank = member.bank_details || {};
     const memberDate = member.date_of_joining || member.date_of_join || member.created_at || "";
@@ -151,7 +177,7 @@ function AdminBankApprove() {
     const userId = member.user_id;
     setSelectedUserId(userId);
     setDetails(null);
-    setRejectionReason(member.bank_details?.rejection_reason || "");
+    setRejectionReason(member.bank_details?.bank_rejection_reason ?? member.bank_details?.rejection_reason ?? "");
     setError("");
     setLoadingDetails(true);
 
@@ -168,17 +194,33 @@ function AdminBankApprove() {
     const result = await getAdminMemberBankDetailsApi(userId);
     if (result.success) {
       const response = result.data || {};
+      const responseBank = response.bank_details || {};
+      const nomineeSource = { ...member.nominee_details, ...response.nominee_details, ...responseBank.nominee_details };
       const bankDetails = {
         ...member.bank_details,
-        ...response.bank_details,
-        bank_name: response.bank_name ?? response.bank_details?.bank_name ?? member.bank_details?.bank_name,
-        bank_account: response.bank_account ?? response.bank_details?.bank_account ?? member.bank_details?.bank_account,
-        ifsc: response.ifsc ?? response.bank_details?.ifsc ?? member.bank_details?.ifsc,
-        bank_proof: response.bank_proof ?? response.bank_details?.bank_proof ?? member.bank_details?.bank_proof,
-        status: response.bank_status ?? response.status ?? response.bank_details?.status ?? member.bank_details?.status,
-        rejection_reason: response.rejection_reason ?? response.bank_details?.rejection_reason ?? member.bank_details?.rejection_reason,
+        ...responseBank,
+        bank_name: response.bank_name ?? responseBank.bank_name ?? member.bank_details?.bank_name,
+        bank_account: response.bank_account ?? responseBank.bank_account ?? member.bank_details?.bank_account,
+        ifsc: response.ifsc ?? responseBank.ifsc ?? member.bank_details?.ifsc,
+        bank_proof: response.bank_proof ?? responseBank.bank_proof ?? member.bank_details?.bank_proof,
+        bank_status: response.bank_status ?? responseBank.bank_status ?? response.status ?? responseBank.status ?? member.bank_details?.bank_status ?? member.bank_details?.status,
+        status: response.bank_status ?? responseBank.bank_status ?? response.status ?? responseBank.status ?? member.bank_details?.bank_status ?? member.bank_details?.status,
+        bank_rejection_reason: response.bank_rejection_reason ?? responseBank.bank_rejection_reason ?? response.rejection_reason ?? responseBank.rejection_reason ?? member.bank_details?.bank_rejection_reason ?? member.bank_details?.rejection_reason,
+        rejection_reason: response.bank_rejection_reason ?? responseBank.bank_rejection_reason ?? response.rejection_reason ?? responseBank.rejection_reason ?? member.bank_details?.bank_rejection_reason ?? member.bank_details?.rejection_reason,
+        nominee_name: responseBank.nominee_name ?? nomineeSource.nominee_name ?? member.nominee_details?.nominee_name ?? member.bank_details?.nominee_name,
+        nominee_relation: responseBank.nominee_relation ?? nomineeSource.nominee_relation ?? member.nominee_details?.nominee_relation ?? member.bank_details?.nominee_relation,
+        nominee_gender: responseBank.nominee_gender ?? nomineeSource.nominee_gender ?? member.nominee_details?.nominee_gender ?? member.bank_details?.nominee_gender,
+        nominee_dob: responseBank.nominee_dob ?? nomineeSource.nominee_dob ?? member.nominee_details?.nominee_dob ?? member.bank_details?.nominee_dob,
+        nominee_address: responseBank.nominee_address ?? nomineeSource.nominee_address ?? member.nominee_details?.nominee_address ?? member.bank_details?.nominee_address,
+        nominee_aadhar: responseBank.nominee_aadhar ?? nomineeSource.nominee_aadhar ?? member.nominee_details?.nominee_aadhar ?? member.bank_details?.nominee_aadhar,
+        nominee_mobile: responseBank.nominee_mobile ?? nomineeSource.nominee_mobile ?? member.nominee_details?.nominee_mobile ?? member.bank_details?.nominee_mobile,
       };
-      setDetails({ ...member, ...response, bank_details: bankDetails, nominee_details: { ...member.nominee_details, ...response.nominee_details } });
+      setDetails({
+        ...member,
+        ...response,
+        bank_details: bankDetails,
+        nominee_details: nomineeSource,
+      });
     } else {
       setDetails(member);
     }
@@ -200,14 +242,41 @@ function AdminBankApprove() {
       setError("Please enter a reason before rejecting bank details.");
       return;
     }
+
     setSaving(true);
     setError("");
+
     const result = await updateAdminMemberBankStatusApi(selectedUserId, status, rejectionReason.trim());
     if (result.success) {
+      const responseData = result.data || {};
+      const updatedStatus = responseData.bank_status || responseData.status || status;
+      const updatedReason = responseData.bank_rejection_reason ?? responseData.rejection_reason ?? rejectionReason.trim();
+
       setPendingMembers((current) => current.filter((member) => member.user_id !== selectedUserId));
-      setHistoryMembers((current) => current.map((member) => member.user_id === selectedUserId ? { ...member, bank_details: { ...member.bank_details, ...result.data, status } } : member));
-      setDetails((current) => current ? { ...current, bank_details: { ...current.bank_details, ...result.data, status } } : current);
-      setMessage(result.data.message || `Bank details ${status.toLowerCase()} successfully.`);
+      setHistoryMembers((current) => current.map((member) => member.user_id === selectedUserId
+        ? {
+            ...member,
+            bank_details: {
+              ...member.bank_details,
+              bank_status: updatedStatus,
+              status: updatedStatus,
+              bank_rejection_reason: updatedReason,
+              rejection_reason: updatedReason,
+            },
+          }
+        : member));
+      setDetails((current) => current ? {
+        ...current,
+        bank_details: {
+          ...current.bank_details,
+          bank_status: updatedStatus,
+          status: updatedStatus,
+          bank_rejection_reason: updatedReason,
+          rejection_reason: updatedReason,
+        },
+      } : current);
+
+      setMessage(typeof result.data === "string" ? result.data : `Bank details ${status.toLowerCase()} successfully.`);
       setTimeout(() => {
         setDetails(null);
         setSelectedUserId("");
@@ -236,14 +305,23 @@ function AdminBankApprove() {
 
         <div className="bank-tab-strip">
           <button type="button" className={`bank-tab-btn ${activeTab === "pending" ? "active" : ""}`} onClick={() => setActiveTab("pending")}>Pending Bank Details</button>
-          <button type="button" className={`bank-tab-btn ${activeTab === "history" ? "active" : ""}`} onClick={() => setActiveTab("history")}>Nominee & Bank Details History</button>
+          <button type="button" className={`bank-tab-btn ${activeTab === "history" ? "active" : ""}`} onClick={() => setActiveTab("history")}>Bank Details History</button>
         </div>
 
         <form className="bank-filters-card" onSubmit={handleReport}>
           <div className="filters-grid">
             <div className="filter-input-wrap"><input type="date" value={startDate} onChange={(event) => setStartDate(event.target.value)} className="filter-date-field" aria-label="Start date" /></div>
             <div className="filter-input-wrap"><input type="date" value={endDate} onChange={(event) => setEndDate(event.target.value)} className="filter-date-field" aria-label="End date" /></div>
-            <div className="filter-select-wrap"><select value={filterUserId} onChange={(event) => setFilterUserId(event.target.value)} className="filter-select-field" aria-label="Select member"><option value="">All members</option>{currentMembers.map((member) => <option key={member.user_id} value={member.user_id}>{member.user_id} - {member.fullname}</option>)}</select></div>
+            <div className="filter-input-wrap">
+              <input
+                type="text"
+                value={filterUserId}
+                onChange={(event) => setFilterUserId(event.target.value)}
+                className="filter-date-field"
+                aria-label="User ID"
+                placeholder="Type user ID"
+              />
+            </div>
             <button type="submit" className="yellow-report-btn">Get Report</button>
           </div>
         </form>
@@ -328,20 +406,22 @@ function AdminBankApprove() {
                           </div>
                         </div>
 
-                        <div className="bank-details-section">
-                          <h3>Nominee Information</h3>
-                          <div className="bank-details-grid">
-                            {nomineeDetailFields.map(([label, key]) => {
-                              const value = details.nominee_details?.[key];
-                              return (
-                                <div className="bank-detail-item" key={key}>
-                                  <span>{label}</span>
-                                  <strong>{value && String(value).trim() ? value : "Not provided"}</strong>
-                                </div>
-                              );
-                            })}
+                        {hasNomineeData(details) && (
+                          <div className="bank-details-section">
+                            <h3>Nominee Information</h3>
+                            <div className="bank-details-grid">
+                              {nomineeDetailFields.map(([label, key]) => {
+                                const value = details.nominee_details?.[key] ?? details.bank_details?.[key];
+                                return (
+                                  <div className="bank-detail-item" key={key}>
+                                    <span>{label}</span>
+                                    <strong>{value && String(value).trim() && String(value).trim() !== "-" ? value : "Not provided"}</strong>
+                                  </div>
+                                );
+                              })}
+                            </div>
                           </div>
-                        </div>
+                        )}
                       </>
                     )}
 
@@ -350,12 +430,6 @@ function AdminBankApprove() {
                       <div className="admin-bank-document-grid">
                         {[
                           ["Bank Proof", details.bank_details?.bank_proof],
-                          ...(activeTab !== "pending"
-                            ? [
-                                ["Nominee Aadhaar Front", details.nominee_details?.nominee_aadhar_front],
-                                ["Nominee Aadhaar Back", details.nominee_details?.nominee_aadhar_back],
-                              ]
-                            : []),
                         ].map(([label, url]) => url ? (
                           <a
                             className="bank-document-link"

@@ -8,7 +8,7 @@ const getErrorMessage = (error, fallback) => {
   return detail || error.response?.data?.message || error.response?.data?.error || fallback;
 };
 
-/** GET /admin/wallet/transactions */
+/** GET /admin/wallet/transactions with server-side pagination. */
 export const getAdminWalletTransactionsApi = async (filters = {}) => {
   try {
     const params = Object.fromEntries(
@@ -16,7 +16,11 @@ export const getAdminWalletTransactionsApi = async (filters = {}) => {
     );
     const response = await api.get("/admin/wallet/transactions", { params });
     const payload = response.data?.data || response.data || [];
-    return { success: true, data: Array.isArray(payload) ? payload : [] };
+    return {
+      success: true,
+      data: Array.isArray(payload) ? payload : [],
+      pagination: response.data?.pagination || null,
+    };
   } catch (error) {
     return { success: false, error: getErrorMessage(error, "Unable to load wallet transactions.") };
   }

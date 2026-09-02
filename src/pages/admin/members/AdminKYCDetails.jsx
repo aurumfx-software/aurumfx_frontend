@@ -27,6 +27,9 @@ function AdminKYCDetails() {
   const [rejectionReason, setRejectionReason] = useState("");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [filterUserId, setFilterUserId] = useState("");
 
   const loadPendingMembers = async () => {
     const result = await getPendingAdminMembersKycApi();
@@ -62,12 +65,23 @@ function AdminKYCDetails() {
 
   useEffect(() => { loadMembers(); }, []);
 
+  const handleReport = (event) => {
+    event.preventDefault();
+    loadMembers();
+  };
+
   const currentMembers = activeTab === "pending" ? pendingMembers : historyMembers;
   const filteredMembers = useMemo(() => currentMembers.filter((member) => {
     const kycRecord = member.kyc || {};
-    if (activeTab === "pending") return String(kycRecord.status || "PENDING").toUpperCase() === "PENDING";
-    return true;
-  }), [currentMembers, activeTab]);
+    const memberDate = member.uploaded_at || member.updated_at || member.created_at || "";
+    const matchesUser = !filterUserId || String(member.user_id || "").toLowerCase().includes(filterUserId.toLowerCase());
+    const matchesStart = !startDate || !memberDate || String(memberDate).slice(0, 10) >= startDate;
+    const matchesEnd = !endDate || !memberDate || String(memberDate).slice(0, 10) <= endDate;
+    const matchesStatus = activeTab === "pending"
+      ? String(kycRecord.status || "PENDING").toUpperCase() === "PENDING"
+      : true;
+    return matchesUser && matchesStart && matchesEnd && matchesStatus;
+  }), [currentMembers, activeTab, filterUserId, startDate, endDate]);
 
   const openDetails = async (member) => {
     setSelectedUserId(member.user_id);
@@ -146,6 +160,24 @@ function AdminKYCDetails() {
           <button type="button" className={`bank-tab-btn ${activeTab === "pending" ? "active" : ""}`} onClick={() => setActiveTab("pending")}>Pending KYC</button>
           <button type="button" className={`bank-tab-btn ${activeTab === "history" ? "active" : ""}`} onClick={() => setActiveTab("history")}>KYC History</button>
         </div>
+
+        <form className="bank-filters-card" onSubmit={handleReport}>
+          <div className="filters-grid">
+            <div className="filter-input-wrap"><input type="date" value={startDate} onChange={(event) => setStartDate(event.target.value)} className="filter-date-field" aria-label="Start date" /></div>
+            <div className="filter-input-wrap"><input type="date" value={endDate} onChange={(event) => setEndDate(event.target.value)} className="filter-date-field" aria-label="End date" /></div>
+            <div className="filter-input-wrap">
+              <input
+                type="text"
+                value={filterUserId}
+                onChange={(event) => setFilterUserId(event.target.value)}
+                className="filter-date-field"
+                aria-label="User ID"
+                placeholder="Type user ID"
+              />
+            </div>
+            <button type="submit" className="yellow-report-btn">Get Report</button>
+          </div>
+        </form>
 
         <section className="bank-details-card admin-bank-list-card">
           <div className="admin-bank-list-heading"><div><h2>{activeTab === "pending" ? "Pending Requests" : "KYC History"}</h2><p>{activeTab === "pending" ? "Review submitted KYC documents awaiting approval." : "View KYC records from previous verification cycles."}</p></div><span>{filteredMembers.length} {activeTab === "pending" ? "pending" : "records"}</span></div>

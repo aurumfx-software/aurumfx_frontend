@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { FiRefreshCw } from "react-icons/fi";
 import AdminLayout from "../../../components/Admin/AdminLayout";
 import { approveReturnApi, getTodayReturnsApi } from "../../../api/admin-investments";
@@ -31,8 +31,17 @@ function MonthlyReturnPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [approvingId, setApprovingId] = useState(null);
+  const [filterUserId, setFilterUserId] = useState("");
 
-  const loadReturns = async () => {
+  const filteredRows = useMemo(() => {
+    return rows.filter((item) => {
+      const itemUserId = String(item.user_id || "").toLowerCase();
+      const matchesUser = !filterUserId || itemUserId.includes(filterUserId.toLowerCase());
+      return matchesUser;
+    });
+  }, [rows, filterUserId]);
+
+  const loadReturns = async (filters = {}) => {
     setLoading(true);
     setError("");
     const result = await getTodayReturnsApi();
@@ -45,6 +54,16 @@ function MonthlyReturnPage() {
     }
 
     setLoading(false);
+  };
+
+  const handleReport = (event) => {
+    event.preventDefault();
+    loadReturns();
+  };
+
+  const handleRefresh = () => {
+    setFilterUserId("");
+    loadReturns();
   };
 
   useEffect(() => {
@@ -82,11 +101,24 @@ function MonthlyReturnPage() {
         </div>
 
         <div className="investments-content-card monthly-return-card">
-          <div className="monthly-return-toolbar">
-            <button type="button" className="investments-refresh-btn monthly-return-refresh" onClick={loadReturns}>
-              <FiRefreshCw size={14} /> Refresh
-            </button>
-          </div>
+          <form className="bank-filters-card" onSubmit={handleReport}>
+            <div className="filters-grid">
+              <div className="filter-input-wrap">
+                <input
+                  type="text"
+                  value={filterUserId}
+                  onChange={(event) => setFilterUserId(event.target.value)}
+                  className="filter-date-field"
+                  aria-label="User ID"
+                  placeholder="Filter by user ID"
+                />
+              </div>
+              <button type="submit" className="yellow-report-btn">Get Report</button>
+              <button type="button" className="investments-refresh-btn monthly-return-refresh" onClick={handleRefresh}>
+                <FiRefreshCw size={14} /> Refresh
+              </button>
+            </div>
+          </form>
 
           <div className="table-overflow-box monthly-return-table-panel">
             <table className="admin-investments-table monthly-return-table">
@@ -106,16 +138,16 @@ function MonthlyReturnPage() {
                   <tr><td colSpan="7">Loading monthly returns...</td></tr>
                 ) : error ? (
                   <tr><td colSpan="7">{error}</td></tr>
-                ) : rows.length === 0 ? (
+                ) : filteredRows.length === 0 ? (
                   <tr>
                     <td colSpan="7" style={{ padding: 0 }}>
                       <div className="docs-empty-state">
-                        <h4 className="empty-state-label">No Returns Due Today</h4>
+                        <h4 className="empty-state-label">No Returns Found</h4>
                       </div>
                     </td>
                   </tr>
                 ) : (
-                  rows.map((item, index) => (
+                  filteredRows.map((item, index) => (
                     <tr key={item.id ?? `${item.user_id ?? "user"}-${index}`}>
                       <td>{index + 1}</td>
                       <td>{item.user_id || "-"}</td>

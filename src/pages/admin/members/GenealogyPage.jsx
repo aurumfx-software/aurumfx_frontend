@@ -290,12 +290,35 @@ function GenealogyPage() {
     loadSelected();
   }, [viewUserId]);
 
+  // Auto-select and fetch tree when user types in search input
+  useEffect(() => {
+    const q = filterInput.trim().toLowerCase();
+    if (!q) {
+      // Clear search if input is empty, keep current selection
+      return;
+    }
+
+    // Find first matching user in the filtered list
+    const matchedUser = allGenealogy.find(
+      (item) =>
+        String(item.user_id || "").toLowerCase().includes(q) ||
+        String(item.name || item.full_name || item.fullname || "").toLowerCase().includes(q)
+    );
+
+    // Auto-select and fetch the tree for the matched user
+    if (matchedUser && matchedUser.user_id !== viewUserId) {
+      setSelectedUserId(matchedUser.user_id);
+      setViewUserId(matchedUser.user_id);
+    }
+  }, [filterInput, allGenealogy, viewUserId]);
+
   // Dropdown handler: updates BOTH the dropdown's own value and the
   // displayed tree. This is the normal, expected "filter by user" flow.
   const handleDropdownChange = (e) => {
     const id = e.target.value;
     setSelectedUserId(id);
     setViewUserId(id);
+    setFilterInput(""); // Clear search when selecting from dropdown
   };
 
   // Tree-node click handler: updates ONLY the displayed tree. The

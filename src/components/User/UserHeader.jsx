@@ -106,38 +106,62 @@ function UserHeader({ onMenuToggle, user }) {
   };
 
   const [verificationStatuses, setVerificationStatuses] = useState({
-    kyc: "not_submitted",
-    bank: "not_submitted",
+    kyc: null,
+    bank: null,
   });
+  const [verificationLoaded, setVerificationLoaded] = useState(false);
 
   useEffect(() => {
     let active = true;
+    setVerificationLoaded(false);
 
-    Promise.all([getMyKycApi(), getProfileBankDetailsApi()]).then(([kycRes, bankRes]) => {
-      if (!active) return;
+    Promise.all([getMyKycApi(), getProfileBankDetailsApi()])
+      .then(([kycRes, bankRes]) => {
+        if (!active) return;
 
-      const kyc = kycRes.success ? (kycRes.data?.data || kycRes.data || {}) : {};
-      const kycSubmitted = hasKycSubmission(kyc);
-      const kycStatus = deriveSectionStatus(kycSubmitted, kyc.status);
+        const kyc = kycRes.success ? (kycRes.data?.data || kycRes.data || {}) : {};
+        const kycSubmitted = hasKycSubmission(kyc);
+        const kycStatus = deriveSectionStatus(kycSubmitted, kyc.status);
 
-      const bankPayload = bankRes.success ? (bankRes.data?.data || bankRes.data || {}) : {};
-      const bankDetails = bankPayload.bank_details || {};
-      const nomineeDetails = bankPayload.nominee_details || {};
-      const bankSubmitted = hasBankSubmission(bankDetails, nomineeDetails);
-      const bankStatus = deriveSectionStatus(bankSubmitted, bankDetails.status);
+        const bankPayload = bankRes.success ? (bankRes.data?.data || bankRes.data || {}) : {};
+        const bankDetails = bankPayload.bank_details || bankPayload || {};
+        const nomineeDetails = bankPayload.nominee_details || {};
+        const bankSubmitted = hasBankSubmission(bankDetails, nomineeDetails);
+        const bankStatusValue = bankDetails.bank_status ?? bankDetails.status ?? bankPayload.bank_status ?? bankPayload.status;
+        const bankStatus = deriveSectionStatus(bankSubmitted, bankStatusValue);
 
-      setVerificationStatuses({ kyc: kycStatus, bank: bankStatus });
-    });
+        setVerificationStatuses({ kyc: kycStatus, bank: bankStatus });
+        setVerificationLoaded(true);
+      })
+      .catch(() => {
+        if (!active) return;
+        setVerificationStatuses({ kyc: null, bank: null });
+        setVerificationLoaded(true);
+      });
 
     return () => {
       active = false;
     };
   }, []);
 
-  const marqueeItems = [
-    { label: `KYC ${STATUS_CONFIG[verificationStatuses.kyc].label}`, className: STATUS_CONFIG[verificationStatuses.kyc].className },
-    { label: `BANK DETAILS ${STATUS_CONFIG[verificationStatuses.bank].label}`, className: STATUS_CONFIG[verificationStatuses.bank].className },
-  ];
+  const marqueeItems = verificationLoaded
+    ? [
+        ...(verificationStatuses.kyc
+          ? [{ label: `KYC ${STATUS_CONFIG[verificationStatuses.kyc].label}`, className: STATUS_CONFIG[verificationStatuses.kyc].className }]
+          : []),
+        ...(verificationStatuses.bank
+          ? [{ label: `BANK DETAILS ${STATUS_CONFIG[verificationStatuses.bank].label}`, className: STATUS_CONFIG[verificationStatuses.bank].className }]
+          : []),
+      ]
+    : [];
+
+  // Filter out approved items - only show pending, not submitted, or rejected
+  const filteredMarqueeItems = marqueeItems.filter(
+    (item) => !item.className.includes("status-approved")
+  );
+
+  // Only show marquee if verification data has finished loading and there are non-approved items
+  const shouldShowMarquee = verificationLoaded && filteredMarqueeItems.length > 0;
 
   // Close dropdowns when clicking outside
   useEffect(() => {
@@ -203,26 +227,28 @@ function UserHeader({ onMenuToggle, user }) {
       </div>
 
       {/* KYC Status Marquee */}
-      <div className="kyc-marquee-wrap">
-        <div className="kyc-marquee-track">
-          <div className="kyc-marquee-group">
-            {marqueeItems.map((item) => (
-              <span className={`kyc-marquee-item ${item.className}`} key={item.label}>
-                <span className="kyc-dot" />
-                {item.label}
-              </span>
-            ))}
-          </div>
-          <div className="kyc-marquee-group" aria-hidden="true">
-            {marqueeItems.map((item) => (
-              <span className={`kyc-marquee-item ${item.className}`} key={`copy-${item.label}`}>
-                <span className="kyc-dot" />
-                {item.label}
-              </span>
-            ))}
+      {shouldShowMarquee && (
+        <div className="kyc-marquee-wrap">
+          <div className="kyc-marquee-track">
+            <div className="kyc-marquee-group">
+              {filteredMarqueeItems.map((item) => (
+                <span className={`kyc-marquee-item ${item.className}`} key={item.label}>
+                  <span className="kyc-dot" />
+                  {item.label}
+                </span>
+              ))}
+            </div>
+            <div className="kyc-marquee-group" aria-hidden="true">
+              {filteredMarqueeItems.map((item) => (
+                <span className={`kyc-marquee-item ${item.className}`} key={`copy-${item.label}`}>
+                  <span className="kyc-dot" />
+                  {item.label}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       <div className="user-header-right">
         {hasAdminSession && (

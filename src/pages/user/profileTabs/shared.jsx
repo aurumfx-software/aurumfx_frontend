@@ -97,6 +97,9 @@ export const hasNomineeSubmission = (nomineeDetails = {}) => {
   return fullFields.every(isFilled);
 };
 
+export const getNomineeStatusValue = (nominee = {}) =>
+  nominee.nominee_status ?? nominee.status ?? "pending";
+
 // Combines "is it actually submitted" with the backend status. If not
 // submitted, it's "not_submitted" no matter what status says. If submitted
 // but status is missing/unrecognized, default to "pending" (never

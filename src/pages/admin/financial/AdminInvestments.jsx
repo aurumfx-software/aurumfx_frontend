@@ -74,11 +74,11 @@ function AdminInvestments() {
   const [returnModalId, setReturnModalId] = useState(null);
   const [remarks, setRemarks] = useState("");
 
-  const sortByLatestApprovedDate = (items = []) => {
+  const sortByApprovedDate = (items = [], newestFirst = true) => {
     return [...items].sort((a, b) => {
       const dateA = new Date(a.approval_status_updated_at || a.investment_date || a.date || a.created_at || 0).getTime();
       const dateB = new Date(b.approval_status_updated_at || b.investment_date || b.date || b.created_at || 0).getTime();
-      return dateB - dateA;
+      return newestFirst ? dateB - dateA : dateA - dateB;
     });
   };
 
@@ -87,7 +87,7 @@ function AdminInvestments() {
     const activeStartDate = filterValues.startDate ?? startDate;
     const activeEndDate = filterValues.endDate ?? endDate;
     const userSearch = activeUserFilter.trim().toLowerCase();
-    return sortByLatestApprovedDate(items.filter((item) => {
+    const filtered = items.filter((item) => {
       const itemUserId = String(item.user_id ?? item.userId ?? "").toLowerCase();
       const itemDate = String(
         item.investment_date ?? item.approval_status_updated_at ?? item.date ?? item.created_at ?? ""
@@ -96,7 +96,17 @@ function AdminInvestments() {
       const matchesStartDate = !activeStartDate || itemDate >= activeStartDate;
       const matchesEndDate = !activeEndDate || itemDate <= activeEndDate;
       return matchesUser && matchesStartDate && matchesEndDate;
-    }));
+    });
+
+    if (activeTab === "requests") {
+      return sortByApprovedDate(filtered, true);
+    }
+
+    if (activeTab === "history") {
+      return sortByApprovedDate(filtered, true);
+    }
+
+    return filtered;
   };
 
   const loadTabData = async (filterValues = {}) => {
@@ -346,31 +356,35 @@ function AdminInvestments() {
           </div>
 
           <div className="investments-tab-content">
-            {(activeTab === "requests" || activeTab === "active" || activeTab === "history") && (
+            {(activeTab === "requests" || activeTab === "active" || activeTab === "history" || activeTab === "today") && (
               <form
                 className="history-filter-row"
                 onSubmit={(e) => { e.preventDefault(); loadTabData(); }}
               >
-                <div className="filter-field-wrap">
-                  <span className="floating-top-label">Pick Start Date</span>
-                  <input
-                    type="date"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                    className="filter-input-field"
-                  />
-                  <FiCalendar className="field-right-icon" />
-                </div>
-                <div className="filter-field-wrap">
-                  <span className="floating-top-label">Pick End Date</span>
-                  <input
-                    type="date"
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
-                    className="filter-input-field"
-                  />
-                  <FiCalendar className="field-right-icon" />
-                </div>
+                {activeTab !== "today" && (
+                  <>
+                    <div className="filter-field-wrap">
+                      <span className="floating-top-label">Pick Start Date</span>
+                      <input
+                        type="date"
+                        value={startDate}
+                        onChange={(e) => setStartDate(e.target.value)}
+                        className="filter-input-field"
+                      />
+                      <FiCalendar className="field-right-icon" />
+                    </div>
+                    <div className="filter-field-wrap">
+                      <span className="floating-top-label">Pick End Date</span>
+                      <input
+                        type="date"
+                        value={endDate}
+                        onChange={(e) => setEndDate(e.target.value)}
+                        className="filter-input-field"
+                      />
+                      <FiCalendar className="field-right-icon" />
+                    </div>
+                  </>
+                )}
                 <div className="filter-field-wrap">
                   <input
                     type="text"
@@ -408,7 +422,7 @@ function AdminInvestments() {
                       <tr><td colSpan="7">Loading...</td></tr>
                     ) : errorMsg ? (
                       <tr><td colSpan="7">{errorMsg}</td></tr>
-                    ) : todayList.length === 0 ? (
+                    ) : filterInvestments(todayList).length === 0 ? (
                       <tr>
                         <td colSpan="7" style={{ padding: 0 }}>
                           <div className="docs-empty-state">
@@ -420,12 +434,12 @@ function AdminInvestments() {
                                 </div>
                               </div>
                             </div>
-                            <h4 className="empty-state-label">No Returns Due Today</h4>
+                            <h4 className="empty-state-label">No Returns Found</h4>
                           </div>
                         </td>
                       </tr>
                     ) : (
-                      todayList.map((item, idx) => (
+                      filterInvestments(todayList).map((item, idx) => (
                         <tr key={item.id}>
                           <td>{idx + 1}</td>
                           <td style={{ cursor: "pointer" }} onClick={() => handleRowClick(item.id)}>

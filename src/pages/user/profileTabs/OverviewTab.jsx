@@ -20,8 +20,11 @@ function OverviewTab({ loadingProfile, profileError, profileData }) {
           <DocRow emoji="📱" label="Mobile" value={profileData.mobile} />
           <DocRow emoji="⚧️" label="Gender" value={profileData.gender} />
           <DocRow emoji="🎂" label="Date of Birth" value={profileData.dateOfBirth} />
-          <DocRow emoji="📍" label="City" value={profileData.city} />
-          <DocRow emoji="🌍" label="Country" value={profileData.country} />
+          <DocRow emoji="📍" label="Country" value={profileData.country} />
+          <DocRow emoji="🗺️" label="State" value={profileData.state} />
+          <DocRow emoji="🏙️" label="City" value={profileData.city} />
+          <DocRow emoji="🏠" label="Building No." value={profileData.buildingNo} />
+          <DocRow emoji="🛣️" label="Street" value={profileData.street} />
           <DocRow emoji="📮" label="ZIP Code" value={profileData.zipCode} />
         </div>
       )}

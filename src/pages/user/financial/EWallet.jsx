@@ -147,9 +147,9 @@ function EWallet() {
               <FiCheckCircle />
             </div>
             <div className="metric-body">
-              <span className="metric-label">Amount</span>
+              <span className="metric-label">Paid Amount</span>
               <span className="metric-value">
-                {summaryLoading ? "—" : money(summary?.amount)}
+                {summaryLoading ? "—" : money(summary?.paid_amount)}
               </span>
             </div>
           </div>
@@ -201,7 +201,7 @@ function EWallet() {
           <div className="table-responsive">
             <table className="ewallet-table ewallet-table--clean">
               <colgroup>
-                <col /><col /><col /><col /><col />
+                <col /><col /><col /><col /><col /><col /><col />
               </colgroup>
               <thead>
                 <tr>
@@ -210,25 +210,26 @@ function EWallet() {
                   <th>From User</th>
                   <th>Amount</th>
                   <th>Transaction Type</th>
+                  <th>Level</th>
                   <th>Status</th>
                 </tr>
               </thead>
               <tbody>
                 {txLoading ? (
                   <tr>
-                    <td colSpan="6" className="empty-cell">
+                    <td colSpan="7" className="empty-cell">
                       Loading...
                     </td>
                   </tr>
                 ) : txError ? (
                   <tr>
-                    <td colSpan="6" className="empty-cell">
+                    <td colSpan="7" className="empty-cell">
                       {txError}
                     </td>
                   </tr>
                 ) : filteredTransactions.length === 0 ? (
                   <tr>
-                    <td colSpan="6" className="empty-cell">
+                    <td colSpan="7" className="empty-cell">
                       {activeSearch
                         ? `No users found for “${searchInput.trim()}”.`
                         : "No wallet transactions found."}
@@ -254,6 +255,7 @@ function EWallet() {
                         <td data-label="From User">{getFromUserLabel(tx)}</td>
                         <td className="cell-amount" data-label="Amount">{money(tx.amount)}</td>
                         <td data-label="Transaction Type">{tx.transaction_type || "-"}</td>
+                        <td data-label="Level">{tx.level ?? "-"}</td>
                         <td data-label="Status">
                           <span className={`status-pill ${statusClass}`}>
                             {status || "-"}

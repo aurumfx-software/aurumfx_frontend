@@ -157,15 +157,17 @@ function UserDashboard() {
       const kycStatus = deriveSectionStatus(kycSubmitted, kyc.status);
 
       const bankPayload = bankRes.success ? (bankRes.data?.data || bankRes.data || {}) : {};
-      const bankDetails = bankPayload.bank_details || {};
+      const bankDetails = bankPayload.bank_details || bankPayload || {};
       const bankNomineeDetails = bankPayload.nominee_details || {};
       const bankSubmitted = hasBankSubmission(bankDetails, bankNomineeDetails);
-      const bankStatus = deriveSectionStatus(bankSubmitted, bankDetails.status);
+      const bankStatusValue = bankDetails.bank_status ?? bankDetails.status ?? bankPayload.bank_status ?? bankPayload.status;
+      const bankStatus = deriveSectionStatus(bankSubmitted, bankStatusValue);
 
       const nomineePayload = nomineeRes.success ? (nomineeRes.data?.data || nomineeRes.data || {}) : {};
       const nomineeDetails = nomineePayload.nominee_details || nomineePayload.nomineeData || nomineePayload || bankNomineeDetails || {};
       const nomineeSubmitted = hasNomineeSubmission(nomineeDetails);
-      const nomineeStatus = nomineeSubmitted ? deriveSectionStatus(true, nomineeDetails.status) : "not_submitted";
+      const nomineeStatusValue = nomineeDetails.nominee_status ?? nomineeDetails.status ?? "pending";
+      const nomineeStatus = nomineeSubmitted ? deriveSectionStatus(true, nomineeStatusValue) : "not_submitted";
 
       // Popup only for genuinely missing or rejected submissions.
       // If a user already submitted bank details and the nominee is just pending,
@@ -412,7 +414,7 @@ function UserDashboard() {
                   <FiTrendingUp />
                 </div>
                 <div className="metric-card-info">
-                  <span className="metric-label">Payout Amount</span>
+                  <span className="metric-label">Paid Amount</span>
                   <h3 className="metric-value">
                     {loading ? "…" : fmt(s.payoutAmount)}
                   </h3>

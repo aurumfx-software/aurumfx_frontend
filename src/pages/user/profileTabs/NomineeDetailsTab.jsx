@@ -90,7 +90,7 @@ function NomineeDetailsTab({
 
           <div className="form-grid-2">
             <div className="field-group">
-              <label className="field-label">Nominee Name</label>
+              <label className="field-label">Nominee Name <span className="required">*</span></label>
               <input
                 type="text"
                 value={nomineeDetails.nominee_name}
@@ -99,7 +99,7 @@ function NomineeDetailsTab({
               />
             </div>
             <div className="field-group">
-              <label className="field-label">Nominee Relation</label>
+              <label className="field-label">Nominee Relation <span className="required">*</span></label>
               <select
                 value={nomineeDetails.nominee_relation}
                 onChange={(e) => setNomineeDetails({ ...nomineeDetails, nominee_relation: e.target.value })}
@@ -122,7 +122,7 @@ function NomineeDetailsTab({
 
           {nomineeDetails.nominee_relation === "Other" && (
             <div className="field-group">
-              <label className="field-label">Specify Nominee Relationship</label>
+              <label className="field-label">Specify Nominee Relationship <span className="required">*</span></label>
               <input
                 type="text"
                 value={nomineeDetails.nominee_relation_other || ""}
@@ -135,7 +135,7 @@ function NomineeDetailsTab({
 
           <div className="form-grid-2">
             <div className="field-group">
-              <label className="field-label">Nominee Gender</label>
+              <label className="field-label">Nominee Gender <span className="required">*</span></label>
               <select
                 value={nomineeDetails.nominee_gender}
                 onChange={(e) => setNomineeDetails({ ...nomineeDetails, nominee_gender: e.target.value })}
@@ -148,7 +148,7 @@ function NomineeDetailsTab({
               </select>
             </div>
             <div className="field-group">
-              <label className="field-label">Nominee Date of Birth</label>
+              <label className="field-label">Nominee Date of Birth <span className="required">*</span></label>
               <input
                 type="date"
                 value={nomineeDetails.nominee_dob}
@@ -170,7 +170,7 @@ function NomineeDetailsTab({
 
           <div className="form-grid-2">
             <div className="field-group">
-              <label className="field-label">Nominee Aadhaar</label>
+              <label className="field-label">Nominee Aadhaar <span className="required">*</span></label>
               <input
                 type="text"
                 value={nomineeDetails.nominee_aadhar}
@@ -179,7 +179,7 @@ function NomineeDetailsTab({
               />
             </div>
             <div className="field-group">
-              <label className="field-label">Nominee Mobile</label>
+              <label className="field-label">Nominee Mobile <span className="required">*</span></label>
               <input
                 type="tel"
                 value={nomineeDetails.nominee_mobile}
@@ -191,7 +191,7 @@ function NomineeDetailsTab({
 
           <div className="kyc-photo-row">
             <div className="field-group">
-              <span className="kyc-photo-slot-label">Aadhaar Card Front</span>
+              <span className="kyc-photo-slot-label">Aadhaar Card Front <span className="required">*</span></span>
               <label className={`upload-dropzone ${nomineeAadharFront ? "is-filled" : ""}`} htmlFor="nominee-front-upload">
                 <FiUpload />
                 <span className="upload-file-name" title={nomineeAadharFront?.name || "Existing front photo"}>{shortFileName(nomineeAadharFront?.name || "Existing front photo")}</span>
@@ -206,7 +206,7 @@ function NomineeDetailsTab({
             </div>
 
             <div className="field-group">
-              <span className="kyc-photo-slot-label">Aadhaar Card Back</span>
+              <span className="kyc-photo-slot-label">Aadhaar Card Back <span className="required">*</span></span>
               <label className={`upload-dropzone ${nomineeAadharBack ? "is-filled" : ""}`} htmlFor="nominee-back-upload">
                 <FiUpload />
                 <span className="upload-file-name" title={nomineeAadharBack?.name || "Existing back photo"}>{shortFileName(nomineeAadharBack?.name || "Existing back photo")}</span>

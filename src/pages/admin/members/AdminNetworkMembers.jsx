@@ -5,8 +5,6 @@ import AdminLayout from "../../../components/Admin/AdminLayout";
 import { getAdminMembersApi, impersonateAdminMemberApi, updateAdminMemberStatusApi } from "../../../api/admin-members-management";
 import "./AdminNetworkMembers.css";
 
-const RANK_OPTIONS = ["No Rank", "Investor", "Associate", "Manager"];
-
 const getUserIdSortValue = (value) => {
   const rawValue = String(value || "");
   const match = rawValue.match(/(\D*)(\d+)/i);
@@ -34,13 +32,12 @@ function AdminNetworkMembers() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [userId, setUserId] = useState("");
-  const [rank, setRank] = useState("");
   const [loading, setLoading] = useState(true);
   const [impersonatingId, setImpersonatingId] = useState("");
   const [updatingStatusId, setUpdatingStatusId] = useState("");
   const [error, setError] = useState("");
 
-  const loadMembers = async (filters = { start_date: startDate, end_date: endDate, user_id: userId, rank }) => {
+  const loadMembers = async (filters = { start_date: startDate, end_date: endDate, user_id: userId }) => {
     setLoading(true);
     setError("");
     const result = await getAdminMembersApi(filters);
@@ -56,6 +53,11 @@ function AdminNetworkMembers() {
   const handleGetReport = (event) => {
     event.preventDefault();
     loadMembers();
+  };
+
+  const handleRefresh = () => {
+    setUserId("");
+    loadMembers({ start_date: startDate, end_date: endDate, user_id: "" });
   };
 
   const handleStatusToggle = async (member) => {
@@ -133,14 +135,10 @@ function AdminNetworkMembers() {
             <div className="filter-input-wrap">
               <input type="search" placeholder="User ID" value={userId} onChange={(event) => setUserId(event.target.value)} className="filter-input-field" />
             </div>
-            <div className="filter-select-wrap">
-              <select value={rank} onChange={(event) => setRank(event.target.value)} className="filter-select-field" aria-label="Filter by rank">
-                <option value="">All ranks</option>
-                {RANK_OPTIONS.map((option) => <option key={option} value={option}>{option}</option>)}
-              </select>
-              <FiChevronDown className="field-arrow" />
-            </div>
             <button type="submit" className="yellow-report-btn">Get Report</button>
+            <button type="button" className="refresh-btn" onClick={handleRefresh} disabled={loading} title="Refresh members list">
+              <FiRefreshCw /> Refresh
+            </button>
           </div>
         </form>
 

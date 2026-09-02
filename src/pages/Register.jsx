@@ -23,6 +23,7 @@ const Register = () => {
     enroller_id: "",
     date_of_birth: "",
     country: "",
+    state: "",
     city: "",
     zip_code: "",
     building_no: "",
@@ -184,6 +185,7 @@ const Register = () => {
       { key: "enroller_id", label: "Enroller ID" },
       { key: "date_of_birth", label: "Date of Birth" },
       { key: "country", label: "Country" },
+      { key: "state", label: "State" },
       { key: "mobile", label: "Mobile" },
       { key: "aadhar_no", label: "Aadhaar Number" },
       { key: "gender", label: "Gender" },
@@ -247,6 +249,11 @@ const Register = () => {
       }
       // Remove helper field before sending
       delete payload.nominee_relation_other;
+
+      // Ensure state is always included as required by backend
+      if (!payload.state || !String(payload.state).trim()) {
+        payload.state = "";
+      }
 
       // Remove empty optional fields to prevent backend validation errors
       const optionalFields = [
@@ -367,6 +374,62 @@ const Register = () => {
     </div>
   );
 
+  const indianStates = [
+    "Andhra Pradesh",
+    "Arunachal Pradesh",
+    "Assam",
+    "Bihar",
+    "Chhattisgarh",
+    "Goa",
+    "Gujarat",
+    "Haryana",
+    "Himachal Pradesh",
+    "Jharkhand",
+    "Karnataka",
+    "Kerala",
+    "Madhya Pradesh",
+    "Maharashtra",
+    "Manipur",
+    "Meghalaya",
+    "Mizoram",
+    "Nagaland",
+    "Odisha",
+    "Punjab",
+    "Rajasthan",
+    "Sikkim",
+    "Tamil Nadu",
+    "Telangana",
+    "Tripura",
+    "Uttar Pradesh",
+    "Uttarakhand",
+    "West Bengal",
+    "Andaman and Nicobar Islands",
+    "Chandigarh",
+    "Dadra and Nagar Haveli and Daman and Diu",
+    "Delhi",
+    "Jammu and Kashmir",
+    "Ladakh",
+    "Lakshadweep",
+    "Puducherry"
+  ];
+
+  const uaeStates = [
+    "Abu Dhabi",
+    "Ajman",
+    "Dubai",
+    "Fujairah",
+    "Ras Al Khaimah",
+    "Sharjah",
+    "Umm Al Quwain"
+  ];
+
+  const stateSuggestions =
+    formData.country === "India"
+      ? indianStates
+      : formData.country === "UAE"
+        ? uaeStates
+        : [];
+
   return (
     <div className="register-page">
       <div className="register-card">
@@ -442,6 +505,34 @@ const Register = () => {
             ["India", "UAE", "USA", "UK", "Canada", "Australia", "Other"],
             true
           )}
+          <div className="field-group">
+            <label htmlFor="state">
+              State <span className="required">*</span>
+            </label>
+            <input
+              id="state"
+              name="state"
+              list={stateSuggestions.length ? "state-options" : undefined}
+              placeholder={
+                formData.country === "India"
+                  ? "Type state name e.g. Kerala"
+                  : formData.country === "UAE"
+                    ? "Type emirate name e.g. Dubai"
+                    : "Type your state or region"
+              }
+              value={formData.state}
+              onChange={handleChange}
+              className={errors.state ? "input-error" : ""}
+            />
+            {stateSuggestions.length > 0 && (
+              <datalist id="state-options">
+                {stateSuggestions.map((stateName) => (
+                  <option key={stateName} value={stateName} />
+                ))}
+              </datalist>
+            )}
+            {errors.state && <small className="error">{errors.state}</small>}
+          </div>
           {renderInput("city", "City", "text", false)}
           {renderInput("zip_code", "ZIP Code", "text", false)}
           {renderInput("building_no", "Building No.", "text", false)}

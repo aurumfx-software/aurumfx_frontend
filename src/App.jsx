@@ -15,6 +15,7 @@ import MonthlyReturnPage from "./pages/admin/financial/MonthlyReturnPage";
 import AdminWallet from "./pages/admin/wallet/AdminWallet";
 import AdminNetworkMembers from "./pages/admin/members/AdminNetworkMembers";
 import AdminBankApprove from "./pages/admin/members/AdminBankApprove";
+import AdminNomineeApprove from "./pages/admin/members/AdminNomineeApprove";
 import AdminKYCDetails from "./pages/admin/members/AdminKYCDetails";
 import GenealogyPage from "./pages/admin/members/GenealogyPage";
 import GenealogyListPage from "./pages/admin/members/GenealogyListPage";
@@ -441,6 +442,14 @@ function App() {
         <Route
           path="/admin/members/bank-account"
           element={<Navigate to="/admin/members/bank-approve" replace />}
+        />
+        <Route
+          path="/admin/members/nominee-details"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminNomineeApprove />
+            </ProtectedRoute>
+          }
         />
         <Route
           path="/admin/members/kyc-details"

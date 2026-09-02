@@ -12,8 +12,9 @@ function EditInfoTab({ profileData, setProfileData, handleEditSubmit, savingMsg,
             <input
               type="text"
               value={profileData.fullName}
-              onChange={(e) => setProfileData({ ...profileData, fullName: e.target.value })}
-              className="field-input"
+              disabled
+              className="field-input field-input--disabled"
+              title="Name cannot be edited"
             />
           </div>
           <div className="field-group">
@@ -40,14 +41,13 @@ function EditInfoTab({ profileData, setProfileData, handleEditSubmit, savingMsg,
           <div className="field-group">
             <label className="field-label">Gender</label>
             <select
-              value={profileData.gender}
+              value={profileData.gender || "Male"}
               onChange={(e) => setProfileData({ ...profileData, gender: e.target.value })}
               className="field-input"
             >
-              <option value="">Select gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="other">Other</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
             </select>
           </div>
         </div>
@@ -58,8 +58,9 @@ function EditInfoTab({ profileData, setProfileData, handleEditSubmit, savingMsg,
             <input
               type="tel"
               value={profileData.mobile}
-              onChange={(e) => setProfileData({ ...profileData, mobile: e.target.value })}
-              className="field-input"
+              disabled
+              className="field-input field-input--disabled"
+              title="Phone number cannot be edited"
             />
           </div>
           <div className="field-group">
@@ -92,6 +93,37 @@ function EditInfoTab({ profileData, setProfileData, handleEditSubmit, savingMsg,
               className="field-input"
             />
           </div>
+        </div>
+
+        <div className="form-grid-2">
+          <div className="field-group">
+            <label className="field-label">State</label>
+            <input
+              type="text"
+              value={profileData.state}
+              onChange={(e) => setProfileData({ ...profileData, state: e.target.value })}
+              className="field-input"
+            />
+          </div>
+          <div className="field-group">
+            <label className="field-label">Building No.</label>
+            <input
+              type="text"
+              value={profileData.buildingNo}
+              onChange={(e) => setProfileData({ ...profileData, buildingNo: e.target.value })}
+              className="field-input"
+            />
+          </div>
+        </div>
+
+        <div className="field-group">
+          <label className="field-label">Street</label>
+          <input
+            type="text"
+            value={profileData.street}
+            onChange={(e) => setProfileData({ ...profileData, street: e.target.value })}
+            className="field-input"
+          />
         </div>
 
         <p className="content-intro" style={{ marginTop: 0 }}>

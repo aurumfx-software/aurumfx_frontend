@@ -7,6 +7,7 @@ import {
   FiMessageSquare,
   FiTool,
   FiUsers,
+  FiUserPlus,
   FiAward,
   FiSettings,
   FiFileText,
@@ -24,6 +25,12 @@ const navItems = [
     label: "Dashboard",
     icon: FiGrid,
     path: "/admin/dashboard",
+  },
+  {
+    id: "new-registration",
+    label: "New Registration",
+    icon: FiUserPlus,
+    path: "/user/register",
   },
   {
     id: "business",
@@ -88,6 +95,11 @@ const navItems = [
         id: "bank-account",
         label: "Bank Account",
         path: "/admin/members/bank-approve",
+      },
+      {
+        id: "nominee-details",
+        label: "Nominee Details",
+        path: "/admin/members/nominee-details",
       },
       {
         id: "kyc-details",
