@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
-import { FiMessageSquare, FiPaperclip, FiSend, FiX } from "react-icons/fi";
+import { FiMessageSquare, FiPaperclip, FiSearch, FiSend, FiX } from "react-icons/fi";
 import AdminLayout from "../../../components/Admin/AdminLayout";
 import {
   getAdminTicketDetailsApi,
@@ -17,11 +17,6 @@ const attachmentUrl = (value) => {
 
 const getReplies = (ticket) => (Array.isArray(ticket?.replies) ? ticket.replies : []);
 
-const hasAdminReply = (ticket) => Boolean(ticket?.admin_submitted || ticket?.admin_replied || ticket?.has_admin_reply) || getReplies(ticket).some((reply) => {
-  const sender = String(reply.sender_type || reply.sender || reply.role || reply.user_type || "").toLowerCase();
-  return sender === "admin" || sender === "administrator" || sender === "support";
-});
-
 const sortTickets = (ticketList) => [...ticketList].sort((first, second) => {
   const firstStatus = String(first.status || "").toLowerCase();
   const secondStatus = String(second.status || "").toLowerCase();
@@ -32,8 +27,11 @@ const sortTickets = (ticketList) => [...ticketList].sort((first, second) => {
   return new Date(second.created_at || 0).getTime() - new Date(first.created_at || 0).getTime();
 });
 
+const getTicketUserId = (ticket) => ticket.user_id || ticket.userId || "";
+
 function AdminHelpCenter() {
   const [tickets, setTickets] = useState([]);
+  const [userIdFilter, setUserIdFilter] = useState("");
   const [loading, setLoading] = useState(true);
   const [listError, setListError] = useState("");
   const [selectedTicket, setSelectedTicket] = useState(null);
@@ -55,6 +53,12 @@ function AdminHelpCenter() {
   };
 
   useEffect(() => { loadTickets(); }, []);
+
+  const filteredTickets = useMemo(() => {
+    const query = userIdFilter.trim().toLowerCase();
+    if (!query) return tickets;
+    return tickets.filter((ticket) => String(getTicketUserId(ticket)).toLowerCase().includes(query));
+  }, [tickets, userIdFilter]);
 
   const openTicket = async (ticketId) => {
     setSelectedTicket(null);
@@ -85,11 +89,6 @@ function AdminHelpCenter() {
     const refreshed = await getAdminTicketDetailsApi(selectedTicket.ticket_id);
     if (refreshed.success) setSelectedTicket(refreshed.data);
     await loadTickets();
-    setTickets((currentTickets) => currentTickets.map((ticket) => (
-      ticket.ticket_id === selectedTicket.ticket_id
-        ? { ...ticket, admin_submitted: true }
-        : ticket
-    )));
     setReplying(false);
     window.setTimeout(() => {
       setSelectedTicket(null);
@@ -113,16 +112,25 @@ function AdminHelpCenter() {
 
         <div className="admin-help-card">
           <div className="admin-help-card-heading"><h2>Support Tickets</h2><p>Pending requests appear first, with the newest ticket at the top.</p></div>
+          <div className="admin-help-filter">
+            <FiSearch size={14} className="admin-help-filter-icon" />
+            <input
+              type="search"
+              aria-label="Filter support tickets by user ID"
+              placeholder="Filter by user ID"
+              value={userIdFilter}
+              onChange={(event) => setUserIdFilter(event.target.value)}
+            />
+          </div>
           <div className="admin-help-table-wrap">
             <table className="admin-help-table">
-              <thead><tr><th>Ticket</th><th>User</th><th>Subject</th><th>Status</th><th>Admin Submitted</th><th>Attachment</th><th>Created</th><th>Action</th></tr></thead>
+              <thead><tr><th>Ticket</th><th>User</th><th>Subject</th><th>Status</th><th>Attachment</th><th>Created</th><th>Action</th></tr></thead>
               <tbody>
-                {loading ? <tr><td colSpan="8" className="admin-help-empty">Loading...</td></tr> : listError ? <tr><td colSpan="8" className="admin-help-empty">{listError}</td></tr> : tickets.length === 0 ? <tr><td colSpan="8" className="admin-help-empty">No support tickets found.</td></tr> : tickets.map((ticket) => (
+                {loading ? <tr><td colSpan="7" className="admin-help-empty">Loading...</td></tr> : listError ? <tr><td colSpan="7" className="admin-help-empty">{listError}</td></tr> : filteredTickets.length === 0 ? <tr><td colSpan="7" className="admin-help-empty">{userIdFilter ? "No tickets found for this user ID." : "No support tickets found."}</td></tr> : filteredTickets.map((ticket) => (
                   <tr key={ticket.ticket_id}>
                     <td className="admin-help-ticket-number">{ticket.ticket_number || `#${ticket.ticket_id}`}</td>
-                    <td>{ticket.user_id || "-"}</td><td>{ticket.subject || "-"}</td>
+                    <td>{getTicketUserId(ticket) || "-"}</td><td>{ticket.subject || "-"}</td>
                     <td><span className={`admin-help-status status-${String(ticket.status || "open").toLowerCase()}`}>{ticket.status || "Open"}</span></td>
-                    <td><span className={`admin-help-submission ${hasAdminReply(ticket) ? "is-submitted" : "is-pending"}`}>{hasAdminReply(ticket) ? "Submitted" : "Pending"}</span></td>
                     <td>{ticket.attachment ? <a href={attachmentUrl(ticket.attachment)} target="_blank" rel="noreferrer"><FiPaperclip size={13} /> View</a> : "-"}</td>
                     <td>{ticket.created_at ? new Date(ticket.created_at).toLocaleString() : "-"}</td>
                     <td><button type="button" className="admin-help-view-btn" onClick={() => openTicket(ticket.ticket_id)}><FiMessageSquare size={13} /> View & Reply</button></td>
@@ -137,7 +145,7 @@ function AdminHelpCenter() {
           <div className="admin-help-modal" onClick={(event) => event.stopPropagation()}>
             <div className="admin-help-modal-header"><div><span className="admin-help-modal-kicker">Support ticket</span><h2>{selectedTicket?.ticket_number || "Ticket Details"}</h2><p>{selectedTicket?.subject || "Support ticket"}</p></div><button type="button" onClick={() => setSelectedTicket(null)} aria-label="Close"><FiX /></button></div>
             {detailLoading ? <p className="admin-help-message">Loading ticket...</p> : detailError ? <p className="admin-help-error">{detailError}</p> : selectedTicket && <>
-              <div className="admin-help-ticket-meta"><span>User: {selectedTicket.user_id || "-"}</span><span className={`admin-help-status status-${String(selectedTicket.status || "open").toLowerCase()}`}>{selectedTicket.status || "Open"}</span><span className={`admin-help-submission ${hasAdminReply(selectedTicket) ? "is-submitted" : "is-pending"}`}>{hasAdminReply(selectedTicket) ? "Admin submitted" : "Awaiting admin reply"}</span></div>
+              <div className="admin-help-ticket-meta"><span>User: {selectedTicket.user_id || "-"}</span><span className={`admin-help-status status-${String(selectedTicket.status || "open").toLowerCase()}`}>{selectedTicket.status || "Open"}</span></div>
               <div className="admin-help-conversation"><div className="admin-help-message-block reply-user"><strong>User request</strong><p>{selectedTicket.message || "No message provided."}</p>{selectedTicket.attachment && <a href={attachmentUrl(selectedTicket.attachment)} target="_blank" rel="noreferrer"><FiPaperclip size={13} /> Open attachment</a>}</div>
                 {getReplies(selectedTicket).map((reply, index) => <div className={`admin-help-message-block reply-${reply.sender_type || reply.sender || reply.role || "reply"}`} key={reply.id || `${reply.created_at || "reply"}-${index}`}><strong>{reply.sender_type || reply.sender || reply.role || "Reply"}</strong><p>{reply.message}</p>{reply.attachment && <a href={attachmentUrl(reply.attachment)} target="_blank" rel="noreferrer"><FiPaperclip size={13} /> Open attachment</a>}</div>)}
               </div>

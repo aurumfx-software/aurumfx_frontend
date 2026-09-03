@@ -12,12 +12,11 @@ const normalizeTicket = (ticket = {}) => ({
   ...ticket,
   ticket_id: ticket.ticket_id ?? ticket.id ?? null,
   ticket_number: ticket.ticket_number ?? "",
-  user_id: ticket.user_id ?? "",
+  user_id: ticket.user_id ?? ticket.userId ?? "",
   subject: ticket.subject ?? "",
   message: ticket.message ?? "",
   attachment: ticket.attachment ?? ticket.attachment_url ?? null,
   replies: Array.isArray(ticket.replies) ? ticket.replies : [],
-  admin_submitted: ticket.admin_submitted ?? ticket.admin_replied ?? ticket.has_admin_reply ?? false,
 });
 
 export const getAdminTicketsApi = async () => {

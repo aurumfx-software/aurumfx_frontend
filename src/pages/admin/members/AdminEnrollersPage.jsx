@@ -26,6 +26,8 @@ const formatDate = (value) => {
   return raw;
 };
 
+const getUserId = (item) => item.user_id || item.userId || "";
+
 function AdminEnrollersPage() {
   const [enrollers, setEnrollers] = useState([]);
   const [query, setQuery] = useState("");
@@ -48,13 +50,7 @@ function AdminEnrollersPage() {
   const filteredEnrollers = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
     const baseList = normalizedQuery
-      ? enrollers.filter((item) => [
-          item.user_id,
-          item.fullname,
-          item.full_name,
-          item.enroller_id,
-          item.enroller_name,
-        ].some((value) => String(value || "").toLowerCase().includes(normalizedQuery)))
+      ? enrollers.filter((item) => String(getUserId(item)).toLowerCase().includes(normalizedQuery))
       : [...enrollers];
 
     return baseList.sort((a, b) => {
@@ -63,7 +59,7 @@ function AdminEnrollersPage() {
         return Number.isFinite(parsed) ? parsed : Number.MAX_SAFE_INTEGER;
       };
 
-      return getUserOrderValue(a.user_id) - getUserOrderValue(b.user_id);
+      return getUserOrderValue(getUserId(a)) - getUserOrderValue(getUserId(b));
     });
   }, [enrollers, query]);
 
@@ -88,7 +84,7 @@ function AdminEnrollersPage() {
                 <FiSearch size={14} className="agen-search-icon" />
                 <input
                   className="agen-input"
-                  placeholder="Search by user ID or name"
+                  placeholder="Search by user ID"
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
                 />
@@ -102,8 +98,8 @@ function AdminEnrollersPage() {
                 <thead><tr><th>User ID</th><th>Full Name</th><th>Date of Joining</th><th>Rank</th><th>Total Investment</th><th>Total Lots</th><th>Enroller ID</th><th>Enroller Name</th></tr></thead>
                 <tbody>
                   {filteredEnrollers.length === 0 ? <tr><td colSpan="8" className="agen-empty-cell">No enrollers found.</td></tr> : filteredEnrollers.map((item) => (
-                    <tr key={item.user_id || item.fullname || "enroller-row"}>
-                      <td className="agen-user-id">{item.user_id || "-"}</td>
+                    <tr key={getUserId(item) || item.fullname || "enroller-row"}>
+                      <td className="agen-user-id">{getUserId(item) || "-"}</td>
                       <td>{item.fullname || item.full_name || "-"}</td>
                       <td>{formatDate(item.date_of_joining)}</td>
                       <td>{item.rank || "-"}</td>
