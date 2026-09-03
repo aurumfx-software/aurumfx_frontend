@@ -28,6 +28,7 @@ import ReturnDateSettings from "./pages/admin/settings/ReturnDateSettings";
 import LevelSettings from "./pages/admin/level/LevelSettings";
 import RankList from "./pages/admin/ranks/RankList";
 import RankHolders from "./pages/admin/ranks/RankHolders";
+import RankTodayHolders from "./pages/admin/ranks/RankTodayHolders";
 import InvestmentReport from "./pages/admin/reports/InvestmentReport";
 import LevelIncomeReport from "./pages/admin/reports/LevelIncomeReport";
 import ReferralIncomeReport from "./pages/admin/reports/ReferralIncomeReport";
@@ -542,6 +543,22 @@ function App() {
           element={
             <ProtectedRoute requiredRole="admin">
               <RankHolders />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/rank-holders"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <RankTodayHolders />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/today-rank-holders"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <RankTodayHolders defaultView="today" />
             </ProtectedRoute>
           }
         />

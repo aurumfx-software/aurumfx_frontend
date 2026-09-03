@@ -9,6 +9,7 @@ import {
   FiUsers,
   FiUserPlus,
   FiAward,
+  FiStar,
   FiSettings,
   FiFileText,
   FiChevronDown,
@@ -113,6 +114,12 @@ const navItems = [
     label: "Rank List",
     icon: FiAward,
     path: "/admin/rank-list",
+  },
+  {
+    id: "rank-holders",
+    label: "Rank Holders",
+    icon: FiStar,
+    path: "/admin/rank-holders",
   },
   {
     id: "settings",
