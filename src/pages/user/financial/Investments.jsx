@@ -7,9 +7,9 @@ import {
   FiX,
   FiCheckCircle,
   FiAlertCircle,
-  FiImage,
   FiFileText,
   FiRefreshCw,
+  FiTrendingUp,
 } from "react-icons/fi";
 import UserLayout from "../../../components/User/UserLayout";
 import {
@@ -247,7 +247,9 @@ function Investments() {
             Portfolio Growth
           </span>
           <div className="page-header-top">
-            <span className="page-title-icon" aria-hidden="true">📈</span>
+            <span className="page-title-icon" aria-hidden="true">
+              <FiTrendingUp />
+            </span>
             <div className="page-header-text">
               <h1 className="page-title">Investments</h1>
               <p className="page-subtitle">Build your portfolio and track every investment in one place.</p>

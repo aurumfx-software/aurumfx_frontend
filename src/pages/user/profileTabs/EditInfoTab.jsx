@@ -63,6 +63,39 @@ function EditInfoTab({ profileData, setProfileData, handleEditSubmit, savingMsg,
               title="Phone number cannot be edited"
             />
           </div>
+        </div>
+
+        <div className="form-grid-2">
+          <div className="field-group">
+            <label className="field-label">Country</label>
+            <input
+              type="text"
+              value={profileData.country}
+              onChange={(e) => setProfileData({ ...profileData, country: e.target.value })}
+              className="field-input"
+            />
+          </div>
+          <div className="field-group">
+            <label className="field-label">State</label>
+            <input
+              type="text"
+              value={profileData.state}
+              onChange={(e) => setProfileData({ ...profileData, state: e.target.value })}
+              className="field-input"
+            />
+          </div>
+        </div>
+
+        <div className="form-grid-2">
+          <div className="field-group">
+            <label className="field-label">District</label>
+            <input
+              type="text"
+              value={profileData.district}
+              onChange={(e) => setProfileData({ ...profileData, district: e.target.value })}
+              className="field-input"
+            />
+          </div>
           <div className="field-group">
             <label className="field-label">City</label>
             <input
@@ -76,32 +109,11 @@ function EditInfoTab({ profileData, setProfileData, handleEditSubmit, savingMsg,
 
         <div className="form-grid-2">
           <div className="field-group">
-            <label className="field-label">ZIP Code</label>
+            <label className="field-label">Street</label>
             <input
               type="text"
-              value={profileData.zipCode}
-              onChange={(e) => setProfileData({ ...profileData, zipCode: e.target.value })}
-              className="field-input"
-            />
-          </div>
-          <div className="field-group">
-            <label className="field-label">Country</label>
-            <input
-              type="text"
-              value={profileData.country}
-              onChange={(e) => setProfileData({ ...profileData, country: e.target.value })}
-              className="field-input"
-            />
-          </div>
-        </div>
-
-        <div className="form-grid-2">
-          <div className="field-group">
-            <label className="field-label">State</label>
-            <input
-              type="text"
-              value={profileData.state}
-              onChange={(e) => setProfileData({ ...profileData, state: e.target.value })}
+              value={profileData.street}
+              onChange={(e) => setProfileData({ ...profileData, street: e.target.value })}
               className="field-input"
             />
           </div>
@@ -114,16 +126,6 @@ function EditInfoTab({ profileData, setProfileData, handleEditSubmit, savingMsg,
               className="field-input"
             />
           </div>
-        </div>
-
-        <div className="field-group">
-          <label className="field-label">Street</label>
-          <input
-            type="text"
-            value={profileData.street}
-            onChange={(e) => setProfileData({ ...profileData, street: e.target.value })}
-            className="field-input"
-          />
         </div>
 
         <p className="content-intro" style={{ marginTop: 0 }}>

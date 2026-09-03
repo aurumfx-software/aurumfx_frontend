@@ -53,7 +53,6 @@ function AdminWallet() {
     transaction_type: "",
   });
   const [transactions, setTransactions] = useState([]);
-  const [pagination, setPagination] = useState({ page: 1, limit: 20, total: 0, total_pages: 1, has_next: false, has_previous: false });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -75,7 +74,7 @@ function AdminWallet() {
     return aliasMap[normalized.toLowerCase()] || normalized.toUpperCase();
   };
 
-  const loadTransactions = async (activeFilters = filters, requestedPage = 1) => {
+  const loadTransactions = async (activeFilters = filters) => {
     setLoading(true);
     setError("");
     const searchValue = String(activeFilters.user_id || "").trim();
@@ -85,8 +84,8 @@ function AdminWallet() {
       transaction_type: normalizeTransactionType(activeFilters.transaction_type),
     };
     const apiFilters = isNumericUserId || !searchValue
-      ? { ...normalizedFilters, page: requestedPage, limit: 20 }
-      : { ...normalizedFilters, user_id: "", page: requestedPage, limit: 20 };
+      ? normalizedFilters
+      : { ...normalizedFilters, user_id: "" };
     const result = await getAdminWalletTransactionsApi(apiFilters);
     if (result.success) {
       const normalizedSearch = searchValue.toLowerCase();
@@ -98,14 +97,6 @@ function AdminWallet() {
         })
         : result.data;
       setTransactions(filteredTransactions);
-      setPagination(result.pagination || {
-        page: requestedPage,
-        limit: 20,
-        total: filteredTransactions.length,
-        total_pages: 1,
-        has_next: false,
-        has_previous: requestedPage > 1,
-      });
     }
     else setError(result.error || "Unable to load wallet transactions.");
     setLoading(false);
@@ -114,18 +105,13 @@ function AdminWallet() {
   useEffect(() => { loadTransactions(); }, []);
 
   const handleSearchByUserId = () => {
-    loadTransactions(filters, 1);
+    loadTransactions(filters);
   };
 
   const handleReset = () => {
     const emptyFilters = { start_date: "", end_date: "", user_id: "", transaction_type: "" };
     setFilters(emptyFilters);
-    loadTransactions(emptyFilters, 1);
-  };
-
-  const handlePageChange = (nextPage) => {
-    if (nextPage < 1 || nextPage > pagination.total_pages || nextPage === pagination.page || loading) return;
-    loadTransactions(filters, nextPage);
+    loadTransactions(emptyFilters);
   };
 
   return (
@@ -177,7 +163,7 @@ function AdminWallet() {
                   const nextValue = event.target.value;
                   const normalizedValue = normalizeTransactionType(nextValue);
                   setFilter("transaction_type", normalizedValue);
-                  loadTransactions({ ...filters, transaction_type: normalizedValue }, 1);
+                  loadTransactions({ ...filters, transaction_type: normalizedValue });
                 }}
                 className="filter-input-field filter-select-field"
                 aria-label="Select transaction type"
@@ -212,7 +198,7 @@ function AdminWallet() {
               <tbody>
                 {loading ? <tr><td colSpan="10"><FiRefreshCw className="wallet-spinner" /> Loading wallet transactions...</td></tr> : error ? <tr><td colSpan="10">{error}</td></tr> : transactions.length === 0 ? <tr><td colSpan="10">No wallet transactions found.</td></tr> : transactions.map((transaction, index) => (
                   <tr key={transaction.id || transaction.transaction_id || index}>
-                    <td>{(pagination.page - 1) * pagination.limit + index + 1}</td>
+                    <td>{index + 1}</td>
                     <td>{transaction.user?.user_id || transaction.user_id || "-"}</td>
                     <td>{transaction.user?.name || transaction.user_name || "-"}</td>
                     <td>{formatUserWithId(transaction.from_user || transaction.fromUser)}</td>
@@ -227,20 +213,6 @@ function AdminWallet() {
               </tbody>
             </table>
           </div>
-          {!loading && !error && pagination.total_pages > 1 && (
-            <div className="wallet-pagination" aria-label="Wallet transaction pages">
-              <span className="wallet-pagination-summary">
-                Showing page {pagination.page} of {pagination.total_pages} ({pagination.total} records)
-              </span>
-              <div className="wallet-pagination-controls">
-                <button type="button" className="wallet-page-btn" disabled={!pagination.has_previous} onClick={() => handlePageChange(pagination.page - 1)}>Previous</button>
-                {Array.from({ length: pagination.total_pages }, (_, index) => index + 1).map((pageNumber) => (
-                  <button type="button" key={pageNumber} className={`wallet-page-btn ${pagination.page === pageNumber ? "wallet-page-btn--active" : ""}`} onClick={() => handlePageChange(pageNumber)}>{pageNumber}</button>
-                ))}
-                <button type="button" className="wallet-page-btn" disabled={!pagination.has_next} onClick={() => handlePageChange(pagination.page + 1)}>Next</button>
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </AdminLayout>

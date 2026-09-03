@@ -339,7 +339,11 @@ function UserHeader({ onMenuToggle, user }) {
             <div className="user-avatar-dropdown">
               <div className="dropdown-user-info">
                 <span className="dropdown-user-mark" aria-hidden="true">
-                  {String(userName || "P").charAt(0).toUpperCase()}
+                  {avatarUrl ? (
+                    <img src={avatarUrl} alt="" />
+                  ) : (
+                    String(userName || "P").charAt(0).toUpperCase()
+                  )}
                 </span>
                 <div className="dropdown-user-details">
                   <div className="dropdown-user-name">{userName}</div>

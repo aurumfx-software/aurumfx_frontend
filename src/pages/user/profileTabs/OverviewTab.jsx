@@ -22,6 +22,7 @@ function OverviewTab({ loadingProfile, profileError, profileData }) {
           <DocRow emoji="🎂" label="Date of Birth" value={profileData.dateOfBirth} />
           <DocRow emoji="📍" label="Country" value={profileData.country} />
           <DocRow emoji="🗺️" label="State" value={profileData.state} />
+          <DocRow emoji="📌" label="District" value={profileData.district} />
           <DocRow emoji="🏙️" label="City" value={profileData.city} />
           <DocRow emoji="🏠" label="Building No." value={profileData.buildingNo} />
           <DocRow emoji="🛣️" label="Street" value={profileData.street} />

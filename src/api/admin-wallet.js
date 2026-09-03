@@ -8,7 +8,7 @@ const getErrorMessage = (error, fallback) => {
   return detail || error.response?.data?.message || error.response?.data?.error || fallback;
 };
 
-/** GET /admin/wallet/transactions with server-side pagination. */
+/** GET /admin/wallet/transactions with the active filters. */
 export const getAdminWalletTransactionsApi = async (filters = {}) => {
   try {
     const params = Object.fromEntries(

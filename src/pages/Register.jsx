@@ -1,8 +1,13 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { registerApi, checkEnrollerApi } from "../api/auth";
+import { getAllStatesWithDistricts } from "india-state-district";
 import "./Register.css";
 import logo from "../assets/logo.png";
+
+const indianDistrictsByState = Object.fromEntries(
+  getAllStatesWithDistricts().map(({ name, districts }) => [name, districts])
+);
 
 const Register = () => {
   const navigate = useNavigate();
@@ -22,8 +27,10 @@ const Register = () => {
     confirm_password:"",
     enroller_id: "",
     date_of_birth: "",
+    gender: "",
     country: "",
     state: "",
+    district: "",
     city: "",
     zip_code: "",
     building_no: "",
@@ -31,7 +38,6 @@ const Register = () => {
     mobile: "",
     aadhar_no: "",
     pan: "",
-    gender: "",
     bank_account: "",
     bank_name: "",
     ifsc: "",
@@ -89,7 +95,12 @@ const Register = () => {
     // clear general api/form error when user starts editing
     if (apiError) setApiError("");
 
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+      ...(name === "country" ? { state: "", district: "" } : {}),
+      ...(name === "state" ? { district: "" } : {}),
+    }));
 
     if (name === "enroller_id") {
       setEnrollerName("");
@@ -430,6 +441,11 @@ const Register = () => {
         ? uaeStates
         : [];
 
+  const districtSuggestions =
+    formData.country === "India"
+      ? indianDistrictsByState[formData.state] || []
+      : [];
+
   return (
     <div className="register-page">
       <div className="register-card">
@@ -499,6 +515,7 @@ const Register = () => {
             checkingEnroller ? "Checking Enroller ID..." : enrollerName
           )}
           {renderInput("date_of_birth", "Date of Birth", "date", true)}
+          {renderSelect("gender", "Gender", ["Male", "Female", "Other"], true)}
           {renderSelect(
             "country",
             "Country",
@@ -533,14 +550,37 @@ const Register = () => {
             )}
             {errors.state && <small className="error">{errors.state}</small>}
           </div>
+          <div className="field-group">
+            <label htmlFor="district">District</label>
+            <input
+              id="district"
+              name="district"
+              list={districtSuggestions.length ? "district-options" : undefined}
+              placeholder={
+                formData.country === "India" && formData.state
+                  ? "Type district name"
+                  : "District"
+              }
+              value={formData.district}
+              onChange={handleChange}
+              className={errors.district ? "input-error" : ""}
+            />
+            {districtSuggestions.length > 0 && (
+              <datalist id="district-options">
+                {districtSuggestions.map((districtName) => (
+                  <option key={districtName} value={districtName} />
+                ))}
+              </datalist>
+            )}
+            {errors.district && <small className="error">{errors.district}</small>}
+          </div>
           {renderInput("city", "City", "text", false)}
-          {renderInput("zip_code", "ZIP Code", "text", false)}
-          {renderInput("building_no", "Building No.", "text", false)}
           {renderInput("street", "Street", "text", false)}
+          {renderInput("building_no", "Building No.", "text", false)}
+          {renderInput("zip_code", "ZIP Code", "text", false)}
           {renderInput("mobile", "Mobile", "tel", true)}
           {renderInput("aadhar_no", "Aadhaar Number", "text", true)}
           {renderInput("pan", "PAN Number", "text", false)}
-          {renderSelect("gender", "Gender", ["Male", "Female", "Other"], true)}
 
           <h3 className="form-section-title">Bank Details</h3>
           {renderInput("bank_name", "Bank Name", "text", false)}

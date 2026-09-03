@@ -346,3 +346,4 @@
 [data-theme="dark"] .register-form input[type="date"]::-webkit-calendar-picker-indicator {
   filter: invert(1) brightness(0.9);
 }
+
