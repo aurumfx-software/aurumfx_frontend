@@ -167,3 +167,45 @@
 .rank-today-holders-error {
 	margin-top: 18px;
 }
+
+@media (max-width: 760px) {
+	.rank-today-holders-card {
+		padding: 18px 14px 20px;
+	}
+
+	.rank-today-holders-toolbar {
+		margin-bottom: 16px;
+	}
+
+	.rank-today-holders-actions {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) 42px;
+		gap: 10px;
+		align-items: stretch;
+	}
+
+	.rank-today-holders-search {
+		grid-column: 1 / -1;
+		width: 100%;
+		min-width: 0;
+	}
+
+	.rank-today-holders-tabs {
+		min-width: 0;
+		width: 100%;
+		height: 46px;
+		gap: 2px;
+	}
+
+	.rank-today-holders-tabs button {
+		min-width: 0;
+		padding: 7px 6px;
+		line-height: 1.2;
+		white-space: normal;
+	}
+
+	.rank-today-holders-refresh {
+		width: 42px;
+		height: 46px;
+	}
+}
