@@ -753,36 +753,41 @@
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(3px);
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
-  padding: 20px;
+  z-index: 9999;
+  overflow-y: auto;
+  padding: 24px;
 }
 
 .modal-container {
-  background: #111111;
-  border: 1px solid rgba(212, 175, 55, 0.2);
-  border-radius: 16px;
   width: 100%;
-  max-width: 480px;
-  max-height: 85vh;
-  overflow-y: auto;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  max-width: 520px;
+  max-height: calc(100vh - 48px);
+  margin: auto;
+  overflow: hidden;
+  border: 1px solid rgba(212, 175, 55, 0.24);
+  border-radius: 18px;
+  background: #0f1012;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
 }
 
 .modal-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 24px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 18px;
+  padding: 22px 28px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.14), transparent 70%);
 }
 
 .modal-header h3 {
-  font-size: 17px;
+  font-size: 20px;
   font-weight: 800;
   color: #f8fafc;
   margin: 0;
@@ -790,12 +795,15 @@
 
 .modal-close-btn {
   background: transparent;
-  border: none;
-  color: #94a3b8;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  color: #a7b0bf;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  padding: 4px;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
   transition: color 0.15s ease;
 }
 
@@ -804,7 +812,10 @@
 }
 
 .modal-body {
-  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 26px 28px 28px;
   color: #e2e8f0;
   font-size: 14px;
 }
@@ -822,12 +833,38 @@
 .field-label {
   font-size: 13px;
   font-weight: 700;
-  color: #cbd5e1;
+  color: #a7b0bf;
+  letter-spacing: 0.04em;
 }
 
 .form-input {
   font-family: inherit;
   resize: vertical;
+}
+
+.investment-reject-textarea {
+  width: 100%;
+  min-height: 108px;
+  margin-top: 2px;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9px;
+  background: #17191d;
+  color: #f8fafc;
+  outline: none;
+  line-height: 1.5;
+}
+
+.investment-reject-textarea:focus {
+  border-color: #f5d061;
+  box-shadow: 0 0 0 3px rgba(245, 208, 97, 0.14);
+}
+
+.investment-reject-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
 }
 
 .cancel-btn {
@@ -1195,4 +1232,57 @@
     font-size: 11.5px;
     padding: 0 8px;
   }
+}
+
+[data-theme="light"] .investment-reject-modal {
+  border-color: rgba(197, 155, 39, 0.28);
+  background: #ffffff;
+  box-shadow: 0 24px 70px rgba(45, 35, 20, 0.22);
+}
+
+[data-theme="light"] .investment-reject-modal .modal-header {
+  border-bottom-color: #e5e7eb;
+  background: linear-gradient(135deg, rgba(197, 155, 39, 0.12), transparent 70%);
+}
+
+[data-theme="light"] .investment-reject-modal .modal-header h3 { color: #171717; }
+[data-theme="light"] .investment-reject-modal .modal-body { color: #374151; }
+[data-theme="light"] .investment-reject-modal .field-label { color: #64748b; }
+
+[data-theme="light"] .investment-reject-textarea {
+  border-color: #e5e7eb;
+  background: #ffffff;
+  color: #141414;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.03);
+}
+
+[data-theme="light"] .investment-reject-modal .modal-close-btn {
+  border-color: #e5e7eb;
+  color: #64748b;
+}
+
+[data-theme="light"] .investment-reject-modal .cancel-btn {
+  border-color: #e2e8f0;
+  background: #f1f5f9;
+  color: #334155;
+}
+
+.investment-success-banner {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid rgba(22, 163, 74, 0.25);
+  border-radius: 10px;
+  background: #ecfdf3;
+  color: #166534;
+  font-size: 13px;
+  font-weight: 700;
+  animation: ai-fade-up 0.25s ease both;
+}
+
+[data-theme="dark"] .investment-success-banner {
+  border-color: rgba(52, 211, 153, 0.28);
+  background: rgba(6, 78, 59, 0.45);
+  color: #86efac;
 }

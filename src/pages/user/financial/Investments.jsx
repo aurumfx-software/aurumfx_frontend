@@ -45,6 +45,14 @@ const formatDDMMYYYY = (value) => {
   return `${day}-${month}-${year}`;
 };
 
+const getInvestmentStatusClass = (value) => {
+  const status = String(value || "").toLowerCase();
+  if (status.includes("reject")) return "status--rejected";
+  if (status.includes("pending")) return "status--pending";
+  if (status.includes("active") || status.includes("approved")) return "status--approved";
+  return "status--approved";
+};
+
 const isPdfFile = (file) => file?.type === "application/pdf" || /\.pdf$/i.test(file?.name || "");
 const MAX_PAYMENT_PROOF_SIZE = 50 * 1024 * 1024;
 
@@ -478,8 +486,8 @@ function Investments() {
                       <td>{inv.return_which ?? 0}</td>
                       <td>{inv.return_balance ?? 0}</td>
                       <td className="date-cell">{formatDDMMYYYY(inv.return_date)}</td>
-                      <td><span className="status-badge status--active">{inv.investment_status}</span></td>
-                      <td><span className="status-badge status--approved">{inv.approval_status}</span></td>
+                      <td><span className={`status-badge ${getInvestmentStatusClass(inv.investment_status)}`}>{inv.investment_status}</span></td>
+                      <td><span className={`status-badge ${getInvestmentStatusClass(inv.approval_status)}`}>{inv.approval_status}</span></td>
                       <td>
                         {inv.payment_proof ? (
                           <button type="button" className="proof-link" onClick={() => handleProofClick(inv.id)}>

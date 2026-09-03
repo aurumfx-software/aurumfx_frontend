@@ -972,8 +972,8 @@
 }
 
 .status--active {
-  background: var(--inv-accent-soft);
-  color: var(--inv-accent);
+  background: var(--inv-success-soft);
+  color: var(--inv-success);
 }
 
 .status--approved {
