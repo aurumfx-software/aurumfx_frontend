@@ -104,6 +104,14 @@ function UserLayout({ children, user }) {
           user={layoutUser}
         />
         <main className="user-layout-content">{children}</main>
+        <footer className="user-layout-footer">
+          <span className="user-layout-footer-line" aria-hidden="true" />
+          <p>
+            <span className="user-layout-footer-brand">AurumFX</span>
+            <span className="user-layout-footer-separator" aria-hidden="true">&bull;</span>
+            <span>&copy; 2026 All Rights Reserved.</span>
+          </p>
+        </footer>
       </div>
     </div>
   );
