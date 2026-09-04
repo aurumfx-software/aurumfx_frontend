@@ -41,7 +41,7 @@ function GenealogyListPage() {
           <span className="agen-eyebrow"><span className="agen-eyebrow-dot" />Network Overview</span>
           <div className="agen-page-header-top">
             <div className="agen-page-header-text">
-              <h1 className="agen-page-title">Genealogy List</h1>
+              <h1 className="agen-page-title">Family List</h1>
               <p className="agen-page-subtitle">All members in the network with investment status</p>
             </div>
           </div>

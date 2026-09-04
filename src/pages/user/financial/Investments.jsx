@@ -22,9 +22,7 @@ import { getInvestmentPlansApi } from "../../../api/adminplans";
 import { getInvestmentTypesApi } from "../../../api/adminreturntype";
 import "./Investments.css";
 
-// Matches messages like "Bank transaction ID already exists", "Duplicate
-// transaction id", "Transaction already used" etc. so we can route the
-// error under the field instead of the generic top banner.
+
 const isDuplicateBankTxError = (message) => {
   if (!message) return false;
   const text = String(message).toLowerCase();
