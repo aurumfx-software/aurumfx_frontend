@@ -83,6 +83,14 @@ function AdminInvestments() {
     });
   };
 
+  const sortPendingByInvestmentDate = (items = []) => {
+    return [...items].sort((a, b) => {
+      const dateA = new Date(a.investment_date || a.date || a.created_at || 0).getTime();
+      const dateB = new Date(b.investment_date || b.date || b.created_at || 0).getTime();
+      return dateA - dateB;
+    });
+  };
+
   const filterInvestments = (items, filterValues = {}) => {
     const activeUserFilter = filterValues.usernameFilter ?? usernameFilter;
     const activeStartDate = filterValues.startDate ?? startDate;
@@ -100,7 +108,7 @@ function AdminInvestments() {
     });
 
     if (activeTab === "requests") {
-      return sortByApprovedDate(filtered, true);
+      return sortPendingByInvestmentDate(filtered);
     }
 
     if (activeTab === "history") {

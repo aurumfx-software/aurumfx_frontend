@@ -120,7 +120,7 @@ function EWallet() {
               {summaryLoading ? "—" : money(summary?.total_amount)}
             </div>
             <span className="balance-hero-sub">
-              Amount:{" "}
+              Eligible Payout:{" "}
               <strong>
                 {summaryLoading ? "—" : money(summary?.amount)}
               </strong>

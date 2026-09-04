@@ -243,6 +243,9 @@ function Investments() {
 
   const userId = localStorage.getItem("userId") || "FX256";
   const userName = localStorage.getItem("userName") || "SUCHITHRA";
+  const hasRejectedInvestment = investments.some((investment) =>
+    String(investment.approval_status || "").toLowerCase().includes("reject")
+  );
 
   return (
     <UserLayout user={{ name: userName, userId }}>
@@ -459,16 +462,17 @@ function Investments() {
                   <th>Return Date</th>
                   <th>Investment Status</th>
                   <th>Approval Status</th>
+                  {hasRejectedInvestment && <th>Rejected Reason</th>}
                   <th>Payment Proof</th>
                 </tr>
               </thead>
               <tbody>
                 {listLoading ? (
-                  <tr><td colSpan="15" className="empty-cell">Loading...</td></tr>
+                  <tr><td colSpan={hasRejectedInvestment ? 16 : 15} className="empty-cell">Loading...</td></tr>
                 ) : listError ? (
-                  <tr><td colSpan="15" className="empty-cell">{listError}</td></tr>
+                  <tr><td colSpan={hasRejectedInvestment ? 16 : 15} className="empty-cell">{listError}</td></tr>
                 ) : investments.length === 0 ? (
-                  <tr><td colSpan="15" className="empty-cell">No investments yet.</td></tr>
+                  <tr><td colSpan={hasRejectedInvestment ? 16 : 15} className="empty-cell">No investments yet.</td></tr>
                 ) : (
                   investments.map((inv, idx) => (
                     <tr key={inv.id}>
@@ -486,6 +490,7 @@ function Investments() {
                       <td className="date-cell">{formatDDMMYYYY(inv.return_date)}</td>
                       <td><span className={`status-badge ${getInvestmentStatusClass(inv.investment_status)}`}>{inv.investment_status}</span></td>
                       <td><span className={`status-badge ${getInvestmentStatusClass(inv.approval_status)}`}>{inv.approval_status}</span></td>
+                      {hasRejectedInvestment && <td>{inv.reject_reason || "-"}</td>}
                       <td>
                         {inv.payment_proof ? (
                           <button type="button" className="proof-link" onClick={() => handleProofClick(inv.id)}>

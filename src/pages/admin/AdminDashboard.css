@@ -114,6 +114,11 @@
 
 /* ===== Summary cards ===== */
 .admin-summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+@media(min-width:901px){
+  .admin-summary-grid{grid-template-columns:repeat(12,minmax(0,1fr))}
+  .admin-summary-card:nth-child(-n+3){grid-column:span 4}
+  .admin-summary-card:nth-child(n+4){grid-column:span 3}
+}
 .admin-summary-card{
   position:relative;overflow:hidden;
   display:flex;flex-direction:column;gap:4px;padding:19px 18px 17px;
@@ -352,6 +357,7 @@
 /* ===== Responsive ===== */
 @media(max-width:900px){
   .admin-summary-grid{grid-template-columns:repeat(2,1fr)}
+  .admin-summary-card{grid-column:auto}
   .month-metrics-grid{grid-template-columns:repeat(2,1fr)}
   .dashboard-main-grid{grid-template-columns:1fr}
   .admin-dashboard-heading{align-items:stretch;flex-direction:column}

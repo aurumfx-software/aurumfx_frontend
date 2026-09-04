@@ -15,7 +15,6 @@ const summaryCards = [
   ["total_users", "Total Users", FiUsers, "count", "teal", false],
   ["active_users", "Active Users", FiActivity, "count", "blue", false],
   ["total_wallet_balance", "Wallet Balance", FiDollarSign, "money", "violet", false],
-  ["total_pending_balance", "Pending Balance", FiDollarSign, "money", "amber", false],
   ["total_payout", "Total Payout", FiDollarSign, "money", "rose", false],
   ["total_income", "Total Income", FiTrendingUp, "money", "teal", false],
   ["total_admin_fee", "Admin Fee", FiDollarSign, "money", "blue", false],
