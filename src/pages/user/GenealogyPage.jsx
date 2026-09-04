@@ -612,6 +612,7 @@ function GenealogyPage() {
                           Investment
                         </span>
                       </th>
+                      <th>Level</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -623,6 +624,7 @@ function GenealogyPage() {
                           <td>{item.fullname || item.full_name || item.name || "-"}</td>
                           <td>{formatJoinDate(joinDate)}</td>
                           <td>₹{Number(item.total_investment || 0).toLocaleString()}</td>
+                          <td>{item.level ?? "-"}</td>
                         </tr>
                       );
                     })}
