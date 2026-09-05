@@ -1,0 +1,159 @@
+/* ── Fund Transfer Report ── */
+
+/* Header row: title + export btn */
+.ft-page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.ft-export-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffc52d;
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(255, 197, 45, 0.3);
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.ft-export-btn:hover {
+  background: #f5b316;
+  transform: translateY(-1px);
+}
+
+/* Main card */
+.ft-card {
+  background: #fff;
+  border: 1px solid #f1f5f9;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  overflow: hidden;
+  animation: ap-fade-up 0.5s ease 0.15s both;
+}
+
+/* Sub-tabs */
+.ft-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1.5px solid #f1f5f9;
+  padding: 0 20px;
+}
+
+.ft-tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+  background: transparent;
+  border: none;
+  border-bottom: 2.5px solid transparent;
+  margin-bottom: -1.5px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ft-tab-btn:hover {
+  color: #1e293b;
+}
+
+.ft-tab-btn--active {
+  color: #1e293b;
+  border-bottom-color: #ffc52d;
+}
+
+/* Filter section container */
+.ft-filter-section {
+  position: relative;
+  padding: 16px 20px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+/* × close button */
+.ft-close-btn {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s, background 0.15s;
+}
+
+.ft-close-btn:hover {
+  color: #ef4444;
+  background: #fff1f2;
+}
+
+/* Filter bar inside the section */
+.ft-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-bottom: 16px;
+  padding-right: 40px; /* space for close button */
+}
+
+/* Table wrapper */
+.ft-table-wrapper {
+  overflow-x: auto;
+}
+
+/* Empty state */
+.ft-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 52px 20px;
+  gap: 12px;
+}
+
+.ft-empty-icon {
+  opacity: 0.7;
+}
+
+.ft-empty-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: #94a3b8;
+  margin: 0;
+}
+
+/* Black/gold theme */
+.admin-reports-page .ft-card {
+  background: #111111;
+  border-color: rgba(212, 175, 55, 0.15);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.admin-reports-page .ft-tabs,
+.admin-reports-page .ft-filter-section {
+  border-bottom-color: rgba(212, 175, 55, 0.18);
+}
+
+.admin-reports-page .ft-tab-btn { color: #94a3b8; }
+.admin-reports-page .ft-tab-btn:hover,
+.admin-reports-page .ft-tab-btn--active { color: #f5d061; }
+
+.admin-reports-page .ft-empty-text { color: #cbd5e1; }
+.admin-reports-page .ft-close-btn:hover { background: rgba(239, 68, 68, 0.12); }

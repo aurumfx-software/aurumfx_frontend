@@ -1,0 +1,346 @@
+.journey {
+  padding: 80px 24px;
+  background: var(--section-bg);
+  position: relative;
+  overflow: hidden;
+}
+
+.journey::before {
+  content: "";
+  position: absolute;
+  bottom: -10%;
+  left: -8%;
+  width: 550px;
+  height: 550px;
+  background: radial-gradient(circle, var(--gold-glow) 0%, transparent 70%);
+  filter: blur(70px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.journey .gold-line-beam {
+  display: none;
+}
+
+.journey .gold-line-beam::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -30%;
+  width: 30%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, var(--gold) 40%, var(--gold-light) 50%, var(--gold) 60%, transparent);
+  box-shadow: 0 0 16px 2px var(--gold-glow);
+  opacity: 0;
+}
+
+.journey.in-view .gold-line-beam::after {
+  animation: none;
+}
+
+@keyframes beamSweep {
+  0% { left: -30%; opacity: 0; }
+  10% { opacity: 1; }
+  50% { left: 50%; opacity: 1; }
+  90% { opacity: 1; }
+  100% { left: 130%; opacity: 0; }
+}
+
+.journey .section-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: var(--gold-glow);
+  border: 1px solid var(--gold-border-strong);
+  border-radius: 999px;
+  color: var(--gold-dark, var(--gold));
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 18px;
+}
+
+[data-theme="dark"] .journey .section-badge {
+  color: var(--gold);
+}
+
+.journey-container {
+  position: relative;
+  z-index: 1;
+  max-width: 1280px;
+  margin: auto;
+}
+
+.journey .section-head {
+  text-align: left;
+  max-width: 640px;
+  margin-bottom: 48px;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.journey.in-view .section-head {
+  animation: fadeSlideUp 0.7s ease forwards;
+}
+
+.journey .section-head h2 {
+  font-size: clamp(28px, 4vw, 36px);
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+
+.journey .section-head h2 span {
+  background: var(--gradient-gold);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-size: 200% auto;
+  animation: shimmer 4s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+.journey .section-head p {
+  font-size: 16px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== Steps Grid ===== */
+.journey-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.journey-card {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--gold-border-strong);
+  border-radius: 16px;
+  padding: 32px 28px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  box-shadow: var(--shadow-card);
+  opacity: 0;
+  transform: translateY(40px) scale(0.95);
+}
+
+.journey.in-view .journey-card {
+  animation: cardPopIn 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes cardPopIn {
+  from { opacity: 0; transform: translateY(40px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.journey-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--gold-dark, var(--gold));
+  box-shadow: 0 20px 44px var(--gold-glow);
+}
+
+.journey-step {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  font-size: 32px;
+  font-weight: 800;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--gold-border-strong);
+}
+
+.journey-icon {
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 20px;
+  background: var(--gradient-gold);
+  color: var(--text-on-gold);
+  border-radius: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 22px;
+  box-shadow: var(--shadow-gold);
+  transition: transform 0.3s ease;
+}
+
+.journey-card:hover .journey-icon {
+  transform: scale(1.08) rotate(-4deg);
+}
+
+.journey-card h3 {
+  font-size: 20px;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.journey-card p {
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* ===== Summary Stats ===== */
+.journey-summary {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+
+.summary-box {
+  background: var(--bg-card);
+  border: 1px solid var(--gold-border-strong);
+  border-radius: 12px;
+  padding: 24px 40px;
+  text-align: center;
+  min-width: 160px;
+  box-shadow: var(--shadow-card);
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+.journey.in-view .summary-box {
+  animation: fadeSlideUp 0.6s ease forwards;
+}
+
+.summary-box h3 {
+  font-size: 28px;
+  font-weight: 700;
+  background: var(--gradient-gold);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 6px;
+}
+
+.summary-box span {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* ===== Dual-rate pills — 8% / 14% with plan labels ===== */
+.summary-box--dual {
+  padding: 20px 28px;
+  min-width: 220px;
+}
+
+.dual-pills {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.rate-pill {
+  flex: 1;
+  background: var(--gold-glow);
+  border: 1px solid var(--gold-border);
+  border-radius: 8px;
+  padding: 10px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.summary-box--dual:hover .rate-pill {
+  border-color: var(--gold-border-strong);
+  background: var(--gold-glow);
+}
+
+.rate-pill strong {
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1;
+  background: var(--gradient-gold);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.rate-pill span {
+  font-size: 10px;
+  color: var(--text-faint);
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+}
+
+/* ===== CTA Button ===== */
+.journey-btn {
+  display: block;
+  width: fit-content;
+  margin: 0 auto;
+  padding: 14px 36px;
+  background: var(--gradient-gold);
+  color: var(--text-on-gold);
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  box-shadow: var(--shadow-gold);
+  border: none;
+}
+
+.journey-btn:hover {
+  background: var(--gradient-gold-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-gold);
+}
+
+@media (max-width: 768px) {
+  .journey .section-head h2 {
+    font-size: 28px;
+  }
+
+  .journey-card {
+    padding: 28px 22px;
+  }
+
+  .summary-box {
+    padding: 20px 32px;
+    min-width: 140px;
+  }
+
+  .summary-box--dual {
+    padding: 18px 20px;
+    min-width: 200px;
+  }
+
+  .rate-pill strong {
+    font-size: 17px;
+  }
+
+  .rate-pill span {
+    font-size: 9px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-head,
+  .journey-card,
+  .summary-box,
+  .gold-line-beam::after {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+}

@@ -1,0 +1,677 @@
+/* Plan Investments Admin Styles */
+
+.plan-investments-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-bottom: 40px;
+  width: 100%;
+}
+
+[data-theme="light"] .plan-investments-page .admin-page-title,
+[data-theme="light"] .plan-investments-page .plan-modal-header h3 {
+  color: #171717;
+}
+
+[data-theme="light"] .plan-investments-page .admin-breadcrumb {
+  color: #6b7280;
+}
+
+[data-theme="light"] .plan-list-card,
+[data-theme="light"] .plan-modal-container {
+  background: #ffffff;
+  border-color: rgba(190, 125, 38, 0.2);
+  box-shadow: 0 4px 16px rgba(45, 35, 20, 0.06);
+}
+
+[data-theme="light"] .plans-table th {
+  background: #f8fafc;
+  color: #4b5563;
+}
+
+[data-theme="light"] .plans-table td,
+[data-theme="light"] .plan-name-cell,
+[data-theme="light"] .modal-field .field-label {
+  color: #414141;
+}
+
+[data-theme="light"] .plan-modal-body input,
+[data-theme="light"] .plan-modal-body select,
+[data-theme="light"] .plans-filter-row input,
+[data-theme="light"] .plans-filter-row select {
+  background: #ffffff;
+  color: #414141;
+  border-color: rgba(190, 125, 38, 0.25);
+}
+
+/* Match the user Genealogy enroller table treatment. */
+.plan-investments-page .plans-table-wrapper {
+  border-color: rgba(197, 155, 39, 0.22);
+  background: #ffffff;
+}
+
+.plan-investments-page .plans-table th {
+  background: linear-gradient(90deg, rgba(197, 155, 39, 0.06), rgba(197, 155, 39, 0.18));
+  color: #a67c1f;
+  font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 2px solid rgba(197, 155, 39, 0.28);
+}
+
+.plan-investments-page .plans-table td {
+  color: #141414;
+  border-bottom-color: rgba(197, 155, 39, 0.14);
+}
+
+.plan-investments-page .plans-table tr:hover td {
+  background: linear-gradient(90deg, rgba(197, 155, 39, 0.06), rgba(197, 155, 39, 0.18));
+}
+
+[data-theme="dark"] .plan-investments-page .plans-table-wrapper {
+  border-color: rgba(212, 175, 55, 0.18);
+  background: #111111;
+}
+
+[data-theme="dark"] .plan-investments-page .plans-table th {
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.05), rgba(212, 175, 55, 0.14));
+  color: #f5d061;
+  border-bottom-color: rgba(212, 175, 55, 0.25);
+}
+
+[data-theme="dark"] .plan-investments-page .plans-table td {
+  color: #e2e8f0;
+  border-bottom-color: rgba(255, 255, 255, 0.06);
+}
+
+[data-theme="dark"] .plan-investments-page .plans-table tr:hover td {
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.05), rgba(212, 175, 55, 0.13));
+}
+
+.admin-page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+}
+
+.header-title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.admin-page-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.plan-investments-page .admin-page-title,
+.admin-investments-page .admin-page-title {
+  color: #ffffff;
+  text-shadow: none;
+}
+
+.admin-breadcrumb {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.plan-investments-page .admin-breadcrumb,
+.admin-investments-page .admin-breadcrumb {
+  color: #d3d8e0;
+}
+
+.plan-investments-page .crumb-active,
+.admin-investments-page .crumb-active {
+  color: #f5d061;
+}
+
+.crumb-sep {
+  color: #64748b;
+}
+
+.crumb-active {
+  color: #f5d061;
+  font-weight: 600;
+}
+
+.plan-list-card {
+  background: #111111;
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.create-plan-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f5d061;
+  color: #111827;
+  border: none;
+  font-weight: 700;
+  font-size: 13.5px;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.25);
+  transition: all 0.15s ease;
+}
+
+.create-plan-btn:hover {
+  background: #e5b80b;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+  .plan-investments-page .agen-page-header-top {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .plan-investments-page .create-plan-btn {
+    flex: 0 0 auto;
+    min-height: 42px;
+    padding: 0 14px;
+    border-radius: 9px;
+    font-size: 13px;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+}
+
+.plans-filter-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.search-input-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #111111;
+  border: 1px solid rgba(212, 175, 55, 0.18);
+  border-radius: 8px;
+  padding: 8px 14px;
+  width: 300px;
+  max-width: 100%;
+}
+
+.search-icon {
+  color: #f5d061;
+  font-size: 16px;
+}
+
+.search-input-box input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 13.5px;
+  color: #e2e8f0;
+  width: 100%;
+}
+
+[data-theme="dark"] .plan-investments-page .search-input-box,
+:root:not([data-theme="light"]) .plan-investments-page .search-input-box {
+  background: #111111;
+}
+
+[data-theme="dark"] .plan-investments-page .search-input-box input,
+:root:not([data-theme="light"]) .plan-investments-page .search-input-box input {
+  background: transparent !important;
+  color: #e2e8f0 !important;
+}
+
+[data-theme="light"] .plan-investments-page .search-input-box {
+  background: #ffffff;
+}
+
+[data-theme="light"] .plan-investments-page .search-input-box input {
+  background: transparent !important;
+  color: #414141 !important;
+}
+
+.filter-select-box select {
+  background: #111111;
+  border: 1px solid rgba(212, 175, 55, 0.18);
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 13.5px;
+  color: #e2e8f0;
+  outline: none;
+  cursor: pointer;
+}
+
+.plans-table-wrapper {
+  overflow-x: auto;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  background: #111111;
+}
+
+.plans-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  text-align: left;
+}
+
+.plans-table th {
+  background: #141414;
+  color: #94a3b8;
+  font-weight: 700;
+  padding: 13px 16px;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+  white-space: nowrap;
+}
+
+.plans-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: #e2e8f0;
+  white-space: nowrap;
+}
+
+.plans-table tr:hover td {
+  background: #1f2937;
+}
+
+.plan-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  color: #e2e8f0;
+}
+
+.cell-icon {
+  color: #f5d061;
+}
+
+.amount-cell {
+  font-weight: 700;
+  color: #e2e8f0;
+}
+
+.text-green {
+  color: #f5d061;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.no-data-cell {
+  text-align: center;
+  padding: 30px;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.status-action-btns {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 9px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 700;
+  border: 1px solid rgba(212, 175, 55, 0.18);
+  background: #111111;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.status-btn.btn-activate:hover,
+.status-btn.btn-activate.active-selected {
+  background: rgba(245, 208, 97, 0.14);
+  color: #f5d061;
+  border-color: #f5d061;
+}
+
+.status-btn.btn-deactivate:hover,
+.status-btn.btn-deactivate.deactive-selected {
+  background: rgba(220, 38, 38, 0.12);
+  color: #fda4af;
+  border-color: #f87171;
+}
+
+.status-badge-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  background: #111111;
+  color: #94a3b8;
+}
+
+.status--active {
+  background: rgba(245, 208, 97, 0.14);
+  color: #f5d061;
+  border: 1px solid rgba(245, 208, 97, 0.24);
+}
+
+.status--inactive {
+  background: #111111;
+  color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.status-badge-btn:hover {
+  opacity: 0.85;
+}
+
+.actions-cell {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.action-icon-btn {
+  background: #111111;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #94a3b8;
+  transition: all 0.15s ease;
+}
+
+.action-edit:hover {
+  background: rgba(245, 208, 97, 0.18);
+  color: #111827;
+  border-color: rgba(245, 208, 97, 0.35);
+}
+
+.action-delete:hover {
+  background: rgba(220, 38, 38, 0.12);
+  color: #fecaca;
+  border-color: rgba(248, 113, 113, 0.35);
+}
+
+/* Modal Popup Styles */
+.plan-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100dvh;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  z-index: 9999;
+  overflow-y: auto;
+  padding: 24px;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.plan-modal-container {
+  background: #111111;
+  width: 100%;
+  max-width: 520px;
+  max-height: calc(100vh - 48px);
+  margin: 0 auto;
+  overflow-y: auto;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.plan-modal-header {
+  padding: 20px 24px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.plan-modal-header h3 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: #e2e8f0;
+}
+
+.plan-modal-body {
+  padding: 20px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.modal-field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.field-label {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #94a3b8;
+}
+
+.modal-field input[type="text"],
+.modal-field input[type="number"] {
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13.5px;
+  color: #e2e8f0;
+  background: #111111;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.modal-field input:focus {
+  border-color: #f5d061;
+}
+
+/* Status Switch Toggle */
+.status-toggle-field {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+
+.toggle-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.toggle-wrapper input[type="checkbox"] {
+  display: none;
+}
+
+.toggle-slider {
+  width: 44px;
+  height: 24px;
+  background: #111111;
+  border-radius: 20px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.toggle-slider::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  background: #111111;
+  border-radius: 50%;
+  top: 3px;
+  left: 3px;
+  transition: transform 0.2s ease;
+}
+
+.toggle-wrapper input[type="checkbox"]:checked + .toggle-slider {
+  background: #f5d061;
+}
+
+.toggle-wrapper input[type="checkbox"]:checked + .toggle-slider::after {
+  transform: translateX(20px);
+}
+
+.toggle-text {
+  font-size: 13px;
+  font-weight: 700;
+  color: #94a3b8;
+}
+
+.modal-alert {
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.modal-alert.error {
+  background: rgba(220, 38, 38, 0.12);
+  color: #fecaca;
+  border: 1px solid rgba(248, 113, 113, 0.3);
+}
+
+.modal-alert.success {
+  background: rgba(245, 208, 97, 0.14);
+  color: #f5d061;
+  border: 1px solid rgba(245, 208, 97, 0.35);
+}
+
+.plan-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.cancel-btn {
+  background: transparent;
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  color: #94a3b8;
+  font-weight: 600;
+  font-size: 13.5px;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.cancel-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #e2e8f0;
+}
+
+.submit-btn {
+  background: #f5d061;
+  color: #111827;
+  border: none;
+  font-weight: 700;
+  font-size: 13.5px;
+  padding: 10px 22px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(255, 197, 45, 0.35);
+  transition: all 0.15s ease;
+}
+
+.submit-btn:hover {
+  background: #f5b316;
+}
+
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Shared by Investment Plan and Return Type modals. */
+[data-theme="light"] .plan-investments-page .plan-modal-container,
+:root:not([data-theme="dark"]) .plan-investments-page .plan-modal-container {
+  background: #ffffff;
+}
+
+[data-theme="light"] .plan-investments-page .plan-modal-body input,
+[data-theme="light"] .plan-investments-page .plan-modal-body select,
+:root:not([data-theme="dark"]) .plan-investments-page .plan-modal-body input,
+:root:not([data-theme="dark"]) .plan-investments-page .plan-modal-body select {
+  background: #ffffff !important;
+  border-color: #d8dee8;
+  color: #1f2937 !important;
+  color-scheme: light;
+}
+
+[data-theme="light"] .plan-investments-page .plan-modal-body input::placeholder,
+:root:not([data-theme="dark"]) .plan-investments-page .plan-modal-body input::placeholder {
+  color: #94a3b8;
+}
+
+[data-theme="light"] .plan-investments-page .field-label,
+:root:not([data-theme="dark"]) .plan-investments-page .field-label {
+  color: #475569;
+}
+
+[data-theme="light"] .plan-investments-page .plan-modal-header,
+:root:not([data-theme="dark"]) .plan-investments-page .plan-modal-header {
+  border-bottom-color: #e5e7eb;
+}
+
+[data-theme="light"] .plan-investments-page .plan-modal-header h3,
+:root:not([data-theme="dark"]) .plan-investments-page .plan-modal-header h3 {
+  color: #171717;
+}

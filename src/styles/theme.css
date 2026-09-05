@@ -1,0 +1,142 @@
+/* AurumFX design tokens — dark (default) & light themes */
+
+:root,
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg-page: #0b0b0b;
+  --bg-page-alt: #0a0c10;
+  --bg-surface: #111111;
+  --bg-elevated: #1a1a1a;
+  --bg-input: #1a1a1a;
+  --bg-sidebar: #0f0f0f;
+  --bg-sidebar-admin: #0a0a0a;
+  --bg-header: rgba(17, 17, 17, 0.96);
+  --bg-header-admin: #0a0a0a;
+  --bg-nav: rgba(0, 0, 0, 0.92);
+  --bg-nav-mobile: rgba(0, 0, 0, 0.98);
+  --bg-card: #111111;
+  --bg-card-hover: #1a1a1a;
+  --bg-overlay: rgba(0, 0, 0, 0.7);
+  --bg-backdrop: rgba(0, 0, 0, 0.4);
+
+  --text-primary: #f1f5f9;
+  --text-secondary: #e2e8f0;
+  --text-subtle: #cbd5e1;
+  --text-muted: #94a3b8;
+  --text-on-gold: #1a1608;
+
+  --gold: #f5d061;
+  --gold-mid: #e5b80b;
+  --gold-dark: #c59b27;
+  --gold-accent: #ffc52d;
+  --gold-border: rgba(212, 175, 55, 0.2);
+  --gold-border-strong: rgba(212, 175, 55, 0.28);
+  --gold-glow: rgba(212, 175, 55, 0.14);
+  --gradient-gold: linear-gradient(135deg, #f5d061 0%, #e5b80b 50%, #c59b27 100%);
+  --gradient-gold-hover: linear-gradient(135deg, #ffe082 0%, #f5d061 50%, #d4af37 100%);
+  --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.28);
+  --shadow-gold: 0 4px 14px rgba(212, 175, 55, 0.35);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --hover-subtle: rgba(255, 255, 255, 0.04);
+  --btn-secondary-bg: rgba(255, 255, 255, 0.06);
+  --gold-light: #ffe082;
+
+  --bg-terminal: #0a0a0a;
+  --bg-terminal-alt: #111111;
+  --bg-terminal-head: #151515;
+  --border-neutral: #2b2b2b;
+  --text-faint: #64748b;
+
+  --card-glass-1: rgba(255, 255, 255, 0.03);
+  --card-glass-2: rgba(255, 255, 255, 0.01);
+  --card-first-tint: rgba(212, 175, 55, 0.06);
+  --card-first-border: rgba(22, 24, 28, 0.96);
+  --btn-ghost-bg: rgba(12, 12, 12, 0.8);
+  --btn-ghost-border: rgba(44, 44, 44, 0.95);
+
+  --hero-scrim: linear-gradient(
+    90deg,
+    #000000 0%,
+    rgba(0, 0, 0, 0.85) 22%,
+    rgba(0, 0, 0, 0.35) 48%,
+    transparent 68%
+  );
+  --section-bg: #000000;
+  --bg-desktop: url("/hero-dark-desktop.png");
+  --bg-mobile: url("/hero-dark-mobile.png");
+
+  --scrollbar-track: #1a1a1a;
+  --scrollbar-thumb: #d4af37;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+
+  --bg-page: #f8fafc;
+  --bg-page-alt: #f1f5f9;
+  --bg-surface: #ffffff;
+  --bg-elevated: #f1f5f9;
+  --bg-input: #ffffff;
+  --bg-sidebar: #ffffff;
+  --bg-sidebar-admin: #ffffff;
+  --bg-header: rgba(255, 255, 255, 0.96);
+  --bg-header-admin: #ffffff;
+  --bg-nav: rgba(255, 255, 255, 0.95);
+  --bg-nav-mobile: #ffffff;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f8fafc;
+  --bg-overlay: rgba(15, 23, 42, 0.45);
+  --bg-backdrop: rgba(15, 23, 42, 0.25);
+
+  --text-primary: #0f172a;
+  --text-secondary: #1e293b;
+  --text-subtle: #475569;
+  --text-muted: #64748b;
+  --text-on-gold: #1a1608;
+
+  --gold: #c59b27;
+  --gold-mid: #d4af37;
+  --gold-dark: #a67c1f;
+  --gold-accent: #e5b80b;
+  --gold-border: rgba(197, 155, 39, 0.35);
+  --gold-border-strong: rgba(197, 155, 39, 0.45);
+  --gold-glow: rgba(197, 155, 39, 0.12);
+  --gradient-gold: linear-gradient(135deg, #c59b27 0%, #d4af37 50%, #a67c1f 100%);
+  --gradient-gold-hover: linear-gradient(135deg, #d4af37 0%, #e5b80b 50%, #c59b27 100%);
+  --shadow-card: 0 2px 12px rgba(15, 23, 42, 0.08);
+  --shadow-gold: 0 4px 14px rgba(197, 155, 39, 0.25);
+  --border-subtle: rgba(15, 23, 42, 0.08);
+  --hover-subtle: rgba(15, 23, 42, 0.04);
+  --btn-secondary-bg: rgba(15, 23, 42, 0.04);
+  --gold-light: #a67c1f;
+  --rose-light: #fce4ec;
+
+  --bg-terminal: #f8fafc;
+  --bg-terminal-alt: #ffffff;
+  --bg-terminal-head: #f1f5f9;
+  --border-neutral: #e2e8f0;
+  --text-faint: #94a3b8;
+
+  --card-glass-1: rgba(15, 23, 42, 0.02);
+  --card-glass-2: rgba(15, 23, 42, 0.01);
+  --card-first-tint: rgba(197, 155, 39, 0.05);
+  --card-first-border: var(--border-neutral);
+  --btn-ghost-bg: var(--bg-elevated);
+  --btn-ghost-border: var(--border-neutral);
+
+  --hero-scrim: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(255, 255, 255, 0.88) 35%,
+    rgba(255, 255, 255, 0.35) 55%,
+    transparent 75%
+  );
+  --section-bg: #ffffff;
+  --rose-light: #fce4ec;
+  --bg-desktop: url("/whiteimage.png");
+  --bg-mobile: url("/whiteimage.png");
+
+  --scrollbar-track: #e2e8f0;
+  --scrollbar-thumb: #c59b27;
+}

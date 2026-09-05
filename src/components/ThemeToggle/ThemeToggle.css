@@ -1,0 +1,108 @@
+.theme-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 1px solid var(--gold-border);
+  border-radius: 50%;
+  background: var(--bg-elevated);
+  color: var(--text-subtle);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, color 0.2s, transform 0.2s;
+  flex-shrink: 0;
+}
+
+.theme-toggle:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+  transform: translateY(-1px);
+}
+
+.theme-toggle-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  line-height: 1;
+}
+
+.theme-toggle-icon--sun {
+  display: none;
+}
+
+[data-theme="light"] .theme-toggle-icon--sun {
+  display: flex;
+}
+
+[data-theme="light"] .theme-toggle-icon--moon {
+  display: none;
+}
+
+[data-theme="dark"] .theme-toggle-icon--sun {
+  display: none;
+}
+
+[data-theme="dark"] .theme-toggle-icon--moon {
+  display: flex;
+}
+
+.theme-toggle-track {
+  display: none;
+}
+
+.theme-toggle--compact {
+  width: 38px;
+  height: 38px;
+  font-size: 16px;
+  border-radius: 10px;
+}
+
+/* Light theme styling for compact variant */
+[data-theme="light"] .theme-toggle--compact {
+  background: rgba(197, 155, 39, 0.12);
+  border-color: rgba(197, 155, 39, 0.35);
+  color: var(--gold-dark);
+}
+
+[data-theme="light"] .theme-toggle--compact:hover {
+  background: rgba(197, 155, 39, 0.2);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.theme-toggle--nav {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(212, 175, 55, 0.08);
+}
+
+[data-theme="light"] .theme-toggle--nav {
+  background: rgba(197, 155, 39, 0.1);
+}
+
+.theme-toggle--auth {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--bg-elevated);
+}
+
+.theme-toggle--user-header {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--bg-elevated);
+  border-color: var(--gold-border);
+}
+
+[data-theme="light"] .theme-toggle--user-header {
+  background: rgba(197, 155, 39, 0.08);
+}
+
+.theme-toggle--user-header:hover {
+  border-color: var(--gold);
+}

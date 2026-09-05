@@ -1,0 +1,1169 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap');
+
+.genealogy-page {
+  --gen-bg: #ffffff;
+  --gen-surface: #ffffff;
+  --gen-card-bg: #ffffff;
+  --gen-border: rgba(197, 155, 39, 0.22);
+  --gen-border-soft: rgba(197, 155, 39, 0.14);
+  --gen-text: #141414;
+  --gen-text-soft: #5a5a5a;
+  --gen-text-faint: #8f8f8f;
+
+  --gen-accent: #c59b27;
+  --gen-accent-strong: #a67c1f;
+  --gen-accent-soft: rgba(197, 155, 39, 0.14);
+  --gen-accent-line: rgba(197, 155, 39, 0.28);
+
+  /* sidebar active-item gradient, reused across this page */
+  --gen-nav-gradient: linear-gradient(90deg, rgba(197, 155, 39, 0.12), rgba(197, 155, 39, 0.35));
+  --gen-nav-gradient-soft: linear-gradient(90deg, rgba(197, 155, 39, 0.06), rgba(197, 155, 39, 0.18));
+
+  --gen-danger: #dc2626;
+  --gen-danger-soft: #fbe9e7;
+
+  --gen-font-display: "Manrope", "Inter", "Segoe UI", sans-serif;
+  --gen-font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+
+  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  color: var(--gen-text);
+  background: var(--gen-bg);
+  padding: 32px 36px 44px;
+  margin: -10px -30px -40px;
+  min-height: calc(100vh - 70px);
+  animation: gen-page-in 0.4s ease both;
+}
+
+@keyframes gen-page-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+[data-theme="dark"] .genealogy-page {
+  --gen-bg: #090909;
+  --gen-surface: #101010;
+  --gen-card-bg: #121212;
+  --gen-border: rgba(212, 175, 55, 0.18);
+  --gen-border-soft: rgba(255, 255, 255, 0.06);
+  --gen-text: #f3f4f6;
+  --gen-text-soft: #d1d5db;
+  --gen-text-faint: #9ca3af;
+
+  --gen-accent: #f5d061;
+  --gen-accent-strong: #d4af37;
+  --gen-accent-soft: rgba(245, 208, 97, 0.08);
+  --gen-accent-line: rgba(212, 175, 55, 0.25);
+  --gen-nav-gradient: linear-gradient(90deg, rgba(212, 175, 55, 0.08), rgba(212, 175, 55, 0.22));
+  --gen-nav-gradient-soft: linear-gradient(90deg, rgba(212, 175, 55, 0.05), rgba(212, 175, 55, 0.14));
+
+  --gen-danger: #f87171;
+  --gen-danger-soft: rgba(248, 113, 113, 0.13);
+}
+
+/* Only the empty/error states stay transparent in dark mode now — the
+   panel itself (and the table wrapper inside it) should keep their
+   card backgrounds so the "white container around the table" look
+   matches Admin Wallet in both themes. */
+[data-theme="dark"] .genealogy-page .genealogy-empty,
+[data-theme="dark"] .genealogy-page .genealogy-error {
+  background: transparent !important;
+  background-image: none !important;
+}
+
+[data-theme="dark"] .genealogy-page .genealogy-card {
+  background: #181818 !important;
+  box-shadow: none;
+}
+
+[data-theme="dark"] .genealogy-page .list-table-wrapper {
+  border-color: rgba(212, 175, 55, 0.18);
+  background: #111111;
+}
+
+[data-theme="dark"] .genealogy-page .genealogy-table thead th {
+  background: var(--gen-nav-gradient-soft);
+}
+
+[data-theme="dark"] .genealogy-card {
+  background: var(--gen-surface) !important;
+}
+
+[data-theme="dark"] .fam-avatar {
+  border-color: #1a1a1a;
+}
+
+[data-theme="dark"] .fam-badge {
+  background: #161616;
+}
+
+[data-theme="dark"] .fam-tooltip {
+  background: #141414;
+}
+
+[data-theme="dark"] .fam-tooltip::before {
+  background: #141414;
+}
+
+.genealogy-page * {
+  box-sizing: border-box;
+}
+
+.user-genealogy-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Page header — eyebrow + icon badge + title/subtitle stack               */
+/* ---------------------------------------------------------------------- */
+.page-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  width: 100%;
+  animation: gen-fade-down 0.45s ease both;
+}
+
+@keyframes gen-fade-down {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.page-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--gen-font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--gen-accent-strong);
+  margin-bottom: 10px;
+}
+
+.page-eyebrow-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gen-accent);
+  box-shadow: 0 0 0 3px var(--gen-accent-soft);
+  animation: gen-dot-pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes gen-dot-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px var(--gen-accent-soft); }
+  50% { box-shadow: 0 0 0 6px var(--gen-accent-soft); }
+}
+
+.page-header-top {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.page-title-icon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  font-size: 24px;
+  border-radius: 16px;
+  background: var(--gen-nav-gradient);
+  border: 1px solid var(--gen-accent-line);
+  box-shadow: 0 6px 16px rgba(197, 155, 39, 0.22);
+  transition: transform 0.25s ease;
+}
+
+.page-title-icon::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 20px;
+  border: 1px dashed var(--gen-accent-line);
+  opacity: 0.6;
+}
+
+.page-header:hover .page-title-icon {
+  transform: rotate(-4deg) scale(1.06);
+}
+
+.page-header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.page-title {
+  display: block;
+  font-family: var(--gen-font-display) !important;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  color: var(--gen-text) !important;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.page-subtitle {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--gen-text-soft);
+  letter-spacing: -0.005em;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--gen-font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gen-text-soft) !important;
+  margin: 12px 0 0;
+  padding-left: 2px;
+}
+
+.breadcrumb .separator {
+  color: var(--gen-accent-line);
+}
+
+.breadcrumb .current {
+  color: var(--gen-accent-strong);
+  font-weight: 700;
+  position: relative;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: var(--gen-nav-gradient-soft);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Panel — now a white/dark card, same treatment as                        */
+/* .admin-wallet-history-card in Admin Wallet (header + search + table     */
+/* all live inside one bordered, shadowed container).                      */
+/* ---------------------------------------------------------------------- */
+.genealogy-page .genealogy-panel {
+  position: relative;
+  margin-top: 0;
+  padding: 24px;
+  border: 1px solid var(--gen-border);
+  border-radius: 16px;
+  background: var(--gen-card-bg);
+  color: var(--gen-text) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  overflow: visible;
+  animation: gen-fade-up 0.5s ease 0.1s both;
+}
+
+[data-theme="dark"] .genealogy-page .genealogy-panel {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+
+@keyframes gen-fade-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.genealogy-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid var(--gen-accent-line);
+}
+
+.genealogy-header-row h2 {
+  font-family: var(--gen-font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gen-accent-strong) !important;
+  margin: 0;
+  padding: 7px 16px;
+  background: var(--gen-nav-gradient);
+  border: 1px solid var(--gen-accent-line);
+  border-radius: 999px;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.genealogy-header-row h2:hover {
+  box-shadow: 0 4px 14px rgba(197, 155, 39, 0.22);
+  transform: translateY(-1px);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Search bar — shared across Family / List / Enroller                     */
+/* ---------------------------------------------------------------------- */
+.gen-search-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.gen-search-input-wrap {
+  position: relative;
+  flex: 1 1 240px;
+  min-width: 180px;
+}
+
+.gen-search-icon {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  color: var(--gen-text-faint);
+  pointer-events: none;
+}
+
+.gen-search-input {
+  width: 100%;
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--gen-text);
+  background: var(--gen-surface);
+  border: 1px solid var(--gen-border);
+  border-radius: 10px;
+  padding: 10px 14px 10px 34px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.gen-search-input::placeholder {
+  color: var(--gen-text-faint);
+}
+
+.gen-search-input:focus {
+  border-color: var(--gen-accent);
+  box-shadow: 0 0 0 3px var(--gen-accent-soft);
+}
+
+.gen-search-btn,
+.gen-search-reset {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: var(--gen-font-mono);
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-radius: 10px;
+  padding: 10px 16px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: box-shadow 0.15s ease, transform 0.15s ease, opacity 0.15s ease;
+  white-space: nowrap;
+}
+
+.gen-search-btn {
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--gen-accent), var(--gen-accent-strong));
+  box-shadow: 0 4px 12px rgba(197, 155, 39, 0.28);
+}
+
+.gen-search-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(197, 155, 39, 0.34);
+}
+
+.gen-search-reset {
+  color: var(--gen-accent-strong);
+  background: var(--gen-nav-gradient-soft);
+  border-color: var(--gen-accent-line);
+}
+
+.gen-search-reset:hover:not(:disabled) {
+  background: var(--gen-nav-gradient);
+}
+
+.gen-search-reset:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+[data-theme="dark"] .gen-search-input {
+  background: #141414;
+}
+
+[data-theme="dark"] .gen-search-btn {
+  color: #141414;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Empty / error states                                                    */
+/* ---------------------------------------------------------------------- */
+.genealogy-empty,
+.genealogy-error {
+  padding: 34px 20px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--gen-text-soft);
+  border: 1px solid var(--gen-border);
+  border-radius: 12px;
+  background: #ffffff;
+  animation: gen-fade-up 0.4s ease both;
+}
+
+.genealogy-error {
+  color: var(--gen-danger);
+  border-color: var(--gen-danger);
+  background: var(--gen-danger-soft);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Lineage tree (legacy card-style — no longer used by Family view)        */
+/* ---------------------------------------------------------------------- */
+.genealogy-tree {
+  overflow-x: auto;
+  padding: 6px 4px 12px;
+}
+
+.genealogy-node {
+  position: relative;
+}
+
+.genealogy-children {
+  position: relative;
+  margin-top: 16px;
+  padding-left: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-left: 2px solid var(--gen-accent-line);
+}
+
+.genealogy-children > .genealogy-node::before {
+  content: "";
+  position: absolute;
+  left: -22px;
+  top: 26px;
+  width: 22px;
+  height: 0;
+  border-top: 2px solid var(--gen-accent-line);
+}
+
+.genealogy-children > .genealogy-node:last-child {
+  padding-bottom: 0;
+}
+
+.genealogy-card {
+  position: relative;
+  width: min(340px, 100%);
+  background: var(--gen-card-bg) !important;
+  border: 1px solid var(--gen-border) !important;
+  border-top: 3px solid var(--gen-accent);
+  border-radius: 14px;
+  padding: 16px 18px 18px;
+  box-shadow: 0 8px 20px rgba(197, 155, 39, 0.08);
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.genealogy-card:hover {
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--gen-text) 8%, transparent);
+  transform: translateY(-1px);
+}
+
+.genealogy-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.genealogy-user-badge {
+  font-family: var(--gen-font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--gen-accent-strong);
+  background: var(--gen-accent-soft);
+  border: 1px solid var(--gen-accent-line);
+  border-radius: 6px;
+  padding: 3px 8px;
+}
+
+.genealogy-role {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--gen-text-faint);
+}
+
+.genealogy-card h3 {
+  font-family: var(--gen-font-display);
+  font-size: 16.5px;
+  font-weight: 600;
+  color: var(--gen-text) !important;
+  margin: 0 0 14px;
+  letter-spacing: -0.005em;
+}
+
+.genealogy-metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 18px;
+  padding-top: 12px;
+  border-top: 1px solid var(--gen-border-soft);
+}
+
+.genealogy-metrics > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: var(--gen-font-mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--gen-text-faint);
+}
+
+.genealogy-metrics strong {
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--gen-text);
+}
+
+.genealogy-metrics > div:first-child strong {
+  font-family: var(--gen-font-mono);
+  color: var(--gen-accent-strong);
+  font-size: 14.5px;
+}
+
+@media (max-width: 768px) {
+  .genealogy-card {
+    width: min(300px, 100%);
+  }
+}
+
+/* ==========================================================================
+   Family view — org-chart avatar tree with hover tooltip
+   ========================================================================== */
+
+.fam-view-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px 16px;
+  margin: 16px 0 18px;
+  border: 1px solid var(--gen-accent-line);
+  border-radius: 10px;
+  background: var(--gen-nav-gradient-soft);
+  color: var(--gen-text);
+  font-size: 12.5px;
+}
+
+.fam-view-banner strong {
+  color: var(--gen-accent-strong);
+  font-family: var(--gen-font-mono);
+}
+
+.fam-view-banner-reset {
+  margin-left: auto;
+  padding: 6px 12px;
+  border: 1px solid var(--gen-accent-line);
+  border-radius: 999px;
+  background: var(--gen-surface);
+  color: var(--gen-accent-strong);
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.fam-view-banner-reset:hover {
+  background: var(--gen-nav-gradient);
+  box-shadow: 0 3px 10px rgba(197, 155, 39, 0.2);
+}
+
+.fam-tree-scroll {
+  position: relative;
+  z-index: 1;
+  overflow: auto;
+  max-height: 70vh;
+  padding: 10px 30px 260px;
+  -webkit-overflow-scrolling: touch;
+  isolation: isolate;
+}
+
+.tree, .tree ul, .tree li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tree {
+  display: inline-flex;
+  justify-content: center;
+  min-width: 100%;
+  padding: 10px 20px 20px;
+}
+
+.tree ul {
+  display: flex;
+  padding-top: 34px;
+  position: relative;
+}
+
+.tree li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  padding: 34px 16px 0 16px;
+}
+
+.tree li::before,
+.tree li::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 50%;
+  border-top: 2px solid var(--gen-accent-line);
+  width: 50%;
+  height: 34px;
+}
+
+.tree li::after {
+  right: auto;
+  left: 50%;
+  border-left: 2px solid var(--gen-accent-line);
+}
+
+.tree li:only-child::after,
+.tree li:only-child::before {
+  display: none;
+}
+
+.tree li:only-child {
+  padding-top: 0;
+}
+
+.tree li:first-child::before {
+  border: none;
+}
+
+.tree li:last-child::after {
+  border: none;
+}
+
+.tree li:last-child::before {
+  border-right: 2px solid var(--gen-accent-line);
+  border-radius: 0 8px 0 0;
+}
+
+.tree li:first-child::after {
+  border-radius: 8px 0 0 0;
+}
+
+.tree li > ul::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  border-left: 2px solid var(--gen-accent-line);
+  width: 0;
+  height: 34px;
+}
+
+.tree > li {
+  padding-top: 0;
+}
+.tree > li::before,
+.tree > li::after {
+  display: none;
+}
+
+.tree li {
+  animation: gen-node-in 0.4s ease both;
+}
+.tree ul li { animation-delay: 0.12s; }
+.tree ul ul li { animation-delay: 0.22s; }
+.tree ul ul ul li { animation-delay: 0.32s; }
+
+@keyframes gen-node-in {
+  from { opacity: 0; transform: scale(0.85) translateY(6px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* ---------------------------------------------------------------------- */
+/* Node: avatar + id badge, badge now uses sidebar-style gradient          */
+/* ---------------------------------------------------------------------- */
+.fam-node {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+  z-index: 2;
+}
+
+.fam-node:hover,
+.fam-node.is-details-open {
+  transform: translateY(-2px);
+  z-index: 999;
+}
+
+.fam-avatar {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--gen-font-display);
+  font-weight: 800;
+  font-size: 18px;
+  color: #fff;
+  border: 3px solid #ffffff;
+  outline: 2px solid var(--gen-accent-line);
+  box-shadow: 0 4px 12px rgba(197, 155, 39, 0.22);
+  transition: outline-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.fam-avatar--clickable {
+  cursor: pointer;
+}
+
+.fam-node:hover .fam-avatar {
+  outline-color: var(--gen-accent);
+  box-shadow: 0 6px 16px rgba(197, 155, 39, 0.32);
+}
+
+.fam-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.fam-badge {
+  margin-top: 8px;
+  font-family: var(--gen-font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 4px 10px 4px 12px;
+  border: 1px solid var(--gen-accent-line);
+  border-left: 3px solid #22c55e;
+  border-radius: 4px 8px 8px 4px;
+  background: var(--gen-nav-gradient-soft);
+  color: var(--gen-accent-strong);
+  white-space: nowrap;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.fam-node:hover .fam-badge {
+  background: var(--gen-nav-gradient);
+  box-shadow: 0 3px 10px rgba(197, 155, 39, 0.2);
+}
+
+.fam-badge.is-inactive {
+  border-left-color: var(--gen-danger);
+  color: var(--gen-danger);
+}
+
+.fam-badge.is-active {
+  border-left-color: #16a34a;
+  color: #15803d;
+}
+
+.fam-investment-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 5px;
+  padding: 3px 8px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-family: var(--gen-font-mono);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  line-height: 1;
+}
+
+.fam-investment-status::before {
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.fam-investment-status.is-active {
+  color: #15803d;
+  background: rgba(22, 163, 74, 0.1);
+  border-color: rgba(22, 163, 74, 0.22);
+}
+
+.fam-investment-status.is-inactive {
+  color: var(--gen-danger);
+  background: var(--gen-danger-soft);
+  border-color: rgba(220, 38, 38, 0.18);
+}
+
+[data-theme="dark"] .fam-badge.is-active {
+  color: #4ade80;
+}
+
+[data-theme="dark"] .fam-investment-status.is-active {
+  color: #4ade80;
+  background: rgba(74, 222, 128, 0.12);
+  border-color: rgba(74, 222, 128, 0.25);
+}
+
+.fam-tooltip-portal {
+  position: fixed;
+  width: 250px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.99) 0%, rgba(255,250,240,0.99) 100%);
+  border: 2px solid rgba(197, 155, 39, 0.9);
+  border-radius: 14px;
+  padding: 16px 18px;
+  box-shadow: 0 22px 48px rgba(15, 23, 42, 0.22), 0 0 0 4px rgba(197, 155, 39, 0.12);
+  z-index: 9999;
+  text-align: left;
+  pointer-events: none;
+  animation: fam-tooltip-in 0.14s ease both;
+  backdrop-filter: blur(2px);
+}
+
+@keyframes fam-tooltip-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fam-tooltip-portal::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 12px;
+  height: 12px;
+  background: rgba(255,250,240,0.99);
+  border: 0;
+}
+
+.fam-tooltip-portal.is-above::before {
+  bottom: -7px;
+  border-right: 1px solid rgba(197, 155, 39, 0.9);
+  border-bottom: 1px solid rgba(197, 155, 39, 0.9);
+}
+
+.fam-tooltip-portal.is-below::before {
+  top: -7px;
+  border-left: 1px solid rgba(197, 155, 39, 0.9);
+  border-top: 1px solid rgba(197, 155, 39, 0.9);
+}
+
+.fam-tooltip-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  font-size: 12.8px;
+  line-height: 1.5;
+  padding: 6px 0;
+  color: var(--gen-text);
+}
+
+.fam-tooltip-row + .fam-tooltip-row {
+  border-top: 1px solid var(--gen-border-soft);
+}
+
+.fam-tooltip-row span:first-child {
+  font-weight: 700;
+  color: #7a6d52;
+  min-width: 110px;
+}
+
+.fam-tooltip-row span:last-child {
+  font-weight: 800;
+  color: #171717;
+  text-align: right;
+  word-break: break-word;
+}
+
+@media (max-width: 768px) {
+  .fam-avatar {
+    width: 44px;
+    height: 44px;
+    font-size: 15px;
+  }
+
+  .fam-tooltip {
+    width: 190px;
+  }
+
+  .fam-tree-scroll {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .fam-tree-scroll::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+/* List / enroller tables — thead + row-hover use sidebar gradient          */
+/* ---------------------------------------------------------------------- */
+.list-table-wrapper {
+  overflow-x: auto;
+  border: 1px solid var(--gen-border);
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 6px 18px rgba(197, 155, 39, 0.06);
+}
+
+.genealogy-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  min-width: 480px;
+}
+
+.genealogy-table thead th {
+  text-align: left;
+  font-family: var(--gen-font-mono);
+  font-size: 10.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--gen-accent-strong);
+  padding: 14px 16px;
+  border-bottom: 2px solid var(--gen-accent-line);
+  background: var(--gen-nav-gradient-soft);
+  white-space: nowrap;
+}
+
+.genealogy-head-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-weight: 800;
+}
+
+.genealogy-head-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gen-accent-strong);
+}
+
+.genealogy-table tbody tr {
+  animation: gen-row-in 0.35s ease both;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.genealogy-table tbody tr:nth-child(1) { animation-delay: 0.05s; }
+.genealogy-table tbody tr:nth-child(2) { animation-delay: 0.1s; }
+.genealogy-table tbody tr:nth-child(3) { animation-delay: 0.15s; }
+.genealogy-table tbody tr:nth-child(4) { animation-delay: 0.2s; }
+.genealogy-table tbody tr:nth-child(5) { animation-delay: 0.25s; }
+.genealogy-table tbody tr:nth-child(n+6) { animation-delay: 0.3s; }
+
+@keyframes gen-row-in {
+  from { opacity: 0; transform: translateX(-6px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.genealogy-table tbody td {
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--gen-border-soft);
+  color: var(--gen-text);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.genealogy-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.genealogy-table tbody tr:hover {
+  background: var(--gen-nav-gradient-soft);
+  transform: translateX(2px);
+}
+
+.genealogy-table tbody td:first-child {
+  font-family: var(--gen-font-mono);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--gen-accent-strong);
+}
+
+/* Light theme: use the same neutral grey and white surfaces as admin pages. */
+[data-theme="light"] .genealogy-page {
+  --gen-bg: #f7f8fa;
+  --gen-surface: #ffffff;
+  --gen-card-bg: #ffffff;
+  --gen-text: #171717;
+  --gen-text-soft: #64748b;
+  --gen-text-faint: #8b93a1;
+  --gen-border: #e6e8ec;
+  --gen-border-soft: #edf0f2;
+  --gen-nav-gradient-soft: #f8fafc;
+}
+
+[data-theme="light"] .genealogy-page .list-table-wrapper {
+  background: #ffffff;
+  border-color: #e6e8ec;
+  box-shadow: 0 6px 18px rgba(45, 55, 72, 0.06);
+}
+
+[data-theme="light"] .genealogy-page .genealogy-table tbody td {
+  color: #414141;
+  border-bottom-color: #edf0f2;
+}
+
+[data-theme="light"] .genealogy-page .genealogy-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+/* Match Admin Wallet table headings exactly. */
+[data-theme="light"] .genealogy-page .genealogy-table thead th {
+  background: linear-gradient(90deg, rgba(197, 155, 39, 0.06), rgba(197, 155, 39, 0.18));
+  color: #a67c1f;
+  font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 2px solid rgba(197, 155, 39, 0.28);
+}
+
+[data-theme="dark"] .genealogy-page .genealogy-table thead th {
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.05), rgba(212, 175, 55, 0.14));
+  color: #f5d061;
+  border-bottom-color: rgba(212, 175, 55, 0.25);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .genealogy-page,
+  .page-header,
+  .genealogy-panel,
+  .tree li,
+  .genealogy-table tbody tr {
+    animation: none !important;
+  }
+
+  .page-eyebrow-dot {
+    animation: none !important;
+  }
+}
+
+/* ==========================================================================
+   Mobile-only extras — sidebar-style gold-white gradient touches
+   ========================================================================== */
+@media (max-width: 768px) {
+  .genealogy-page {
+    margin: -16px -16px -30px;
+    padding: 18px 14px 32px;
+  }
+
+  .page-eyebrow {
+    font-size: 9.5px;
+    margin-bottom: 8px;
+  }
+
+  .page-header-top {
+    gap: 12px;
+  }
+
+  .page-title-icon {
+    width: 42px;
+    height: 42px;
+    font-size: 19px;
+    border-radius: 13px;
+  }
+
+  .page-title {
+    font-size: 21px;
+  }
+
+  .page-subtitle {
+    font-size: 12px;
+  }
+
+  /* No longer sticky/pinned to the viewport — that was producing the
+     stray white bar over content (e.g. behind the "USER: FX004" badge)
+     once the panel became a card. It now just sits inside the card
+     like a normal section header. */
+  .genealogy-header-row {
+    padding-top: 4px;
+  }
+
+  .genealogy-header-row h2 {
+    font-size: 11px;
+    padding: 6px 12px;
+  }
+
+  .gen-search-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .gen-search-input-wrap {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .gen-search-btn,
+  .gen-search-reset {
+    width: 100%;
+  }
+
+  .genealogy-table {
+    min-width: 0;
+    font-size: 12px;
+  }
+
+  .genealogy-table thead th,
+  .genealogy-table tbody td {
+    padding: 10px 8px;
+  }
+
+  .list-table-wrapper {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    border-radius: 12px;
+  }
+
+  .list-table-wrapper::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* tap-friendly avatar + badge sizing, gradient glow ring on active tap */
+  .fam-badge {
+    padding: 5px 12px 5px 14px;
+  }
+
+  .fam-node:active .fam-avatar {
+    outline-color: var(--gen-accent);
+    box-shadow: 0 0 0 5px var(--gen-accent-soft);
+  }
+
+  .breadcrumb .current {
+    padding: 3px 9px;
+  }
+}

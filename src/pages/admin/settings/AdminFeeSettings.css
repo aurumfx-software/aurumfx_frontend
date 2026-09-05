@@ -1,0 +1,161 @@
+.admin-fee-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-bottom: 40px;
+}
+
+.admin-fee-header,
+.admin-fee-card-title,
+.admin-fee-modal-header,
+.admin-fee-modal-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.admin-fee-header h1 {
+  margin: 0;
+  color: #f8fafc;
+  font-size: 24px;
+}
+
+.admin-fee-breadcrumb {
+  display: flex;
+  gap: 8px;
+  margin-top: 5px;
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.admin-fee-breadcrumb strong { color: #f5d061; }
+
+.admin-fee-primary-btn,
+.admin-fee-secondary-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.admin-fee-primary-btn {
+  border: 0;
+  background: #f5d061;
+  color: #141414;
+}
+
+.admin-fee-primary-btn:hover { background: #f7da7d; }
+.admin-fee-primary-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.admin-fee-secondary-btn {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: transparent;
+  color: #e2e8f0;
+}
+
+.admin-fee-card {
+  overflow: hidden;
+  border: 1px solid rgba(212, 175, 55, 0.18);
+  border-radius: 14px;
+  background: #111111;
+}
+
+.admin-fee-card-title { padding: 22px 24px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+.admin-fee-card-title h2 { margin: 0; color: #f8fafc; font-size: 17px; }
+.admin-fee-card-title p { margin: 5px 0 0; color: #94a3b8; font-size: 13px; }
+.admin-fee-table-wrap { overflow-x: auto; }
+.admin-fee-table { width: 100%; min-width: 720px; border-collapse: collapse; text-align: left; }
+.admin-fee-table th { padding: 13px 18px; background: #141414; color: #94a3b8; font-size: 11px; text-transform: uppercase; }
+.admin-fee-table td { padding: 14px 18px; border-top: 1px solid rgba(255, 255, 255, 0.06); color: #e2e8f0; font-size: 13px; }
+.admin-fee-value { color: #f5d061 !important; font-weight: 800; }
+.admin-fee-status { padding: 5px 10px; border-radius: 999px; font-size: 11px; font-weight: 800; }
+.admin-fee-status.is-active { color: #34d399; background: rgba(52, 211, 153, 0.13); }
+.admin-fee-status.is-inactive { color: #94a3b8; background: rgba(148, 163, 184, 0.14); }
+.admin-fee-actions { display: flex; gap: 8px; }
+.admin-fee-actions button,
+.admin-fee-modal-header button { display: inline-flex; align-items: center; justify-content: center; border: 0; background: transparent; color: #94a3b8; cursor: pointer; }
+.admin-fee-actions button:hover { color: #f5d061; }
+.admin-fee-actions button:last-child:hover { color: #f87171; }
+.admin-fee-empty { padding: 32px !important; color: #94a3b8 !important; text-align: center; }
+
+.admin-fee-modal-backdrop { position: fixed; inset: 0; z-index: 1200; display: flex; align-items: center; justify-content: center; padding: 20px; background: rgba(0, 0, 0, 0.65); }
+.admin-fee-modal { width: min(100%, 440px); border: 1px solid rgba(212, 175, 55, 0.22); border-radius: 14px; background: #111111; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35); }
+.admin-fee-modal-header { padding: 18px 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+.admin-fee-modal-header h2 { margin: 0; color: #f8fafc; font-size: 17px; }
+.admin-fee-form { display: flex; flex-direction: column; gap: 10px; padding: 20px; }
+.admin-fee-form > label { color: #cbd5e1; font-size: 13px; font-weight: 700; }
+.admin-fee-form input[type="number"] { width: 100%; height: 42px; padding: 0 12px; border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 8px; background: #0a0a0a; color: #f8fafc; outline: none; }
+.admin-fee-toggle-label { display: flex; align-items: center; gap: 8px; color: #cbd5e1; font-size: 13px; cursor: pointer; }
+.admin-fee-form-error { margin: 0; color: #f87171; font-size: 13px; }
+.admin-fee-modal-actions { justify-content: flex-end; margin-top: 8px; }
+
+@media (max-width: 600px) {
+  .admin-fee-header { align-items: flex-start; flex-direction: column; }
+  .admin-fee-primary-btn { width: 100%; }
+}
+
+[data-theme="light"] .admin-fee-page {
+  color: #141414;
+}
+
+[data-theme="light"] .admin-fee-page .admin-fee-header h1 {
+  color: #171717;
+}
+
+[data-theme="light"] .admin-fee-page .admin-fee-breadcrumb {
+  color: #6b7280;
+}
+
+[data-theme="light"] .admin-fee-page .admin-fee-card,
+[data-theme="light"] .admin-fee-page .admin-fee-modal {
+  background: #ffffff;
+  border-color: rgba(197, 155, 39, 0.22);
+  box-shadow: 0 4px 16px rgba(45, 35, 20, 0.06);
+}
+
+[data-theme="light"] .admin-fee-page .admin-fee-card-title {
+  border-bottom-color: #e5e7eb;
+}
+
+[data-theme="light"] .admin-fee-page .admin-fee-card-title h2,
+[data-theme="light"] .admin-fee-page .admin-fee-modal-header h2 {
+  color: #1f2937;
+}
+
+[data-theme="light"] .admin-fee-page .admin-fee-card-title p,
+[data-theme="light"] .admin-fee-page .admin-fee-empty {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .admin-fee-page .admin-fee-table th {
+  background: linear-gradient(90deg, rgba(197, 155, 39, 0.06), rgba(197, 155, 39, 0.18));
+  color: #a67c1f;
+}
+
+[data-theme="light"] .admin-fee-page .admin-fee-table td {
+  color: #141414;
+  border-top-color: rgba(197, 155, 39, 0.14);
+}
+
+[data-theme="light"] .admin-fee-page .admin-fee-form > label,
+[data-theme="light"] .admin-fee-page .admin-fee-toggle-label {
+  color: #374151;
+}
+
+[data-theme="light"] .admin-fee-page .admin-fee-form input[type="number"] {
+  background: #ffffff;
+  border-color: rgba(197, 155, 39, 0.25);
+  color: #141414;
+}
+
+[data-theme="light"] .admin-fee-page .admin-fee-secondary-btn {
+  border-color: #d1d5db;
+  color: #374151;
+}

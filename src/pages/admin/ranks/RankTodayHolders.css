@@ -1,0 +1,211 @@
+.rank-today-holders-page{display:flex;flex-direction:column;gap:20px;padding-bottom:40px}.rank-today-holders-card{overflow:hidden;border:1px solid rgba(212,175,55,.18);border-radius:14px;background:#111;box-shadow:0 4px 16px rgba(0,0,0,.2);padding:22px 24px 26px}.rank-today-holders-toolbar{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:20px}.rank-today-holders-toolbar h2{margin:0;color:#f8fafc;font-size:18px}.rank-today-holders-toolbar p{margin:5px 0 0;color:#94a3b8;font-size:13px}.rank-today-holders-actions{display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap}.rank-today-holders-search{display:flex;align-items:center;gap:8px;width:190px;padding:0 11px;border:1px solid rgba(212,175,55,.25);border-radius:8px;background:rgba(255,255,255,.04)}.rank-today-holders-search svg{flex-shrink:0;color:#f5d061}.rank-today-holders-search input{width:100%;height:36px;border:0;outline:0;background:transparent;color:#f8fafc;font-size:12px}.rank-today-holders-search input::placeholder{color:#94a3b8}.rank-today-holders-tabs{display:flex;gap:4px;padding:3px;border:1px solid rgba(212,175,55,.22);border-radius:9px;background:rgba(255,255,255,.04)}.rank-today-holders-tabs button{border:0;border-radius:6px;padding:8px 10px;background:transparent;color:#a8a29e;font-size:11px;font-weight:700;cursor:pointer}.rank-today-holders-tabs button.is-active{background:#d4af37;color:#1a1408}.rank-today-holders-refresh{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border:1px solid rgba(212,175,55,.28);border-radius:8px;background:transparent;color:#f5d061;cursor:pointer}.rank-today-holders-table-wrap{overflow-x:auto}.rank-today-holders-table{width:100%;border-collapse:collapse;min-width:650px}.rank-today-holders-table th,.rank-today-holders-table td{padding:13px 12px;border-bottom:1px solid rgba(255,255,255,.08);text-align:left;white-space:nowrap;font-size:12.5px}.rank-today-holders-table th{color:#f5d061;text-transform:uppercase;letter-spacing:.06em;font-size:10px}.rank-today-holders-table td{color:#cbd5e1}.rank-today-holder-user-id{font-weight:800;color:#f5d061!important}.rank-today-holder-name{display:flex;align-items:center;gap:9px;color:#f8fafc!important;font-weight:700}.rank-today-holder-avatar{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;overflow:hidden;border-radius:50%;background:linear-gradient(135deg,#e0b256,#8a5a2b);color:#1a1408;font-size:16px;flex-shrink:0}.rank-today-holder-avatar img{width:100%;height:100%;object-fit:cover}.rank-today-holder-rank{display:inline-flex;padding:5px 9px;border:1px solid rgba(212,175,55,.32);border-radius:999px;background:rgba(212,175,55,.1);color:#f5d061;font-weight:700}.rank-today-holders-empty{text-align:center;padding:32px;color:#94a3b8;font-size:13px}.rank-today-holders-error{padding:12px 16px;border-radius:8px;color:#f87171;background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.25)}[data-theme="light"] .rank-today-holders-card{background:#fff;border-color:rgba(197,155,39,.22);box-shadow:0 4px 16px rgba(45,35,20,.06)}[data-theme="light"] .rank-today-holders-toolbar h2{color:#1f2937}[data-theme="light"] .rank-today-holders-toolbar p{color:#64748b}[data-theme="light"] .rank-today-holders-search{background:#fff;border-color:rgba(197,155,39,.3)}[data-theme="light"] .rank-today-holders-search input{color:#1f2937}[data-theme="light"] .rank-today-holders-tabs{background:#f8fafc;border-color:rgba(197,155,39,.25)}[data-theme="light"] .rank-today-holders-tabs button{color:#64748b}[data-theme="light"] .rank-today-holders-table th{color:#8a6713}[data-theme="light"] .rank-today-holders-table td{color:#475569;border-bottom-color:#e5e7eb}[data-theme="light"] .rank-today-holder-name{color:#1f2937!important}@media(max-width:760px){.rank-today-holders-toolbar{display:block}.rank-today-holders-actions{justify-content:flex-start;margin-top:14px}.rank-today-holders-search{flex:1;min-width:150px}.rank-today-holders-tabs{flex:1}.rank-today-holders-tabs button{flex:1}}
+
+.rank-today-holders-card {
+	border-color: var(--agen-border);
+	background: var(--agen-surface);
+	box-shadow: var(--agen-shadow);
+}
+
+[data-theme="dark"] .rank-today-holders-card,
+[data-theme="dark"] .rank-today-holders-table-wrap {
+  border-color: rgba(212, 175, 55, 0.22);
+}
+
+.rank-today-holders-page {
+	--agen-text: #171717;
+	--agen-text-soft: #64748b;
+	--agen-accent: #c59b27;
+	--agen-accent-strong: #a67c1f;
+	--agen-accent-soft: rgba(197, 155, 39, 0.12);
+	--agen-accent-line: rgba(197, 155, 39, 0.28);
+	--agen-font-display: "Manrope", "Inter", "Segoe UI", sans-serif;
+	--agen-font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+}
+
+[data-theme="dark"] .rank-today-holders-page {
+	--agen-text: #f3f4f6;
+	--agen-text-soft: #d1d5db;
+	--agen-accent: #f5d061;
+	--agen-accent-strong: #d4af37;
+	--agen-accent-soft: rgba(245, 208, 97, 0.1);
+	--agen-accent-line: rgba(212, 175, 55, 0.25);
+}
+
+.rank-today-holders-page .agen-eyebrow {
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+	margin-bottom: 10px;
+	color: var(--agen-accent-strong);
+	font-family: var(--agen-font-mono);
+	font-size: 10.5px;
+	font-weight: 700;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+}
+
+.rank-today-holders-page .agen-eyebrow-dot {
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background: var(--agen-accent);
+	box-shadow: 0 0 0 3px var(--agen-accent-soft);
+}
+
+.rank-today-holders-page .agen-page-title {
+	color: var(--agen-text);
+	font-family: var(--agen-font-display);
+}
+
+.rank-today-holders-toolbar {
+	align-items: center;
+	padding-bottom: 18px;
+	border-bottom: 1px solid var(--agen-border-soft);
+}
+
+.rank-today-holders-toolbar h2 {
+	color: var(--agen-text);
+	font-family: var(--agen-font-display);
+	font-size: 20px;
+	letter-spacing: -0.01em;
+}
+
+[data-theme="light"] .rank-today-holders-toolbar h2 {
+	color: #171717;
+}
+
+.rank-today-holders-toolbar p,
+.rank-today-holders-empty {
+	color: var(--agen-text-muted);
+}
+
+.rank-today-holders-search,
+.rank-today-holders-tabs,
+.rank-today-holders-refresh {
+	border-color: var(--agen-border);
+	background: var(--agen-surface-raised);
+}
+
+.rank-today-holders-search:focus-within {
+	border-color: var(--agen-accent);
+	box-shadow: 0 0 0 3px var(--agen-accent-soft);
+}
+
+.rank-today-holders-tabs button {
+	color: var(--agen-text-muted);
+	transition: background 0.15s ease, color 0.15s ease;
+}
+
+.rank-today-holders-tabs button.is-active {
+	background: #d4af37 !important;
+	color: #241b08 !important;
+	box-shadow: 0 3px 8px rgba(197, 155, 39, 0.28);
+}
+
+.rank-today-holders-refresh:hover {
+	border-color: var(--agen-accent);
+	background: var(--agen-accent-soft);
+}
+
+.rank-today-holders-table-wrap {
+	overflow: auto;
+	border: 1px solid var(--agen-border);
+	border-radius: 12px;
+	box-shadow: 0 5px 18px rgba(20, 20, 20, 0.06);
+}
+
+.rank-today-holders-table th {
+	padding: 14px 16px;
+	background: var(--agen-gradient-soft);
+	color: var(--agen-accent-strong);
+	border-bottom: 2px solid var(--agen-accent-line);
+	font-family: var(--agen-font-mono);
+}
+
+.rank-today-holders-table th:first-child {
+	border-top-left-radius: 10px;
+}
+
+.rank-today-holders-table th:last-child {
+	border-top-right-radius: 10px;
+}
+
+.rank-today-holders-table td {
+	padding: 14px 16px;
+	border-bottom: 1px solid var(--agen-border-soft);
+	color: var(--agen-text);
+	font-family: var(--agen-font-body);
+}
+
+.rank-today-holders-table tbody tr {
+	transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.rank-today-holders-table tbody tr:hover {
+	background: var(--agen-gradient-soft);
+}
+
+.rank-today-holders-table tbody tr:last-child td {
+	border-bottom: 0;
+}
+
+.rank-today-holder-name {
+	color: var(--agen-text) !important;
+}
+
+.rank-today-holder-avatar {
+	border: 1px solid var(--agen-accent-line);
+	box-shadow: 0 3px 8px rgba(20, 20, 20, 0.12);
+}
+
+.rank-today-holder-rank {
+	border-color: var(--agen-accent-line);
+	background: var(--agen-accent-soft);
+	color: var(--agen-accent-strong);
+}
+
+.rank-today-holders-error {
+	margin-top: 18px;
+}
+
+@media (max-width: 760px) {
+	.rank-today-holders-card {
+		padding: 18px 14px 20px;
+	}
+
+	.rank-today-holders-toolbar {
+		margin-bottom: 16px;
+	}
+
+	.rank-today-holders-actions {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) 42px;
+		gap: 10px;
+		align-items: stretch;
+	}
+
+	.rank-today-holders-search {
+		grid-column: 1 / -1;
+		width: 100%;
+		min-width: 0;
+	}
+
+	.rank-today-holders-tabs {
+		min-width: 0;
+		width: 100%;
+		height: 46px;
+		gap: 2px;
+	}
+
+	.rank-today-holders-tabs button {
+		min-width: 0;
+		padding: 7px 6px;
+		line-height: 1.2;
+		white-space: normal;
+	}
+
+	.rank-today-holders-refresh {
+		width: 42px;
+		height: 46px;
+	}
+}

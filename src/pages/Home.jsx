@@ -1,0 +1,37 @@
+import Navbar from "../components/Landing/Navbar";
+import Hero from "../components/Landing/Hero";
+import AboutSection from "../components/Landing/AboutSection";
+import MT5RealChart from "../components/Landing/MT5RealChart";
+import ReturnsCalculator from "../components/Landing/ReturnsCalculator";
+import InvestmentTiers from "../components/Landing/InvestmentTiers";
+import Features from "../components/Landing/Features";
+import Testimonials from "../components/Landing/Testimonials";
+import InvestmentJourney from "../components/Landing/InvestmentJourney";
+import FAQ from "../components/Landing/FAQ";
+import CTASection from "../components/Landing/CTASection";
+import Footer from "../components/Landing/Footer";
+
+import "./Home.css";
+
+const Home = () => {
+  return (
+    <div className="landing-page">
+      <Navbar />
+      {/* <TickerBar /> */}
+      <Hero />
+      <AboutSection />
+      <MT5RealChart />
+      <ReturnsCalculator />
+      <InvestmentTiers />
+      <Features />
+      {/* <MarketOverview /> */}
+      <InvestmentJourney />
+      <FAQ />
+      <CTASection />
+      <Testimonials />
+      <Footer />
+    </div>
+  );
+};
+
+export default Home;

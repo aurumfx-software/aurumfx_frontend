@@ -1,0 +1,833 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap');
+
+/* ==========================================================================
+   Theme variables — light by default, dark via [data-theme="dark"].
+   Everything below is scoped to .admin-genealogy-page so it can never
+   collide with the user-side genealogy page, even if both stylesheets
+   end up loaded in the same bundle.
+   ========================================================================== */
+.admin-genealogy-page {
+  --agen-bg: #f7f8fa;
+  --agen-surface: #ffffff;
+  --agen-card-bg: #ffffff;
+  --agen-border: #e6e8ec;
+  --agen-border-soft: #edf0f2;
+  --agen-text: #171717;
+  --agen-text-soft: #64748b;
+  --agen-text-faint: #8b93a1;
+
+  --agen-accent: #c59b27;
+  --agen-accent-strong: #a67c1f;
+  --agen-accent-soft: rgba(197, 155, 39, 0.12);
+  --agen-accent-line: rgba(197, 155, 39, 0.28);
+  --agen-gradient: linear-gradient(90deg, rgba(197, 155, 39, 0.08), rgba(197, 155, 39, 0.22));
+  --agen-gradient-soft: linear-gradient(90deg, rgba(197, 155, 39, 0.05), rgba(197, 155, 39, 0.14));
+
+  --agen-danger: #dc2626;
+  --agen-danger-soft: #fbe9e7;
+
+  --agen-font-display: "Manrope", "Inter", "Segoe UI", sans-serif;
+  --agen-font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+
+  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  color: var(--agen-text);
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  animation: agen-page-in 0.4s ease both;
+ }
+
+@keyframes agen-page-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+[data-theme="dark"] .admin-genealogy-page {
+  --agen-bg: #090909;
+  --agen-surface: #141414;
+  --agen-card-bg: #121212;
+  --agen-border: rgba(212, 175, 55, 0.18);
+  --agen-border-soft: rgba(255, 255, 255, 0.06);
+  --agen-text: #f3f4f6;
+  --agen-text-soft: #d1d5db;
+  --agen-text-faint: #9ca3af;
+
+  --agen-accent: #f5d061;
+  --agen-accent-strong: #d4af37;
+  --agen-accent-soft: rgba(245, 208, 97, 0.1);
+  --agen-accent-line: rgba(212, 175, 55, 0.25);
+  --agen-gradient: linear-gradient(90deg, rgba(212, 175, 55, 0.08), rgba(212, 175, 55, 0.2));
+  --agen-gradient-soft: linear-gradient(90deg, rgba(212, 175, 55, 0.05), rgba(212, 175, 55, 0.12));
+
+  --agen-danger: #f87171;
+  --agen-danger-soft: rgba(248, 113, 113, 0.13);
+}
+
+.admin-genealogy-page * {
+  box-sizing: border-box;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Page header — themed, so the title is never invisible on a light bg    */
+/* ---------------------------------------------------------------------- */
+.agen-page-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.agen-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--agen-font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--agen-accent-strong);
+  margin-bottom: 10px;
+}
+
+.agen-eyebrow-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--agen-accent);
+  box-shadow: 0 0 0 3px var(--agen-accent-soft);
+  animation: agen-dot-pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes agen-dot-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px var(--agen-accent-soft); }
+  50% { box-shadow: 0 0 0 6px var(--agen-accent-soft); }
+}
+
+.agen-page-header-top {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.agen-title-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
+  font-size: 21px;
+  border-radius: 15px;
+  background: var(--agen-gradient);
+  border: 1px solid var(--agen-accent-line);
+  color: var(--agen-accent-strong);
+  box-shadow: 0 6px 16px rgba(197, 155, 39, 0.18);
+}
+
+.agen-page-header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+/* Explicit theme-aware colour — this is what was missing before, which is
+   why the heading rendered white-on-white in light mode. */
+.agen-page-title {
+  margin: 0;
+  font-family: var(--agen-font-display);
+  font-size: 27px;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  color: var(--agen-text);
+}
+
+.agen-page-subtitle {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--agen-text-soft);
+}
+
+.agen-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--agen-font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--agen-text-soft);
+  margin-top: 12px;
+}
+
+.agen-crumb-sep {
+  color: var(--agen-accent-line);
+}
+
+.agen-crumb-active {
+  color: var(--agen-accent-strong);
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: var(--agen-gradient-soft);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Panel                                                                   */
+/* ---------------------------------------------------------------------- */
+.agen-panel {
+  padding: 24px;
+  border: 1px solid var(--agen-border);
+  border-radius: 16px;
+  background: var(--agen-card-bg);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  animation: agen-fade-up 0.5s ease 0.1s both;
+}
+
+[data-theme="dark"] .agen-panel {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+
+@keyframes agen-fade-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.agen-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid var(--agen-accent-line);
+}
+
+.agen-header-row h2 {
+  font-family: var(--agen-font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--agen-accent-strong);
+  margin: 0;
+  padding: 7px 16px;
+  background: var(--agen-gradient);
+  border: 1px solid var(--agen-accent-line);
+  border-radius: 999px;
+}
+
+.agen-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.agen-search-input-wrap {
+  position: relative;
+  min-width: 200px;
+}
+
+.agen-search-icon {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  color: var(--agen-text-faint);
+  pointer-events: none;
+}
+
+.agen-input,
+.agen-select {
+  min-width: 200px;
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--agen-border);
+  background: var(--agen-surface);
+  color: var(--agen-text);
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.agen-input {
+  padding-left: 34px;
+}
+
+.agen-input::placeholder {
+  color: var(--agen-text-faint);
+}
+
+.agen-input:focus,
+.agen-select:focus {
+  border-color: var(--agen-accent);
+  box-shadow: 0 0 0 3px var(--agen-accent-soft);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Quick stats grid                                                        */
+/* ---------------------------------------------------------------------- */
+.agen-quick-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.agen-stat-card {
+  background: var(--agen-surface);
+  border: 1px solid var(--agen-border);
+  border-radius: 12px;
+  padding: 16px 18px;
+}
+
+.agen-stat-card span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--agen-text-faint);
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.agen-stat-card strong {
+  color: var(--agen-text);
+  font-size: 1.15rem;
+  font-family: var(--agen-font-mono);
+}
+
+/* ---------------------------------------------------------------------- */
+/* "Viewing drilled-in user" banner — shown only when a tree-node click   */
+/* has diverged the displayed tree from the dropdown's own selection.     */
+/* ---------------------------------------------------------------------- */
+.agen-view-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px 16px;
+  margin-bottom: 18px;
+  border: 1px solid var(--agen-accent-line);
+  border-radius: 10px;
+  background: var(--agen-gradient-soft);
+  color: var(--agen-text);
+  font-size: 12.5px;
+}
+
+.agen-view-banner strong {
+  color: var(--agen-accent-strong);
+  font-family: var(--agen-font-mono);
+}
+
+.agen-view-banner-reset {
+  margin-left: auto;
+  padding: 6px 12px;
+  border: 1px solid var(--agen-accent-line);
+  border-radius: 999px;
+  background: var(--agen-surface);
+  color: var(--agen-accent-strong);
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.agen-view-banner-reset:hover {
+  background: var(--agen-gradient);
+  box-shadow: 0 3px 10px rgba(197, 155, 39, 0.2);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Empty / error states                                                    */
+/* ---------------------------------------------------------------------- */
+.agen-empty,
+.agen-error {
+  padding: 34px 20px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--agen-text-soft);
+  border: 1px dashed var(--agen-border);
+  border-radius: 12px;
+  background: var(--agen-surface);
+}
+
+.agen-error {
+  color: var(--agen-danger);
+  border-color: var(--agen-danger);
+  background: var(--agen-danger-soft);
+  border-style: solid;
+}
+
+/* ==========================================================================
+   Family tree — org-chart avatar tree, matching the user-side "Family"
+   view, scoped under agen- to stay collision-free.
+
+   NOTE: the tooltip is NO LONGER rendered inline inside the tree (it used
+   to be a `.agen-tooltip` child of `.agen-node`, shown via :hover). That
+   approach could get visually buried under sibling nodes because each
+   hovered node only becomes a *local* stacking context — a plain z-index
+   bump can't reliably beat every other node in a deep/wide tree, and
+   `.agen-tree-scroll`'s `overflow: auto` compounds the problem.
+
+   The tooltip is now rendered by AdminNodeTooltip via a React portal
+   straight onto <body>, positioned with `position: fixed` using the
+   hovered avatar's real bounding rect (see `.agen-tooltip-portal` below,
+   near the end of this file). That guarantees it always paints above
+   absolutely everything on the page.
+   ========================================================================== */
+.agen-tree-scroll {
+  overflow: auto;
+  max-height: 70vh;
+  padding: 10px 20px 220px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.agen-tree, .agen-tree ul, .agen-tree li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.agen-tree {
+  display: inline-flex;
+  justify-content: center;
+  min-width: 100%;
+  padding: 10px 20px 20px;
+}
+
+.agen-tree ul {
+  display: flex;
+  padding-top: 34px;
+  position: relative;
+}
+
+.agen-tree li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  padding: 34px 16px 0 16px;
+}
+
+.agen-tree li::before,
+.agen-tree li::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 50%;
+  border-top: 2px solid var(--agen-accent-line);
+  width: 50%;
+  height: 34px;
+}
+
+.agen-tree li::after {
+  right: auto;
+  left: 50%;
+  border-left: 2px solid var(--agen-accent-line);
+}
+
+.agen-tree li:only-child::after,
+.agen-tree li:only-child::before {
+  display: none;
+}
+
+.agen-tree li:only-child {
+  padding-top: 0;
+}
+
+.agen-tree li:first-child::before {
+  border: none;
+}
+
+.agen-tree li:last-child::after {
+  border: none;
+}
+
+.agen-tree li:last-child::before {
+  border-right: 2px solid var(--agen-accent-line);
+  border-radius: 0 8px 0 0;
+}
+
+.agen-tree li:first-child::after {
+  border-radius: 8px 0 0 0;
+}
+
+.agen-tree li > ul::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  border-left: 2px solid var(--agen-accent-line);
+  width: 0;
+  height: 34px;
+}
+
+.agen-tree > li {
+  padding-top: 0;
+}
+.agen-tree > li::before,
+.agen-tree > li::after {
+  display: none;
+}
+
+.agen-tree li {
+  animation: agen-node-in 0.4s ease both;
+}
+.agen-tree ul li { animation-delay: 0.12s; }
+.agen-tree ul ul li { animation-delay: 0.22s; }
+.agen-tree ul ul ul li { animation-delay: 0.32s; }
+
+@keyframes agen-node-in {
+  from { opacity: 0; transform: scale(0.85) translateY(6px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.agen-node {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: default;
+  transition: transform 0.15s ease;
+  z-index: 1;
+}
+
+.agen-node:hover {
+  transform: translateY(-2px);
+  z-index: 2;
+}
+
+.agen-avatar {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--agen-font-display);
+  font-weight: 800;
+  font-size: 18px;
+  color: #fff;
+  border: 3px solid var(--agen-card-bg);
+  outline: 2px solid var(--agen-accent-line);
+  box-shadow: 0 4px 12px rgba(197, 155, 39, 0.2);
+  transition: outline-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.agen-node:hover .agen-avatar {
+  outline-color: var(--agen-accent);
+  box-shadow: 0 6px 16px rgba(197, 155, 39, 0.32);
+}
+
+.agen-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Clickable affordance — clicking an avatar drills the tree into that
+   user's own subtree (see AdminFamNode's onViewUser in the JS file).
+   This is purely visual; it does not affect the dropdown at the top. */
+.agen-avatar--clickable {
+  cursor: pointer;
+}
+
+.agen-avatar--clickable:hover {
+  transform: scale(1.06);
+}
+
+.agen-avatar--clickable:active {
+  transform: scale(0.97);
+}
+
+.agen-avatar--clickable:focus-visible {
+  outline: 2px solid var(--agen-accent);
+  outline-offset: 2px;
+}
+
+.agen-badge {
+  margin-top: 8px;
+  font-family: var(--agen-font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 4px 10px 4px 12px;
+  border: 1px solid var(--agen-accent-line);
+  border-left: 3px solid var(--agen-accent);
+  border-radius: 4px 8px 8px 4px;
+  background: var(--agen-gradient-soft);
+  color: var(--agen-accent-strong);
+  white-space: nowrap;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.agen-node:hover .agen-badge {
+  background: var(--agen-gradient);
+  box-shadow: 0 3px 10px rgba(197, 155, 39, 0.2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-genealogy-page,
+  .agen-panel,
+  .agen-tree li,
+  .agen-eyebrow-dot {
+    animation: none !important;
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+/* Mobile                                                                  */
+/* ---------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  .agen-panel {
+    padding: 18px;
+  }
+
+  .agen-title-icon {
+    width: 42px;
+    height: 42px;
+    font-size: 18px;
+    border-radius: 12px;
+  }
+
+  .agen-page-title {
+    font-size: 21px;
+  }
+
+  .agen-page-subtitle {
+    font-size: 12px;
+  }
+
+  .agen-header-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .agen-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .agen-input,
+  .agen-select,
+  .agen-search-input-wrap {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .agen-avatar {
+    width: 44px;
+    height: 44px;
+    font-size: 15px;
+  }
+
+  .agen-tooltip-portal {
+    width: 190px;
+  }
+
+  .agen-tree-scroll {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .agen-tree-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .agen-view-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .agen-view-banner-reset {
+    margin-left: 0;
+  }
+}
+
+.agen-investment-status,
+.agen-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.agen-investment-status {
+  margin-top: 5px;
+  font-family: var(--agen-font-mono);
+  font-size: 9px;
+}
+
+.agen-investment-status.is-active,
+.agen-status.is-active {
+  color: #15803d;
+  background: rgba(22, 163, 74, 0.1);
+  border-color: rgba(22, 163, 74, 0.25);
+}
+
+.agen-investment-status.is-inactive,
+.agen-status.is-inactive {
+  color: var(--agen-danger);
+  background: var(--agen-danger-soft);
+  border-color: rgba(220, 38, 38, 0.2);
+}
+
+.agen-badge.is-active {
+  border-left-color: #16a34a;
+}
+
+.agen-badge.is-inactive {
+  border-left-color: var(--agen-danger);
+}
+
+.agen-list-table-wrapper {
+  overflow-x: auto;
+  border: 1px solid var(--agen-border);
+  border-radius: 12px;
+}
+
+.agen-list-table {
+  width: 100%;
+  min-width: 800px;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.agen-list-table th {
+  padding: 13px 14px;
+  background: var(--agen-gradient-soft);
+  color: var(--agen-accent-strong);
+  font-family: var(--agen-font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.agen-list-table td {
+  padding: 13px 14px;
+  border-top: 1px solid var(--agen-border-soft);
+  color: var(--agen-text);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.agen-list-table tbody tr:hover {
+  background: var(--agen-accent-soft);
+}
+
+.agen-user-id {
+  color: var(--agen-accent-strong) !important;
+  font-family: var(--agen-font-mono);
+  font-weight: 800;
+}
+
+.agen-empty-cell {
+  padding: 34px !important;
+  color: var(--agen-text-faint) !important;
+  text-align: center;
+}
+
+[data-theme="dark"] .agen-investment-status.is-active,
+[data-theme="dark"] .agen-status.is-active {
+  color: #4ade80;
+  background: rgba(74, 222, 128, 0.12);
+  border-color: rgba(74, 222, 128, 0.25);
+}
+
+/* ==========================================================================
+   Portal tooltip — rendered onto document.body by AdminNodeTooltip, NOT
+   inside .agen-tree. `position: fixed` + a very high z-index means it
+   always sits above the entire page, immune to tree nesting/overflow.
+   ========================================================================== */
+.agen-tooltip-portal {
+  position: fixed;
+  width: 250px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.99) 0%, rgba(255,250,240,0.99) 100%);
+  border: 2px solid rgba(197, 155, 39, 0.9);
+  border-radius: 14px;
+  padding: 16px 18px;
+  box-shadow: 0 22px 48px rgba(15, 23, 42, 0.22), 0 0 0 4px rgba(197, 155, 39, 0.12);
+  z-index: 9999;
+  text-align: left;
+  pointer-events: none;
+  animation: agen-tooltip-in 0.14s ease both;
+  backdrop-filter: blur(2px);
+}
+
+/* IMPORTANT: only animate opacity here. The tooltip's actual position
+   (centering + above/below flip) is set via an inline `transform` style
+   from JS (see AdminNodeTooltip in the .jsx file). A CSS animation that
+   also touches `transform` will override that inline value for its
+   entire duration, silently cancelling the centering/flip and making
+   the tooltip render off-position, overlapping neighboring nodes. */
+@keyframes agen-tooltip-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Small pointer arrow. Points down when the tooltip sits above the node,
+   points up when it had to flip below (near the top of the viewport). */
+.agen-tooltip-portal::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 12px;
+  height: 12px;
+  background: rgba(255,250,240,0.99);
+  border: 0;
+}
+
+.agen-tooltip-portal.is-above::before {
+  bottom: -7px;
+  border-right: 1px solid var(--agen-border);
+  border-bottom: 1px solid var(--agen-border);
+}
+
+.agen-tooltip-portal.is-below::before {
+  top: -7px;
+  border-left: 1px solid var(--agen-border);
+  border-top: 1px solid var(--agen-border);
+}
+
+.agen-tooltip-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  font-size: 12.8px;
+  line-height: 1.5;
+  padding: 6px 0;
+  color: var(--agen-text);
+}
+
+.agen-tooltip-row + .agen-tooltip-row {
+  border-top: 1px solid var(--agen-border-soft);
+}
+
+.agen-tooltip-row span:first-child {
+  font-weight: 700;
+  color: #7a6d52;
+  min-width: 110px;
+}
+
+.agen-tooltip-row span:last-child {
+  font-weight: 800;
+  color: #171717;
+  text-align: right;
+  word-break: break-word;
+}
