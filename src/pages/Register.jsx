@@ -73,6 +73,13 @@ const Register = () => {
     };
   }, []);
 
+  const formatDateInput = (value) => {
+    const digits = String(value || "").replace(/\D/g, "").slice(0, 8);
+    if (digits.length <= 2) return digits;
+    if (digits.length <= 4) return `${digits.slice(0, 2)}-${digits.slice(2)}`;
+    return `${digits.slice(0, 2)}-${digits.slice(2, 4)}-${digits.slice(4)}`;
+  };
+
   const parseDisplayDate = (dateStr) => {
     const match = String(dateStr || "").match(/^(\d{2})[-/]([\d]{2})[-/](\d{4})$/);
     if (!match) return null;
@@ -93,7 +100,7 @@ const Register = () => {
   const formatDateForApi = (dateStr) => {
     const isoDate = parseDisplayDate(dateStr) || dateStr;
     const match = String(isoDate || "").match(/^(\d{4})[-/]([\d]{2})[-/]([\d]{2})$/);
-    return match ? `${match[3]}-${match[2]}-${match[1]}` : "";
+    return match ? `${match[1]}-${match[2]}-${match[3]}` : "";
   };
 
   // Shared age calculator used by validate() and immediate field checks
@@ -116,12 +123,14 @@ const Register = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    const isDateField = ["date_of_birth", "registration_date", "nominee_dob"].includes(name);
+    const nextValue = isDateField ? formatDateInput(value) : value;
     // clear general api/form error when user starts editing
     if (apiError) setApiError("");
 
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: nextValue,
       ...(name === "country" ? { state: "", district: "" } : {}),
       ...(name === "state" ? { district: "" } : {}),
     }));
@@ -144,7 +153,7 @@ const Register = () => {
 
     // Immediate DOB validation while user types or selects
     if (name === "date_of_birth") {
-      const userAge = calcAge(value);
+      const userAge = calcAge(nextValue);
       if (userAge === null) {
         setErrors((prev) => ({ ...prev, date_of_birth: "Please enter a valid Date of Birth" }));
       } else if (userAge < 18) {
@@ -155,10 +164,10 @@ const Register = () => {
     }
 
     if (name === "nominee_dob") {
-      if (!value) {
+      if (!nextValue) {
         setErrors((prev) => ({ ...prev, nominee_dob: "" }));
       } else {
-        const nomAge = calcAge(value);
+        const nomAge = calcAge(nextValue);
         if (nomAge === null) {
           setErrors((prev) => ({ ...prev, nominee_dob: "Please enter a valid Nominee Date of Birth" }));
         } else if (nomAge < 18) {
@@ -366,6 +375,8 @@ const Register = () => {
         value={formData[name]}
         onChange={handleChange}
         onBlur={onBlur}
+        inputMode={name === "date_of_birth" || name === "registration_date" || name === "nominee_dob" ? "numeric" : undefined}
+        maxLength={name === "date_of_birth" || name === "registration_date" || name === "nominee_dob" ? 10 : undefined}
         className={errors[name] ? "input-error" : ""}
       />
       {extraInfo && <small className="info-text" style={{ color: "#27ae60", marginTop: "2px", fontWeight: 500 }}>{extraInfo}</small>}
