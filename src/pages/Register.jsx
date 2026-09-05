@@ -27,7 +27,7 @@ const Register = () => {
     confirm_password:"",
     enroller_id: "",
     date_of_birth: "",
-    joining_date: "",
+    registration_date: "",
     gender: "",
     country: "",
     state: "",
@@ -73,11 +73,34 @@ const Register = () => {
     };
   }, []);
 
+  const parseDisplayDate = (dateStr) => {
+    const match = String(dateStr || "").match(/^(\d{2})[-/]([\d]{2})[-/](\d{4})$/);
+    if (!match) return null;
+
+    const [, day, month, year] = match;
+    const date = new Date(Number(year), Number(month) - 1, Number(day));
+    if (
+      date.getFullYear() !== Number(year) ||
+      date.getMonth() !== Number(month) - 1 ||
+      date.getDate() !== Number(day)
+    ) {
+      return null;
+    }
+
+    return `${year}-${month}-${day}`;
+  };
+
+  const formatDateForApi = (dateStr) => {
+    const isoDate = parseDisplayDate(dateStr) || dateStr;
+    const match = String(isoDate || "").match(/^(\d{4})[-/]([\d]{2})[-/]([\d]{2})$/);
+    return match ? `${match[3]}-${match[2]}-${match[1]}` : "";
+  };
+
   // Shared age calculator used by validate() and immediate field checks
   const calcAge = (dateStr) => {
     try {
       if (!dateStr) return null;
-      const d = new Date(dateStr);
+      const d = new Date(parseDisplayDate(dateStr) || dateStr);
       if (isNaN(d.getTime())) return null;
       const today = new Date();
       let age = today.getFullYear() - d.getFullYear();
@@ -89,24 +112,6 @@ const Register = () => {
     } catch {
       return null;
     }
-  };
-
-  const parseJoiningDate = (dateStr) => {
-    const match = String(dateStr || "").match(/^(\d{2})\/(\d{2})\/(\d{2})$/);
-    if (!match) return null;
-
-    const [, day, month, shortYear] = match;
-    const year = Number(shortYear) >= 50 ? 1900 + Number(shortYear) : 2000 + Number(shortYear);
-    const date = new Date(year, Number(month) - 1, Number(day));
-    if (
-      date.getFullYear() !== year ||
-      date.getMonth() !== Number(month) - 1 ||
-      date.getDate() !== Number(day)
-    ) {
-      return null;
-    }
-
-    return `${year}-${month}-${day}`;
   };
 
   const handleChange = (e) => {
@@ -214,7 +219,7 @@ const Register = () => {
       { key: "confirm_password", label: "Confirm Password" },
       { key: "enroller_id", label: "Enroller ID" },
       { key: "date_of_birth", label: "Date of Birth" },
-      { key: "joining_date", label: "Joining Date" },
+      { key: "registration_date", label: "Joining Date" },
       { key: "country", label: "Country" },
       { key: "state", label: "State" },
       { key: "mobile", label: "Mobile" },
@@ -239,8 +244,8 @@ const Register = () => {
       e.date_of_birth = "You must be at least 18 years old to register";
     }
 
-    if (formData.joining_date && !parseJoiningDate(formData.joining_date)) {
-      e.joining_date = "Please enter Joining Date as DD/MM/YY";
+    if (formData.registration_date && !parseDisplayDate(formData.registration_date)) {
+      e.registration_date = "Please enter Joining Date as DD-MM-YYYY";
     }
 
     if (formData.nominee_dob) {
@@ -279,7 +284,11 @@ const Register = () => {
     setLoading(true);
     try {
       const payload = { ...formData };
-      payload.joining_date = parseJoiningDate(payload.joining_date);
+      payload.date_of_birth = formatDateForApi(payload.date_of_birth);
+      payload.registration_date = formatDateForApi(payload.registration_date);
+      if (payload.nominee_dob) {
+        payload.nominee_dob = formatDateForApi(payload.nominee_dob);
+      }
       if (payload.nominee_relation === "Other") {
         payload.nominee_relation = payload.nominee_relation_other || "";
       }
@@ -539,8 +548,8 @@ const Register = () => {
             handleEnrollerBlur,
             checkingEnroller ? "Checking Enroller ID..." : enrollerName
           )}
-          {renderInput("date_of_birth", "Date of Birth", "date", true)}
-          {renderInput("joining_date", "Joining Date", "text", true, "DD/MM/YY")}
+          {renderInput("date_of_birth", "Date of Birth", "text", true, "DD-MM-YYYY")}
+          {renderInput("registration_date", "Joining Date", "text", true, "DD-MM-YYYY")}
           {renderSelect("gender", "Gender", ["Male", "Female", "Other"], true)}
           {renderSelect(
             "country",
@@ -628,7 +637,7 @@ const Register = () => {
             ["Male", "Female", "Other"],
             false
           )}
-          {renderInput("nominee_dob", "Nominee DOB", "date", false)}
+          {renderInput("nominee_dob", "Nominee DOB", "text", false, "DD-MM-YYYY")}
           {renderTextArea("nominee_address", "Nominee Address", false)}
           {renderInput("nominee_aadhar", "Nominee Aadhaar", "text", false)}
           {renderInput("nominee_mobile", "Nominee Mobile", "tel", false)}
