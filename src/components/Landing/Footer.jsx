@@ -7,6 +7,7 @@ import {
   FaEnvelope,
   FaPhoneAlt,
 } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import "./Footer.css";
 
@@ -44,6 +45,7 @@ const Footer = () => {
             <li><a href="#mt5-chart">MT5 Chart</a></li>
             <li><a href="#plans">Investment Plans</a></li>
             <li><a href="#contact">Contact</a></li>
+            <li><Link to="/privacy-policy">Privacy Policy</Link></li>
           </ul>
         </div>
 
@@ -60,8 +62,8 @@ const Footer = () => {
         <div className="footer-column">
           <h3>Contact</h3>
           <p><FaMapMarkerAlt /> Dubai, UAE</p>
-          <p><FaEnvelope /> info@aurumfx.com</p>
-          <p><FaPhoneAlt /> +971 55 123 4567</p>
+          <p><FaEnvelope /> info@aurumfx.net</p>
+          <p><FaPhoneAlt /> +971 55 632 9865</p>
         </div>
       </div>
 

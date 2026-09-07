@@ -49,6 +49,7 @@ import Profile from "./pages/user/Profile";
 import UserGenealogyPage from "./pages/user/GenealogyPage";
 import HelpCenterPage from "./pages/user/help/HelpCenterPage";
 import NotFound from "./pages/NotFound";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import GoldenCursor from "./components/GoldenCursor/GoldenCursor";
 
@@ -629,6 +630,7 @@ function App() {
 
         {/* Home Landing Page */}
         <Route path="/" element={<Home />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
 
         {/* 404 Unknown Route Fallback */}
         <Route path="*" element={<NotFound />} />

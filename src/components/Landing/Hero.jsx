@@ -10,9 +10,7 @@ function Hero() {
       <div
         className="hero-bg-image"
         style={{
-          // exposed as CSS custom properties so Hero.css can pick
-          // the right one per breakpoint via a media query —
-          // this is what lets desktop and mobile use different files.
+          
           "--bg-desktop": `url(${heroImageDesktop})`,
           "--bg-mobile": `url(${heroImageMobile})`,
         }}

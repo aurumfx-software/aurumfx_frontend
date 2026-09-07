@@ -33,6 +33,12 @@ const TESTIMONIALS = [
     quote:
       "Simple to get started, and the platform feels genuinely built for people who want steady, well-documented growth rather than hype. That's what kept me investing more.",
   },
+  {
+    name: "Arun Lal",
+    location: "Palakkad",
+    quote:
+      "The platform is simple to use, and I appreciate being able to follow my investments and returns clearly in one place.",
+  },
 ];
 
 const AUTO_ADVANCE_MS = 5000;
