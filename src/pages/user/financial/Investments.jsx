@@ -43,6 +43,29 @@ const formatDDMMYYYY = (value) => {
   return `${day}-${month}-${year}`;
 };
 
+const formatDateInput = (value) => {
+  const digits = String(value || "").replace(/\D/g, "").slice(0, 8);
+  if (digits.length <= 2) return digits;
+  if (digits.length <= 4) return `${digits.slice(0, 2)}-${digits.slice(2)}`;
+  return `${digits.slice(0, 2)}-${digits.slice(2, 4)}-${digits.slice(4)}`;
+};
+
+const formatDateForApi = (value) => {
+  const match = String(value || "").match(/^(\d{2})-(\d{2})-(\d{4})$/);
+  if (!match) return "";
+
+  const date = new Date(Number(match[3]), Number(match[2]) - 1, Number(match[1]));
+  if (
+    date.getFullYear() !== Number(match[3]) ||
+    date.getMonth() !== Number(match[2]) - 1 ||
+    date.getDate() !== Number(match[1])
+  ) {
+    return "";
+  }
+
+  return `${match[3]}-${match[2]}-${match[1]}`;
+};
+
 const getInvestmentStatusClass = (value) => {
   const status = String(value || "").toLowerCase();
   if (status.includes("reject")) return "status--rejected";
@@ -66,6 +89,9 @@ function Investments() {
   const [selectedPlanId, setSelectedPlanId] = useState("");
   const [selectedReturnTypeId, setSelectedReturnTypeId] = useState("");
 
+  const today = formatDDMMYYYY(new Date());
+  const [investmentDate, setInvestmentDate] = useState(today);
+  const [returnDate, setReturnDate] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
@@ -103,7 +129,9 @@ function Investments() {
       const realPlans = plansRes.data.filter((p) => p.status !== false);
       setPlans(realPlans);
       const defaultPlan = realPlans.find((plan) => Number(plan.duration_months) === 30) || realPlans[0];
-      if (defaultPlan) setSelectedPlanId(String(defaultPlan.id));
+      if (defaultPlan) {
+        setSelectedPlanId(String(defaultPlan.id));
+      }
     }
 
     const typesRes = await getInvestmentTypesApi();
@@ -150,6 +178,14 @@ function Investments() {
       errors.plan = "Please select an Investment Plan.";
     }
 
+    if (!formatDateForApi(investmentDate)) {
+      errors.investmentDate = "Enter a valid investment date as DD-MM-YYYY.";
+    }
+
+    if (!formatDateForApi(returnDate)) {
+      errors.returnDate = "Enter a valid return date as DD-MM-YYYY.";
+    }
+
     if (!paymentProof) {
       errors.proof = "Please upload the payment proof.";
     } else if (paymentProof.size > MAX_PAYMENT_PROOF_SIZE) {
@@ -177,7 +213,8 @@ function Investments() {
       return_type_id: Number(selectedReturnTypeId) || 0,
       amount: Number(amount),
       bank_transaction_id: bankTxId.trim(),
-      investment_date: new Date().toISOString().split("T")[0],
+      investment_date: formatDateForApi(investmentDate),
+      return_date: formatDateForApi(returnDate),
       payment_proof: paymentProof,
     });
 
@@ -197,6 +234,8 @@ function Investments() {
     setFieldErrors({});
     setAmount("");
     setBankTxId("");
+    setInvestmentDate(formatDDMMYYYY(new Date()));
+    setReturnDate("");
     setPaymentProof(null);
     document.getElementById("payment-proof-upload").value = "";
     setLoading(false);
@@ -341,6 +380,45 @@ function Investments() {
                   </select>
                   <FiChevronDown className="select-arrow" aria-hidden="true" />
                 </div>
+              </div>
+            </div>
+
+            <div className="form-row">
+              <div className="form-group">
+                <label className="separated-label">Investment Date</label>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  placeholder="DD-MM-YYYY"
+                  value={investmentDate}
+                  onChange={(e) => {
+                    const nextDate = formatDateInput(e.target.value);
+                    setInvestmentDate(nextDate);
+                    if (fieldErrors.investmentDate) setFieldErrors((prev) => ({ ...prev, investmentDate: "" }));
+                  }}
+                  className={`form-input ${fieldErrors.investmentDate ? "is-invalid" : ""}`}
+                  maxLength={10}
+                  aria-invalid={Boolean(fieldErrors.investmentDate)}
+                />
+                {fieldErrors.investmentDate && <span className="field-error">{fieldErrors.investmentDate}</span>}
+              </div>
+
+              <div className="form-group">
+                <label className="separated-label">Return Date</label>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  placeholder="DD-MM-YYYY"
+                  value={returnDate}
+                  onChange={(e) => {
+                    setReturnDate(formatDateInput(e.target.value));
+                    if (fieldErrors.returnDate) setFieldErrors((prev) => ({ ...prev, returnDate: "" }));
+                  }}
+                  className={`form-input ${fieldErrors.returnDate ? "is-invalid" : ""}`}
+                  maxLength={10}
+                  aria-invalid={Boolean(fieldErrors.returnDate)}
+                />
+                {fieldErrors.returnDate && <span className="field-error">{fieldErrors.returnDate}</span>}
               </div>
             </div>
 

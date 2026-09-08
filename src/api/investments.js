@@ -13,6 +13,7 @@ export const createInvestmentApi = async (data) => {
     "investment_date",
     data.investment_date || new Date().toISOString().split("T")[0]
   );
+  payload.append("return_date", data.return_date || "");
   if (data.payment_proof) payload.append("payment_proof", data.payment_proof);
 
   try {
