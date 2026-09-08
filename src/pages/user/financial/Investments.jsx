@@ -299,7 +299,7 @@ function Investments() {
               <FiTrendingUp size={28} strokeWidth={2.4} />
             </span>
             <div className="page-header-text">
-              <h1 className="page-title">Investments</h1>
+              <h1 className="page-title">Investment</h1>
               <p className="page-subtitle">Build your portfolio and track every investment in one place.</p>
             </div>
           </div>
