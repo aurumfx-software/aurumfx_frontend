@@ -296,7 +296,7 @@ function Investments() {
           </span>
           <div className="page-header-top">
             <span className="page-title-icon" aria-hidden="true">
-              <FiTrendingUp />
+              <FiTrendingUp size={28} strokeWidth={2.4} />
             </span>
             <div className="page-header-text">
               <h1 className="page-title">Investments</h1>
