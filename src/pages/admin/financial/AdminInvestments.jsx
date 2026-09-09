@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { useLocation, useNavigate } from "react-router-dom";
-import { FiCalendar, FiChevronDown, FiFolder, FiRefreshCw, FiX } from "react-icons/fi";
+import { FiCalendar, FiFolder, FiRefreshCw, FiX } from "react-icons/fi";
 import AdminLayout from "../../../components/Admin/AdminLayout";
 import {
   getPendingInvestmentsApi,
@@ -59,8 +59,10 @@ function AdminInvestments() {
   const [successMsg, setSuccessMsg] = useState("");
 
   const [confirmingId, setConfirmingId] = useState(null);
+  const [approveModalId, setApproveModalId] = useState(null);
   const [rejectModalId, setRejectModalId] = useState(null);
   const [rejectionReason, setRejectionReason] = useState("");
+  const [approvalDate, setApprovalDate] = useState("");
   const [approvingReturnId, setApprovingReturnId] = useState(null);
 
   const [startDate, setStartDate] = useState("");
@@ -174,11 +176,40 @@ function AdminInvestments() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab]);
 
+  const formatDateInput = (value) => {
+    const digits = String(value || "").replace(/\D/g, "").slice(0, 8);
+    if (digits.length <= 2) return digits;
+    if (digits.length <= 4) return `${digits.slice(0, 2)}-${digits.slice(2)}`;
+    return `${digits.slice(0, 2)}-${digits.slice(2, 4)}-${digits.slice(4)}`;
+  };
+
+  const parseDisplayDate = (dateStr) => {
+    const match = String(dateStr || "").match(/^(\d{2})-(\d{2})-(\d{4})$/);
+    if (!match) return "";
+
+    const [, day, month, year] = match;
+    const date = new Date(Number(year), Number(month) - 1, Number(day));
+    if (date.getFullYear() !== Number(year) || date.getMonth() !== Number(month) - 1 || date.getDate() !== Number(day)) {
+      return "";
+    }
+
+    return `${year}-${month}-${day}`;
+  };
+
   const handleConfirm = async (id) => {
+    setApprovalDate("");
+    setApproveModalId(id);
+  };
+
+  const submitApprove = async () => {
+    const formattedDate = parseDisplayDate(approvalDate);
+    if (!formattedDate) return;
+    const id = approveModalId;
     setConfirmingId(id);
-    const res = await approveRejectInvestmentApi(id, "Approved");
+    const res = await approveRejectInvestmentApi(id, "Approved", "", formattedDate);
     if (res.success) {
       setRequests((prev) => prev.filter((r) => r.id !== id));
+      setApproveModalId(null);
       setSuccessMsg("Investment confirmed successfully");
       setTimeout(() => setSuccessMsg(""), 3500);
     } else {
@@ -189,15 +220,18 @@ function AdminInvestments() {
 
   const handleReject = async (id) => {
     setRejectionReason("");
+    setApprovalDate("");
     setRejectModalId(id);
   };
 
   const submitReject = async () => {
     const trimmedReason = rejectionReason.trim();
     if (!trimmedReason) return;
+    const formattedDate = parseDisplayDate(approvalDate);
+    if (!formattedDate) return;
     const id = rejectModalId;
     setConfirmingId(id);
-    const res = await approveRejectInvestmentApi(id, "Rejected", trimmedReason);
+    const res = await approveRejectInvestmentApi(id, "Rejected", trimmedReason, formattedDate);
     if (res.success) {
       setRequests((prev) => prev.filter((r) => r.id !== id));
       setRejectModalId(null);
@@ -223,7 +257,11 @@ function AdminInvestments() {
     setApprovingReturnId(id);
     const res = await approveReturnApi(id, remarks);
     if (res.success) {
-      setTodayList((prev) => prev.filter((t) => t.id !== id));
+      if (activeTab === "history") {
+        setHistory((prev) => prev.filter((item) => item.id !== id));
+      } else {
+        setTodayList((prev) => prev.filter((t) => t.id !== id));
+      }
       setReturnModalId(null);
       setRemarks("");
     } else {
@@ -235,6 +273,7 @@ function AdminInvestments() {
   const renderStandardTable = (dataList, showActions) => {
     const isHistoryTab = activeTab === "history";
     const isRequestTab = activeTab === "requests";
+    const hasActions = showActions || isHistoryTab;
     const dateLabel = isRequestTab ? "Date" : "Approved Date";
     const approvedDateValue = (item) => formatDate(item.approval_status_updated_at);
     const investmentDateValue = (item) => formatDate(item.investment_date);
@@ -251,17 +290,17 @@ function AdminInvestments() {
             <th>Approval Status</th>
             <th>{dateLabel}</th>
             {isHistoryTab && <th>Investment Date</th>}
-            {showActions && <th>Action</th>}
+            {hasActions && <th>Action</th>}
           </tr>
         </thead>
         <tbody>
           {loading ? (
-            <tr><td colSpan={showActions ? 9 : isHistoryTab ? 9 : 8}>Loading...</td></tr>
+            <tr><td colSpan={hasActions ? 9 : 8}>Loading...</td></tr>
           ) : errorMsg ? (
-            <tr><td colSpan={showActions ? 9 : isHistoryTab ? 9 : 8}>{errorMsg}</td></tr>
+            <tr><td colSpan={hasActions ? 9 : 8}>{errorMsg}</td></tr>
           ) : dataList.length === 0 ? (
             <tr>
-              <td colSpan={showActions ? 9 : isHistoryTab ? 9 : 8} style={{ padding: 0 }}>
+              <td colSpan={hasActions ? 9 : 8} style={{ padding: 0 }}>
                 <div className="docs-empty-state">
                   <div className="empty-magnifier-box">
                     <div className="magnifier-art">
@@ -290,26 +329,37 @@ function AdminInvestments() {
                 <td><span className="invest-status-green">{item.approval_status}</span></td>
                 <td>{isRequestTab ? investmentDateValue(item) : approvedDateValue(item)}</td>
                 {isHistoryTab && <td>{investmentDateValue(item)}</td>}
-                {showActions && (
+                {hasActions && (
                   <td>
-                    <div style={{ display: "flex", gap: "8px" }}>
+                    {isHistoryTab ? (
                       <button
                         type="button"
                         className="action-confirm-btn"
-                        onClick={() => handleConfirm(item.id)}
-                        disabled={confirmingId === item.id}
+                        onClick={() => setReturnModalId(item.id)}
+                        disabled={approvingReturnId === item.id}
                       >
-                        {confirmingId === item.id ? "..." : "Confirm"}
+                        {approvingReturnId === item.id ? "Approving..." : "Approve Return"}
                       </button>
-                      <button
-                        type="button"
-                        className="action-confirm-btn action-reject-btn"
-                        onClick={() => handleReject(item.id)}
-                        disabled={confirmingId === item.id}
-                      >
-                        Reject
-                      </button>
-                    </div>
+                    ) : (
+                      <div style={{ display: "flex", gap: "8px" }}>
+                        <button
+                          type="button"
+                          className="action-confirm-btn"
+                          onClick={() => handleConfirm(item.id)}
+                          disabled={confirmingId === item.id}
+                        >
+                          {confirmingId === item.id ? "..." : "Confirm"}
+                        </button>
+                        <button
+                          type="button"
+                          className="action-confirm-btn action-reject-btn"
+                          onClick={() => handleReject(item.id)}
+                          disabled={confirmingId === item.id}
+                        >
+                          Reject
+                        </button>
+                      </div>
+                    )}
                   </td>
                 )}
               </tr>
@@ -555,6 +605,35 @@ function AdminInvestments() {
           document.body,
         )}
 
+        {approveModalId && createPortal(
+          <div className="modal-backdrop" onClick={() => setApproveModalId(null)}>
+            <div className="modal-container investment-reject-modal" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <h3>Approve Investment</h3>
+                <button className="modal-close-btn" onClick={() => setApproveModalId(null)}><FiX size={18} /></button>
+              </div>
+              <div className="modal-body">
+                <label className="field-label" htmlFor="investment-approval-date">Approval date</label>
+                <input
+                  id="investment-approval-date"
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={10}
+                  value={approvalDate}
+                  onChange={(e) => setApprovalDate(formatDateInput(e.target.value))}
+                  className="form-input"
+                  placeholder="DD-MM-YYYY"
+                />
+                <div className="investment-reject-actions">
+                  <button type="button" className="cancel-btn" onClick={() => setApproveModalId(null)}>Cancel</button>
+                  <button type="button" className="action-confirm-btn" onClick={submitApprove} disabled={confirmingId === approveModalId || !parseDisplayDate(approvalDate)}>{confirmingId === approveModalId ? "Approving..." : "Confirm Approve"}</button>
+                </div>
+              </div>
+            </div>
+          </div>,
+          document.body,
+        )}
+
         {rejectModalId && createPortal(
           <div className="modal-backdrop" onClick={() => setRejectModalId(null)}>
             <div className="modal-container investment-reject-modal" onClick={(e) => e.stopPropagation()}>
@@ -565,9 +644,20 @@ function AdminInvestments() {
               <div className="modal-body">
                 <label className="field-label" htmlFor="investment-rejection-reason">Rejection reason</label>
                 <textarea id="investment-rejection-reason" value={rejectionReason} onChange={(e) => setRejectionReason(e.target.value)} rows={4} className="form-input investment-reject-textarea" placeholder="Enter the reason for rejecting this investment" />
+                <label className="field-label" htmlFor="investment-rejection-date">Approval date</label>
+                <input
+                  id="investment-rejection-date"
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={10}
+                  value={approvalDate}
+                  onChange={(e) => setApprovalDate(formatDateInput(e.target.value))}
+                  className="form-input"
+                  placeholder="DD-MM-YYYY"
+                />
                 <div className="investment-reject-actions">
                   <button type="button" className="cancel-btn" onClick={() => setRejectModalId(null)}>Cancel</button>
-                  <button type="button" className="action-confirm-btn action-reject-btn" onClick={submitReject} disabled={confirmingId === rejectModalId || !rejectionReason.trim()}>{confirmingId === rejectModalId ? "Rejecting..." : "Confirm Reject"}</button>
+                  <button type="button" className="action-confirm-btn action-reject-btn" onClick={submitReject} disabled={confirmingId === rejectModalId || !rejectionReason.trim() || !parseDisplayDate(approvalDate)}>{confirmingId === rejectModalId ? "Rejecting..." : "Confirm Reject"}</button>
                 </div>
               </div>
             </div>

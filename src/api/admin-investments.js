@@ -109,12 +109,13 @@ export const getAdminInvestmentDetailsApi = async (id) => {
 
 /**
  * Approve/Reject Investment via PUT /admin/investments/{id}
- * Body: { approval_status: string, reject_reason?: string }
+ * Body: { approval_status: string, reject_reason?: string, approval_date: string }
  * e.g. "Approved" | "Rejected"
  */
-export const approveRejectInvestmentApi = async (id, approvalStatus, rejectionReason = "") => {
+export const approveRejectInvestmentApi = async (id, approvalStatus, rejectionReason = "", approvalDate = new Date().toISOString().split("T")[0]) => {
   const payload = {
     approval_status: approvalStatus,
+    approval_date: approvalDate,
     ...(approvalStatus === "Rejected" && { reject_reason: rejectionReason.trim() }),
   };
   try {

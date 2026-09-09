@@ -35,6 +35,9 @@ function AdminPayout() {
   const [payingUserId, setPayingUserId] = useState(null);
   const [rejectingUserId, setRejectingUserId] = useState(null);
   const [rejectionReason, setRejectionReason] = useState("");
+  const [payDate, setPayDate] = useState("");
+  const [payModalUserId, setPayModalUserId] = useState(null);
+  const [payModalBulk, setPayModalBulk] = useState(false);
   const [page, setPage] = useState(1);
   const [activeTab, setActiveTab] = useState("pending");
   const [selectedUsers, setSelectedUsers] = useState(new Set());
@@ -61,6 +64,26 @@ function AdminPayout() {
   };
 
   useEffect(() => { loadPayouts(); }, [activeTab]);
+
+  const formatDateInput = (value) => {
+    const digits = String(value || "").replace(/\D/g, "").slice(0, 8);
+    if (digits.length <= 2) return digits;
+    if (digits.length <= 4) return `${digits.slice(0, 2)}-${digits.slice(2)}`;
+    return `${digits.slice(0, 2)}-${digits.slice(2, 4)}-${digits.slice(4)}`;
+  };
+
+  const parseDisplayDate = (dateStr) => {
+    const match = String(dateStr || "").match(/^(\d{2})-(\d{2})-(\d{4})$/);
+    if (!match) return "";
+
+    const [, day, month, year] = match;
+    const date = new Date(Number(year), Number(month) - 1, Number(day));
+    if (date.getFullYear() !== Number(year) || date.getMonth() !== Number(month) - 1 || date.getDate() !== Number(day)) {
+      return "";
+    }
+
+    return `${year}-${month}-${day}`;
+  };
 
   const handleSearch = (event) => {
     event.preventDefault();
@@ -95,11 +118,27 @@ function AdminPayout() {
   };
 
   const handlePayUser = async (userId) => {
-    if (!window.confirm("Pay all pending income for this user?")) return;
+    setPayDate("");
+    setPayModalBulk(false);
+    setPayModalUserId(userId);
+  };
+
+  const submitPay = async () => {
+    const formattedDate = parseDisplayDate(payDate);
+    if (!formattedDate) return;
+
+    const isBulkPay = payModalBulk;
+    const userId = payModalUserId;
+    setBulkPaying(isBulkPay);
     setPayingUserId(userId);
-    const result = await payUserPayoutApi(userId);
+    const result = isBulkPay
+      ? await bulkPayUsersApi(Array.from(selectedUsers), formattedDate)
+      : await payUserPayoutApi(userId, formattedDate);
     if (result.success) await loadPayouts();
     else setError(result.error || "Unable to pay user");
+    setPayModalUserId(null);
+    setPayModalBulk(false);
+    setBulkPaying(false);
     setPayingUserId(null);
   };
 
@@ -135,19 +174,9 @@ function AdminPayout() {
 
   const handleBulkPay = async () => {
     if (selectedUsers.size === 0) return;
-    if (!window.confirm(`Pay ${selectedUsers.size} selected users?`)) return;
-    
-    setBulkPaying(true);
-    setError("");
-    const userIds = Array.from(selectedUsers);
-    const result = await bulkPayUsersApi(userIds);
-    if (result.success) {
-      setSelectedUsers(new Set());
-      await loadPayouts();
-    } else {
-      setError(result.error || "Unable to bulk pay users");
-    }
-    setBulkPaying(false);
+    setPayDate("");
+    setPayModalUserId(null);
+    setPayModalBulk(true);
   };
 
   const searchTerm = searchUser.trim().toLowerCase();
@@ -206,6 +235,7 @@ function AdminPayout() {
           {loading ? <tr><td colSpan={columnCount}>Loading {activeTab} payouts...</td></tr> : error ? <tr><td colSpan={columnCount}>{error}</td></tr> : visibleRows.length > 0 ? visibleRows.map((row, index) => { const bankDetails = getBankDetails(row); const userId = getUserId(row); return activeTab === "paid" || activeTab === "history" ? <tr key={row.payout_history_id || userId}><td>{(page - 1) * pageSize + index + 1}</td><td>{row.user_code || "-"}</td><td>{row.user_name || "-"}</td><td>{money(row.referral_income)}</td><td>{money(row.level_income)}</td><td>{money(row.rank_income)}</td><td>{money(row.total_income)}</td><td>{row.admin_fee_percentage != null ? `${row.admin_fee_percentage}%` : "-"}</td><td>{money(row.admin_fee)}</td><td>{money(row.net_payable)}</td><td>{bankDetails.bank_name || "-"}<br />Account: {bankDetails.bank_account || "-"}<br />IFSC: {bankDetails.ifsc || "-"}</td><td>{bankDetails.status || "-"}</td><td>{row.payout_method || "-"}</td><td>{row.payout_information || "-"}</td><td><span className="payout-status-paid">{row.status || "-"}</span></td><td>{formatDate(row.paid_at)}</td><td>{formatDate(row.created_at)}</td></tr> : <tr key={userId}>{activeTab === "pending" && <td><input type="checkbox" checked={selectedUsers.has(userId)} onChange={() => toggleUserSelection(userId)} style={{ cursor: "pointer", width: "18px", height: "18px" }} /></td>}<td>{(page - 1) * pageSize + index + 1}</td><td>{row.user_code ?? row.userCode ?? "-"}</td><td>{getUserName(row)}</td><td>{money(getGrossIncome(row))}</td><td>{money(getAdminFee(row))}</td><td>{money(getNetPayable(row))}</td><td>{bankDetails.bank_name || "-"}<br />Account: {bankDetails.bank_account || "-"}<br />IFSC: {bankDetails.ifsc || "-"}</td>{activeTab === "pending" && <td><div className="payout-action-buttons"><button type="button" className="reports-search-btn" disabled={payingUserId === userId} onClick={() => handlePayUser(userId)}>{payingUserId === userId ? "Paying..." : "Pay User"}</button><button type="button" className="payout-reject-btn" disabled={payingUserId === userId} onClick={() => handleRejectUser(userId)}>Reject</button></div></td>}</tr>; }) : <tr><td colSpan={columnCount}>No {activeTab} payouts found.</td></tr>}
         </tbody></table></div><div className="reports-pagination"><button className="reports-page-btn" disabled={page === 1} onClick={() => setPage((current) => current - 1)}>‹</button>{Array.from({ length: totalPages }, (_, index) => <button key={index + 1} className={`reports-page-btn ${page === index + 1 ? "reports-page-btn--active" : ""}`} onClick={() => setPage(index + 1)}>{index + 1}</button>)}<button className="reports-page-btn" disabled={page === totalPages} onClick={() => setPage((current) => current + 1)}>›</button></div></div>
       </div>
+      {(payModalUserId || payModalBulk) && <div className="payout-modal-backdrop" onClick={() => { setPayModalUserId(null); setPayModalBulk(false); }}><div className="payout-modal-container" onClick={(event) => event.stopPropagation()}><div className="payout-modal-header"><h3>{payModalBulk ? "Pay Selected Users" : "Pay User"}</h3><button type="button" className="payout-modal-close" onClick={() => { setPayModalUserId(null); setPayModalBulk(false); }} aria-label="Close payment dialog"><FiX size={18} /></button></div><div className="payout-modal-body"><label className="payout-modal-label" htmlFor="payout-pay-date">Payment date</label><input id="payout-pay-date" type="text" inputMode="numeric" maxLength={10} value={payDate} onChange={(event) => setPayDate(formatDateInput(event.target.value))} className="payout-modal-input" placeholder="DD-MM-YYYY" /><div className="payout-modal-actions"><button type="button" className="payout-cancel-btn" onClick={() => { setPayModalUserId(null); setPayModalBulk(false); }}>Cancel</button><button type="button" className="reports-search-btn" onClick={submitPay} disabled={bulkPaying || payingUserId !== null || !parseDisplayDate(payDate)}>{bulkPaying || payingUserId !== null ? "Paying..." : "Confirm Pay"}</button></div></div></div></div>}
       {rejectingUserId && <div className="payout-modal-backdrop" onClick={() => setRejectingUserId(null)}><div className="payout-modal-container" onClick={(event) => event.stopPropagation()}><div className="payout-modal-header"><h3>Reject Payout</h3><button type="button" className="payout-modal-close" onClick={() => setRejectingUserId(null)} aria-label="Close rejection dialog"><FiX size={18} /></button></div><div className="payout-modal-body"><label className="payout-modal-label" htmlFor="payout-rejection-reason">Rejection reason</label><textarea id="payout-rejection-reason" value={rejectionReason} onChange={(event) => setRejectionReason(event.target.value)} rows={4} className="payout-modal-input" placeholder="Enter the reason for rejecting this payout" /><div className="payout-modal-actions"><button type="button" className="payout-cancel-btn" onClick={() => setRejectingUserId(null)}>Cancel</button><button type="button" className="payout-confirm-reject-btn" onClick={submitReject} disabled={payingUserId === rejectingUserId || !rejectionReason.trim()}>{payingUserId === rejectingUserId ? "Rejecting..." : "Confirm Reject"}</button></div></div></div></div>}
     </AdminLayout>
   );

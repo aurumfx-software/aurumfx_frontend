@@ -25,19 +25,23 @@ export const getPendingPayoutsApi = async () => {
   }
 };
 
-export const payUserPayoutApi = async (userId) => {
+export const payUserPayoutApi = async (userId, payDate) => {
   try {
-    const response = await api.post(`/admin/payout/${userId}/pay`);
+    const body = new URLSearchParams({ pay_date: payDate });
+    const response = await api.post(`/admin/payout/${userId}/pay`, body, {
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    });
     return { success: true, data: response.data };
   } catch (error) {
     return { success: false, error: getErrorMessage(error, "Unable to pay user") };
   }
 };
 
-export const bulkPayUsersApi = async (userIds) => {
+export const bulkPayUsersApi = async (userIds, payDate) => {
   try {
     const response = await api.post("/admin/payout/bulk-pay", {
       user_ids: userIds,
+      pay_date: payDate,
     });
     return { success: true, data: response.data };
   } catch (error) {
